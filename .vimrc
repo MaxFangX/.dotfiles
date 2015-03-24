@@ -72,10 +72,15 @@ set background=dark " When set to "dark", Vim will try to use colors that look
 set mouse=a         " Enable the use of the mouse.
 
 execute pathogen#infect()
-filetype plugin indent on
+" PERSONAL SETTINGS" 
+colorscheme badwolf
+cdls() { cd "$@" && ls; }           " cdls dir to cd then ls
 syntax on
 let base16colorspace=256
 set t_Co=256
+" END PERSONAL SETTINGS"
+
+filetype plugin indent on
 let g:neocomplcache_enable_at_startup = 1
 let g:indentLine_char = '│'
 let g:notes_directories = ['~/Notes/']
@@ -87,8 +92,6 @@ set laststatus=2
 set synmaxcol=300
 " Force saving files that require root permission 
 cmap w!! w !sudo tee > /dev/null %
-
-colorscheme badwolf
 
 " Syntastic settings:
 set statusline+=%#warningmsg#
