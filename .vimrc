@@ -76,7 +76,6 @@ filetype plugin indent on
 syntax on
 let base16colorspace=256
 set t_Co=256
-                    "colorscheme solarized 
 let g:neocomplcache_enable_at_startup = 1
 let g:indentLine_char = '│'
 let g:notes_directories = ['~/Notes/']
@@ -90,3 +89,13 @@ set synmaxcol=300
 cmap w!! w !sudo tee > /dev/null %
 
 colorscheme badwolf
+
+" Syntastic settings:
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
