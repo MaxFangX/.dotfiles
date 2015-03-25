@@ -74,7 +74,6 @@ set mouse=a         " Enable the use of the mouse.
 execute pathogen#infect()
 " PERSONAL SETTINGS" 
 colorscheme badwolf
-cdls() { cd "$@" && ls; }           " cdls dir to cd then ls
 syntax on
 let base16colorspace=256
 set t_Co=256
@@ -105,4 +104,5 @@ let g:syntastic_check_on_wq = 0
 " To toggle error checking, ctrl+w, E
 let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
 nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+let g:syntastic_javascript_checkers = ['jshint']
 " End syntastic settings
