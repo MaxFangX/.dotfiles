@@ -104,5 +104,8 @@ let g:syntastic_check_on_wq = 0
 " To toggle error checking, ctrl+w, E
 let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
 nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
-let g:syntastic_javascript_checkers = ['jshint']
+let g:syntastic_javascript_checkers = ['jshint', 'jsl']
+let g:syntastic_python_checkers = ['flake8', 'pep8', 'pyflakes', 'python']
 " End syntastic settings
+
+colorscheme badwolf
