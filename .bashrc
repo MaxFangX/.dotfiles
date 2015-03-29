@@ -123,6 +123,9 @@ cdl() { cd "$@" && l; }
 # PhantomJS
 export PATH=$PATH:/home/user/work/phantomjs/bin/
 
+# NodeJs
+export PATH=$PATH:/home/user/.nvm/v0.10.38/bin/
+
 # Prevent production server api calls
 export CHANGECOIN_API=http://localhost:8000/v1
 
