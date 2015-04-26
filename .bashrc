@@ -133,6 +133,21 @@ export CHANGECOIN_API=http://localhost:8000/v1
 alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
 
+# Git
+alias gs="git status"
+alias gdi="git diff"
+alias gch="git checkout"
+alias gchm="git checkout master"
+alias gco="git commit"
+alias gcom="git commit -m"
+alias gcoam="git commit -a -m"
+alias gps="git push"
+alias gpso="git push origin"
+alias gpsom="git push origin master"
+alias gpl="git pull"
+alias gplo="git pull origin"
+alias gplom="git pull origin master"
+
 # Sensitive environment variables
 . ~/info.sh
 
