@@ -135,6 +135,8 @@ alias javatest="java org.junit.runner.JUnitCore"
 
 # Git
 alias gs="git status"
+
+alias gd="git diff"
 alias gdi="git diff"
 
 alias gch="git checkout"
@@ -147,7 +149,6 @@ alias gcoam="git commit -a -m"
 alias gps="git push"
 alias gpso="git push origin"
 alias gpsom="git push origin master"
-
 alias gpush="git push"
 alias gpusho="git push origin"
 alias gpushom="git push origin master"
@@ -155,10 +156,12 @@ alias gpushom="git push origin master"
 alias gpl="git pull"
 alias gplo="git pull origin"
 alias gplom="git pull origin master"
-
 alias gpull="git pull"
 alias gpullo="git pull origin"
 alias gpullom="git pull origin master"
+
+alias gm="git merge"
+alias gme="git merge"
 
 # Sensitive environment variables
 . ~/info.sh
