@@ -163,6 +163,22 @@ alias gpullom="git pull origin master"
 alias gm="git merge"
 alias gme="git merge"
 
+# Django
+alias pm="python manage.py"
+alias pym="python manage.py"
+alias p3m="python3 manage.py"
+alias py3m="python3 manage.py"
+
+alias pmr="python manage.py runserver"
+alias pymr="python manage.py runserver"
+alias p3mr="python manage.py runserver"
+alias py3mr="python manage.py runserver"
+
+alias pms="python manage.py shell"
+alias pyms="python manage.py shell"
+alias p3ms="python manage.py shell"
+alias py3ms="python manage.py shell"
+
 # Sensitive environment variables
 . ~/info.sh
 
