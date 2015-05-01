@@ -163,6 +163,10 @@ alias gpullom="git pull origin master"
 alias gm="git merge"
 alias gme="git merge"
 
+# Python
+alias py="python"
+alias py3="python3"
+
 # Django
 alias pm="python manage.py"
 alias pym="python manage.py"
