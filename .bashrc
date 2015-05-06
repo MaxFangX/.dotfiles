@@ -183,6 +183,9 @@ alias pyms="python manage.py shell"
 alias p3ms="python manage.py shell"
 alias py3ms="python manage.py shell"
 
+# Pip
+alias pirr="pip install -r requirements.txt"
+
 # Sensitive environment variables
 . ~/info.sh
 
