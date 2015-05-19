@@ -163,6 +163,9 @@ alias gpullom="git pull origin master"
 alias gm="git merge"
 alias gme="git merge"
 
+alias ga="git add"
+alias gad="git add"
+
 # Python
 alias py="python"
 alias py3="python3"
