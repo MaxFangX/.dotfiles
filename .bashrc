@@ -183,6 +183,12 @@ alias pyms="python manage.py shell"
 alias p3ms="python manage.py shell"
 alias py3ms="python manage.py shell"
 
+alias pmt="python manage.py test"
+alias pymt="python manage.py test"
+alias p3mt="python3 manage.py test"
+alias py3mt="python3 manage.py test"
+
+
 # Pip
 alias pirr="pip install -r requirements.txt"
 
