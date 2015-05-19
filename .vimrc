@@ -77,6 +77,7 @@ colorscheme badwolf
 syntax on
 let base16colorspace=256
 set t_Co=256
+map <C-c> "+y<CR>"
 " END PERSONAL SETTINGS"
 
 filetype plugin indent on
