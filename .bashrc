@@ -169,6 +169,8 @@ alias gad="git add"
 alias gss="git stash"
 alias gssa="git stash apply"
 
+alias grm="git rm"
+
 # Python
 alias py="python"
 alias py3="python3"
