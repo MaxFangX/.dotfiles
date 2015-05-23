@@ -159,6 +159,9 @@ alias gplom="git pull origin master"
 alias gpull="git pull"
 alias gpullo="git pull origin"
 alias gpullom="git pull origin master"
+alias gplr="git pull --rebase"
+alias gplro="git pull --rebase origin"
+alias gplrom="git pull --rebase origin master"
 
 alias gm="git merge"
 alias gme="git merge"
@@ -170,6 +173,7 @@ alias gss="git stash"
 alias gssa="git stash apply"
 
 alias grm="git rm"
+
 
 # Python
 alias py="python"
