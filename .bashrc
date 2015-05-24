@@ -149,16 +149,10 @@ alias gcoam="git commit -a -m"
 alias gps="git push"
 alias gpso="git push origin"
 alias gpsom="git push origin master"
-alias gpush="git push"
-alias gpusho="git push origin"
-alias gpushom="git push origin master"
 
 alias gpl="git pull"
 alias gplo="git pull origin"
 alias gplom="git pull origin master"
-alias gpull="git pull"
-alias gpullo="git pull origin"
-alias gpullom="git pull origin master"
 alias gplr="git pull --rebase"
 alias gplro="git pull --rebase origin"
 alias gplrom="git pull --rebase origin master"
@@ -173,7 +167,6 @@ alias gss="git stash"
 alias gssa="git stash apply"
 
 alias grm="git rm"
-
 
 # Python
 alias py="python"
@@ -203,6 +196,7 @@ alias py3mt="python3 manage.py test"
 
 # Pip
 alias pirr="pip install -r requirements.txt"
+alias pfr="pip freeze > requirements.txt"
 
 # Sensitive environment variables
 . ~/info.sh
