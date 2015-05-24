@@ -168,6 +168,9 @@ alias gssa="git stash apply"
 
 alias grm="git rm"
 
+alias gbr="git branch"
+alias gbrr="git branch -r"
+
 # Python
 alias py="python"
 alias py3="python3"
