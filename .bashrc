@@ -177,25 +177,16 @@ alias py3="python3"
 
 # Django
 alias pm="python manage.py"
-alias pym="python manage.py"
 alias p3m="python3 manage.py"
-alias py3m="python3 manage.py"
 
 alias pmr="python manage.py runserver"
-alias pymr="python manage.py runserver"
 alias p3mr="python3 manage.py runserver"
-alias py3mr="python3 manage.py runserver"
 
 alias pms="python manage.py shell"
-alias pyms="python manage.py shell"
 alias p3ms="python3 manage.py shell"
-alias py3ms="python3 manage.py shell"
 
 alias pmt="python manage.py test"
-alias pymt="python manage.py test"
 alias p3mt="python3 manage.py test"
-alias py3mt="python3 manage.py test"
-
 
 # Pip
 alias pirr="pip install -r requirements.txt"
