@@ -171,6 +171,10 @@ alias grm="git rm"
 alias gbr="git branch"
 alias gbrr="git branch -r"
 
+alias grb="git rebase"
+alias grbc="git rebase --continue"
+alias grbs="git rebase --skip"
+
 # Python
 alias py="python"
 alias py3="python3"
