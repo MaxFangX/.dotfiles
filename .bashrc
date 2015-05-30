@@ -188,6 +188,12 @@ alias p3ms="python3 manage.py shell"
 alias pmt="python manage.py test"
 alias p3mt="python3 manage.py test"
 
+alias pmmkm="python manage.py makemigrations"
+alias p3mmkm="python3 manage.py makemigrations"
+
+alias pmm="python manage.py migrate"
+alias p3mm="python3 manage.py migrate"
+
 # Pip
 alias pirr="pip install -r requirements.txt"
 alias pfr="pip freeze > requirements.txt"
