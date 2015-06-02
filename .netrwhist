@@ -1,7 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_cnt =6
 let g:netrw_dirhist_1='/home/user/work/changetip/bots/templates/facebook'
 let g:netrw_dirhist_2='/home/user/work/changetip/bots/tests'
 let g:netrw_dirhist_3='/home/user/work/changetip/helpers'
 let g:netrw_dirhist_4='/home/user/wine/napaeagle/eagle/templates'
 let g:netrw_dirhist_5='/home/user/work'
+let g:netrw_dirhist_6='/Users/fang/work/changetip/changecoin/templates'
