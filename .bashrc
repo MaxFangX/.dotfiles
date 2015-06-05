@@ -160,6 +160,7 @@ alias gplrom="git pull --rebase origin master"
 
 alias gm="git merge"
 alias gme="git merge"
+alias gmem="git merge master"
 
 alias ga="git add"
 alias gad="git add"
