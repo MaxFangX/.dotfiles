@@ -139,6 +139,7 @@ alias gs="git status"
 
 alias gd="git diff"
 alias gdi="git diff"
+alias gdihh="git diff HEAD^ HEAD"
 
 alias gch="git checkout"
 alias gchm="git checkout master"
