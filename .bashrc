@@ -178,6 +178,14 @@ alias gre="git rebase"
 alias grec="git rebase --continue"
 alias gres="git rebase --skip"
 
+# Updates a feature branch
+update() {
+    git checkout master &&
+    git pull origin master &&
+    git checkout "$@" &&
+    git merge master;
+}   
+
 # Python
 alias py="python"
 alias py3="python3"
