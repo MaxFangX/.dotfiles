@@ -165,6 +165,7 @@ alias gad="git add"
 
 alias gss="git stash"
 alias gssa="git stash apply"
+alias gssp="git stash pop"
 
 alias grm="git rm"
 
