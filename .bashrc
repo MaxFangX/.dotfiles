@@ -178,6 +178,8 @@ alias gre="git rebase"
 alias grec="git rebase --continue"
 alias gres="git rebase --skip"
 
+alias glo="git log"
+
 # Updates a feature branch
 update() {
     git checkout master &&
