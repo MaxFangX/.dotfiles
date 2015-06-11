@@ -137,7 +137,6 @@ alias javatest="java org.junit.runner.JUnitCore"
 # Git
 alias gs="git status"
 
-alias gd="git diff"
 alias gdi="git diff"
 alias gdihh="git diff HEAD^ HEAD"
 
@@ -159,11 +158,9 @@ alias gplr="git pull --rebase"
 alias gplro="git pull --rebase origin"
 alias gplrom="git pull --rebase origin master"
 
-alias gm="git merge"
 alias gme="git merge"
 alias gmem="git merge master"
 
-alias ga="git add"
 alias gad="git add"
 
 alias gss="git stash"
