@@ -114,8 +114,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Settings
+# Settings and misc aliases
 alias py=python3
+alias rmpyc="find ./ -name '*pyc' | xargs rm -f"
 
 # cdls and cdl as commands to change directory and list
 cdls() { cd "$@" && ls; }   
