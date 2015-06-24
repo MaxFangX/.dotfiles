@@ -148,4 +148,8 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 " End switch splits
 
+" Splits files below and to the right
+set splitbelow
+set splitright
+
 colorscheme badwolf
