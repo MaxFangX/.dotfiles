@@ -141,4 +141,11 @@ let g:syntastic_javascript_checkers = ['jshint', 'jsl']
 let g:syntastic_python_checkers = ['flake8', 'pep8', 'pyflakes', 'python']
 " End syntastic settings
 
+" Start: make ctrl+j,k,h,l to switch splits
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+" End switch splits
+
 colorscheme badwolf
