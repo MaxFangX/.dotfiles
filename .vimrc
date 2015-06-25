@@ -152,4 +152,7 @@ map <C-l> <C-W>l
 set splitbelow
 set splitright
 
+" Automatically toggle :set paste and :set nopaste upon paste
+inoremap <S-Insert> <ESC>"+p`]a"
+
 colorscheme badwolf
