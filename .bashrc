@@ -122,6 +122,9 @@ alias rmpyc="find ./ -name '*pyc' | xargs rm -f"
 cdls() { cd "$@" && ls; }   
 cdl() { cd "$@" && l; }   
 
+# commands to quickly switch between different environments
+workon() { . ~/scripts/"$@".sh; }
+
 # PhantomJS
 export PATH=$PATH:/home/user/work/phantomjs/bin/
 
