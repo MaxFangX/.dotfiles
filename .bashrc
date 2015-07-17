@@ -224,5 +224,7 @@ alias pirr="pip install -r requirements.txt"
 alias pfr="pip freeze > requirements.txt"
 
 # Sensitive environment variables
-. ~/info.sh
+if [ -f ~/scripts/info.sh ]; then
+    . ~/scripts/info.sh
+fi
 
