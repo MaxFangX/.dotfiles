@@ -123,7 +123,7 @@ cdls() { cd "$@" && ls; }
 cdl() { cd "$@" && l; }   
 
 # commands to quickly switch between different environments
-workon() { . ~/scripts/"$@".sh; }
+work() { . ~/scripts/"$@".sh; }
 
 # PhantomJS
 export PATH=$PATH:/home/user/work/phantomjs/bin/
