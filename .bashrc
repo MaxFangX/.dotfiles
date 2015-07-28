@@ -117,6 +117,7 @@ fi
 # Settings and misc aliases
 alias py=python3
 alias rmpyc="find ./ -name '*pyc' | xargs rm -f"
+alias rmswp="find ./ -name '*swp' | xargs rm -f"
 
 # cdls and cdl as commands to change directory and list
 cdls() { cd "$@" && ls; }   
