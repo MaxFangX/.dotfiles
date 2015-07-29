@@ -154,6 +154,7 @@ alias gchm="git checkout master"
 alias gco="git commit"
 alias gcom="git commit -m"
 alias gcoam="git commit -a -m"
+alias gcoa="git commit --amend"
 
 alias gps="git push"
 alias gpso="git push origin"
@@ -185,6 +186,7 @@ alias grec="git rebase --continue"
 alias gres="git rebase --skip"
 
 alias glo="git log"
+
 
 # Updates a feature branch
 update() {
