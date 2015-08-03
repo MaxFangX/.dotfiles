@@ -187,6 +187,7 @@ alias gres="git rebase --skip"
 
 alias glo="git log"
 
+alias gbl="git blame"
 
 # Updates a feature branch
 update() {
