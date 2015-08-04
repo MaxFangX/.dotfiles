@@ -189,6 +189,8 @@ alias glo="git log"
 
 alias gbl="git blame"
 
+alias grs="git reset"
+
 # Updates a feature branch
 update() {
     git checkout master &&
