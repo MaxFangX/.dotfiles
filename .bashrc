@@ -215,6 +215,8 @@ alias p3ms="python3 manage.py shell"
 
 alias pmt="python manage.py test"
 alias p3mt="python3 manage.py test"
+alias pwmt="python -Wall manage.py test"
+alias p3wmt="python3 -Wall manage.py test"
 
 alias pmmkm="python manage.py makemigrations"
 alias p3mmkm="python3 manage.py makemigrations"
