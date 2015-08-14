@@ -205,27 +205,18 @@ alias py3="python3"
 
 # Django
 alias pm="python manage.py"
-alias p3m="python3 manage.py"
 
 alias pmr="python manage.py runserver"
-alias p3mr="python3 manage.py runserver"
 
 alias pms="python manage.py shell"
-alias p3ms="python3 manage.py shell"
 
 alias pmt="python manage.py test"
-alias p3mt="python3 manage.py test"
-alias pwmt="python -Wall manage.py test"
-alias p3wmt="python3 -Wall manage.py test"
 
 alias pmmkm="python manage.py makemigrations"
-alias p3mmkm="python3 manage.py makemigrations"
 
 alias pmm="python manage.py migrate"
-alias p3mm="python3 manage.py migrate"
 
 alias pmc="python manage.py check"
-alias p3mc="python3 manage.py check"
 
 # Pip
 alias pirr="pip install -r requirements.txt"
@@ -235,4 +226,3 @@ alias pfr="pip freeze > requirements.txt"
 if [ -f ~/scripts/info.sh ]; then
     . ~/scripts/info.sh
 fi
-
