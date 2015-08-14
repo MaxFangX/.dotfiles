@@ -206,17 +206,18 @@ alias py3="python3"
 # Django
 alias pm="python manage.py"
 
-alias pmr="python manage.py runserver"
+alias pmr="python manage.py runserver -v 2"
 
-alias pms="python manage.py shell"
+alias pms="python manage.py shell -v 2"
 
-alias pmt="python manage.py test"
+alias pmt="python manage.py test -v 2"
+alias pmtk="python manage.py test -k -v 2"
 
-alias pmmkm="python manage.py makemigrations"
+alias pmmkm="python manage.py makemigrations -v 2"
 
-alias pmm="python manage.py migrate"
+alias pmm="python manage.py migrate -v 2"
 
-alias pmc="python manage.py check"
+alias pmc="python manage.py check -v 2"
 
 # Pip
 alias pirr="pip install -r requirements.txt"
