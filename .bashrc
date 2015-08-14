@@ -231,6 +231,9 @@ alias p3mc="python3 manage.py check"
 alias pirr="pip install -r requirements.txt"
 alias pfr="pip freeze > requirements.txt"
 
+# Ruby
+source ~/.profile
+
 # Sensitive environment variables
 if [ -f ~/scripts/info.sh ]; then
     . ~/scripts/info.sh
