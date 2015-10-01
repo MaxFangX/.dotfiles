@@ -217,6 +217,7 @@ alias pmtk="python manage.py test -k -v 2"
 alias pmmkm="python manage.py makemigrations -v 2"
 
 alias pmm="python manage.py migrate"
+alias pmml="python manage.py migrate --list"
 alias pmmfi="python manage.py migrate --fake-initial"
 
 alias pmc="python manage.py check -v 2"
