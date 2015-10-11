@@ -138,6 +138,9 @@ export CHANGECOIN_API=http://localhost:8000/v1
 # Hack for YCM to work
 export DYLD_FORCE_FLAT_NAMESPACE=1
 
+# Vim
+export EDITOR="/usr/local/bin/vim"
+
 # Java
 alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
