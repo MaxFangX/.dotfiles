@@ -196,6 +196,7 @@ alias glo="git log"
 alias gbl="git blame"
 
 alias grs="git reset"
+alias grsh="git reset HEAD"
 
 # Updates a feature branch
 update() {
