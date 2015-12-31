@@ -176,7 +176,7 @@ alias gdi="git diff"
 alias gdihh="git diff HEAD^ HEAD"
 alias gdis="git diff --staged"
 
-function gadis { git add "$@"; git diff --staged; }   
+function gadis { git add "$@"; git diff --staged "$@"; }   
 
 alias gch="git checkout"
 alias gchm="git checkout master"
