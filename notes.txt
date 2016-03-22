@@ -1,0 +1,3 @@
+To fix corrupt Mission Control shortcuts:
+mv ~/Library/Preferences/com.apple.symbolichotkeys.plist ~/Desktop/com.apple.symbolichotkeys.plist
+then logout + in
