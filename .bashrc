@@ -254,6 +254,10 @@ alias pmc="python manage.py check -v 2"
 alias pirr="pip install -r requirements.txt"
 alias pfr="pip freeze > requirements.txt"
 
+# Misc
+alias sw="sass --watch"
+alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
+
 # Sensitive environment variables
 if [ -f ~/scripts/info.sh ]; then
     . ~/scripts/info.sh
