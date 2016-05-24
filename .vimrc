@@ -71,6 +71,8 @@ set background=dark " When set to "dark", Vim will try to use colors that look
  
 set mouse=a         " Enable the use of the mouse.
 
+" START Vundle settings
+
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -81,12 +83,14 @@ call vundle#begin()
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'Valloric/YouCompleteMe'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
+
+" END Vundle settings
 
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
