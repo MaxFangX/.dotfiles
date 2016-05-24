@@ -124,7 +124,9 @@ cdls() { cd "$@" && ls; }
 cdl() { cd "$@" && l; }   
 
 # commands to quickly switch between different environments
-work() { . ~/scripts/"$@".sh; }
+alias clean="source ~/.vim/clean.sh"
+fang() { clean && . ~/scripts/"$@".sh; }
+work() { clean && . ~/scripts/"$@".sh; }
 
 # Easy extract
 extract () {
