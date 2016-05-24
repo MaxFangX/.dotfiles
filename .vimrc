@@ -144,6 +144,7 @@ let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [],'passive_f
 nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
 let g:syntastic_javascript_checkers = ['jshint', 'jsl']
 let g:syntastic_python_checkers = ['flake8', 'pep8', 'pyflakes', 'python']
+let g:syntastic_typescript_checkers = ['eslint', 'tsc', 'tslint']
 " End syntastic settings
 
 " Start: make ctrl+j,k,h,l to switch splits
