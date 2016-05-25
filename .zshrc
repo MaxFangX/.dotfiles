@@ -322,6 +322,7 @@ export PATH="/Users/fang/work/tipenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
+fpath=(/usr/local/share/zsh-completions $fpath)
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
