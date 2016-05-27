@@ -86,22 +86,13 @@ fi
 
 # some more ls aliases
 alias ll='ls -alF'
-alias la='ls -A'
+alias la='ls -a'
 alias l='ls -CF'
 alias ls='ls -GFh'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -181,7 +172,7 @@ alias gdi="git diff"
 alias gdihh="git diff HEAD^ HEAD"
 alias gdis="git diff --staged"
 
-function gadis { git add "$@"; git diff --staged "$@"; }   
+function gadis { git add "$@"; git diff --staged "$@"; }
 
 alias gch="git checkout"
 alias gchm="git checkout master"
@@ -225,17 +216,11 @@ alias gbl="git blame"
 alias grs="git reset"
 alias grsh="git reset HEAD"
 
-# Updates a feature branch
-update() {
-    git checkout master &&
-    git pull origin master &&
-    git checkout "$@" &&
-    git merge master;
-}   
 
 # Python
 alias py="python"
 alias py3="python3"
+
 
 # Django
 alias pm="python manage.py"
