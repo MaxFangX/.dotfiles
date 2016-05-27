@@ -1,5 +1,8 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/$(whoami)/.oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
+
+# Load common settings
+source ~/.bash_profile
 
 ###########################
 # ZSH SETTINGS
