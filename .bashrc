@@ -180,6 +180,8 @@ alias gad="git add"
 alias gdi="git diff"
 alias gdihh="git diff HEAD^ HEAD"
 alias gdis="git diff --staged"
+alias gdif="git difftool"
+alias gdifc="git difftool --cached"
 
 function gadis { git add "$@"; git diff --staged "$@"; }   
 
@@ -194,6 +196,7 @@ alias gcoa="git commit --amend"
 alias gps="git push"
 alias gpso="git push origin"
 alias gpsom="git push origin master"
+alias gcr="git push origin HEAD:refs/for/develop"
 
 alias gpl="git pull"
 alias gplo="git pull origin"

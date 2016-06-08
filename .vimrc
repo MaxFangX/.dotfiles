@@ -111,6 +111,9 @@ syntax on
 let base16colorspace=256
 set t_Co=256
 map <C-c> "+y<CR>"
+" Spelling checking and automatic wrapping at 72 columns for git messages
+autocmd Filetype gitcommit setlocal spell textwidth=72
+
 " END PERSONAL SETTINGS"
 
 let g:neocomplcache_enable_at_startup = 1
