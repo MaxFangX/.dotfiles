@@ -111,9 +111,10 @@ alias grm="git rm"
 alias gbr="git branch"
 alias gbrr="git branch -r"
 
-alias gre="git rebase"
-alias grec="git rebase --continue"
-alias gres="git rebase --skip"
+alias grb="git rebase"
+alias grbi="git rebase -i"
+alias grbc="git rebase --continue"
+alias grbs="git rebase --skip"
 
 alias glo="git log"
 
