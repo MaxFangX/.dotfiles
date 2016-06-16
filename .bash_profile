@@ -83,7 +83,6 @@ function gadis { git add "$@"; git diff --staged "$@"; }
 alias gch="git checkout"
 alias gchm="git checkout master"
 
-alias gco="git commit"
 alias gcom="git commit -m"
 alias gcoam="git commit -a -m"
 alias gcoa="git commit --amend"
@@ -161,3 +160,6 @@ if [ -f ~/scripts/info.sh ]; then
 fi
 
 export PATH="/usr/local/sbin:$PATH"
+
+# TODO move this into script
+export PATH="~/sigfig/ngts/ngts_dev_tools/bin:$PATH"

@@ -4,6 +4,9 @@ export ZSH="$HOME/.oh-my-zsh"
 # Load common settings
 source ~/.bash_profile
 
+# Load Mac settings
+source ~/.mac_profile
+
 ###########################
 # ZSH SETTINGS
 ###########################
