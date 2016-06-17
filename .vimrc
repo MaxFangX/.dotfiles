@@ -155,6 +155,10 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 " End switch splits
 
+" START CtrlP
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+" START CtrlP
+
 " Splits files below and to the right
 set splitbelow
 set splitright
