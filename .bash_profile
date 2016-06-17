@@ -153,6 +153,7 @@ alias pfr="pip freeze > requirements.txt"
 # Misc
 alias sw="sass --watch"
 alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
+alias ctagshide="ctags -R -f ./.git/tags"
 
 # Sensitive environment variables
 if [ -f ~/scripts/info.sh ]; then
