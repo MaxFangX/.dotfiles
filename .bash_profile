@@ -154,6 +154,8 @@ alias pfr="pip freeze > requirements.txt"
 alias sw="sass --watch"
 alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
 alias ctagshide="ctags -R -f ./.git/tags"
+alias sv="grunt server"
+svp() { grunt server --partner=$1; }
 
 # Sensitive environment variables
 if [ -f ~/scripts/info.sh ]; then

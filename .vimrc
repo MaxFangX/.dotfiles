@@ -111,6 +111,11 @@ syntax on
 let base16colorspace=256
 set t_Co=256
 map <C-c> "+y<CR>"
+
+" Show empty spaces
+set list
+set listchars=tab:>-     " > is shown at the beginning, - throughout
+
 " END PERSONAL SETTINGS"
 
 let g:neocomplcache_enable_at_startup = 1
