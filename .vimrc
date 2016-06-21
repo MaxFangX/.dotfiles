@@ -3,20 +3,29 @@
 
 " For multi-byte character support (CJK support, for example):
 "set fileencodings=ucs-bom,utf-8,cp936,big5,euc-jp,euc-kr,gb18030,latin1
+
        
+if $SIGFIGCONFIG ==# 1
+    set noexpandtab
+    set copyindent
+    set preserveindent
+    set softtabstop=0
+else
+    set expandtab       " Use the appropriate number of spaces to insert a <Tab>.
+                        " Spaces are used in indents with the '>' and '<' commands
+                        " and when 'autoindent' is on. To insert a real tab when
+                        " 'expandtab' is on, use CTRL-V <Tab>.
+
+    set smarttab        " When on, a <Tab> in front of a line inserts blanks
+                        " according to 'shiftwidth'. 'tabstop' is used in other
+                        " places. A <BS> will delete a 'shiftwidth' worth of space
+                        " at the start of the line.
+     
+endif
+ 
 set tabstop=4       " Number of spaces that a <Tab> in the file counts for.
  
 set shiftwidth=4    " Number of spaces to use for each step of (auto)indent.
- 
-set expandtab       " Use the appropriate number of spaces to insert a <Tab>.
-                    " Spaces are used in indents with the '>' and '<' commands
-                    " and when 'autoindent' is on. To insert a real tab when
-                    " 'expandtab' is on, use CTRL-V <Tab>.
- 
-set smarttab        " When on, a <Tab> in front of a line inserts blanks
-                    " according to 'shiftwidth'. 'tabstop' is used in other
-                    " places. A <BS> will delete a 'shiftwidth' worth of space
-                    " at the start of the line.
  
 set showcmd         " Show (partial) command in status line.
 
