@@ -150,10 +150,13 @@ alias pmc="python manage.py check -v 2"
 alias pirr="pip install -r requirements.txt"
 alias pfr="pip freeze > requirements.txt"
 
+# Ctags
+alias ctagshide="ctags -R -f ./.git/tags"
+alias ctagsfull="ctags --links=no --exclude='@.gitignore' -R ."
+
 # Misc
 alias sw="sass --watch"
 alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
-alias ctagshide="ctags -R -f ./.git/tags"
 alias sv="grunt server"
 svp() { grunt server --partner=$1; }
 
