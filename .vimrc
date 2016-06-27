@@ -182,8 +182,18 @@ let g:ctrlp_custom_ignore = {
     \ }
 " END CtrlP
 
+" START vim-smooth-scroll
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 2)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 2)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 10, 4)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 10, 4)<CR>
+" END vim-smooth-scroll
+
 " Ignore these files in vim
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " Linux/MacOSX
+
+" Search for visually selected text with //
+vnoremap // y/<C-R>"<CR>
 
 " Splits files below and to the right
 set splitbelow

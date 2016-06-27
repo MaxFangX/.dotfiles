@@ -167,5 +167,9 @@ fi
 
 export PATH="/usr/local/sbin:$PATH"
 
+if [ -f ~/scripts/local.sh ]; then
+    . ~/scripts/local.sh
+fi
+
 # TODO move this into script
 export PATH="~/sigfig/ngts/ngts_dev_tools/bin:$PATH"
