@@ -139,11 +139,12 @@ set synmaxcol=300
 " Force saving files that require root permission 
 cmap w!! w !sudo tee > /dev/null %
 
-" Syntastic settings:
+" START Syntastic settings
+
+set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
 " set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
 " set statusline+=%*
-set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -160,7 +161,13 @@ let g:syntastic_javascript_checkers = ['jshint', 'jsl']
 let g:syntastic_python_checkers = ['flake8', 'pep8', 'pyflakes', 'python']
 let g:syntastic_typescript_checkers = ['eslint', 'tslint']
 "                                       also 'tsc' for typescript
-" End syntastic settings
+
+" Angular
+let g:syntastic_html_tidy_ignore_errors=[
+    \'proprietary attribute "ng-',
+    \'proprietary attribute "sgfg-'
+\]
+" END syntastic settings
 
 " Start: make ctrl+j,k,h,l to switch splits
 map <C-j> <C-W>j
