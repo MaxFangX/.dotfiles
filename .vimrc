@@ -177,7 +177,7 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 " End switch splits
 
-" START CtrlP
+""" START CtrlP
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -188,7 +188,9 @@ let g:ctrlp_custom_ignore = {
     \ 'file': '\v\.(exe|so|dll)$',
     \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
     \ }
-" END CtrlP
+" CtrlPTag Shortcut: \.
+nnoremap <leader>. :CtrlPTag<cr>
+""" END CtrlP
 
 " START vim-smooth-scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 2)<CR>
@@ -196,6 +198,10 @@ noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 2)<CR>
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 10, 4)<CR>
 noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 10, 4)<CR>
 " END vim-smooth-scroll
+
+
+" Tagbar: F8 shortcut
+nmap <F8> :TagbarToggle<CR>
 
 " Ignore these files in vim
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " Linux/MacOSX
