@@ -32,3 +32,15 @@
 [submodule "bundle/ctrlp.vim"]
 	path = bundle/ctrlp.vim
 	url = https://github.com/ctrlpvim/ctrlp.vim
+[submodule "bundle/tsuquyomi"]
+	path = bundle/tsuquyomi
+	url = https://github.com/Quramy/tsuquyomi
+[submodule "bundle/vim-angular"]
+	path = bundle/vim-angular
+	url = https://github.com/burnettk/vim-angular
+[submodule "bundle/vim-smooth-scroll"]
+	path = bundle/vim-smooth-scroll
+	url = https://github.com/terryma/vim-smooth-scroll
+[submodule "bundle/vimproc.vim"]
+	path = bundle/vimproc.vim
+	url = https://github.com/Shougo/vimproc.vim
