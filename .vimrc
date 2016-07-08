@@ -179,6 +179,7 @@ map <C-l> <C-W>l
 
 """ START CtrlP
 set runtimepath^=~/.vim/bundle/ctrlp.vim
+set path=$PWD/**
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
@@ -199,6 +200,8 @@ noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 10, 4)<CR>
 noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 10, 4)<CR>
 " END vim-smooth-scroll
 
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " Tagbar: F8 shortcut
 nmap <F8> :TagbarToggle<CR>
