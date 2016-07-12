@@ -177,21 +177,35 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 " End switch splits
 
-""" START CtrlP
-set runtimepath^=~/.vim/bundle/ctrlp.vim
+""" CtrlP {
+    set runtimepath^=~/.vim/bundle/ctrlp.vim
+    let g:ctrlp_map = '<c-p>'
+    let g:ctrlp_cmd = 'CtrlP'
+    let g:ctrlp_working_path_mode = 'ra'
+    let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+    let g:ctrlp_custom_ignore = {
+        \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+        \ 'file': '\v\.(exe|so|dll)$',
+        \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+        \ }
+    " CtrlPTag Shortcut: \.
+    nnoremap <leader>. :CtrlPTag<cr>
+""" CtrlP
+
+""" Path {{
 set path=$PWD/**
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-    \ 'file': '\v\.(exe|so|dll)$',
-    \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-    \ }
-" CtrlPTag Shortcut: \.
-nnoremap <leader>. :CtrlPTag<cr>
-""" END CtrlP
+    " Sigfig
+    if $SIGFIGCONFIG ==# 1
+        set path+=/scripts/references.ts
+        set path+=/scripts/lib/**/*.ts
+        set path+=/scripts/app.ts
+        set path+=/scripts/module.ts
+        set path+=/scripts/util/**/*.ts
+        set path+=/scripts/services/**/*wire*.ts
+        set path+=/scripts/services/**/*.ts
+        set path+=/scripts/**/*.{ts,tsx}
+endif
+""" Path }}
 
 " START vim-smooth-scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 2)<CR>

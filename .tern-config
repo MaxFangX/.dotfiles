@@ -1,0 +1,15 @@
+{
+	"libs": [
+		"jquery",
+		"sigfig"
+	],
+	"loadEagerly": [
+	],
+	"plugins": {
+		"requirejs": {
+			"baseURL": "./",
+			"paths": {}
+		},
+		"angular"
+	}
+}
