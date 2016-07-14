@@ -1,7 +1,7 @@
 {
 	"libs": [
-		"jquery",
-		"sigfig"
+		"browser",
+		"jquery"
 	],
 	"loadEagerly": [
 	],
@@ -10,6 +10,7 @@
 			"baseURL": "./",
 			"paths": {}
 		},
-		"angular"
+		"angular": {},
+		"es_modules": {}
 	}
 }

@@ -140,44 +140,54 @@ set synmaxcol=300
 " Force saving files that require root permission 
 cmap w!! w !sudo tee > /dev/null %
 
-" START Syntastic settings
+""" Syntastic settings
 
-set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
+    set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
+    " set statusline+=%#warningmsg#
+    " set statusline+=%{SyntasticStatuslineFlag()}
+    " set statusline+=%*
+    
+    let g:syntastic_always_populate_loc_list = 1
+    let g:syntastic_auto_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_check_on_wq = 0
+    
+    " disable syntastic on the statusline
+    let g:statline_syntastic = 0
+    
+    let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html'] }
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+    " To toggle error checking, ctrl+w, E
+    nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+    let g:syntastic_javascript_checkers = ['jshint'] 
+    " also 'jsl'
+    let g:syntastic_python_checkers = ['flake8', 'pep8', 'pyflakes', 'python']
+    let g:syntastic_typescript_checkers = ['eslint', 'tslint']
+    " also 'tsc' for typescript
+    
+    " Angular
+    let g:syntastic_html_tidy_ignore_errors=[
+        \'proprietary attribute "ng-',
+        \'proprietary attribute "sgfg-'
+    \]
+""" Syntastic settings
 
-" disable syntastic on the statusline
-let g:statline_syntastic = 0
+""" { ctrl+j,k,h,l to switch splits
+    map <C-j> <C-W>j
+    map <C-k> <C-W>k
+    map <C-h> <C-W>h
+    map <C-l> <C-W>l
+"""" } switch splits
 
-" To toggle error checking, ctrl+w, E
-let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [],'passive_filetypes': [] }
-nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
-let g:syntastic_javascript_checkers = ['jshint', 'jsl']
-let g:syntastic_python_checkers = ['flake8', 'pep8', 'pyflakes', 'python']
-let g:syntastic_typescript_checkers = ['eslint', 'tslint']
-"                                       also 'tsc' for typescript
+""" Fix mouse past 220th column {
+    if has("mouse_sgr")
+        set ttymouse=sgr
+    else
+        set ttymouse=xterm2
+    end
+""" }
 
-" Angular
-let g:syntastic_html_tidy_ignore_errors=[
-    \'proprietary attribute "ng-',
-    \'proprietary attribute "sgfg-'
-\]
-" END syntastic settings
-
-" Start: make ctrl+j,k,h,l to switch splits
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
-" End switch splits
-
-""" CtrlP {
+""" CtrlP
     set runtimepath^=~/.vim/bundle/ctrlp.vim
     let g:ctrlp_map = '<c-p>'
     let g:ctrlp_cmd = 'CtrlP'
@@ -196,14 +206,14 @@ map <C-l> <C-W>l
 set path=$PWD/**
     " Sigfig
     if $SIGFIGCONFIG ==# 1
-        set path+=/scripts/references.ts
-        set path+=/scripts/lib/**/*.ts
-        set path+=/scripts/app.ts
-        set path+=/scripts/module.ts
-        set path+=/scripts/util/**/*.ts
-        set path+=/scripts/services/**/*wire*.ts
-        set path+=/scripts/services/**/*.ts
-        set path+=/scripts/**/*.{ts,tsx}
+        set path+=$PWD/**/scripts/references.ts
+        set path+=$PWD/**/scripts/lib/**/*.ts
+        set path+=$PWD/**/scripts/app.ts
+        set path+=$PWD/**/scripts/module.ts
+        set path+=$PWD/**/scripts/util/**/*.ts
+        set path+=$PWD/**/scripts/services/**/*wire*.ts
+        set path+=$PWD/**/scripts/services/**/*.ts
+        set path+=$PWD/**/scripts/**/*.{ts,tsx}
 endif
 """ Path }}
 
