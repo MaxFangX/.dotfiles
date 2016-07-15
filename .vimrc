@@ -155,7 +155,12 @@ cmap w!! w !sudo tee > /dev/null %
     " disable syntastic on the statusline
     let g:statline_syntastic = 0
     
-    let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html'] }
+
+    if $SIGFIGCONFIG ==# 1
+        let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html', 'javascript', 'typescript'] }
+    else
+        let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html'] }
+    endif
 
     " To toggle error checking, ctrl+w, E
     nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
@@ -214,7 +219,7 @@ set path=$PWD/**
         set path+=$PWD/**/scripts/services/**/*wire*.ts
         set path+=$PWD/**/scripts/services/**/*.ts
         set path+=$PWD/**/scripts/**/*.{ts,tsx}
-endif
+    endif
 """ Path }}
 
 " START vim-smooth-scroll
