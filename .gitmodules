@@ -62,3 +62,6 @@
 [submodule "bundle/yajs.vim"]
 	path = bundle/yajs.vim
 	url = https://github.com/othree/yajs.vim
+[submodule "bundle/vim-unimpaired"]
+	path = bundle/vim-unimpaired
+	url = https://github.com/tpope/vim-unimpaired
