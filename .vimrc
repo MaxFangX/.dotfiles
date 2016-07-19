@@ -222,6 +222,26 @@ set path=$PWD/**
     endif
 """ Path }}
 
+""" Relative line numbers {
+    " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
+
+    " Ctrl + n to switch between relative and absolute
+    function! NumberToggle()
+      if(&relativenumber == 1)
+        set number
+      else
+        set relativenumber
+      endif
+    endfunc
+    nnoremap <C-n> :call NumberToggle()<cr>
+    set relativenumber
+    
+    " Set/unset when lose/gain focus
+    :au FocusLost * :set number
+    :au FocusGained * :set relativenumber
+
+""" }
+
 " START vim-smooth-scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 2)<CR>
