@@ -122,11 +122,12 @@ alias gbl="git blame"
 alias grs="git reset"
 alias grsh="git reset HEAD"
 
+alias gsur="git submodule update --recursive"
+alias gsuri="git submodule update --recursive --init"
 
 # Python
 alias py="python"
 alias py3="python3"
-
 
 # Django
 alias pm="python manage.py"
