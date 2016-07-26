@@ -4,7 +4,18 @@
 " For multi-byte character support (CJK support, for example):
 "set fileencodings=ucs-bom,utf-8,cp936,big5,euc-jp,euc-kr,gb18030,latin1
 
-       
+colorscheme badwolf
+syntax on
+let base16colorspace=256
+set t_Co=256
+map <C-c> "+y<CR>"
+
+" Show empty spaces
+set list
+
+" For tabs, > is shown at the beginning, - throughout
+set listchars=tab:>-
+
 if $SIGFIGCONFIG ==# 1
     set noexpandtab
     set copyindent
@@ -80,53 +91,42 @@ set background=dark " When set to "dark", Vim will try to use colors that look
  
 set mouse=a         " Enable the use of the mouse.
 
-" START Vundle settings
+""" Vundle settings {
 
-set nocompatible              " be iMproved, required
-filetype off                  " required
+    set nocompatible              " be iMproved, required
+    filetype off                  " required
+    
+    " set the runtime path to include Vundle and initialize
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+    " alternatively, pass a path where Vundle should install plugins
+    "call vundle#begin('~/some/path/here')
+    
+    " let Vundle manage Vundle, required
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'Valloric/YouCompleteMe'
+    Plugin 'burnettk/vim-angular'
+    
+    " All of your Plugins must be added before the following line
+    call vundle#end()            " required
+    filetype plugin indent on    " required
+    
+    " To ignore plugin indent changes, instead use:
+    "filetype plugin on
+    "
+    " Brief help
+    " :PluginList       - lists configured plugins
+    " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+    " :PluginSearch foo - searches for foo; append `!` to refresh local cache
+    " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+    "
+    " see :h vundle for more details or wiki for FAQ
+    " Put your non-Plugin stuff after this line
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+""" }
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'burnettk/vim-angular'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-
-" END Vundle settings
-
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-
+" Pathogen
 execute pathogen#infect()
-" PERSONAL SETTINGS" 
-colorscheme badwolf
-syntax on
-let base16colorspace=256
-set t_Co=256
-map <C-c> "+y<CR>"
-
-" Show empty spaces
-set list
-set listchars=tab:>-     " > is shown at the beginning, - throughout
-
-" END PERSONAL SETTINGS"
 
 let g:neocomplcache_enable_at_startup = 1
 let g:indentLine_char = '│'
@@ -137,6 +137,7 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=8
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=8
 set laststatus=2
 set synmaxcol=300
+
 " Force saving files that require root permission 
 cmap w!! w !sudo tee > /dev/null %
 
@@ -157,7 +158,7 @@ cmap w!! w !sudo tee > /dev/null %
     
 
     if $SIGFIGCONFIG ==# 1
-        let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html', 'javascript', 'typescript'] }
+        let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html', 'javascript'] }
     else
         let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html'] }
     endif
@@ -239,18 +240,20 @@ set path=$PWD/**
     " Set/unset when lose/gain focus
     :au FocusLost * :set number
     :au FocusGained * :set relativenumber
-
 """ }
 
 " START vim-smooth-scroll
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 2)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 2)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 10, 4)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 10, 4)<CR>
+    noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 2)<CR>
+    noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 2)<CR>
+    noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 10, 4)<CR>
+    noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 10, 4)<CR>
 " END vim-smooth-scroll
 
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+""" Nerdtree {
+    " Start nerdtree when opening vim if no files were specified
+    autocmd StdinReadPre * let s:std_in=1
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+""" }
 
 " Tagbar: F8 shortcut
 nmap <F8> :TagbarToggle<CR>
