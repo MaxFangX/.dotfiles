@@ -10,6 +10,11 @@ let base16colorspace=256
 set t_Co=256
 map <C-c> "+y<CR>"
 
+""" Re-yank text pasted in visual mode {
+    " http://stackoverflow.com/questions/290465/vim-how-to-paste-over-without-overwriting-register
+    xnoremap p pgvy
+""" }
+
 " Show empty spaces
 set list
 
