@@ -160,6 +160,7 @@ alias sw="sass --watch"
 alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
 alias sv="grunt server"
 svp() { grunt server --partner=$1; }
+alias latexmk='latexmk -pdf -pvc'
 
 # Sensitive environment variables
 if [ -f ~/scripts/info.sh ]; then

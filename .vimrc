@@ -284,4 +284,8 @@ set splitright
     endfunction
 """ }
 
-colorscheme badwolf
+" Auto-wrap .tex files at 80 characters
+au BufRead,BufNewFile *.tex setlocal textwidth=80
+
+" Show a right margin at 80 characters
+set colorcolumn=80
