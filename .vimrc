@@ -4,7 +4,6 @@
 " For multi-byte character support (CJK support, for example):
 "set fileencodings=ucs-bom,utf-8,cp936,big5,euc-jp,euc-kr,gb18030,latin1
 
-colorscheme badwolf
 syntax on
 let base16colorspace=256
 set t_Co=256
@@ -111,6 +110,7 @@ set mouse=a         " Enable the use of the mouse.
     Plugin 'VundleVim/Vundle.vim'
     Plugin 'Valloric/YouCompleteMe'
     Plugin 'burnettk/vim-angular'
+    Plugin 'jacoborus/tender'
     
     " All of your Plugins must be added before the following line
     call vundle#end()            " required
@@ -182,6 +182,10 @@ cmap w!! w !sudo tee > /dev/null %
         \'proprietary attribute "sgfg-'
     \]
 """ Syntastic settings
+
+""" { Javascript two space indent
+    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+""" }
 
 """ { ctrl+j,k,h,l to switch splits
     map <C-j> <C-W>j
@@ -289,3 +293,25 @@ au BufRead,BufNewFile *.tex setlocal textwidth=80
 
 " Show a right margin at 80 characters
 set colorcolumn=80
+
+""" Color scheme {
+    " If you have vim >=8.0 or Neovim >= 0.1.5
+    if (has("termguicolors"))
+     set termguicolors
+    endif
+
+    " For Neovim 0.1.3 and 0.1.4
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+
+    " Fix for MacVim
+    let macvim_skip_colorscheme=1
+
+    " set airline theme
+    let g:airline_theme = 'tender'
+
+    " colorscheme badwolf
+    syntax enable
+    colorscheme tender
+""" }
+
