@@ -156,9 +156,9 @@ alias ctagshide="ctags -R -f ./.git/tags"
 alias ctagsfull="ctags --links=no --exclude='@.gitignore' -R ."
 
 # Lightning Network
-alias lncli-alice="lncli --rpcserver=localhost:10009"
-alias lncli-bob="lncli --rpcserver=localhost:10010"
-alias lncli-charlie="lncli --rpcserver=localhost:10013"
+alias lncli-alice="lncli --rpcserver=localhost:10001"
+alias lncli-bob="lncli --rpcserver=localhost:10002"
+alias lncli-charlie="lncli --rpcserver=localhost:10003"
 
 # Misc
 alias sw="sass --watch"
