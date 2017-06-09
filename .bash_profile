@@ -155,6 +155,11 @@ alias pfr="pip freeze > requirements.txt"
 alias ctagshide="ctags -R -f ./.git/tags"
 alias ctagsfull="ctags --links=no --exclude='@.gitignore' -R ."
 
+# Lightning Network
+alias lncli-alice="lncli --rpcserver=localhost:10009"
+alias lncli-bob="lncli --rpcserver=localhost:10010"
+alias lncli-charlie="lncli --rpcserver=localhost:10013"
+
 # Misc
 alias sw="sass --watch"
 alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
