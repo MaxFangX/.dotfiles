@@ -14,12 +14,6 @@ map <C-c> "+y<CR>"
     xnoremap p pgvy
 """ }
 
-" Show empty spaces
-set list
-
-" For tabs, > is shown at the beginning, - throughout
-set listchars=tab:>-
-
 if $SIGFIGCONFIG ==# 1
     set noexpandtab
     set copyindent
@@ -98,26 +92,26 @@ set mouse=a         " Enable the use of the mouse.
 """ Vundle settings {
 
     set nocompatible              " be iMproved, required
-    filetype off                  " required
-    
+    filetype plugin on            " required
+
     " set the runtime path to include Vundle and initialize
     set rtp+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
     " alternatively, pass a path where Vundle should install plugins
     "call vundle#begin('~/some/path/here')
-    
+
     " let Vundle manage Vundle, required
     Plugin 'VundleVim/Vundle.vim'
     Plugin 'Valloric/YouCompleteMe'
     Plugin 'burnettk/vim-angular'
     Plugin 'jacoborus/tender'
-    
+
     " All of your Plugins must be added before the following line
     call vundle#end()            " required
     filetype plugin indent on    " required
-    
+
     " To ignore plugin indent changes, instead use:
-    "filetype plugin on
+    " filetype plugin on
     "
     " Brief help
     " :PluginList       - lists configured plugins
@@ -143,21 +137,22 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=8
 set laststatus=2
 set synmaxcol=300
 
-" Force saving files that require root permission 
-cmap w!! w !sudo tee > /dev/null %
+""" Force saving files that require root permission 
+    cmap w!! w !sudo tee > /dev/null %
+"""
 
-""" Syntastic settings
+""" { Syntastic settings
 
     set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
     " set statusline+=%#warningmsg#
     " set statusline+=%{SyntasticStatuslineFlag()}
     " set statusline+=%*
-    
+
     let g:syntastic_always_populate_loc_list = 1
     let g:syntastic_auto_loc_list = 1
     let g:syntastic_check_on_open = 1
     let g:syntastic_check_on_wq = 0
-    
+
     " disable syntastic on the statusline
     let g:statline_syntastic = 0
     
@@ -175,16 +170,29 @@ cmap w!! w !sudo tee > /dev/null %
     let g:syntastic_python_checkers = ['flake8', 'pep8', 'pyflakes', 'python']
     let g:syntastic_typescript_checkers = ['eslint', 'tslint']
     " also 'tsc' for typescript
-    
     " Angular
     let g:syntastic_html_tidy_ignore_errors=[
         \'proprietary attribute "ng-',
         \'proprietary attribute "sgfg-'
     \]
-""" Syntastic settings
+""" } Syntastic settings
+
+""" { Python two space indent
+    " For tabs, > is shown at the beginning, - throughout
+    autocmd FileType python setlocal listchars=tab:>-
+
+    " Show empty spaces
+    " set list
+""" }
 
 """ { Javascript two space indent
+    " For tabs, > is shown at the beginning, - throughout
+    autocmd FileType javascript setlocal listchars=tab:>-
     autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+""" }
+
+""" { Go tab indent
+    autocmd FileType go setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
 """ }
 
 """ { ctrl+j,k,h,l to switch splits
