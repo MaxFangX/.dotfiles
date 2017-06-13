@@ -202,6 +202,10 @@ set synmaxcol=300
     map <C-l> <C-W>l
 """" } switch splits
 
+""" { jk for Esc key
+    imap jk <Esc>
+""" }
+
 """ Fix mouse past 220th column {
     if has("mouse_sgr")
         set ttymouse=sgr
