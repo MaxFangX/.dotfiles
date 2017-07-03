@@ -8,4 +8,5 @@ cp ~/.vim/.ctags ~
 cp ~/.vim/.tern-config ~
 cp ~/.vim/.latexmkrc ~
 cp ~/.vim/.gitconfig ~
+cp ~/.vim/.profile ~
 source ~/.zshrc

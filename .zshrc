@@ -7,6 +7,9 @@ source ~/.bash_profile
 # Load Mac settings
 source ~/.mac_profile
 
+# Load Ruby settings
+source ~/.profile
+
 ###########################
 # ZSH SETTINGS
 ###########################
