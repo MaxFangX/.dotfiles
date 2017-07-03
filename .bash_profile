@@ -47,6 +47,8 @@ extract () {
   fi
 }
 
+export EDITOR="/usr/bin/vim"
+
 # PhantomJS
 export PATH=$PATH:/home/user/work/phantomjs/bin
 
