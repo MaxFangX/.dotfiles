@@ -7,12 +7,6 @@
 syntax on
 let base16colorspace=256
 set t_Co=256
-map <C-c> "+y<CR>"
-
-""" Re-yank text pasted in visual mode {
-    " http://stackoverflow.com/questions/290465/vim-how-to-paste-over-without-overwriting-register
-    xnoremap p pgvy
-""" }
 
 if $SIGFIGCONFIG ==# 1
     set noexpandtab
@@ -184,6 +178,18 @@ set synmaxcol=300
 
     " Show empty spaces
     " set list
+""" }
+
+""" Re-yank text pasted in visual mode {
+    " http://stackoverflow.com/questions/290465/vim-how-to-paste-over-without-overwriting-register
+    xnoremap p pgvy
+""" }
+
+""" { Copy to OS clipboard from vim
+    " https://stackoverflow.com/questions/677986/vim-copy-selection-to-os-x-clipboard
+    set clipboard=unnamed
+    vmap <C-x> :!pbcopy<CR>  
+vmap <C-c> :w !pbcopy<CR><CR> 
 """ }
 
 """ { Javascript two space indent
