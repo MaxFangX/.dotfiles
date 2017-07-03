@@ -68,3 +68,6 @@
 [submodule "bundle/vim-solidity"]
 	path = bundle/vim-solidity
 	url = https://github.com/tomlion/vim-solidity.git
+[submodule "bundle/tender.vim"]
+	path = bundle/tender.vim
+	url = https://github.com/jacoborus/tender.vim
