@@ -4,8 +4,10 @@
 # Install gpg
 brew install gpg
 
-# Install user executable ruby
-gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+# Install rvm and user executable ruby
+# http://www.moncefbelyamani.com/how-to-install-xcode-homebrew-git-rvm-ruby-on-mac/
+curl -L https://get.rvm.io | bash -s stable --auto-dotfiles --autolibs=enable --rails
+rvm reinstall 2.2.0 --disable-binary
 
 # Install Cmake so that installing submodules works
 brew install cmake
