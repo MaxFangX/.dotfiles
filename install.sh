@@ -49,6 +49,9 @@ brew install thefuck
 # Install the silver searcher
 brew install the_silver_searcher
 
+# Install tldr
+brew install tldr
+
 # Install vim powerline fonts
 # Instructions here: https://github.com/powerline/fonts
 git clone https://github.com/powerline/fonts.git
