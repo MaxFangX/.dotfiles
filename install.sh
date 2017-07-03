@@ -1,3 +1,6 @@
+# Install brew
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
 # Install Cmake so that installing submodules works
 brew install cmake
 
@@ -48,5 +51,5 @@ cd fonts
 cd ..
 rm -rf fonts
 
-# Install vim plugins
+# Install Vundle plugins
 vim +PluginInstall +qall
