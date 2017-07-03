@@ -7,4 +7,5 @@ cp ~/.vim/.mac_profile ~
 cp ~/.vim/.ctags ~
 cp ~/.vim/.tern-config ~
 cp ~/.vim/.latexmkrc ~
+cp ~/.vim/.gitconfig ~
 source ~/.zshrc
