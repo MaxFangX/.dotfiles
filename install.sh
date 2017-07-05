@@ -6,8 +6,8 @@ brew install gpg
 
 # Install rvm and user executable ruby
 # http://www.moncefbelyamani.com/how-to-install-xcode-homebrew-git-rvm-ruby-on-mac/
-curl -L https://get.rvm.io | bash -s stable --auto-dotfiles --autolibs=enable --rails
-rvm reinstall 2.2.0 --disable-binary
+curl -L https://get.rvm.io | bash -s stable --auto-dotfiles --autolibs=enable --ruby
+rvm reinstall 2.4.0 --disable-binary
 
 # Install Cmake so that installing submodules works
 brew install cmake
@@ -53,6 +53,9 @@ brew install the_silver_searcher
 
 # Install tldr
 brew install tldr
+
+# Tree
+brew install tree
 
 # Install vim powerline fonts
 # Instructions here: https://github.com/powerline/fonts
