@@ -4,7 +4,6 @@
 " For multi-byte character support (CJK support, for example):
 "set fileencodings=ucs-bom,utf-8,cp936,big5,euc-jp,euc-kr,gb18030,latin1
 
-syntax on
 let base16colorspace=256
 set t_Co=256
 
@@ -121,6 +120,7 @@ set mouse=a         " Enable the use of the mouse.
 
 " Pathogen
 execute pathogen#infect()
+syntax on
 
 let g:neocomplcache_enable_at_startup = 1
 let g:indentLine_char = '│'
