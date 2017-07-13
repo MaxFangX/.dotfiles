@@ -213,6 +213,11 @@ vmap <C-c> :w !pbcopy<CR><CR>
     imap jk <Esc>
 """ }
 
+""" { emacs movements in vim because Mac has turned me into a blasphemer
+    nmap <C-a> 0
+    nmap <C-e> $
+"""
+
 """ Fix mouse past 220th column {
     if has("mouse_sgr")
         set ttymouse=sgr
@@ -271,10 +276,10 @@ set path=$PWD/**
 """ }
 
 " START vim-smooth-scroll
-    noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 2)<CR>
-    noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 2)<CR>
-    noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 10, 4)<CR>
-    noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 10, 4)<CR>
+    noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 3, 2)<CR>
+    noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 3, 2)<CR>
+    noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 3, 4)<CR>
+    noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 3, 4)<CR>
 " END vim-smooth-scroll
 
 """ Nerdtree {
