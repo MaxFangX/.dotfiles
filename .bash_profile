@@ -77,7 +77,6 @@ alias gs="git status"
 alias gad="git add"
 
 alias gdi="git diff"
-alias gdihh="git diff HEAD^ HEAD"
 alias gdis="git diff --staged"
 
 function gadis { git add "$@"; git diff --staged "$@"; }
