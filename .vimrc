@@ -214,7 +214,7 @@ vmap <C-c> :w !pbcopy<CR><CR>
 """ }
 
 """ { emacs movements in vim because Mac has turned me into a blasphemer
-    nmap <C-a> 0
+    nmap <C-a> ^
     nmap <C-e> $
 """
 
@@ -274,13 +274,6 @@ set path=$PWD/**
     :au FocusLost * :set number
     :au FocusGained * :set relativenumber
 """ }
-
-" START vim-smooth-scroll
-    noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 3, 2)<CR>
-    noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 3, 2)<CR>
-    noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 3, 4)<CR>
-    noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 3, 4)<CR>
-" END vim-smooth-scroll
 
 """ Nerdtree {
     " Start nerdtree when opening vim if no files were specified
