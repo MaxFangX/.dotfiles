@@ -162,6 +162,16 @@ set synmaxcol=300
     let g:syntastic_javascript_checkers = ['jshint', 'jsl'] 
     let g:syntastic_python_checkers = ['flake8', 'pep8', 'pyflakes', 'python']
 
+    """ { Custom Configurations
+
+        " Ignore line too long rule.
+        let g:syntastic_python_flake8_args='--ignore=E501'
+        let g:syntastic_python_pep8_args='--ignore=E501'
+        " More info:
+        " https://stackoverflow.com/questions/28118565/how-can-i-set-the-python-max-allowed-line-length-to-120-in-syntastic-for-vim
+
+    """ }
+
 """ } Syntastic settings
 
 """ { Python two space indent
