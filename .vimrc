@@ -151,7 +151,6 @@ set synmaxcol=300
     " disable syntastic on the statusline
     let g:statline_syntastic = 0
     
-
     if $SIGFIGCONFIG ==# 1
         let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html', 'javascript'] }
     else
@@ -160,16 +159,9 @@ set synmaxcol=300
 
     " To toggle error checking, ctrl+w, E
     nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
-    let g:syntastic_javascript_checkers = ['jshint'] 
-    " also 'jsl'
+    let g:syntastic_javascript_checkers = ['jshint', 'jsl'] 
     let g:syntastic_python_checkers = ['flake8', 'pep8', 'pyflakes', 'python']
-    let g:syntastic_typescript_checkers = ['eslint', 'tslint']
-    " also 'tsc' for typescript
-    " Angular
-    let g:syntastic_html_tidy_ignore_errors=[
-        \'proprietary attribute "ng-',
-        \'proprietary attribute "sgfg-'
-    \]
+
 """ } Syntastic settings
 
 """ { Python two space indent
@@ -186,10 +178,15 @@ set synmaxcol=300
 """ }
 
 """ { Copy to OS clipboard from vim
-    " https://stackoverflow.com/questions/677986/vim-copy-selection-to-os-x-clipboard
     set clipboard=unnamed
-    vmap <C-x> :!pbcopy<CR>  
-vmap <C-c> :w !pbcopy<CR><CR> 
+
+    " https://stackoverflow.com/questions/41798130/copy-paste-in-iterm-vim
+    vmap <C-c> "*y
+
+    " This alternative way to do it doesn't seem to work
+    " https://stackoverflow.com/questions/677986/vim-copy-selection-to-os-x-clipboard
+    " vmap <C-x> :!pbcopy<CR>  
+    " vmap <C-c> :w !pbcopy<CR><CR> 
 """ }
 
 """ { Javascript two space indent

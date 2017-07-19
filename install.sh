@@ -73,6 +73,22 @@ rm -rf fonts
 vim +PluginInstall +qall
 
 ###########################
+# Pip dependencies
+###########################
+
+# Python linters
+pip install pep8
+pip install pyflakes
+pip install flake8
+
+###########################
+# Javascript dependencies
+###########################
+
+# Javascript linters
+npm install -g jshint
+
+###########################
 # Command line tools
 ###########################
 
