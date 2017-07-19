@@ -7,24 +7,18 @@
 let base16colorspace=256
 set t_Co=256
 
-if $SIGFIGCONFIG ==# 1
-    set noexpandtab
-    set copyindent
-    set preserveindent
-    set softtabstop=0
-else
-    set expandtab       " Use the appropriate number of spaces to insert a <Tab>.
-                        " Spaces are used in indents with the '>' and '<' commands
-                        " and when 'autoindent' is on. To insert a real tab when
-                        " 'expandtab' is on, use CTRL-V <Tab>.
+set expandtab       " Use the appropriate number of spaces to insert a <Tab>.
+                    " Spaces are used in indents with the '>' and '<' commands
+                    " and when 'autoindent' is on. To insert a real tab when
+                    " 'expandtab' is on, use CTRL-V <Tab>.
 
-    set smarttab        " When on, a <Tab> in front of a line inserts blanks
-                        " according to 'shiftwidth'. 'tabstop' is used in other
-                        " places. A <BS> will delete a 'shiftwidth' worth of space
-                        " at the start of the line.
+set smarttab        " When on, a <Tab> in front of a line inserts blanks
+                    " according to 'shiftwidth'. 'tabstop' is used in other
+                    " places. A <BS> will delete a 'shiftwidth' worth of space
+                    " at the start of the line.
+
+set softtabstop=4   " Required for correct indent
      
-endif
- 
 set tabstop=4       " Number of spaces that a <Tab> in the file counts for.
  
 set shiftwidth=4    " Number of spaces to use for each step of (auto)indent.
@@ -118,7 +112,7 @@ set mouse=a         " Enable the use of the mouse.
 
 """ }
 
-" Pathogen
+""" { Pathogen
 execute pathogen#infect()
 syntax on
 
@@ -127,10 +121,16 @@ let g:indentLine_char = '│'
 let g:notes_directories = ['~/Notes/']
 let g:notes_suffix = '.note'
 
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=8
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=8
 set laststatus=2
 set synmaxcol=300
+""" } Pathogen
+
+""" { Vim indent guides
+    " https://github.com/nathanaelkane/vim-indent-guides
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=3
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=4
+    let g:indent_guides_enable_on_vim_startup = 1
+""" }
 
 """ Force saving files that require root permission 
     cmap w!! w !sudo tee > /dev/null %
@@ -312,8 +312,9 @@ set splitright
     endfunction
 """ }
 
-" Auto-wrap .tex files at 80 characters
+" Auto-wrap .tex and .py files at 80 characters
 au BufRead,BufNewFile *.tex setlocal textwidth=80
+au BufRead,BufNewFile *.py setlocal textwidth=80
 
 " Show a right margin at 80 characters
 set colorcolumn=80
