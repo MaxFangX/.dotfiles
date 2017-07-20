@@ -187,8 +187,10 @@ set synmaxcol=300
     xnoremap p pgvy
 """ }
 
-""" { Copy to OS clipboard from vim
-    set clipboard=unnamed
+""" { Copy and paste settings
+
+    " Copy to OS clipboard from vim
+    " set clipboard=unnamed
 
     " https://stackoverflow.com/questions/41798130/copy-paste-in-iterm-vim
     vmap <C-c> "*y
@@ -217,7 +219,7 @@ set synmaxcol=300
 """" } switch splits
 
 """ { jk for Esc key
-    imap jk <Esc>
+    imap jk <Esc>l
 """ }
 
 """ { emacs movements in vim because Mac has turned me into a blasphemer
@@ -315,6 +317,7 @@ set splitright
 " Auto-wrap .tex and .py files at 80 characters
 au BufRead,BufNewFile *.tex setlocal textwidth=80
 au BufRead,BufNewFile *.py setlocal textwidth=80
+au BufRead,BufNewFile *.md setlocal textwidth=80
 
 " Show a right margin at 80 characters
 set colorcolumn=80
