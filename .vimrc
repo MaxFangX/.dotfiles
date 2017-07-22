@@ -314,9 +314,8 @@ set splitright
     endfunction
 """ }
 
-" Auto-wrap .tex and .py files at 80 characters
+" Auto-wrap .tex and .md files at 80 characters
 au BufRead,BufNewFile *.tex setlocal textwidth=80
-au BufRead,BufNewFile *.py setlocal textwidth=80
 au BufRead,BufNewFile *.md setlocal textwidth=80
 
 " Show a right margin at 80 characters
