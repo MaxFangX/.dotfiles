@@ -219,7 +219,7 @@ set synmaxcol=300
 """" } switch splits
 
 """ { jk for Esc key
-    imap jk <Esc>l
+    imap jk <Esc>
 """ }
 
 """ { emacs movements in vim because Mac has turned me into a blasphemer
