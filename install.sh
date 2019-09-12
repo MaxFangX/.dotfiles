@@ -14,10 +14,8 @@ brew cask install java
 # Install gpg
 brew install gpg
 
-# Install rvm and user executable ruby
-# http://www.moncefbelyamani.com/how-to-install-xcode-homebrew-git-rvm-ruby-on-mac/
-curl -L https://get.rvm.io | bash -s stable --auto-dotfiles --autolibs=enable --ruby
-rvm reinstall 2.4.0 --disable-binary
+# Install ruby
+brew install ruby
 
 # Install Cmake so that installing submodules works
 brew install cmake
@@ -28,9 +26,19 @@ brew install node
 # Install Python
 brew install python
 
+# Fix Python
+# https://stackoverflow.com/questions/47513024/how-to-fix-permissions-on-home-brew-on-macos-high-sierra
+sudo mkdir /usr/local/Frameworks
+sudo chown $(whoami):admin /usr/local/Frameworks    
+brew link python3
+# Check python --version is a python3 version
+
 # Install pip and virtualenv
-sudo easy_install pip
-pip install virtualenv
+# Might error if on VPN
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
+# Test with pip --version before:
+rm get-pip
 
 # Install PostGreSQL
 brew install postgresql
@@ -39,38 +47,38 @@ brew install postgresql
 # VIM
 ###########################
 
-# Update submodules
-git submodule update --init --recursive
-
 # YouCompleteMe
 # http://www.nyayapati.com/srao/2014/12/installing-homebrew-macvim-with-youcompleteme-on-yosemite/
-pushd ~/.vim/bundle/YouCompleteMe
-./install.py --clang-completer
-popd
-
-# Tsuquyomi https://github.com/Quramy/tsuquyomi
-git clone https://github.com/Shougo/vimproc.vim.git ~/.vim/bundle/vimproc.vim
-pushd ~/.vim/bundle/vimproc.vim
-make
-popd
-git clone https://github.com/Quramy/tsuquyomi.git ~/.vim/bundle/tsuquyomi
+# requires cmake
+# YCM must be install before submodules can be updated
+cd ~/.vim/bundle/YouCompleteMe
+mkdir YouCompleteMe/ycmbuild
+cd ycmbuild
+cmake -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+make ycm_core
+cd ~/.vim
 
 # Tern for vim https://github.com/ternjs/tern_for_vim
 # requires node
-pushd ~/.vim/bundle/tern_for_vim
+cd ~/.vim/bundle/tern_for_vim
 npm install
-popd
+cd ~/.vim
 
 # Install vim powerline fonts
 # Instructions here: https://github.com/powerline/fonts
+cd ~/.vim
 git clone https://github.com/powerline/fonts.git
 cd fonts
 ./install.sh
-cd ..
+cd ~/.vim
 rm -rf fonts
 
 # Install Vundle plugins
 vim +PluginInstall +qall
+
+# Update submodules
+cd ~/.vim
+git submodule update --init --recursive
 
 ###########################
 # Pip dependencies
@@ -95,11 +103,9 @@ npm install -g jshint
 # ZSH
 # Instructions here: http://sourabhbajaj.com/mac-setup/iTerm/zsh.html
 brew install zsh zsh-completions
-curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
-chsh -s /usr/local/bin/zsh
-chsh -s /bin/zsh
 
 # Oh my zsh
+# VPN may mess with this
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # Install thefuck
@@ -117,7 +123,3 @@ brew install tree
 ###########################
 # Misc
 ###########################
-
-# Disable Chrome's two finger drag
-# https://apple.stackexchange.com/questions/21236/how-do-i-disable-chromes-two-finger-back-forward-navigation
-defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool FALSE

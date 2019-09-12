@@ -71,10 +71,6 @@ export MANPATH="/usr/local/man:$MANPATH"
 source $ZSH/oh-my-zsh.sh
 fpath=(/usr/local/share/zsh-completions $fpath)
 
-# Install thefuck: https://github.com/nvbn/thefuck
-# brew install thefuck
-eval "$(thefuck --alias)"
-
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 

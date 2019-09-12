@@ -16,6 +16,9 @@ alias py=python3
 alias rmpyc="find ./ -name '*pyc' | xargs rm -f"
 alias rmswp="find ./ -name '*swp' | xargs rm -f"
 
+# thefuck alias
+eval "$(thefuck --alias)"
+
 # cdls and cdl as commands to change directory and list
 cdls() { cd "$@" && ls; }
 cdl() { cd "$@" && l; }
@@ -48,6 +51,9 @@ extract () {
 }
 
 export EDITOR="/usr/bin/vim"
+
+# Python
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"
 
 # PhantomJS
 export PATH=$PATH:/home/user/work/phantomjs/bin
@@ -127,8 +133,9 @@ alias gsur="git submodule update --recursive"
 alias gsuri="git submodule update --recursive --init"
 
 # Python
-alias py="python"
+alias py="python3"
 alias py3="python3"
+alias python="python3"
 
 # Django
 alias pm="python manage.py"
@@ -149,6 +156,7 @@ alias pmmfi="python manage.py migrate --fake-initial"
 alias pmc="python manage.py check -v 2"
 
 # Pip
+alias pip="pip3"
 alias pirr="pip install -r requirements.txt"
 alias pfr="pip freeze > requirements.txt"
 
@@ -179,6 +187,3 @@ export PATH="/usr/local/sbin:$PATH"
 if [ -f ~/scripts/local.sh ]; then
     . ~/scripts/local.sh
 fi
-
-# TODO move this into script
-export PATH="~/sigfig/ngts/ngts_dev_tools/bin:$PATH"
