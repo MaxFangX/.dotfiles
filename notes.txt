@@ -4,3 +4,9 @@ then logout + in
 
 Update submodules
 git submodule update --init --recursive
+
+Ignore untracked files in submodules:
+add "ignore = dirty"
+
+Allow pushing to repo using SSH
+git remote set-url origin git@github.com:<Username>/<Project>.git
