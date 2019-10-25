@@ -176,6 +176,7 @@ alias sv="grunt server"
 svp() { grunt server --partner=$1; }
 alias latexmk='latexmk -pdf -pvc'
 alias fucking='sudo'
+alias damnshortcuts="mv ~/Library/Preferences/com.apple.symbolichotkeys.plist ~/Desktop/com.apple.symbolichotkeys.plist"
 
 # Sensitive environment variables
 if [ -f ~/scripts/info.sh ]; then
