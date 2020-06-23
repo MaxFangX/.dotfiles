@@ -1,0 +1,34 @@
+{
+    "title": "Control + q to Escape",
+    "rules": [
+        {
+            "description": "Control + q to escape",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "q",
+                        "modifiers": {
+                            "mandatory": [
+                                "control"
+                            ],
+                            "optional": [
+                                "caps_lock"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "escape"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "frontmost_application_unless"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}
