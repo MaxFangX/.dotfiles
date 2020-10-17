@@ -123,3 +123,9 @@ brew install tree
 ###########################
 # Misc
 ###########################
+
+# Make a github folder if it doesn't already exist
+mkdir -p ~/github
+
+# Clone the repo required for the cputemp alias
+git clone https://github.com/lavoiesl/osx-cpu-temp
