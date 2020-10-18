@@ -129,3 +129,6 @@ mkdir -p ~/github
 
 # Clone the repo required for the cputemp alias
 git clone https://github.com/lavoiesl/osx-cpu-temp
+
+# Install coreutils required for sha256sum
+brew install coreutils
