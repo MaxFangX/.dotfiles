@@ -1,5 +1,5 @@
 {
-    "title": "Left control + yuio as arrow keys",
+    "title": "Left control + yuio as arrow keys. Compatible with critical emacs shortcuts and works with shift/option/command.",
     "rules": [
         {
             "description": "Left control + yuio as arrow keys",
@@ -12,7 +12,11 @@
                                 "control"
                             ],
                             "optional": [
-                                "caps_lock"
+                                "caps_lock",
+                                "command",
+                                "option",
+                                "shift",
+                                "fn"
                             ]
                         }
                     },
@@ -36,7 +40,11 @@
                                 "control"
                             ],
                             "optional": [
-                                "caps_lock"
+                                "caps_lock",
+                                "command",
+                                "option",
+                                "shift",
+                                "fn"
                             ]
                         }
                     },
@@ -60,7 +68,11 @@
                                 "control"
                             ],
                             "optional": [
-                                "caps_lock"
+                                "caps_lock",
+                                "command",
+                                "option",
+                                "shift",
+                                "fn"
                             ]
                         }
                     },
@@ -84,7 +96,11 @@
                                 "control"
                             ],
                             "optional": [
-                                "caps_lock"
+                                "caps_lock",
+                                "command",
+                                "option",
+                                "shift",
+                                "fn"
                             ]
                         }
                     },
