@@ -55,11 +55,8 @@ export EDITOR="/usr/bin/vim"
 # Python
 export PATH="/usr/local/opt/python/libexec/bin:$PATH"
 
-# PhantomJS
-export PATH=$PATH:/home/user/work/phantomjs/bin
-
-# NodeJs
-export PATH=$PATH:/home/user/.nvm/v0.10.38/bin
+# Rust
+export PATH="$PATH:$HOME/.cargo/bin"
 
 # Prevent production server api calls
 export CHANGECOIN_API=http://localhost:8000/v1
@@ -170,6 +167,7 @@ alias lncli-bob="lncli --macaroonpath=data/admin.macaroon --rpcserver=localhost:
 alias lncli-charlie="lncli --macaroonpath=data/admin.macaroon --rpcserver=localhost:10003"
 
 # Misc
+alias lt="ls"
 alias sw="sass --watch"
 alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
 alias sv="grunt server"
