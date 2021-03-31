@@ -1,0 +1,66 @@
+{
+    "title": "Left control + cv as up/down. Use right control if control+c is needed, such as in bash.",
+    "rules": [
+        {
+            "description": "Left control + cv as up/down",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "c",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_control"
+                            ],
+                            "optional": [
+                                "caps_lock",
+                                "command",
+                                "option",
+                                "shift",
+                                "fn"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "down_arrow"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "frontmost_application_unless"
+                        }
+                    ],
+                    "type": "basic"
+                },
+                {
+                    "from": {
+                        "key_code": "v",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_control"
+                            ],
+                            "optional": [
+                                "caps_lock",
+                                "command",
+                                "option",
+                                "shift",
+                                "fn"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "up_arrow"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "frontmost_application_unless"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

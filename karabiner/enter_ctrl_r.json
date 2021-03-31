@@ -1,0 +1,34 @@
+{
+    "title": "Left hand enter",
+    "rules": [
+        {
+            "description": "Enter with ctrl r",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "r",
+                        "modifiers": {
+                            "mandatory": [
+                                "control"
+                            ],
+                            "optional": [
+                                "caps_lock"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "return_or_enter"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "frontmost_application_unless"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

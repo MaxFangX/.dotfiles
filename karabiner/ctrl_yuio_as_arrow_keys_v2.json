@@ -1,5 +1,5 @@
 {
-    "title": "Left control + yuio as arrow keys. Compatible with critical emacs shortcuts and works with shift/option/command.",
+    "title": "Left control + yuio as arrow keys v2. Compatible with critical emacs shortcuts and works with shift/option/command.",
     "rules": [
         {
             "description": "Left control + yuio as arrow keys",
@@ -9,7 +9,7 @@
                         "key_code": "y",
                         "modifiers": {
                             "mandatory": [
-                                "control"
+                                "left_control"
                             ],
                             "optional": [
                                 "caps_lock",
@@ -37,7 +37,7 @@
                         "key_code": "u",
                         "modifiers": {
                             "mandatory": [
-                                "control"
+                                "left_control"
                             ],
                             "optional": [
                                 "caps_lock",
@@ -65,7 +65,7 @@
                         "key_code": "i",
                         "modifiers": {
                             "mandatory": [
-                                "control"
+                                "left_control"
                             ],
                             "optional": [
                                 "caps_lock",
@@ -93,7 +93,7 @@
                         "key_code": "o",
                         "modifiers": {
                             "mandatory": [
-                                "control"
+                                "left_control"
                             ],
                             "optional": [
                                 "caps_lock",

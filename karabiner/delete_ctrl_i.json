@@ -1,0 +1,34 @@
+{
+    "title": "Left hand delete",
+    "rules": [
+        {
+            "description": "Backspace with ctrl i",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "g",
+                        "modifiers": {
+                            "mandatory": [
+                                "control"
+                            ],
+                            "optional": [
+                                "caps_lock"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "delete_or_backspace"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "frontmost_application_unless"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}
