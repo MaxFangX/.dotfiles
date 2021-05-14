@@ -65,7 +65,9 @@ export CHANGECOIN_API=http://localhost:8000/v1
 gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
 
 # Hack for YCM to work
-export DYLD_FORCE_FLAT_NAMESPACE=1
+# Removed because it causes LibreSSL to not work when downloading
+# packages from crates.io
+# export DYLD_FORCE_FLAT_NAMESPACE=1
 
 # Vim
 export EDITOR="/usr/local/bin/vim"
