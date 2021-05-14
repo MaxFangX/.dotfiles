@@ -218,8 +218,42 @@ set synmaxcol=300
     map <C-l> <C-W>l
 """" } switch splits
 
-""" { jk for Esc key
-    imap jk <Esc>
+""" { jk for Esc key, but is ht under DVORAK
+    imap ht <Esc>
+""" }
+
+""" { Fix weird hjkl positioning under DVORAK
+    nnoremap d h
+    nnoremap h j
+    nnoremap t k
+    nnoremap n l
+
+    " Apply during visual and select modes
+    vnoremap d h
+    vnoremap h j
+    vnoremap t k
+    vnoremap n l
+
+    " Has to apply during commands as well, such as delete up, yank down
+    " Only for up and down, kk
+    onoremap h j
+    onoremap t k
+
+    " k or K for delete (Think: "(k)ill")
+    nnoremap k d
+    nnoremap K D
+    " apply during visual and select modes as well
+    vnoremap k d
+    vnoremap K D
+    " kk to delete line: the second k is in command mode
+    onoremap k d
+
+    " j and J for find next and prev (Think: "down (j)")
+    nnoremap j n
+    nnoremap J N
+
+    " L for Join lines (which was just overridden by find prev) (Think: "(L)ine")
+    nnoremap L J
 """ }
 
 """ { emacs movements in vim because Mac has turned me into a blasphemer
