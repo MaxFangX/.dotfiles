@@ -211,12 +211,12 @@ set synmaxcol=300
     autocmd FileType go setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
 """ }
 
-""" { ctrl+j,k,h,l to switch splits
-    map <C-j> <C-W>j
-    map <C-k> <C-W>k
-    map <C-h> <C-W>h
-    map <C-l> <C-W>l
-"""" } switch splits
+""" { ctrl+W then d,h,t,n to switch splits
+    noremap <C-W>d <C-W>h
+    noremap <C-W>h <C-W>j
+    noremap <C-W>t <C-W>k
+    noremap <C-W>n <C-W>l
+"""" }
 
 """ { jk for Esc key, but is ht under DVORAK
     imap ht <Esc>
