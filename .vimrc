@@ -211,6 +211,10 @@ set synmaxcol=300
     autocmd FileType go setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
 """ }
 
+""" { Cut up to line end while in insert mode
+    inoremap <C-k> <Esc>lDa
+""" }
+
 """ { ctrl+W then d,h,t,n to switch splits
     noremap <C-W>d <C-W>h
     noremap <C-W>h <C-W>j
