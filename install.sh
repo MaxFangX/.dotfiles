@@ -8,6 +8,9 @@
 # Install brew cask
 brew tap caskroom/cask
 
+# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
 # Java
 brew cask install java
 
@@ -119,6 +122,9 @@ brew install tldr
 
 # Tree
 brew install tree
+
+# Ripgrep
+brew install ripgrep
 
 ###########################
 # Misc
