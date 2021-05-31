@@ -109,7 +109,7 @@ brew install zsh zsh-completions
 
 # Oh my zsh
 # VPN may mess with this
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Install thefuck
 brew install thefuck
