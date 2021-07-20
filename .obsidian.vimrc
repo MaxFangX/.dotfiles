@@ -54,6 +54,11 @@ noremap L J
 
 """ { emacs movements in vim because Mac has turned me into a blasphemer
 "(n)"
-map <C-a> ^
-map <C-e> $
+nmap <C-a> ^
+nmap <C-e> $
 """
+
+""" { Fix emacs movements in insert mode again
+imap <C-a> <Esc>I
+imap <C-e> <Esc>A
+""" }
