@@ -9,4 +9,5 @@ cp ~/.vim/.tern-config ~
 cp ~/.vim/.latexmkrc ~
 cp ~/.vim/.gitconfig ~
 cp ~/.vim/.profile ~
+cp ~/.vim/.obsidian.vimrc ~/Google\ Drive/Obsidian
 source ~/.zshrc
