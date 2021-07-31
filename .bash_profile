@@ -171,6 +171,7 @@ alias lncli-charlie="lncli --macaroonpath=data/admin.macaroon --rpcserver=localh
 # Cargo / Rust
 alias crc="cargo check"
 alias crr="cargo run"
+alias crrr="cargo run --release"
 alias crb="cargo build"
 alias crbr="cargo build --release"
 alias crf="cargo fmt --all"
