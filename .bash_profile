@@ -188,6 +188,7 @@ alias fucking='sudo'
 alias damnshortcuts="mv ~/Library/Preferences/com.apple.symbolichotkeys.plist ~/Desktop/com.apple.symbolichotkeys.plist"
 alias cputemp="~/github/osx-cpu-temp/osx-cpu-temp"
 alias eutykhia="cargo run" # just for fun
+alias tyche="cargo run --release" # just for fun
 
 # Sensitive environment variables
 if [ -f ~/scripts/info.sh ]; then
