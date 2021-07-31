@@ -168,6 +168,14 @@ alias lncli-alice="lncli --macaroonpath=data/admin.macaroon --rpcserver=localhos
 alias lncli-bob="lncli --macaroonpath=data/admin.macaroon --rpcserver=localhost:10002"
 alias lncli-charlie="lncli --macaroonpath=data/admin.macaroon --rpcserver=localhost:10003"
 
+# Cargo / Rust
+alias crc="cargo check"
+alias crr="cargo run"
+alias crb="cargo build"
+alias crbr="cargo build --release"
+alias crf="cargo fmt --all"
+alias crfc="cargo fmt --all && cargo clippy --workspace --all-targets -- --deny=warnings"
+
 # Misc
 alias lt="ls"
 alias sw="sass --watch"
