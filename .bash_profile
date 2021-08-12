@@ -57,6 +57,7 @@ export PATH="/usr/local/opt/python/libexec/bin:$PATH"
 # Rust
 export PATH="$PATH:$HOME/.cargo/bin"
 export RUST_BACKTRACE=1
+export RUST_LOG=info
 
 # usage: gerrit [clone] [project]
 gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
