@@ -50,16 +50,13 @@ extract () {
   fi
 }
 
-export EDITOR="/usr/bin/vim"
 
 # Python
 export PATH="/usr/local/opt/python/libexec/bin:$PATH"
 
 # Rust
 export PATH="$PATH:$HOME/.cargo/bin"
-
-# Prevent production server api calls
-export CHANGECOIN_API=http://localhost:8000/v1
+export RUST_BACKTRACE=1
 
 # usage: gerrit [clone] [project]
 gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
@@ -70,6 +67,7 @@ gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
 # export DYLD_FORCE_FLAT_NAMESPACE=1
 
 # Vim
+# export EDITOR="/usr/bin/vim"
 export EDITOR="/usr/local/bin/vim"
 
 # Java
