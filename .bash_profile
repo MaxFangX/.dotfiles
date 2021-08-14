@@ -174,7 +174,7 @@ alias crrr="cargo run --release"
 alias crb="cargo build"
 alias crbr="cargo build --release"
 alias crf="cargo fmt --all"
-alias crfc="cargo fmt --all && cargo clippy --workspace --all-targets -- --deny=warnings"
+alias crfc="cargo fmt --all && cargo clippy --workspace --all-targets"
 
 # Misc
 alias lt="ls"
