@@ -222,8 +222,10 @@ set synmaxcol=300
     noremap <C-W>n <C-W>l
 """" }
 
-""" { jk for Esc key, but is ht under DVORAK
-    imap ht <Esc>
+""" { hn for Esc key under DVORAK
+    imap hn <Esc>
+    " Why not try it too
+    imap snth <Esc>
 """ }
 
 """ { Fix weird hjkl positioning under DVORAK
