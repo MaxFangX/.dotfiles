@@ -127,9 +127,9 @@ set synmaxcol=300
 
 """ { Vim indent guides
     " https://github.com/nathanaelkane/vim-indent-guides
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=3
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=4
-    let g:indent_guides_enable_on_vim_startup = 1
+    " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=3
+    " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=4
+    " let g:indent_guides_enable_on_vim_startup = 1
 """ }
 
 """ Force saving files that require root permission 
@@ -378,6 +378,6 @@ set colorcolumn=80
 
     " colorscheme
     syntax enable
-    colorscheme tender
+    " colorscheme tender
 """ }
 

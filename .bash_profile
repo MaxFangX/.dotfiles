@@ -59,6 +59,10 @@ export PATH="$PATH:$HOME/.cargo/bin"
 export RUST_BACKTRACE=1
 export RUST_LOG=info
 
+# Go
+export GOPATH=~/gocode
+export PATH=$PATH:$GOPATH/bin
+
 # usage: gerrit [clone] [project]
 gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
 
@@ -68,8 +72,9 @@ gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
 # export DYLD_FORCE_FLAT_NAMESPACE=1
 
 # Vim
-# export EDITOR="/usr/bin/vim"
-export EDITOR="/usr/local/bin/vim"
+# export EDITOR="/usr/bin/nvim"
+export EDITOR="/usr/local/bin/nvim"
+alias vim=nvim
 
 # Java
 alias javat="java org.junit.runner.JUnitCore"
