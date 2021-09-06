@@ -80,6 +80,9 @@ alias vim=nvim
 alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
 
+# fzf key bindings - see --bind in :Man fzf (in vim) for details
+export FZF_DEFAULT_OPTS="--bind=d:left,h:down,t:up,n:right"
+
 # Git
 alias gs="git status"
 
@@ -193,6 +196,7 @@ alias damnshortcuts="mv ~/Library/Preferences/com.apple.symbolichotkeys.plist ~/
 alias cputemp="~/github/osx-cpu-temp/osx-cpu-temp"
 alias eutykhia="cargo run" # just for fun
 alias tyche="cargo run --release" # just for fun
+alias lc="lncli" # lncli is awkward to type in DVORAK
 
 # Sensitive environment variables
 if [ -f ~/scripts/info.sh ]; then

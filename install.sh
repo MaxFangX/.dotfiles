@@ -10,6 +10,7 @@ brew tap caskroom/cask
 
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup update
 
 # Java
 brew cask install java
@@ -50,38 +51,14 @@ brew install postgresql
 # VIM
 ###########################
 
-# YouCompleteMe
-# http://www.nyayapati.com/srao/2014/12/installing-homebrew-macvim-with-youcompleteme-on-yosemite/
-# requires cmake
-# YCM must be install before submodules can be updated
-cd ~/.vim/bundle/YouCompleteMe
-mkdir YouCompleteMe/ycmbuild
-cd ycmbuild
-cmake -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
-make ycm_core
-cd ~/.vim
-
 # Tern for vim https://github.com/ternjs/tern_for_vim
 # requires node
 cd ~/.vim/bundle/tern_for_vim
 npm install
 cd ~/.vim
 
-# Install vim powerline fonts
-# Instructions here: https://github.com/powerline/fonts
-cd ~/.vim
-git clone https://github.com/powerline/fonts.git
-cd fonts
-./install.sh
-cd ~/.vim
-rm -rf fonts
-
-# Install Vundle plugins
-vim +PluginInstall +qall
-
-# Update submodules
-cd ~/.vim
-git submodule update --init --recursive
+# Install vim-plug plugins
+vim +PlugInstall
 
 ###########################
 # Pip dependencies
@@ -100,6 +77,19 @@ pip install flake8
 npm install -g jshint
 
 ###########################
+# Rust / Cargo
+###########################
+
+# See installed packages:
+cargo install --list
+
+# Cargo watch
+cargo install cargo-watch
+
+# Cargo crev
+cargo instnall cargo-crev
+
+###########################
 # Command line tools
 ###########################
 
@@ -111,13 +101,10 @@ brew install zsh zsh-completions
 # VPN may mess with this
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# Install thefuck
+# thefuck
 brew install thefuck
 
-# Install the silver searcher
-brew install the_silver_searcher
-
-# Install tldr
+# tldr
 brew install tldr
 
 # Tree
@@ -125,6 +112,11 @@ brew install tree
 
 # Ripgrep
 brew install ripgrep
+
+# fzf
+brew install fzf
+# To install useful key bindings and fuzzy completion:
+$(brew --prefix)/opt/fzf/install
 
 ###########################
 # Misc
