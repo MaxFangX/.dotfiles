@@ -433,6 +433,10 @@
         \     'PrtSelectMove("t")': ['<c-t>', '<up>'],
         \ }
 
+    " Disable jump to file if it's already open, so it's easy to open multiple
+    " splits of the same file
+    let g:ctrlp_switch_buffer = 0
+
     " CtrlP-specific ignore
     let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|DS_Store)|(\.(swp|ico|git|svn))$'
 
@@ -442,7 +446,6 @@
       let g:ctrlp_user_command = 'rg --files %s'
       let g:ctrlp_use_caching = 0
       let g:ctrlp_working_path_mode = 'ra'
-      let g:ctrlp_switch_buffer = 'et'
     endif
 """ }
 
