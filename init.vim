@@ -309,9 +309,11 @@
         Plug 'tpope/vim-repeat'         " Plugin maps are repeatable
         Plug 'tpope/vim-fugitive'       " Arbitrary git with :Git or just :G
         Plug 'tpope/vim-commentary'     " Comment / uncomment
+        Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
 
         Plug 'preservim/nerdtree'       " File system explorer
         Plug 'kien/ctrlp.vim'           " Fuzzy file search
+        Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
         """ For code completion
         Plug 'ycm-core/YouCompleteMe'
@@ -376,6 +378,8 @@
 """ }
 
 """ { NERDTree
+    " Toggle show NERDTree with Option+8
+    nnoremap • :NERDTreeToggle<Enter>
 
     " No existing mapping h
     " Undo existing mapping t
@@ -391,12 +395,20 @@
     let NERDTreeMenuUp='t'        " Navigation
     let NERDTreeMapOpenVSplit='v' " vsplit
     let NERDTreeMapOpenSplit='s'  " split
-    " let NERDTreeMenuOpenInTabSilent='T' " can't get tab to workk
+    " let NERDTreeMenuOpenInTabSilent='T' " can't get tab to work
     " let NERDTreeMenuOpenInTab='T'       " can't get tab to work
 
-    " Start NERDTree. If a file is specified, move the cursor to its window.
+    " Start NERDTree when Vim is started without file arguments.
     autocmd StdinReadPre * let s:std_in=1
-    autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
+    autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+
+    " Start NERDTree if Vim is started with 0 file arguments or >=2 file args,
+    " move the cursor to the other window if it was started with >= 2 file args
+    autocmd VimEnter * if argc() == 0 || argc() >= 2 | NERDTree | endif
+    autocmd VimEnter * if argc() >= 2 | wincmd p | endif
+
+    " Open the existing NERDTree on each new tab.
+    autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
 
     " Exit Vim if NERDTree is the only window remaining in the only tab.
     autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
@@ -423,6 +435,15 @@
 
     " CtrlP-specific ignore
     let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|DS_Store)|(\.(swp|ico|git|svn))$'
+
+    " Use with ripgrep
+    " https://www.philipbradley.net/posts/2017-03-29-ripgrep-with-ctrlp-and-vim/
+    if executable('rg')
+      let g:ctrlp_user_command = 'rg --files %s'
+      let g:ctrlp_use_caching = 0
+      let g:ctrlp_working_path_mode = 'ra'
+      let g:ctrlp_switch_buffer = 'et'
+    endif
 """ }
 
 """ { Plugin Options - rust-analyzer
