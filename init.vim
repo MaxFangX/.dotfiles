@@ -102,7 +102,10 @@
     set mouse=a
 """ }
 
-""" {
+""" { Leader Key
+    " This setting must occur before any mapping that uses <leader>
+    " Consider '\' (default) or ',' as alternatives
+    let mapleader = ' '
 """ }
 
 """ { DVORAK - Splits
