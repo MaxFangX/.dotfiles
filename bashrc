@@ -100,4 +100,4 @@ if ! shopt -oq posix; then
 fi
 
 # Load common settings
-source ~/.bash_profile
+source ~/.common

@@ -1,6 +1,6 @@
 # Copy over the dotfiles
 cp ~/.bashrc ~/.dotfiles/bashrc
-cp ~/.bash_profile ~/.dotfiles/bash_profile
+cp ~/.common ~/.dotfiles/common
 cp ~/.zshrc ~/.dotfiles/zshrc
 cp ~/.gitconfig ~/.dotfiles/gitconfig
 

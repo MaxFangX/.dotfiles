@@ -90,4 +90,4 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 ###########################
 
 # Load settings common to both bash and zsh
-source ~/.bash_profile
+source ~/.common
