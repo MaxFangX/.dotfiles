@@ -123,7 +123,8 @@
 """" }
 
 """ { DVORAK - hn for Esc key
-    imap hn <Esc>
+    " l at the end because the cursor moves left one tick by default
+    inoremap hn <Esc>l
 """ }
 
 """ { DVORAK - Fix weird hjkl positioning
@@ -467,8 +468,41 @@
 """ { nvim-lspconfig General
     " https://github.com/neovim/nvim-lspconfig#rust_analyzer
 
-    " Default minimal config
-    lua require'lspconfig'.rust_analyzer.setup{}
+    " Default minimal config - insufficient
+    " lua require'lspconfig'.rust_analyzer.setup{}
+
+    " Need loadOutDirsFromCheck for compiled .proto files (confirmed err o.w.)
+    " - See: https://crates.io/crates/tonic
+
+lua << EOF
+local nvim_lsp = require'lspconfig'
+
+local on_attach = function(client)
+    require'completion'.on_attach(client)
+end
+
+nvim_lsp.rust_analyzer.setup({
+    on_attach=on_attach,
+    settings = {
+        ["rust-analyzer"] = {
+            assist = {
+                importGranularity = "module",
+                importPrefix = "by_self",
+            },
+            cargo = {
+                loadOutDirsFromCheck = true -- Required to see compiled .proto
+            },
+            procMacro = {
+                enable = true
+            },
+        }
+    }
+})
+EOF
+
+
+
+
 """ }
 
 """ { Code navigation shortcut examples - integrate these
