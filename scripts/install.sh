@@ -51,12 +51,6 @@ brew install postgresql
 # VIM
 ###########################
 
-# Tern for vim https://github.com/ternjs/tern_for_vim
-# requires node
-cd ~/.vim/bundle/tern_for_vim
-npm install
-cd ~/.vim
-
 # Install vim-plug plugins
 vim +PlugInstall
 

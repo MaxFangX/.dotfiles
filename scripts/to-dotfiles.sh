@@ -1,11 +1,10 @@
 # Copy over the dotfiles
-cp ~/.ideavimrc ~/.vim/nvim/init.vim
-cp ~/.bashrc ~/.vim/.bashrc
-cp ~/.bash_profile ~/.vim/.bash_profile
-cp ~/.zshrc ~/.vim/.zshrc
-cp ~/.gitconfig ~/.vim/.gitconfig
+cp ~/.bashrc ~/.dotfiles/bashrc
+cp ~/.bash_profile ~/.dotfiles/bash_profile
+cp ~/.zshrc ~/.dotfiles/zshrc
+cp ~/.gitconfig ~/.dotfiles/gitconfig
 
 # Neovim
-cp ~/.config/nvim/init.vim ~/.vim/nvim
-rm -rf ~/.vim/after
-cp -R ~/.config/nvim/after ~/.vim/nvim
+cp ~/.config/nvim/init.vim ~/.dotfiles/nvim
+rm -rf ~/.dotfiles/nvim/after
+cp -R ~/.config/nvim/after ~/.dotfiles/nvim

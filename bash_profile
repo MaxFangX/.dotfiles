@@ -1,4 +1,15 @@
 ###########################
+# GENERAL
+###########################
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='nvim'
+else
+  export EDITOR='vim'
+fi
+
+###########################
 # ENVIRONMENT VARIABLES
 ###########################
 
@@ -57,12 +68,12 @@ cdls() { cd "$@" && ls; }
 cdl() { cd "$@" && l; }
 
 # commands to update configs
-alias clean="source ~/.vim/clean.sh"
-alias to-dotfiles="source ~/.vim/to-dotfiles.sh"
-alias from-dotfiles="source ~/.vim/from-dotfiles.sh"
+alias clean="source ~/.dotfiles/scripts/clean.sh"
+alias to-dotfiles="source ~/.dotfiles/scripts/to-dotfiles.sh"
+alias from-dotfiles="source ~/.dotfiles/scripts/from-dotfiles.sh"
 
 # Quickly switch between different environments with $ work <project>
-work() { clean && . ~/.vim/scripts/"$@".sh; }
+work() { clean && . ~/.dotfiles/scripts/"$@".sh; }
 
 # Easy extract
 extract () {
@@ -95,8 +106,6 @@ gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
 # export DYLD_FORCE_FLAT_NAMESPACE=1
 
 # Vim
-# export EDITOR="/usr/bin/nvim"
-export EDITOR="/usr/local/bin/nvim"
 alias vim=nvim
 
 # Java
