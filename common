@@ -75,6 +75,8 @@ alias from-dotfiles="source ~/.dotfiles/scripts/from-dotfiles.sh"
 # Quickly switch between different environments with $ work <project>
 work() { clean && . ~/.dotfiles/scripts/"$@".sh; }
 
+wordcount() { find ~/Obsidian/ -type f -name "*.md" -exec cat '{}' \+ | wc -w; }
+
 # Easy extract
 extract () {
   if [ -f $1 ] ; then
