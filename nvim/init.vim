@@ -184,9 +184,8 @@
     " 'matchtime'.
     set showmatch
 
-    " Auto-wrap .tex and .md files at 80 characters
-    au BufRead,BufNewFile *.tex setlocal textwidth=80
-    au BufRead,BufNewFile *.md setlocal textwidth=80
+    " Default text width of 80
+    set textwidth=80
 
     " Try these if you have backspace problems
     " https://vim.fandom.com/wiki/Backspace_and_delete_problems
