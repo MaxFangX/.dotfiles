@@ -56,8 +56,12 @@ eval "$(thefuck --alias)"
 cdls() { cd "$@" && ls; }
 cdl() { cd "$@" && l; }
 
-# commands to quickly switch between different environments
+# commands to update configs
 alias clean="source ~/.vim/clean.sh"
+alias to-dotfiles="source ~/.vim/to-dotfiles.sh"
+alias from-dotfiles="source ~/.vim/from-dotfiles.sh"
+
+# Quickly switch between different environments with $ work <project>
 work() { clean && . ~/.vim/scripts/"$@".sh; }
 
 # Easy extract
