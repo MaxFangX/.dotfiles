@@ -1,4 +1,37 @@
-if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
+###########################
+# ENVIRONMENT VARIABLES
+###########################
+
+# Non-destructive setup
+mkdir -p ~/env
+touch ~/env/local.sh ~/env/sensitive.sh
+chmod u+x ~/env/local.sh ~/env/sensitive.sh
+
+# Device-specific environment variables
+if [ -f ~/env/local.sh ]; then
+    . ~/env/local.sh
+fi
+
+# Sensitive environment variables
+if [ -f ~/env/sensitive.sh ]; then
+    . ~/env/sensitive.sh
+fi
+
+# User binaries requiring root access
+export PATH="$PATH:/usr/local/sbin"
+
+# Rust
+export PATH="$PATH:$HOME/.cargo/bin"
+export RUST_BACKTRACE=1
+export RUST_LOG=info
+
+# Go
+export GOPATH=~/gocode
+export PATH=$PATH:$GOPATH/bin
+
+###########################
+# ALIASES
+###########################
 
 # Alias definitions. Currently not used
 # if [ -f ~/.bash_aliases ]; then
@@ -25,8 +58,7 @@ cdl() { cd "$@" && l; }
 
 # commands to quickly switch between different environments
 alias clean="source ~/.vim/clean.sh"
-fang() { clean && . ~/scripts/"$@".sh; }
-work() { clean && . ~/scripts/"$@".sh; }
+work() { clean && . ~/.vim/scripts/"$@".sh; }
 
 # Easy extract
 extract () {
@@ -50,19 +82,6 @@ extract () {
   fi
 }
 
-
-# Python
-export PATH="/usr/local/opt/python/libexec/bin:$PATH"
-
-# Rust
-export PATH="$PATH:$HOME/.cargo/bin"
-export RUST_BACKTRACE=1
-export RUST_LOG=info
-
-# Go
-export GOPATH=~/gocode
-export PATH=$PATH:$GOPATH/bin
-
 # usage: gerrit [clone] [project]
 gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
 
@@ -84,6 +103,8 @@ alias javatest="java org.junit.runner.JUnitCore"
 export FZF_DEFAULT_OPTS="--bind=d:left,h:down,t:up,n:right"
 
 # Git
+alias g="git"
+
 alias gs="git status"
 
 alias gad="git add"
@@ -114,9 +135,9 @@ alias gplrom="git pull --rebase origin master"
 alias gme="git merge"
 alias gmem="git merge master"
 
-alias gss="git stash"
-alias gssa="git stash apply"
-alias gssp="git stash pop"
+alias gst="git stash"
+alias gsta="git stash apply"
+alias gstp="git stash pop"
 
 alias grm="git rm"
 
@@ -128,7 +149,7 @@ alias grbi="git rebase -i"
 alias grbc="git rebase --continue"
 alias grbs="git rebase --skip"
 
-alias glo="git log"
+# alias glo="git log" # Alias in oh-my-zsh's git plugin is better
 
 alias gbl="git blame"
 
@@ -197,14 +218,3 @@ alias cputemp="~/github/osx-cpu-temp/osx-cpu-temp"
 alias eutykhia="cargo run" # just for fun
 alias tyche="cargo run --release" # just for fun
 alias lc="lncli" # lncli is awkward to type in DVORAK
-
-# Sensitive environment variables
-if [ -f ~/scripts/info.sh ]; then
-    . ~/scripts/info.sh
-fi
-
-export PATH="/usr/local/sbin:$PATH"
-
-if [ -f ~/scripts/local.sh ]; then
-    . ~/scripts/local.sh
-fi

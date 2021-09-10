@@ -87,7 +87,7 @@ cargo install --list
 cargo install cargo-watch
 
 # Cargo crev
-cargo instnall cargo-crev
+cargo install cargo-crev
 
 ###########################
 # Command line tools

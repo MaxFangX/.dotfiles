@@ -1,15 +1,6 @@
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Load common settings
-source ~/.bash_profile
-
-# Load Mac settings
-source ~/.mac_profile
-
-# Load Ruby settings
-source ~/.profile
-
 ###########################
 # ZSH SETTINGS
 ###########################
@@ -18,7 +9,10 @@ source ~/.profile
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="robbyrussell"
+
+# ZSH_THEME="robbyrussell" # Default
+ZSH_THEME="af-magic"
+# ZSH_THEME="random" # When I need some excitement in my life
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -60,9 +54,11 @@ ZSH_THEME="robbyrussell"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# See also: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+# plugins=(git) # Default
+plugins=(git cargo rust python fzf ripgrep thefuck)
 
 # User configuration
 
@@ -75,11 +71,11 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='nvim'
+else
+  export EDITOR='vim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -95,3 +91,10 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+###########################
+# GENERAL SETTINGS
+###########################
+
+# Load settings common to both bash and zsh
+source ~/.bash_profile
