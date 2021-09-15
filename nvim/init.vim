@@ -182,7 +182,7 @@
     " Control+t to transpose letters
     inoremap <C-t> <Esc>xpa
 
-    " ITERM2 MAPPING SETUP:
+    """ ITERM2 MAPPING SETUP:
     " - Remove conflicting iTerm2 profile mappings from ALL profiles:
     "   - Preferences > Profiles > Keys
     "   - Remove Option + Up/Down/Left/Right
