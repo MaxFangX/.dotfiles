@@ -170,6 +170,14 @@
 """
 
 """ { Typing - Emacs
+
+    " With vim-rsi and Karabiner, the following work (in insert mode):
+    " - Ctrl+a/e to go to beginning / end of line
+    " - Ctrl+f/b/j/k left hand arrow keys
+    "   - Note: Ctrl+f/b in normal mode will move view forward / back a page
+    " - Ctrl+u/i/o/p two-handed arrow keys
+    " - Ctrl+w to delete one word back
+
     " Ctrl+k to delete to end of line
     inoremap <C-k> <Esc>lDa
 
@@ -210,10 +218,6 @@
 
     " Option + r (DVORAK) to redo last change
     nnoremap ø <C-R>
-
-    " Shift+Tab to inverse tab in insert mode
-    " https://stackoverflow.com/questions/4766230/map-shift-tab-in-vim-to-inverse-tab-in-vim
-    inoremap <S-Tab> <C-d>
 """ }
 
 
@@ -312,6 +316,7 @@
         Plug 'tpope/vim-repeat'         " Plugin maps are repeatable
         Plug 'tpope/vim-fugitive'       " Arbitrary git with :Git or just :G
         Plug 'tpope/vim-commentary'     " Comment / uncomment
+        Plug 'tpope/vim-rsi'            " Readline (emacs) shortcuts in vim
         Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
 
         Plug 'preservim/nerdtree'       " File system explorer
