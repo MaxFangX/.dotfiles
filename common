@@ -50,9 +50,13 @@ fi
 # Key bindings
 # source "/usr/local/opt/fzf/shell/key-bindings.bash"
 # fzf key bindings - see --bind in :Man fzf (in vim) for details
-export FZF_DEFAULT_OPTS="--bind=h:down,t:up"
 
-
+# Use ripgrep for fzf filename searching
+if [ -x "$(command -v rg)" ]; then
+    export FZF_DEFAULT_COMMAND='rg --files --fixed-strings --ignore-case '\
+'--no-ignore --hidden --follow '\
+'--glob "!.git/*" --glob "!target/*" '
+fi
 
 ###########################
 # ALIASES
