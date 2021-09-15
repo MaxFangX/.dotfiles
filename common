@@ -49,6 +49,9 @@ fi
 [[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.bash" 2> /dev/null
 # Key bindings
 # source "/usr/local/opt/fzf/shell/key-bindings.bash"
+# fzf key bindings - see --bind in :Man fzf (in vim) for details
+export FZF_DEFAULT_OPTS="--bind=h:down,t:up"
+
 
 
 ###########################
@@ -124,9 +127,6 @@ alias vim=nvim
 # Java
 alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
-
-# fzf key bindings - see --bind in :Man fzf (in vim) for details
-export FZF_DEFAULT_OPTS="--bind=d:left,h:down,t:up,n:right"
 
 # Git
 alias g="git"
