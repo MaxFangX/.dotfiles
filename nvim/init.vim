@@ -507,7 +507,11 @@ EOF
 """ { Code navigation shortcut examples - integrate these
     " https://github.com/sharksforarms/vim-rust/blob/master/neovim-init-lsp-cmp-rust-tools.vim
 
+    " Go to definition
     nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+    " Go back
+    nnoremap <silent> <c-[> <c-^>
+
     nnoremap <silent> D     <cmd>lua vim.lsp.buf.hover()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
     " Just shows local usages
