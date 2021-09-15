@@ -161,27 +161,214 @@
     nnoremap L J
 """ }
 
-""" { Emacs navigation in vim because I'm a blasphemer
-    
+""" { Emacs in vim because I'm a blasphemer
+
+    """ SIMPLE MAPPINGS: Doesn't require advanced configuration
+
+    " With vim-rsi and Karabiner, the following work (in insert mode):
+    " - Control+a/e to go to beginning / end of line
+    " - Control+f/b/j/k left hand arrow keys
+    "   - Note: Ctrl+f/b in normal mode will move view forward / back a page
+    " - Control+u/i/o/p two-handed arrow keys
+    " - Control+w to delete one word back
+
     " Normal mode Ctrl + a / Ctrl + e to go to beginning / end
     nmap <C-a> ^
     nmap <C-e> $
 
-"""
-
-""" { Typing - Emacs
-
-    " With vim-rsi and Karabiner, the following work (in insert mode):
-    " - Ctrl+a/e to go to beginning / end of line
-    " - Ctrl+f/b/j/k left hand arrow keys
-    "   - Note: Ctrl+f/b in normal mode will move view forward / back a page
-    " - Ctrl+u/i/o/p two-handed arrow keys
-    " - Ctrl+w to delete one word back
-
-    " Ctrl+k to delete to end of line
+    " Control+k to delete to end of line
     inoremap <C-k> <Esc>lDa
 
-    " TODO: Delete word with option+delete, option+ctrl+i, etc
+    " Control+t to transpose letters
+    inoremap <C-t> <Esc>xpa
+
+    " ITERM2 MAPPING SETUP:
+    " - Remove conflicting iTerm2 profile mappings from ALL profiles:
+    "   - Preferences > Profiles > Keys
+    "   - Remove Option + Up/Down/Left/Right
+    "   - Remove Shift + Up/Down/Left/Right
+    " - Add the iTerm2 key bindings
+    "   - Prefs > Keys > Key Bindings 'Send Text with vim Special Chars'
+    "   - <M-t><M-g><M-i><M-o> becomes \<M-t>\<M-g>\<M-i>\<M-o>
+    "   - Import from maxfangx.itermkeymap in dotfiles to save time
+    " - See Obsidian notes: 'Emacs in Vim', 'iTerm2', `zsh`, `Oh My Zsh`
+    "
+    " Adding New Mappings:
+    " - iTerm2 maps macOS keys to meta keys not used by zsh or Oh My Zsh
+    " - Vim maps meta keys to corresponding functions
+    " - Since there are more shortcuts than available meta keys, the meta keys
+    "   are combined in different permutations, achieving up to n! combinations
+    "   - Available Meta+keys for permuting: gijknoptvyz
+    "     - All other Meta+keys used in zsh, Oh My Zsh, or a vim plugin
+    "   - Reserved for later: jknpz
+    "     - Ctrl+z to undo, Ctrl+shift+z to redo?
+    "   - Used: giot
+    "   - Unused: vy
+    " - There may be a cleaner approach, but this works perfectly fine
+    " - iTerm2 is also capable of mapping macOS keys to hex, octals, control
+    "   keys, form feed, and others... see docs for more information:
+    "   https://iterm2.com/documentation-preferences-profiles-keys.html
+
+    """ DELETE: Applies to Insert and Normal mode
+
+    " Delete Words:
+    " Control + Option + h: Delete word back
+    " - <C-g>u<C-w> instead of <Esc>ldbi so it works at end of line
+    "   Thanks to tim-pope/vim-rsi for the solution
+    " NOTE: Additional iTerm2 mapping: Option + Delete
+    " NOTE: Additional iTerm2 mapping: Control + Option + Delete
+    inoremap <M-t><M-g><M-i><M-o> <C-g>u<C-w>
+    " Control + Option + d: Delete word forward
+    inoremap <M-t><M-g><M-o><M-i> <Esc>ldwi
+
+    """ MOVEMENT: Applies to all (Insert, Normal, and Visual) modes
+
+    " Letter Movement: Overwrite the default page up/down to
+    " forward / back in normal mode
+    " - This enables full left-handed arrow keys using Control+jkfb
+    nnoremap <C-f> l
+    nnoremap <C-b> h
+
+    " Word Movement: Insert AND normal modes
+    " Control + Option + f: Move forward a word
+    " NOTE: Additional iTerm2 mapping: Option + Right
+    " - Will also enable the Control + Option + o variant
+    inoremap <M-t><M-o><M-g><M-i> <Esc>lwi
+    nnoremap <M-t><M-o><M-g><M-i> w
+    vnoremap <M-t><M-o><M-g><M-i> w
+    " Control + Option + b: Move back a word
+    " NOTE: Additional iTerm2 mapping: Control + Option + Left
+    " - Will also enable the Control + Option + y variant
+    inoremap <M-t><M-o><M-i><M-g> <Esc>lbi
+    nnoremap <M-t><M-o><M-i><M-g> b
+    vnoremap <M-t><M-o><M-i><M-g> b
+
+    " Paragraph Movement: Insert AND normal modes
+    " - iTerm2 mappings are not required for Control + key versions
+    " Option + down (or Command + Control + u): Go to end of paragraph
+    inoremap <M-g><M-t><M-i><M-o> <Esc>}a
+    nnoremap <M-g><M-t><M-i><M-o> }
+    vnoremap <M-g><M-t><M-i><M-o> }
+    " Option + up (or Command + Control + i): Go to start of paragraph
+    inoremap <M-g><M-t><M-o><M-i> <Esc>{a
+    nnoremap <M-g><M-t><M-o><M-i> {
+    vnoremap <M-g><M-t><M-o><M-i> {
+
+    " Up Down Movement: Works out of the box
+    " - Up/Down or Command + j/k or Control + u/i Insert mode
+    " - Up/Down or Command + j/k or Control + u/i Normal mode
+    " - Up/Down or Command + j/k or Control + u/i Visual mode
+
+    " Home End Movement: Insert AND normal modes
+    " - iTerm2 mapping is not required for Control + key versions
+    "
+    " Command + left: Go to beginning of line
+    " - Command + Control + u works without additional iTerm2 mapping
+    " NOTE: Additional iTerm2 mapping: Command + h
+    inoremap <M-o><M-g><M-t><M-i> <Esc>^i
+    nnoremap <M-o><M-g><M-t><M-i> ^
+    vnoremap <M-o><M-g><M-t><M-i> ^
+    " Command + right: Go to end of line
+    " - Command + Control + i works without additional iTerm2 mapping
+    " NOTE: Additional iTerm2 mapping: Command + l
+    inoremap <M-o><M-i><M-t><M-g> <Esc>$a
+    nnoremap <M-o><M-i><M-t><M-g> $
+    vnoremap <M-o><M-i><M-t><M-g> $
+
+    " Top Bottom Movement: Insert AND normal modes
+    " - iTerm2 mapping is not required for Control + key versions
+    "
+    " Command + down (or Command + Control + u): Go to bottom of page
+    " NOTE: Additional iTerm2 mapping: Command + j
+    inoremap <M-t><M-i><M-g><M-o> <Esc>Gi
+    nnoremap <M-t><M-i><M-g><M-o> G
+    " Command + up (or Command + Control + i): Go to top of page
+    " NOTE: Additional iTerm2 mapping: Command + k
+    inoremap <M-t><M-i><M-o><M-g> <Esc>ggi
+    nnoremap <M-t><M-i><M-o><M-g> gg
+
+    """ SELECT:
+    " - Insert / normal mode begins the select, visual mode continues it
+
+    " Select Letter:
+    " Shift + Control + f: Select forward a letter
+    " NOTE: Additional iTerm2 mapping: Shift + Right
+    " - Shift + Control + o works without additional iTerm2 mapping
+    inoremap <M-o><M-t><M-g><M-i> <Esc>lv
+    vnoremap <M-o><M-t><M-g><M-i> l
+    nnoremap <M-o><M-t><M-g><M-i> vl
+    " Shift + Control + b: Select backward a letter
+    " NOTE: Additional iTerm2 mapping: Shift + Left
+    " - Shift + Control + y works without additional iTerm2 mapping
+    inoremap <M-o><M-t><M-i><M-g> <Esc>v
+    vnoremap <M-o><M-t><M-i><M-g> h
+    nnoremap <M-o><M-t><M-i><M-g> vh
+
+    " Select Word:
+    " Shift + Option + Control + f: Select forward a word
+    " NOTE: Additional iTerm2 mapping: Option + Shift + Right
+    " - Shift + Control + Option + o works without additional mapping
+    inoremap <M-i><M-t><M-g><M-o> <Esc>lve
+    vnoremap <M-i><M-t><M-g><M-o> e
+    nnoremap <M-i><M-t><M-g><M-o> ve
+    " Shift + Option + Control + b: Select backward a word
+    " NOTE: Additional iTerm2 mapping: Option + Shift + Left
+    " - Shift + Control + Option + y works without additional mapping
+    inoremap <M-i><M-t><M-o><M-g> <Esc>vb
+    vnoremap <M-i><M-t><M-o><M-g> b
+    nnoremap <M-i><M-t><M-o><M-g> vb
+
+    " Select Paragraph:
+    " Shift + Option + Down: Select to end of paragraph
+    " - Shift + Option + Control + u works without additional mapping
+    inoremap <M-i><M-g><M-t><M-o> <Esc>lv}
+    vnoremap <M-i><M-g><M-t><M-o> }
+    nnoremap <M-i><M-g><M-t><M-o> v}
+    " Shift + Option + Up: Select to beginning of paragraph
+    " - Shift + Option + Control + i works without additional mapping
+    inoremap <M-i><M-o><M-t><M-g> <Esc>v{
+    vnoremap <M-i><M-o><M-t><M-g> {
+    nnoremap <M-i><M-o><M-t><M-g> v{
+
+    " Select Up Down:
+    " Shift + Control + u: Select down
+    " - Shift + Down works without additional iTerm2 mapping
+    inoremap <M-g><M-i><M-t><M-o> <Esc>lvj
+    vnoremap <M-g><M-i><M-t><M-o> j
+    nnoremap <M-g><M-i><M-t><M-o> vj
+    " Shift + Control + i: Select up
+    " - Shift + Up works without additional iTerm2 mapping
+    inoremap <M-g><M-o><M-t><M-i> <Esc>vk
+    vnoremap <M-g><M-o><M-t><M-i> k
+    nnoremap <M-g><M-o><M-t><M-i> vk
+
+    " Select Home End:
+    " Shift + Command + Right
+    " - Shift + Command + Control + o works without additional mapping
+    inoremap <M-g><M-i><M-o><M-t> <Esc>lv$
+    vnoremap <M-g><M-i><M-o><M-t> $
+    nnoremap <M-g><M-i><M-o><M-t> v$
+    " Shift + Command + Left
+    " - Shift + Command + Control + y works without additional mapping
+    inoremap <M-g><M-o><M-i><M-t> <Esc>v^
+    vnoremap <M-g><M-o><M-i><M-t> ^
+    nnoremap <M-g><M-o><M-i><M-t> hv^
+
+    " Select Top Bottom:
+    " Shift + Command + Down
+    " - Shift + Command + Control + u works without additional mapping
+    inoremap <M-o><M-g><M-i><M-t> <Esc>lvG
+    vnoremap <M-o><M-g><M-i><M-t> G
+    nnoremap <M-o><M-g><M-i><M-t> vG
+    " Shift + Command + Up
+    " - Shift + Command + Control + i works without additional mapping
+    inoremap <M-o><M-i><M-g><M-t> <Esc>vgg
+    vnoremap <M-o><M-i><M-g><M-t> gg
+    nnoremap <M-o><M-i><M-g><M-t> hvgg
+
+    " Unmapped:
+    inoremap <M-i><M-g><M-o><M-t> unmapped
+    inoremap <M-i><M-o><M-g><M-t> unmapped
 """ } 
 
 """ { Typing - General
