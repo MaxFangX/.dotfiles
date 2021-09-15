@@ -507,7 +507,8 @@
         Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
 
         Plug 'preservim/nerdtree'       " File system explorer
-        Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+        Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Adds :FZF
+        Plug 'junegunn/fzf.vim'         " Adds the rest of the commands
 
         """ For code completion
         Plug 'ycm-core/YouCompleteMe'
@@ -616,8 +617,33 @@
     " Set the (r)un(t)ime (p)ath
     set rtp+=/usr/local/opt/fzf
 
-    nnoremap π :FZF<Enter>
-    vnoremap π <Esc>:FZF<Enter>
+    " Namespace fzf.vim commands
+    let g:fzf_command_prefix = 'Fzf'
+
+    " (QWERTY) Option + P to open file search
+    nnoremap π :FzfFiles<Enter>
+    vnoremap π <Esc>:FzfFiles<Enter>
+
+    " (DVORAK) Option + B to open buffer search (useful after piping rg | vim)
+    nnoremap ˜ :FzfBuffers<Enter>
+    vnoremap ˜ <Esc>:FzfBuffers<Enter>
+
+    " (DVORAK) Option + S to search with ripgrep
+    " TODO configure: ALT-A to select all, ALT-D to deselect all
+    nnoremap … :FzfRg<Enter>
+
+    " Quick search [neo]vim help tags with :H
+    command H FzfHelptags
+
+    " Other commands:
+    " - :FzfColors - Switch to any installed theme
+    " - :Commands - See available commands
+    " - :Maps - Alternative view of nmap
+    
+    " Also consider:
+    " - :FzfTags - Tags in the project (`ctags -R`)
+    " - :FzfBTags - Tags in the current buffer
+    " - :FzfMarks - Marks in the current buffer
 """ }
 
 """ { Plugin Options - rust-analyzer

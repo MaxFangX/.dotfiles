@@ -112,6 +112,9 @@ brew install fzf
 # To install useful key bindings and fuzzy completion:
 $(brew --prefix)/opt/fzf/install
 
+# bat - required for syntax-highlighted fzf / ripgrep
+brew install bat
+
 ###########################
 # Misc
 ###########################
