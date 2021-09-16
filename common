@@ -40,6 +40,13 @@ export RUST_LOG=info
 export GOPATH=~/gocode
 export PATH=$PATH:$GOPATH/bin
 
+# Ruby - chruby
+source /usr/local/opt/chruby/share/chruby/chruby.sh
+# Enable auto-switching of Rubies specified by .ruby-version files
+source /usr/local/opt/chruby/share/chruby/auto.sh
+# Use 2.7.2 by default
+chruby ruby-2.7.2
+
 # fzf
 # Setup
 if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]]; then

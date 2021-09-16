@@ -19,7 +19,17 @@ brew cask install java
 brew install gpg
 
 # Install ruby
-brew install ruby
+# https://www.moncefbelyamani.com/how-to-install-xcode-homebrew-git-rvm-ruby-on-mac/
+brew install chruby ruby-install
+ruby-install ruby-2.7.2
+# Check that 2.7.2 is installed
+# ruby -v
+
+# Install bundler
+gem install bundler
+# Use # of computer cores - 1
+number_of_cores=$(sysctl -n hw.ncpu)
+bundle config --global jobs $((number_of_cores - 1))
 
 # Install Cmake so that installing submodules works
 brew install cmake
