@@ -637,8 +637,8 @@
 
     " Other commands:
     " - :FzfColors - Switch to any installed theme
-    " - :Commands - See available commands
-    " - :Maps - Alternative view of nmap
+    " - :FzfCommands - See available commands
+    " - :FzfMaps - Alternative view of nmap
     
     " Also consider:
     " - :FzfTags - Tags in the project (`ctags -R`)
@@ -701,10 +701,10 @@ EOF
 """ { Code navigation shortcut examples - integrate these
     " https://github.com/sharksforarms/vim-rust/blob/master/neovim-init-lsp-cmp-rust-tools.vim
 
-    " Go to definition
-    nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-    " Go back
-    nnoremap <silent> <c-[> <c-^>
+    " Option + QWERTY ]: Go to definition
+    nnoremap <silent> ‘ <cmd>lua vim.lsp.buf.definition()<CR>
+    " Option + QWERTY [: Go back
+    nnoremap <silent> “ <c-^>
 
     nnoremap <silent> D     <cmd>lua vim.lsp.buf.hover()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
