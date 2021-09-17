@@ -407,6 +407,26 @@
     nnoremap ø <C-R>
 """ }
 
+""" { Autocompletion options
+    " Set completeopt to have a better completion experience
+    " - :help completeopt
+    " - menuone: popup even when there's only one match
+    " - noinsert: Do not insert text until a selection is made
+    " - noselect: Do not select, force user to select one from the menu
+    set completeopt=menuone,noinsert,noselect
+
+    " Make <Enter> input a newline if no item was selected in the
+    " autocomplete pop up menu ('pum')
+    " - See 'pumvisible()' in :help eval.txt
+    inoremap <expr> <CR> pumvisible() ?
+        \ (complete_info().selected == -1 ? '<C-y><CR>' : '<C-y>') :
+        \ '<CR>'
+    
+    " Avoid showing extra messages when using completion
+    " set shortmess+=c
+""" }
+
+
 
 """ Relative line numbers {
     " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
@@ -511,6 +531,7 @@
         Plug 'junegunn/fzf.vim'         " Adds the rest of the commands
 
         """ For code completion
+        " FIXME: Switch to an auto-completion engine that respects completeopt
         Plug 'ycm-core/YouCompleteMe'
 
         """ Rust - simrat39/rust-tools.nvim
@@ -652,16 +673,8 @@
 """ }
 
 """ { Plugin Options - rust-analyzer
-    " Set completeopt to have a better completion experience
-    " :help completeopt
-    " menuone: popup even when there's only one match
-    " noinsert: Do not insert text until a selection is made
-    " noselect: Do not select, force user to select one from the menu
-    set completeopt=menuone,noinsert,noselect
-
-    " Avoid showing extra messages when using completion
-    " set shortmess+=c
 """ }
+
 
 """ { nvim-lspconfig General
     " https://github.com/neovim/nvim-lspconfig#rust_analyzer
@@ -688,7 +701,8 @@ nvim_lsp.rust_analyzer.setup({
                 importPrefix = "by_self",
             },
             cargo = {
-                loadOutDirsFromCheck = true -- Required to see compiled .proto
+                -- Required to see compiled .proto
+                loadOutDirsFromCheck = true 
             },
             procMacro = {
                 enable = true
