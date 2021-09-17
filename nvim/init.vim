@@ -630,6 +630,11 @@
 
     " (DVORAK) Option + S to search with ripgrep
     " TODO configure: ALT-A to select all, ALT-D to deselect all
+    " - Tab to select/deselect and move down
+    " - Shift+Tab to select/deselect and move up
+    " - Can prefix by filename; e.g. 'inwel' to find 'Welcome' in index.js
+    " - FIXME: <Enter> <C-t>, <C-x>, <C-v> to open selected files in
+    "   current window / tabs / split / vsplit
     nnoremap … :FzfRg<Enter>
 
     " Quick search [neo]vim help tags with :H

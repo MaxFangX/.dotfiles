@@ -57,6 +57,8 @@ fi
 # Key bindings
 # source "/usr/local/opt/fzf/shell/key-bindings.bash"
 # fzf key bindings - see --bind in :Man fzf (in vim) for details
+# FIXME: Doesn't work
+# export FZF_DEFAULT_OPTS='--bind ctrl-å:select-all'
 
 # Use ripgrep for fzf filename searching
 if [ -x "$(command -v rg)" ]; then
