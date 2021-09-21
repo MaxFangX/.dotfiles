@@ -147,8 +147,7 @@ alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
 
 # Git
-alias g="git"
-
+alias g="git status"
 alias gs="git status"
 
 alias gad="git add"
