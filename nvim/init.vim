@@ -637,7 +637,9 @@
 
 """ }
 
-""" { Plugin Options - fzf
+""" { Plugin Options - fzf.vim
+    " NOTE: :FZF is still available
+
     " Set the (r)un(t)ime (p)ath
     set rtp+=/usr/local/opt/fzf
 
@@ -660,6 +662,8 @@
     " - FIXME: <Enter> <C-t>, <C-x>, <C-v> to open selected files in
     "   current window / tabs / split / vsplit
     nnoremap … :FzfRg<Enter>
+    " NOTE: This can be removed later if another namespace is needed
+    nnoremap <Space> :FzfRg<Enter>
 
     " Quick search [neo]vim help tags with :H
     command H FzfHelptags
