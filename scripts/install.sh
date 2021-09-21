@@ -12,6 +12,10 @@ brew tap caskroom/cask
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup update
 
+# Rust tools
+cargo install cargo-watch
+cargo install tokei
+
 # Java
 brew cask install java
 
