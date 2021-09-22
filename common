@@ -148,44 +148,42 @@ alias javatest="java org.junit.runner.JUnitCore"
 
 # Git
 alias g="git status"
-alias gs="git status"
 
-alias gad="git add"
+alias ga="git add"
 
-alias gdi="git diff"
-alias gdis="git diff --staged"
+alias gd="git diff"
+alias gds="git diff --staged"
 
-function gadis { git add "$@"; git diff --staged "$@"; }
+function gads { git add "$@"; git diff --staged "$@"; }
 
 alias gch="git checkout"
 alias gchm="git checkout master"
 
-alias gcom="git commit -m"
-alias gcoam="git commit -a -m"
-alias gcoa="git commit --amend"
+alias gcm="git commit -m"
+alias gca="git commit --amend"
 
-alias gps="git push"
-alias gpso="git push origin"
-alias gpsom="git push origin master"
+alias gp="git push"
+alias gpo="git push origin"
+alias gpom="git push origin master"
 
-alias gpl="git pull"
-alias gplo="git pull origin"
-alias gplom="git pull origin master"
-alias gplr="git pull --rebase"
-alias gplro="git pull --rebase origin"
-alias gplrom="git pull --rebase origin master"
+alias gl="git pull"
+alias glo="git pull origin"
+alias glom="git pull origin master"
+alias glr="git pull --rebase"
+alias glro="git pull --rebase origin"
+alias glrom="git pull --rebase origin master"
 
 alias gme="git merge"
 alias gmem="git merge master"
 
-alias gst="git stash"
-alias gsta="git stash apply"
-alias gstp="git stash pop"
+alias gs="git stash"
+alias gsa="git stash apply"
+alias gsp="git stash pop"
 
 alias grm="git rm"
 
-alias gbr="git branch"
-alias gbrr="git branch -r"
+alias gb="git branch"
+alias gbr="git branch -r"
 
 alias grb="git rebase"
 alias grbi="git rebase -i"
@@ -196,8 +194,8 @@ alias grbs="git rebase --skip"
 
 alias gbl="git blame"
 
-alias grs="git reset"
-alias grsh="git reset HEAD"
+alias grs="git restore"
+alias grss="git restore --staged"
 
 alias gsur="git submodule update --recursive"
 alias gsuri="git submodule update --recursive --init"
