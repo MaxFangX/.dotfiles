@@ -52,6 +52,9 @@
 
     " Show a right margin at 80 characters
     set colorcolumn=80
+
+    " Always keep at least 2 lines above / below the cursor
+    set scrolloff=2
 """ }
 
 """ { Basics - Search
