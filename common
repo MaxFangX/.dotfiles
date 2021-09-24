@@ -142,6 +142,21 @@ gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
 # Vim
 alias vim=nvim
 
+# Ripgrep
+alias rgf="rg --files"
+alias rgn="rg --no-ignore"
+alias rgfn="rg --files --no-ignore"
+alias rgnf="rg --files --no-ignore"
+# Emulate Silver Searcher's -g filename search somewhat
+function rgg { rg --files | rg "$@" }
+function rggn { rg --files --no-ignore | rg "$@" }
+# To get log/tyche_rCURRENT.log (where log/* is in .gitignore);
+# - rggn CURR
+# - rgfn | rg CURR
+# or just use silver searcher:
+# - ag -U -g CURR
+# - ag -Ug CURR
+
 # Java
 alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
