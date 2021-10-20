@@ -622,8 +622,8 @@
 
     " Start NERDTree if Vim is started with 0 file arguments or >=2 file args,
     " move the cursor to the other window if so
-    autocmd VimEnter * if argc() == 0 || argc() >= 2 | NERDTree | endif
-    autocmd VimEnter * if argc() == 0 || argc() >= 2 | wincmd p | endif
+    " autocmd VimEnter * if argc() == 0 || argc() >= 2 | NERDTree | endif
+    " autocmd VimEnter * if argc() == 0 || argc() >= 2 | wincmd p | endif
 
     " Open the existing NERDTree on each new tab.
     autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
