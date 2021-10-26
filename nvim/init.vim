@@ -98,8 +98,8 @@
     nnoremap ƒ <C-D>
     nnoremap ∫ <C-U>
 
-    " Option + e/k (DVORAK) to move screen up/down by one line
-    nnoremap ∂ <C-e>
+    " Option + j/k (DVORAK) to move screen up/down by one line
+    nnoremap ç <C-e>
     nnoremap √ <C-y>
 """ }
 
@@ -471,9 +471,9 @@
     " set clipboard=unnamed
     " set clipboard+=unnamedplus
 
-    " Alt + QWERTY c to copy
+    " Alt + QWERTY x to copy
     " https://stackoverflow.com/questions/41798130/copy-paste-in-iterm-vim
-    vmap ç "*y
+    vmap ≈ "*y
 
     " This alternative way to do it doesn't seem to work
     " https://stackoverflow.com/questions/677986/vim-copy-selection-to-os-x-clipboard
