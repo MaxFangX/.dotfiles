@@ -69,8 +69,8 @@ fi
 # Use ripgrep for fzf filename searching
 if [ -x "$(command -v rg)" ]; then
     export FZF_DEFAULT_COMMAND='rg --files --fixed-strings --ignore-case '\
-    '--no-ignore --hidden --follow '\
-    '--glob "!.git/*" --glob "!target/*" '
+'--no-ignore --hidden --follow '\
+'--glob "!.git/*" --glob "!target/*" '
 fi
 
 ###########################
