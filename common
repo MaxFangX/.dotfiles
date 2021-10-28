@@ -41,11 +41,17 @@ export GOPATH=~/gocode
 export PATH=$PATH:$GOPATH/bin
 
 # Ruby - chruby
-source /usr/local/opt/chruby/share/chruby/chruby.sh
+if [ -f /usr/local/opt/chruby/share/chruby/chruby.sh ]; then
+    source /usr/local/opt/chruby/share/chruby/chruby.sh
+fi
 # Enable auto-switching of Rubies specified by .ruby-version files
-source /usr/local/opt/chruby/share/chruby/auto.sh
+if [ -f /usr/local/opt/chruby/share/chruby/auto.sh ]; then
+    source /usr/local/opt/chruby/share/chruby/auto.sh
+fi
 # Use 2.7.2 by default
-chruby ruby-2.7.2
+if [ -x "$(command -v chruby)" ]; then
+    chruby ruby-2.7.2
+fi
 
 # fzf
 # Setup
@@ -63,8 +69,8 @@ fi
 # Use ripgrep for fzf filename searching
 if [ -x "$(command -v rg)" ]; then
     export FZF_DEFAULT_COMMAND='rg --files --fixed-strings --ignore-case '\
-'--no-ignore --hidden --follow '\
-'--glob "!.git/*" --glob "!target/*" '
+    '--no-ignore --hidden --follow '\
+    '--glob "!.git/*" --glob "!target/*" '
 fi
 
 ###########################
@@ -88,7 +94,9 @@ alias rmpyc="find ./ -name '*pyc' | xargs rm -f"
 alias rmswp="find ./ -name '*swp' | xargs rm -f"
 
 # thefuck alias
-eval "$(thefuck --alias)"
+if [ -x "$(command -v thefuck)" ]; then
+    eval "$(thefuck --alias)"
+fi
 
 # cdls and cdl as commands to change directory and list
 cdls() { cd "$@" && ls; }
