@@ -126,6 +126,10 @@ brew install fzf
 # To install useful key bindings and fuzzy completion:
 $(brew --prefix)/opt/fzf/install
 
+# fzf-tab - zsh tab completions with fzf
+# Make sure fzf-tab is enabled in zsh plugins
+git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
+
 # bat - required for syntax-highlighted fzf / ripgrep
 brew install bat
 

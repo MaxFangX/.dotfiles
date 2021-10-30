@@ -58,7 +58,7 @@ ZSH_THEME="af-magic"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git) # Default
-plugins=(git cargo rust python fzf ripgrep thefuck)
+plugins=(git cargo rust python fzf fzf-tab ripgrep thefuck)
 
 # User configuration
 
