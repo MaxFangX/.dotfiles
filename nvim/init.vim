@@ -99,8 +99,8 @@
     nnoremap ∫ <C-U>
 
     " Option + j/k (DVORAK) to move screen up/down by one line
-    nnoremap ç <C-e>
-    nnoremap √ <C-y>
+    nnoremap ç 4<C-e>
+    nnoremap √ 4<C-y>
 """ }
 
 """ { Mouse settings
