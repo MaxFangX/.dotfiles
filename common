@@ -97,6 +97,9 @@ alias rmswp="find ./ -name '*swp' | xargs rm -f"
 if [ -x "$(command -v thefuck)" ]; then
     eval "$(thefuck --alias)"
 fi
+# Fix for git push --no-verify over --set-upstream until packages are updated
+# https://github.com/nvbn/thefuck/issues/1207#issuecomment-864671223
+export THEFUCK_PRIORITY="git_hook_bypass=1100"
 
 # cdls and cdl as commands to change directory and list
 cdls() { cd "$@" && ls; }
