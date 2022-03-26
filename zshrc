@@ -10,9 +10,19 @@ export ZSH="$HOME/.oh-my-zsh"
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 
-# ZSH_THEME="robbyrussell" # Default
-ZSH_THEME="af-magic"
-# ZSH_THEME="random" # When I need some excitement in my life
+# If the current computer is running macOS
+if [[ $OSTYPE == 'darwin'* ]]; then
+    # It's probably my personal computer, use a theme without user@host
+    ZSH_THEME="mh"
+else
+    # It's a remote instance; use a theme *with* user@host
+    ZSH_THEME="alanpeabody"
+fi
+# Other themes:
+# ZSH_THEME="robbyrussell" # zsh default
+# ZSH_THEME="af-magic" # Theme with two lines, a little tired of it
+# ZSH_THEME="random" # Random theme
+# More themes at https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -64,6 +74,7 @@ plugins=(git rust python fzf fzf-tab ripgrep thefuck)
 
 export MANPATH="/usr/local/man:$MANPATH"
 
+# Init zsh
 source $ZSH/oh-my-zsh.sh
 fpath=(/usr/local/share/zsh-completions $fpath)
 
