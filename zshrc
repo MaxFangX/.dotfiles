@@ -68,7 +68,7 @@ fi
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git) # Default
-plugins=(git rust python fzf fzf-tab ripgrep thefuck)
+plugins=(git rust python fzf ripgrep)
 
 # User configuration
 
