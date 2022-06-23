@@ -75,6 +75,9 @@
 
     " Search for visually selected text with //
     vnoremap // y/<C-R>"<CR>
+
+    " Use # as * but without immediately skipping to the next one
+    nnoremap # *N
 """ }
 
 """ { Basics - Files
