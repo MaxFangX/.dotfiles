@@ -104,6 +104,10 @@
     " Option + j/k (DVORAK) to move screen up/down by one line
     nnoremap ç 4<C-e>
     nnoremap √ 4<C-y>
+
+    " QWERTY J/K to move cursor up/down by 10 lines
+    nnoremap H 10j
+    nnoremap T 10k
 """ }
 
 """ { Mouse settings
