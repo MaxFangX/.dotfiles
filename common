@@ -82,6 +82,9 @@ fi
 #     . ~/.bash_aliases
 # fi
 
+# Git aliases
+alias grhsh='git reset --soft HEAD~1'
+
 # Some ls aliases
 alias ll='ls -alF'
 alias la='ls -a'
