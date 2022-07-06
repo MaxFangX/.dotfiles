@@ -104,10 +104,21 @@
     " Option + j/k (DVORAK) to move screen up/down by one line
     nnoremap ç 4<C-e>
     nnoremap √ 4<C-y>
+""" }
 
-    " QWERTY J/K to move cursor up/down by 10 lines
+""" { QWERTY J/K to quickly move cursor up/down by 10 lines
+
+    " Normal mode
     nnoremap H 10j
     nnoremap T 10k
+
+    " Visual and select modes
+    vnoremap H 10j
+    vnoremap T 10k
+
+    " Command mode
+    onoremap H 10j
+    onoremap T 10k
 """ }
 
 """ { Mouse settings
