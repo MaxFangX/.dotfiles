@@ -186,7 +186,10 @@ alias gds="git diff --staged"
 function gads { git add "$@"; git diff --staged "$@"; }
 
 alias gch="git checkout"
-alias gchm="git checkout master"
+# This works for both `main` or `master`
+function gchm() {
+    git checkout `git branch | grep -o -m1 '\b\(master\|main\)\b'`
+}
 
 alias gcm="git commit -m"
 alias gca="git commit --amend"
