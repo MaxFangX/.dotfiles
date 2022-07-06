@@ -718,8 +718,14 @@ nvim_lsp.rust_analyzer.setup({
                 importPrefix = "by_self",
             },
             cargo = {
+                -- Enable or disable features
+                -- features = "all",
                 -- Required to see compiled .proto
-                loadOutDirsFromCheck = true 
+                loadOutDirsFromCheck = true,
+            },
+            diagnostics = {
+                -- Prevents cfg'd code from being all underlined as warning
+                disabled = {"inactive-code"},
             },
             procMacro = {
                 enable = true
@@ -728,9 +734,6 @@ nvim_lsp.rust_analyzer.setup({
     }
 })
 EOF
-
-
-
 
 """ }
 
