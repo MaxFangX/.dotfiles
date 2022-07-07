@@ -272,6 +272,7 @@ alias lncli-bob="lncli --macaroonpath=data/admin.macaroon --rpcserver=localhost:
 alias lncli-charlie="lncli --macaroonpath=data/admin.macaroon --rpcserver=localhost:10003"
 
 # Cargo / Rust
+alias c="cargo"
 alias crc="cargo check"
 alias crr="cargo run"
 alias crrr="cargo run --release"
