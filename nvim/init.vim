@@ -106,19 +106,19 @@
     nnoremap √ 4<C-y>
 """ }
 
-""" { QWERTY J/K to quickly move cursor up/down by 10 lines
+""" { QWERTY J/K to quickly move cursor up/down by 8 lines
 
     " Normal mode
-    nnoremap H 10j
-    nnoremap T 10k
+    nnoremap H 8j
+    nnoremap T 8k
 
     " Visual and select modes
-    vnoremap H 10j
-    vnoremap T 10k
+    vnoremap H 8j
+    vnoremap T 8k
 
     " Command mode
-    onoremap H 10j
-    onoremap T 10k
+    onoremap H 8j
+    onoremap T 8k
 """ }
 
 """ { Mouse settings
