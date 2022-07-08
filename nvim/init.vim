@@ -101,9 +101,9 @@
     nnoremap ƒ <C-D>
     nnoremap ∫ <C-U>
 
-    " Option + j/k (DVORAK) to move screen up/down by one line
-    nnoremap ç 4<C-e>
-    nnoremap √ 4<C-y>
+    " Option + j/k (DVORAK) to move screen up/down by 6 lines
+    nnoremap ç 6<C-e>
+    nnoremap √ 6<C-y>
 """ }
 
 """ { QWERTY J/K to quickly move cursor up/down by 8 lines
