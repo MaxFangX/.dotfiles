@@ -782,7 +782,7 @@ EOF
 
 
     " Commands: 
-    nnoremap grsi :RustSetInlayHints<Enter>
+    nnoremap grs :RustSetInlayHints<Enter>
     nnoremap grdi :RustDisableInlayHints<Enter>
     " - RustToggleInlayHints
     nnoremap grr :RustRunnables<Enter>
