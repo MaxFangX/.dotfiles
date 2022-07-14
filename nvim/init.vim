@@ -121,6 +121,21 @@
     onoremap T 8k
 """ }
 
+""" { QWERTY H/L to quickly move to start/end of line
+
+    " Normal mode
+    nnoremap D ^
+    nnoremap N $
+
+    " Visual and select modes
+    vnoremap D ^
+    vnoremap N $
+
+    " Command mode
+    onoremap D ^
+    onoremap N $
+""" }
+
 """ { Mouse settings
 
     " Enable clicking around to move cursor position
@@ -756,7 +771,7 @@ EOF
     " Option + QWERTY [: Go back
     nnoremap <silent> “ <c-^>
 
-    nnoremap <silent> D     <cmd>lua vim.lsp.buf.hover()<CR>
+    " nnoremap <silent> gh    <cmd>lua vim.lsp.buf.hover()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
     " Just shows local usages
     " nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR> 
