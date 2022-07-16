@@ -212,6 +212,8 @@ alias gmem="git merge master"
 
 alias gs="git stash"
 alias gsa="git stash apply"
+alias gsd="git stash drop"
+alias gsl="git stash list"
 alias gsp="git stash pop"
 
 alias grm="git rm"
@@ -219,8 +221,8 @@ alias grm="git rm"
 alias gb="git branch"
 alias gbr="git branch -r"
 
-alias grb="git rebase"
-alias grbi="git rebase -i"
+alias grb="git rebase --committer-date-is-author-date"
+alias grbi="git rebase -i --committer-date-is-author-date"
 alias grbc="git rebase --continue"
 alias grbs="git rebase --skip"
 
