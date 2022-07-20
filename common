@@ -182,6 +182,7 @@ alias javatest="java org.junit.runner.JUnitCore"
 
 # Git
 alias g="git status"
+unalias gss # OMZ git status -s
 
 alias ga="git add"
 
@@ -220,6 +221,13 @@ alias gsa="git stash apply"
 alias gsd="git stash drop"
 alias gsl="git stash list"
 alias gsp="git stash pop"
+alias gss="git stash show --text"
+unalias gstaa # OMZ git stash apply
+unalias gstc # OMZ git stash clear
+unalias gstd # OMZ git stash drop
+unalias gstl # OMZ git stash list
+unalias gstp # OMZ git stash pop
+unalias gsts # OMZ git stash show --text
 
 alias grm="git rm"
 
