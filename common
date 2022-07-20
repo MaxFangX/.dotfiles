@@ -205,13 +205,21 @@ alias gpo="git push origin"
 alias gpom="git push origin master"
 
 alias gl="git pull"
-alias glor="git pull origin"
-alias glorm="git pull origin master"
-alias glup="git pull upstream"
-alias glupm="git pull upstream master"
+alias glo="git pull origin"
+function glom() { git pull origin `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
+
+alias glu="git pull upstream"
+unalias glum # For some reason set to 'git pull upstream master'
+function glum() { git pull upstream `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
+
 alias glr="git pull --rebase"
 alias glro="git pull --rebase origin"
-alias glrom="git pull --rebase origin master"
+function glrom() { git pull --rebase origin `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
+unalias gup # OMZ git pull --rebase
+unalias gupa # OMZ git pull --rebase --autostash
+unalias gupav # OMZ git pull --rebase --autostash -v
+unalias gupv # OMZ git pull --rebase -v
+unalias ggpull # OMZ git pull origin "$(git_current_branch)"
 
 alias gme="git merge"
 alias gmem="git merge master"
@@ -228,6 +236,7 @@ unalias gstd # OMZ git stash drop
 unalias gstl # OMZ git stash list
 unalias gstp # OMZ git stash pop
 unalias gsts # OMZ git stash show --text
+unalias gsta # OMZ git stash push
 
 alias grm="git rm"
 
