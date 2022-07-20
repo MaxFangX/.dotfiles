@@ -9,6 +9,11 @@ else
   export EDITOR='vim'
 fi
 
+# Use vim as $MANPAGER
+# https://stackoverflow.com/a/16741577
+# https://muru.dev/2015/08/28/vim-for-man.html
+export MANPAGER='nvim -c "%! col -b" -c "set ft=man nomod | let &titlestring=$MAN_PN"'
+
 ###########################
 # ENVIRONMENT VARIABLES
 ###########################
