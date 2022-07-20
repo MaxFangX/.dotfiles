@@ -121,19 +121,19 @@
     onoremap T 8k
 """ }
 
-""" { QWERTY H/L to quickly move to start/end of line
+""" { QWERTY H/L to quickly move forward/back one (blank-separated) word
 
     " Normal mode
-    nnoremap D ^
-    nnoremap N $
+    nnoremap D B
+    nnoremap N W
 
     " Visual and select modes
-    vnoremap D ^
-    vnoremap N $
+    vnoremap D B
+    vnoremap N W
 
     " Command mode
-    onoremap D ^
-    onoremap N $
+    onoremap D B
+    onoremap N W
 """ }
 
 """ { Mouse settings
