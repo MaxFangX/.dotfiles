@@ -307,6 +307,7 @@ alias crf="cargo fmt -- -l"
 alias crfa="cargo fmt --all -- -l"
 alias crfl="cargo fmt --all -- -l"
 alias crfc="cargo fmt --all && cargo clippy --workspace --all-targets"
+alias crt="cargo test"
 
 # Misc
 alias lt="ls"
