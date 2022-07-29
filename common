@@ -205,16 +205,16 @@ alias gpo="git push origin"
 alias gpom="git push origin master"
 
 alias gl="git pull"
-alias glo="git pull origin"
-function glom() { git pull origin `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
+alias glor="git pull origin"
+function glorm() { git pull origin `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
 
-alias glu="git pull upstream"
+alias glup="git pull upstream"
 unalias glum # For some reason set to 'git pull upstream master'
-function glum() { git pull upstream `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
+function glupm() { git pull upstream `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
 
 alias glr="git pull --rebase"
-alias glro="git pull --rebase origin"
-function glrom() { git pull --rebase origin `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
+alias glror="git pull --rebase origin"
+function glrorm() { git pull --rebase origin `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
 unalias gup # OMZ git pull --rebase
 unalias gupa # OMZ git pull --rebase --autostash
 unalias gupav # OMZ git pull --rebase --autostash -v
@@ -224,7 +224,7 @@ unalias ggpull # OMZ git pull origin "$(git_current_branch)"
 alias gme="git merge"
 alias gmem="git merge master"
 
-alias gs="git stash"
+alias gs="git stash --include-untracked"
 alias gsa="git stash apply"
 alias gsd="git stash drop"
 alias gsl="git stash list"
@@ -237,6 +237,7 @@ unalias gstl # OMZ git stash list
 unalias gstp # OMZ git stash pop
 unalias gsts # OMZ git stash show --text
 unalias gsta # OMZ git stash push
+unalias gstall # OMZ git stash --all
 
 alias grm="git rm"
 
