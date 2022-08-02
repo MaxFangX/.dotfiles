@@ -7,6 +7,11 @@
 
 """
 
+""" { 'Learn Vimscript the Hard Way' exercises
+    " Echoing messages: Display this cat when opening vim
+    echo "Welcome back! >^.^<"
+""" }
+
 """ { Basic usability - Tabs
 
     " Insert space characters whenever the tab key is pressed
@@ -212,9 +217,13 @@
     " - Control+u/i/o/p two-handed arrow keys
     " - Control+w to delete one word back
 
-    " Normal mode Ctrl + a / Ctrl + e to go to beginning / end
-    nmap <C-a> ^
-    nmap <C-e> $
+    " Ctrl + a / Ctrl + e to go to beginning / end
+    nnoremap <C-a> ^
+    nnoremap <C-e> $
+    vnoremap <C-a> ^
+    vnoremap <C-e> $
+    onoremap <C-a> ^
+    onoremap <C-e> $
 
     " Control+k to delete to end of line
     inoremap <C-k> <Esc>lDa
