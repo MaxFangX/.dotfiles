@@ -20,15 +20,9 @@
 
 """ }
 
-""" { Select mode ('normal text editor' mode)
+" # --- CONFIGURATION --- #
 
-    " Enter select mode with any mouse selection
-    " Select mode is normally entered with gh or gH but those are unergonomic.
-    set selectmode=mouse
-
-""" }
-
-""" { Basic usability - Tabs
+""" { Configuration - Tabs
 
     " Insert space characters whenever the tab key is pressed
     " https://vim.fandom.com/wiki/Converting_tabs_to_spaces
@@ -56,13 +50,13 @@
     set autoindent
 """ }
 
-""" { Basics - Split location
+""" { Configuration - Split location
     " Split files below and to the right
     set splitbelow
     set splitright
 """ }
 
-""" { Basics - UI
+""" { Configuration - UI
     " Show line numbers
     set number
 
@@ -78,7 +72,7 @@
     set scrolloff=2
 """ }
 
-""" { Basics - Search
+""" { Configuration - Search
     " When there is a previous search pattern, highlight all
     " its matches.
     " set hlsearch
@@ -93,21 +87,119 @@
     " Override the 'ignorecase' option if the search pattern
     " contains upper case characters.
     set smartcase
-
-    " Search for visually selected text with //
-    xnoremap // y/<C-R>"<CR>
-
-    " Use # as * but without immediately skipping to the next one
-    nnoremap # *N
 """ }
 
-""" { Basics - Files
+""" { Configuration - Files
     " Ignore these files in vim
     set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.DS_Store
     set wildignore+=*/node_modules/*,*/build/*,*/target/*,*/dist/*
 
     " Force saving files that require root permission 
     cmap w!! w !sudo tee > /dev/null %
+""" }
+
+""" { Configuration - Typing
+
+    " When a bracket is inserted, briefly jump to the matching
+    " one. The jump is only done if the match can be seen on the
+    " screen. The time to show the match can be set with
+    " 'matchtime'.
+    set showmatch
+
+    " Default text width of 80
+    set textwidth=80
+
+    " Try these if you have backspace problems
+    " https://vim.fandom.com/wiki/Backspace_and_delete_problems
+    " set backspace=2
+    " set backspace=indent,eol,start
+
+    " Automatic formatting
+
+    " A sequence of letters which describes how automatic formatting
+    " is to be done.
+    "
+    " letter    meaning when present in 'formatoptions'
+    " ------    ---------------------------------------
+    " c         Auto-wrap comments using textwidth, inserting
+    "           the current comment leader automatically.
+    " q         Allow formatting of comments with "gq".
+    " r         Automatically insert the current comment leader
+    "           after hitting <Enter> in Insert mode. 
+    " t         Auto-wrap text using textwidth (does not apply
+    "           to comments)
+    set formatoptions=c,q,r,t 
+""" }
+
+""" { Configuration - Autocompletion options
+    " Set completeopt to have a better completion experience
+    " - :help completeopt
+    " - menuone: popup even when there's only one match
+    " - noinsert: Do not insert text until a selection is made
+    " - noselect: Do not select, force user to select one from the menu
+    set completeopt=menuone,noinsert,noselect
+
+    " Make <Enter> input a newline if no item was selected in the
+    " autocomplete pop up menu ('pum')
+    " - See 'pumvisible()' in :help eval.txt
+    inoremap <expr> <CR> pumvisible() ?
+        \ (complete_info().selected == -1 ? '<C-y><CR>' : '<C-y>') :
+        \ '<CR>'
+    
+    " Avoid showing extra messages when using completion
+    " set shortmess+=c
+""" }
+
+""" Configuration - Relative line numbers {
+    " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
+    set relativenumber
+
+    " Ctrl + n to switch between relative and absolute
+    function! NumberToggle()
+      if(&relativenumber == 1)
+        set number
+      else
+        set relativenumber
+      endif
+    endfunc
+    nnoremap <C-n> :call NumberToggle()<cr>
+    
+    " Set/unset when lose/gain focus
+    :au FocusLost * :set number
+    :au FocusGained * :set relativenumber
+""" }
+
+""" { Configuration - Aesthetics
+    " Use 'True colors' (16 million colors)
+    " Info: https://gist.github.com/XVilka/8346728
+    set termguicolors
+
+    " When set to "dark", Vim will try to use colors that look
+    " good on a dark background. When set to "light", Vim will
+    " try to use colors that look good on a light background.
+    set background=dark
+""" }
+
+" # --- MAPPINGS --- #
+
+""" { Mappings - Leader Keys
+    " Main leader key (space)
+    " This setting must occur before any mapping that uses <leader>
+    " '\' is the default setting.
+    let mapleader = " "
+
+    " Local leader key
+    " This is meant for mappings that only take effect for certain types of
+    " files, e.g. Python, Rust
+    let maplocalleader = "-"
+""" }
+
+""" { Mappings - Search
+    " Search for visually selected text with //
+    xnoremap // y/<C-R>"<CR>
+
+    " Use # as * but without immediately skipping to the next one
+    nnoremap # *N
 """ }
 
 """ { Normal mode mods
@@ -161,12 +253,10 @@
 
     " Enable clicking around to move cursor position
     set mouse=a
-""" }
 
-""" { Leader Key (space)
-    " This setting must occur before any mapping that uses <leader>
-    " Consider '\' (default) '-', or ',' as alternatives
-    let mapleader = " "
+    " Enter select mode ('normal text editor' mode) using the mouse
+    " instead of the unergonomic gh or gH
+    set selectmode=mouse
 """ }
 
 """ { DVORAK - Splits
@@ -436,83 +526,12 @@
     inoremap <M-i><M-o><M-g><M-t> unmapped
 """ } 
 
-""" { Typing - General
-
-    " When a bracket is inserted, briefly jump to the matching
-    " one. The jump is only done if the match can be seen on the
-    " screen. The time to show the match can be set with
-    " 'matchtime'.
-    set showmatch
-
-    " Default text width of 80
-    set textwidth=80
-
-    " Try these if you have backspace problems
-    " https://vim.fandom.com/wiki/Backspace_and_delete_problems
-    " set backspace=2
-    " set backspace=indent,eol,start
-
-    " Automatic formatting
-
-    " A sequence of letters which describes how automatic formatting
-    " is to be done.
-    "
-    " letter    meaning when present in 'formatoptions'
-    " ------    ---------------------------------------
-    " c         Auto-wrap comments using textwidth, inserting
-    "           the current comment leader automatically.
-    " q         Allow formatting of comments with "gq".
-    " r         Automatically insert the current comment leader
-    "           after hitting <Enter> in Insert mode. 
-    " t         Auto-wrap text using textwidth (does not apply
-    "           to comments)
-    set formatoptions=c,q,r,t 
-
+""" { Mappings - Redo
     " Option + r (DVORAK) to redo last change
     nnoremap ø <C-R>
 """ }
 
-""" { Autocompletion options
-    " Set completeopt to have a better completion experience
-    " - :help completeopt
-    " - menuone: popup even when there's only one match
-    " - noinsert: Do not insert text until a selection is made
-    " - noselect: Do not select, force user to select one from the menu
-    set completeopt=menuone,noinsert,noselect
-
-    " Make <Enter> input a newline if no item was selected in the
-    " autocomplete pop up menu ('pum')
-    " - See 'pumvisible()' in :help eval.txt
-    inoremap <expr> <CR> pumvisible() ?
-        \ (complete_info().selected == -1 ? '<C-y><CR>' : '<C-y>') :
-        \ '<CR>'
-    
-    " Avoid showing extra messages when using completion
-    " set shortmess+=c
-""" }
-
-
-
-""" Relative line numbers {
-    " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
-    set relativenumber
-
-    " Ctrl + n to switch between relative and absolute
-    function! NumberToggle()
-      if(&relativenumber == 1)
-        set number
-      else
-        set relativenumber
-      endif
-    endfunc
-    nnoremap <C-n> :call NumberToggle()<cr>
-    
-    " Set/unset when lose/gain focus
-    :au FocusLost * :set number
-    :au FocusGained * :set relativenumber
-""" }
-
-""" { Vim Copy and Paste (i.e. with p)
+""" { Mappings - Vim paste (i.e. with p)
 
     " Don't overwrite yank register when pasting over existing text
     " in visual mode
@@ -520,7 +539,7 @@
     xnoremap p pgvy
 """ }
 
-""" { OS Copy and Paste
+""" { Mappings - OS Copy and Paste
 
     " Copy to OS clipboard from vim
     " Update: This overwrites the system clipboard when pasting over text in
@@ -553,7 +572,9 @@
     endfunction
 """ }
 
-""" { Language-specific Python
+" # --- LANGUAGE SPECIFIC --- #
+
+""" { Language-specific - Python
     " For tabs, > is shown at the beginning, - throughout
     autocmd FileType python setlocal listchars=tab:>-
 
@@ -642,19 +663,19 @@
     let g:surround_no_mappings = '1'
 
     " Manually add back key mappings, replacing ds with ks
-    nmap ks     <Plug>Dsurround
-    nmap cs     <Plug>Csurround
-    nmap cS     <Plug>CSurround
-    nmap ys     <Plug>Ysurround
-    nmap yS     <Plug>YSurround
-    nmap yss    <Plug>Yssurround
-    nmap ySs    <Plug>YSsurround
-    nmap ySS    <Plug>YSsurround
-    xmap S      <Plug>VSurround
-    xmap gS     <Plug>VgSurround
-    imap <C-S>  <Plug>Isurround
-    imap <C-G>s <Plug>Isurround
-    imap <C-G>S <Plug>ISurround
+    nnoremap ks     <Plug>Dsurround
+    nnoremap cs     <Plug>Csurround
+    nnoremap cS     <Plug>CSurround
+    nnoremap ys     <Plug>Ysurround
+    nnoremap yS     <Plug>YSurround
+    nnoremap yss    <Plug>Yssurround
+    nnoremap ySs    <Plug>YSsurround
+    nnoremap ySS    <Plug>YSsurround
+    xnoremap S      <Plug>VSurround
+    xnoremap gS     <Plug>VgSurround
+    inoremap <C-S>  <Plug>Isurround
+    inoremap <C-G>s <Plug>Isurround
+    inoremap <C-G>S <Plug>ISurround
 """ }
 
 """ { NERDTree
@@ -742,7 +763,6 @@
 
 """ { Plugin Options - rust-analyzer
 """ }
-
 
 """ { nvim-lspconfig General
     " https://github.com/neovim/nvim-lspconfig#rust_analyzer
@@ -871,15 +891,3 @@ EOF
     " let g:alduin_Shout_Become_Ethereal = 1 " Black background
     " colorscheme alduin
 """
-
-""" { Aesthetics
-    " Use 'True colors' (16 million colors)
-    " Info: https://gist.github.com/XVilka/8346728
-    set termguicolors
-
-    " When set to "dark", Vim will try to use colors that look
-    " good on a dark background. When set to "light", Vim will
-    " try to use colors that look good on a light background.
-    set background=dark
-""" }
-
