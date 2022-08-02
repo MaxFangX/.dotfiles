@@ -8,8 +8,24 @@
 """
 
 """ { 'Learn Vimscript the Hard Way' exercises
-    " Echoing messages: Display this cat when opening vim
+
+    " Echoing messages: Display friendly cat when opening vim
     echo "Welcome back! >^.^<"
+
+    " Mapping keys: Map \ to delete the current line(s),
+    " then paste it below the one we're on now
+    nnoremap \ ddp
+    " In visual mode, also reselect the pasted text
+    xnoremap \ dp`[V`]
+
+""" }
+
+""" { Select mode ('normal text editor' mode)
+
+    " Enter select mode with any mouse selection
+    " Select mode is normally entered with gh or gH but those are unergonomic.
+    set selectmode=mouse
+
 """ }
 
 """ { Basic usability - Tabs
@@ -79,7 +95,7 @@
     set smartcase
 
     " Search for visually selected text with //
-    vnoremap // y/<C-R>"<CR>
+    xnoremap // y/<C-R>"<CR>
 
     " Use # as * but without immediately skipping to the next one
     nnoremap # *N
@@ -117,9 +133,9 @@
     nnoremap H 8j
     nnoremap T 8k
 
-    " Visual and select modes
-    vnoremap H 8j
-    vnoremap T 8k
+    " Visual mode
+    xnoremap H 8j
+    xnoremap T 8k
 
     " Command mode
     onoremap H 8j
@@ -132,9 +148,9 @@
     nnoremap D B
     nnoremap N W
 
-    " Visual and select modes
-    vnoremap D B
-    vnoremap N W
+    " Visual mode
+    xnoremap D B
+    xnoremap N W
 
     " Command mode
     onoremap D B
@@ -147,10 +163,10 @@
     set mouse=a
 """ }
 
-""" { Leader Key
+""" { Leader Key (space)
     " This setting must occur before any mapping that uses <leader>
-    " Consider '\' (default) or ',' as alternatives
-    let mapleader = ' '
+    " Consider '\' (default) '-', or ',' as alternatives
+    let mapleader = " "
 """ }
 
 """ { DVORAK - Splits
@@ -178,11 +194,11 @@
     nnoremap t k
     nnoremap n l
 
-    " Apply during visual and select modes
-    vnoremap d h
-    vnoremap h j
-    vnoremap t k
-    vnoremap n l
+    " Apply during visual mode
+    xnoremap d h
+    xnoremap h j
+    xnoremap t k
+    xnoremap n l
 
     " Has to apply during commands as well, such as delete up, yank down
     " Only for up and down, kk
@@ -192,9 +208,9 @@
     " k or K for delete (Think: "(k)ill")
     nnoremap k d
     nnoremap K D
-    " apply during visual and select modes as well
-    vnoremap k d
-    vnoremap K D
+    " apply during visual mode as well
+    xnoremap k d
+    xnoremap K D
     " kk to delete line: the second k is in command mode
     onoremap k d
 
@@ -220,8 +236,8 @@
     " Ctrl + a / Ctrl + e to go to beginning / end
     nnoremap <C-a> ^
     nnoremap <C-e> $
-    vnoremap <C-a> ^
-    vnoremap <C-e> $
+    xnoremap <C-a> ^
+    xnoremap <C-e> $
     onoremap <C-a> ^
     onoremap <C-e> $
 
@@ -284,24 +300,24 @@
     " - Will also enable the Control + Option + o variant
     inoremap <M-t><M-o><M-g><M-i> <Esc>lwi
     nnoremap <M-t><M-o><M-g><M-i> w
-    vnoremap <M-t><M-o><M-g><M-i> w
+    xnoremap <M-t><M-o><M-g><M-i> w
     " Control + Option + b: Move back a word
     " NOTE: Additional iTerm2 mapping: Control + Option + Left
     " - Will also enable the Control + Option + y variant
     inoremap <M-t><M-o><M-i><M-g> <Esc>lbi
     nnoremap <M-t><M-o><M-i><M-g> b
-    vnoremap <M-t><M-o><M-i><M-g> b
+    xnoremap <M-t><M-o><M-i><M-g> b
 
     " Paragraph Movement: Insert AND normal modes
     " - iTerm2 mappings are not required for Control + key versions
     " Option + down (or Command + Control + u): Go to end of paragraph
     inoremap <M-g><M-t><M-i><M-o> <Esc>}a
     nnoremap <M-g><M-t><M-i><M-o> }
-    vnoremap <M-g><M-t><M-i><M-o> }
+    xnoremap <M-g><M-t><M-i><M-o> }
     " Option + up (or Command + Control + i): Go to start of paragraph
     inoremap <M-g><M-t><M-o><M-i> <Esc>{a
     nnoremap <M-g><M-t><M-o><M-i> {
-    vnoremap <M-g><M-t><M-o><M-i> {
+    xnoremap <M-g><M-t><M-o><M-i> {
 
     " Up Down Movement: Works out of the box
     " - Up/Down or Command + j/k or Control + u/i Insert mode
@@ -316,13 +332,13 @@
     " NOTE: Additional iTerm2 mapping: Command + h
     inoremap <M-o><M-g><M-t><M-i> <Esc>^i
     nnoremap <M-o><M-g><M-t><M-i> ^
-    vnoremap <M-o><M-g><M-t><M-i> ^
+    xnoremap <M-o><M-g><M-t><M-i> ^
     " Command + right: Go to end of line
     " - Command + Control + i works without additional iTerm2 mapping
     " NOTE: Additional iTerm2 mapping: Command + l
     inoremap <M-o><M-i><M-t><M-g> <Esc>$a
     nnoremap <M-o><M-i><M-t><M-g> $
-    vnoremap <M-o><M-i><M-t><M-g> $
+    xnoremap <M-o><M-i><M-t><M-g> $
 
     " Top Bottom Movement: Insert AND normal modes
     " - iTerm2 mapping is not required for Control + key versions
@@ -344,13 +360,13 @@
     " NOTE: Additional iTerm2 mapping: Shift + Right
     " - Shift + Control + o works without additional iTerm2 mapping
     inoremap <M-o><M-t><M-g><M-i> <Esc>lv
-    vnoremap <M-o><M-t><M-g><M-i> l
+    xnoremap <M-o><M-t><M-g><M-i> l
     nnoremap <M-o><M-t><M-g><M-i> vl
     " Shift + Control + b: Select backward a letter
     " NOTE: Additional iTerm2 mapping: Shift + Left
     " - Shift + Control + y works without additional iTerm2 mapping
     inoremap <M-o><M-t><M-i><M-g> <Esc>v
-    vnoremap <M-o><M-t><M-i><M-g> h
+    xnoremap <M-o><M-t><M-i><M-g> h
     nnoremap <M-o><M-t><M-i><M-g> vh
 
     " Select Word:
@@ -358,61 +374,61 @@
     " NOTE: Additional iTerm2 mapping: Option + Shift + Right
     " - Shift + Control + Option + o works without additional mapping
     inoremap <M-i><M-t><M-g><M-o> <Esc>lve
-    vnoremap <M-i><M-t><M-g><M-o> e
+    xnoremap <M-i><M-t><M-g><M-o> e
     nnoremap <M-i><M-t><M-g><M-o> ve
     " Shift + Option + Control + b: Select backward a word
     " NOTE: Additional iTerm2 mapping: Option + Shift + Left
     " - Shift + Control + Option + y works without additional mapping
     inoremap <M-i><M-t><M-o><M-g> <Esc>vb
-    vnoremap <M-i><M-t><M-o><M-g> b
+    xnoremap <M-i><M-t><M-o><M-g> b
     nnoremap <M-i><M-t><M-o><M-g> vb
 
     " Select Paragraph:
     " Shift + Option + Down: Select to end of paragraph
     " - Shift + Option + Control + u works without additional mapping
     inoremap <M-i><M-g><M-t><M-o> <Esc>lv}
-    vnoremap <M-i><M-g><M-t><M-o> }
+    xnoremap <M-i><M-g><M-t><M-o> }
     nnoremap <M-i><M-g><M-t><M-o> v}
     " Shift + Option + Up: Select to beginning of paragraph
     " - Shift + Option + Control + i works without additional mapping
     inoremap <M-i><M-o><M-t><M-g> <Esc>v{
-    vnoremap <M-i><M-o><M-t><M-g> {
+    xnoremap <M-i><M-o><M-t><M-g> {
     nnoremap <M-i><M-o><M-t><M-g> v{
 
     " Select Up Down:
     " Shift + Control + u: Select down
     " - Shift + Down works without additional iTerm2 mapping
     inoremap <M-g><M-i><M-t><M-o> <Esc>lvj
-    vnoremap <M-g><M-i><M-t><M-o> j
+    xnoremap <M-g><M-i><M-t><M-o> j
     nnoremap <M-g><M-i><M-t><M-o> vj
     " Shift + Control + i: Select up
     " - Shift + Up works without additional iTerm2 mapping
     inoremap <M-g><M-o><M-t><M-i> <Esc>vk
-    vnoremap <M-g><M-o><M-t><M-i> k
+    xnoremap <M-g><M-o><M-t><M-i> k
     nnoremap <M-g><M-o><M-t><M-i> vk
 
     " Select Home End:
     " Shift + Command + Right
     " - Shift + Command + Control + o works without additional mapping
     inoremap <M-g><M-i><M-o><M-t> <Esc>lv$
-    vnoremap <M-g><M-i><M-o><M-t> $
+    xnoremap <M-g><M-i><M-o><M-t> $
     nnoremap <M-g><M-i><M-o><M-t> v$
     " Shift + Command + Left
     " - Shift + Command + Control + y works without additional mapping
     inoremap <M-g><M-o><M-i><M-t> <Esc>v^
-    vnoremap <M-g><M-o><M-i><M-t> ^
+    xnoremap <M-g><M-o><M-i><M-t> ^
     nnoremap <M-g><M-o><M-i><M-t> hv^
 
     " Select Top Bottom:
     " Shift + Command + Down
     " - Shift + Command + Control + u works without additional mapping
     inoremap <M-o><M-g><M-i><M-t> <Esc>lvG
-    vnoremap <M-o><M-g><M-i><M-t> G
+    xnoremap <M-o><M-g><M-i><M-t> G
     nnoremap <M-o><M-g><M-i><M-t> vG
     " Shift + Command + Up
     " - Shift + Command + Control + i works without additional mapping
     inoremap <M-o><M-i><M-g><M-t> <Esc>vgg
-    vnoremap <M-o><M-i><M-g><M-t> gg
+    xnoremap <M-o><M-i><M-g><M-t> gg
     nnoremap <M-o><M-i><M-g><M-t> hvgg
 
     " Unmapped:
@@ -693,11 +709,11 @@
 
     " (QWERTY) Option + P to open file search
     nnoremap π :FzfFiles<Enter>
-    vnoremap π <Esc>:FzfFiles<Enter>
+    xnoremap π <Esc>:FzfFiles<Enter>
 
     " (DVORAK) Option + B to open buffer search (useful after piping rg | vim)
     nnoremap ˜ :FzfBuffers<Enter>
-    vnoremap ˜ <Esc>:FzfBuffers<Enter>
+    xnoremap ˜ <Esc>:FzfBuffers<Enter>
 
     " (DVORAK) Option + S to search with ripgrep
     " TODO configure: ALT-A to select all, ALT-D to deselect all
@@ -708,7 +724,7 @@
     "   current window / tabs / split / vsplit
     nnoremap … :FzfRg<Enter>
     " NOTE: This can be removed later if another namespace is needed
-    nnoremap <Space><Space> :FzfRg<Enter>
+    nnoremap <Leader><Space> :FzfRg<Enter>
 
     " Quick search [neo]vim help tags with :H
     command H FzfHelptags
