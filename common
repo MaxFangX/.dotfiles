@@ -245,8 +245,8 @@ alias grm="git rm"
 alias gb="git branch"
 alias gbr="git branch -r"
 
-alias grb="git rebase --committer-date-is-author-date"
-alias grbi="git rebase -i --committer-date-is-author-date"
+alias grb="git rebase"
+alias grbi="git rebase -i"
 alias grbc="git rebase --continue"
 alias grbs="git rebase --skip"
 
