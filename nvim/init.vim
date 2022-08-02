@@ -73,10 +73,14 @@
     set autoindent
 """ }
 
-""" { Configuration - Split location
+""" { Configuration - Splits
     " Split files below and to the right
     set splitbelow
     set splitright
+
+    " Maintain equal splits when the window size changes.
+    set equalalways " this is default value
+    autocmd VimResized * wincmd =
 """ }
 
 """ { Configuration - UI
@@ -208,6 +212,10 @@
 """ { Command mode mappings
     " Automatically replace ':help' with ':vert help' to open in vertical split
     cnoremap help vert help
+""" }
+
+""" { Mappings - Press <Leader>= to re-equalize splits
+    nnoremap <Leader>= <C-W>=
 """ }
 
 """ { Mappings - Search
