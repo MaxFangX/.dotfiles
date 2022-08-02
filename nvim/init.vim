@@ -7,6 +7,20 @@
 
 """
 
+""" { Mappings - Leader Keys
+    " These are first because they are used throughout the file.
+
+    " Main leader key <Space>
+    " This setting must occur before any mapping that uses <leader>
+    " '\' is the default setting.
+    let mapleader = "\<Space>"
+
+    " Local leader key -
+    " This is meant for mappings that only take effect for certain types of
+    " files, e.g. Python, Rust
+    let maplocalleader = "-"
+""" }
+
 """ { 'Learn Vimscript the Hard Way' exercises
 
     " Echoing messages: Display friendly cat when opening vim
@@ -15,9 +29,18 @@
     " Mapping keys: Map \ to delete the current line(s),
     " then paste it below the one we're on now
     nnoremap \ ddp
-    " In visual mode, also reselect the pasted text
+    " In visual mode, also reselect text
     xnoremap \ dp`[V`]
 
+    " Quickly edit init.vim in the midst of coding
+    " (v)im: (e)dit my init.vim
+    nnoremap <leader>ve :vsplit $MYVIMRC<cr>
+    " (v)im: (s)ource my init.vim
+    nnoremap <leader>vs :source $MYVIMRC<cr>
+
+    " Abbreviations to fix typos
+    iabbrev adn and
+    iabbrev waht what
 """ }
 
 " # --- CONFIGURATION --- #
@@ -182,16 +205,9 @@
 
 " # --- MAPPINGS --- #
 
-""" { Mappings - Leader Keys
-    " Main leader key (space)
-    " This setting must occur before any mapping that uses <leader>
-    " '\' is the default setting.
-    let mapleader = " "
-
-    " Local leader key
-    " This is meant for mappings that only take effect for certain types of
-    " files, e.g. Python, Rust
-    let maplocalleader = "-"
+""" { Command mode mappings
+    " Automatically replace ':help' with ':vert help' to open in vertical split
+    cnoremap help vert help
 """ }
 
 """ { Mappings - Search
@@ -728,13 +744,18 @@
     " Namespace fzf.vim commands
     let g:fzf_command_prefix = 'Fzf'
 
-    " (QWERTY) Option + P to open file search
+    " <Leader>f to open file search (or QWERTY Option + P)
     nnoremap π :FzfFiles<Enter>
     xnoremap π <Esc>:FzfFiles<Enter>
+    nnoremap <Leader>f :FzfFiles<Enter>
+    xnoremap <Leader>f <Esc>:FzfFiles<Enter>
 
-    " (DVORAK) Option + B to open buffer search (useful after piping rg | vim)
+    " <Leader>b to open file search (or QWERTY Option + B)
+    " Useful after piping rg | vim
     nnoremap ˜ :FzfBuffers<Enter>
     xnoremap ˜ <Esc>:FzfBuffers<Enter>
+    nnoremap <Leader>b :FzfBuffers<Enter>
+    xnoremap <Leader>b <Esc>:FzfBuffers<Enter>
 
     " (DVORAK) Option + S to search with ripgrep
     " TODO configure: ALT-A to select all, ALT-D to deselect all
@@ -842,20 +863,21 @@ EOF
 
 
     " Commands: 
-    nnoremap grs :RustSetInlayHints<Enter>
-    nnoremap grdi :RustDisableInlayHints<Enter>
+    nnoremap <LocalLeader>i :RustSetInlayHints<Enter>
+    nnoremap <LocalLeader>di :RustDisableInlayHints<Enter>
     " - RustToggleInlayHints
-    nnoremap grr :RustRunnables<Enter>
-    nnoremap grd :RustDebuggables<Enter>
+    nnoremap <LocalLeader>r :RustRunnables<Enter>
+    nnoremap <LocalLeader>d :RustDebuggables<Enter>
     " - RustExpandMacro
     " - RustOpenCargo 
     " - RustParentModule
     " - RustJoinLines
     " First command opens the window, second command enters it
-    " nnoremap grh :RustHoverActions<Enter> " Already covered by lsp
+    " This one is already covered by lsp
+    " nnoremap <LocalLeader>h :RustHoverActions<Enter>
     " - RustHoverRange
-    nnoremap grmd :RustMoveItemDown<Enter>
-    nnoremap grmu :RustMoveItemUp<Enter>
+    nnoremap <LocalLeader>md :RustMoveItemDown<Enter>
+    nnoremap <LocalLeader>mu :RustMoveItemUp<Enter>
     " - RustStartStandaloneServerForBuffer 
     " - RustViewCrateGraph (requires dot from graphviz)
 
