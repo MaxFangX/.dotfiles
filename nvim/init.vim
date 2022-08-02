@@ -708,7 +708,7 @@
     "   current window / tabs / split / vsplit
     nnoremap … :FzfRg<Enter>
     " NOTE: This can be removed later if another namespace is needed
-    nnoremap <Space> :FzfRg<Enter>
+    nnoremap <Space><Space> :FzfRg<Enter>
 
     " Quick search [neo]vim help tags with :H
     command H FzfHelptags
