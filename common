@@ -160,6 +160,7 @@ gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
 
 # Vim
 alias vim=nvim
+alias vi=nvim
 
 # Ripgrep
 alias rgf="rg --files"
