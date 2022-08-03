@@ -1,22 +1,41 @@
 """ { Notes
 
     " Config Docs: See http://vimdoc.sourceforge.net/htmldoc/options.html
-
+    "
     " For multi-byte character support (CJK support, for example):
     " set fileencodings=ucs-bom,utf-8,cp936,big5,euc-jp,euc-kr,gb18030,latin1
-
+    "
+    " Auto Command Groups:
+    "
     " All autocmds should be wrapped in a group prefixed with autocmd! to
     " prevent setting duplicate autocmds each time init.vim is resourced.
-    " Info: https://learnvimscriptthehardway.stevelosh.com/chapters/14.html
+    "
     " Example: 
     " augroup my_autocmd_group
     "     autocmd!
     "     autocmd FileType python       :iabbrev <buffer> iff if:<left>
     "     autocmd FileType javascript   :iabbrev <buffer> iff if()<left>
     " augroup END
-
+    "
+    " Info: https://learnvimscriptthehardway.stevelosh.com/chapters/14.html
+    "
+    " Map Comments:
+    "
     " Vim comments don't work after :map statements.
+    "
     " Info: https://learnvimscriptthehardway.stevelosh.com/chapters/03.html
+    "
+    " Operator Pending Mappings:
+    "
+    " A good way to keep the multiple ways of creating operator-pending mappings
+    " straight is to remember the following two rules:
+    "
+    " - If your operator-pending mapping ends with some text visually selected,
+    "   Vim will operate on that text.
+    " - Otherwise, Vim will operate on the text between the original cursor
+    "   position and the new position.
+    "
+    " Info: https://learnvimscriptthehardway.stevelosh.com/chapters/15.html
 """
 
 """ { Mappings - Leader Keys
@@ -54,6 +73,26 @@
     iabbrev adn and
     iabbrev waht what
     iabbrev teh the
+
+    " Operator-Pending Mappings
+    " 'Inside next parenthesis on this line'
+    onoremap in( :<c-u>normal! f(vi(<cr>
+    onoremap in) :<c-u>normal! f(vi(<cr>
+    " 'Inside last parenthesis on this line'
+    onoremap il( :<c-u>normal! F)vi)<cr>
+    onoremap il) :<c-u>normal! F)vi)<cr>
+    " 'Inside next brackets on this line'
+    onoremap in[ :<c-u>normal! f[vi[<cr>
+    onoremap in] :<c-u>normal! f[vi[<cr>
+    " 'Inside last brackets on this line'
+    onoremap il[ :<c-u>normal! F]vi]<cr>
+    onoremap il] :<c-u>normal! F]vi]<cr>
+    " 'Inside next curly braces on this line'
+    onoremap in{ :<c-u>normal! f{vi{<cr>
+    onoremap in} :<c-u>normal! f{vi{<cr>
+    " 'Inside last curly braces on this line'
+    onoremap il{ :<c-u>normal! F}vi}<cr>
+    onoremap il} :<c-u>normal! F}vi}<cr>
 """ }
 
 " # --- CONFIGURATION --- #
