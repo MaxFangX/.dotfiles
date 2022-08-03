@@ -80,7 +80,10 @@
 
     " Maintain equal splits when the window size changes.
     set equalalways " this is default value
-    autocmd VimResized * wincmd =
+    augroup equal_splits
+        autocmd!
+        autocmd VimResized * wincmd =
+    augroup END
 """ }
 
 """ { Configuration - UI
@@ -602,49 +605,66 @@
 """ { Show empty space
     " Show tabs as >--- and non-breakable space chars as +
     " See :help nolist for more info
-    autocmd FileType vim setlocal list
-    autocmd FileType rust setlocal list
-    autocmd FileType python setlocal list
-    autocmd FileType javascript setlocal list
+    augroup show_empty_space
+        autocmd!
+        autocmd FileType vim setlocal list
+        autocmd FileType rust setlocal list
+        autocmd FileType python setlocal list
+        autocmd FileType javascript setlocal list
+    augroup END
 """ }
 
 """ { Don't set maximum text width for some filetypes
-    autocmd FileType vim setlocal set textwidth=0
-    autocmd FileType toml setlocal set textwidth=0
+    augroup max_textwidth
+        autocmd!
+        autocmd FileType vim setlocal set textwidth=0
+        autocmd FileType toml setlocal set textwidth=0
+    augroup END
 """ }
 
 """ { Use iff to fill out if statements
     " 'Learn Vimscript the Hard Way' exercise
-    autocmd FileType python       :iabbrev <buffer> iff if:<left>
-    autocmd FileType javascript   :iabbrev <buffer> iff if()<left>
+    augroup iff_statements
+        autocmd!
+        autocmd FileType python       :iabbrev <buffer> iff if:<left>
+        autocmd FileType javascript   :iabbrev <buffer> iff if()<left>
+    augroup END
 """ }
 
 " # --- LANGUAGE SPECIFIC - BY LANGUAGE --- #
 
 """ { Rust
-    " Expand fn to fn _() {}
-    autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Left><Esc><Up>wi
-
-    " Expand matchr to match _ { Ok(_) => {}\nErr(e) => {} }
-    autocmd FileType rust :iabbrev <buffer> matchr match {<CR>Ok(_) => {<CR>}<CR>Err(e) => {<CR>}}<Esc>5<Up>ea
-    " Expand matcho to match _ { Some(_) => {}\nNone => {} }
-    autocmd FileType rust :iabbrev <buffer> matcho match {<CR>Some(_) => {<CR>}<CR>None => {<CR>}}<Esc>5<Up>ea
+    augroup rust_cmds
+        autocmd!
+        " Expand fn to fn _() {}
+        autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Left><Esc><Up>wi
+        " Expand matchr to match _ { Ok(_) => {}\nErr(e) => {} }
+        autocmd FileType rust :iabbrev <buffer> matchr match {<CR>Ok(_) => {<CR>}<CR>Err(e) => {<CR>}}<Esc>5<Up>ea
+        " Expand matcho to match _ { Some(_) => {}\nNone => {} }
+        autocmd FileType rust :iabbrev <buffer> matcho match {<CR>Some(_) => {<CR>}<CR>None => {<CR>}}<Esc>5<Up>ea
+    augroup END
 """ }
 
 """ { Python
 """ }
 
 """ { Javascript
-    " Two space indent
-    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
-    " Show tabs as >---, show non-breakable space chars as +
-    " See :help nolist for more info
-    autocmd FileType javascript setlocal list
+    augroup javascript_cmds
+        autocmd!
+        " Two space indent
+        autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+        " Show tabs as >---, show non-breakable space chars as +
+        " See :help nolist for more info
+        autocmd FileType javascript setlocal list
+    augroup END
 """ }
 
 """ { Go
-    " Go tabs
-    autocmd FileType go setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
+    augroup go_cmds
+        autocmd!
+        " Go tabs
+        autocmd FileType go setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
+    augroup END
 """ }
 
 """ { Plugin Management - vim-plug
@@ -752,24 +772,25 @@
     " let NERDTreeMenuOpenInTabSilent='T' " can't get tab to work
     " let NERDTreeMenuOpenInTab='T'       " can't get tab to work
 
-    " Start NERDTree if Vim is started with 0 file arguments or >=2 file args,
-    " move the cursor to the other window if so
-    " autocmd VimEnter * if argc() == 0 || argc() >= 2 | NERDTree | endif
-    " autocmd VimEnter * if argc() == 0 || argc() >= 2 | wincmd p | endif
+    augroup _
+        autocmd!
+        " Start NERDTree if Vim is started with 0 file arguments or >=2 file args,
+        " move the cursor to the other window if so
+        " autocmd VimEnter * if argc() == 0 || argc() >= 2 | NERDTree | endif
+        " autocmd VimEnter * if argc() == 0 || argc() >= 2 | wincmd p | endif
 
-    " Open the existing NERDTree on each new tab.
-    autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
+        " Open the existing NERDTree on each new tab.
+        autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
 
-    " Exit Vim if NERDTree is the only window remaining in the only tab.
-    autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+        " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+        autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+        " Exit Vim if NERDTree is the only window remaining in the only tab.
+        autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
-    " Close the tab if NERDTree is the only window remaining in it.
-    autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-
-    " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
-    autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
-        \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
-
+        " Close the tab if NERDTree is the only window remaining in it.
+        autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+            \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+    augroup END
 """ }
 
 """ { Plugin Options - fzf.vim
@@ -886,9 +907,12 @@ EOF
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
 
-    " Try to enable the inlay hints as soon as vim loads
-    autocmd VimEnter :RustSetInlayHints<Enter> silent " When opening vim
-    autocmd CursorHold :RustSetInlayHints<Enter> silent " Keep trying
+    augroup _
+        autocmd!
+        " Try to enable the inlay hints as soon as vim loads
+        autocmd VimEnter :RustSetInlayHints<Enter> silent " When opening vim
+        autocmd CursorHold :RustSetInlayHints<Enter> silent " Keep trying
+    augroup END
 """ }
 
 
