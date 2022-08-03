@@ -669,8 +669,8 @@
 """ { Don't set maximum text width for some filetypes
     augroup max_textwidth
         autocmd!
-        autocmd FileType vim setlocal set textwidth=0
-        autocmd FileType toml setlocal set textwidth=0
+        autocmd FileType vim setlocal textwidth=0
+        autocmd FileType toml setlocal textwidth=0
     augroup END
 """ }
 
@@ -684,6 +684,16 @@
 """ }
 
 " # --- LANGUAGE SPECIFIC - BY LANGUAGE --- #
+
+""" { Vim
+    augroup vim_cmds
+        autocmd!
+        " Disable auto-pairs in vim configs, required for the following abbrev
+        autocmd Filetype vim let b:autopairs_loaded=1
+        " Expand """ to """ { """ }
+        autocmd FileType vim :iabbrev <buffer> """ """ {<CR>""" }<Up>
+    augroup END
+""" }
 
 """ { Rust
     augroup rust_cmds
