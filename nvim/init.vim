@@ -5,6 +5,18 @@
     " For multi-byte character support (CJK support, for example):
     " set fileencodings=ucs-bom,utf-8,cp936,big5,euc-jp,euc-kr,gb18030,latin1
 
+    " All autocmds should be wrapped in a group prefixed with autocmd! to
+    " prevent setting duplicate autocmds each time init.vim is resourced.
+    " Info: https://learnvimscriptthehardway.stevelosh.com/chapters/14.html
+    " Example: 
+    " augroup my_autocmd_group
+    "     autocmd!
+    "     autocmd FileType python       :iabbrev <buffer> iff if:<left>
+    "     autocmd FileType javascript   :iabbrev <buffer> iff if()<left>
+    " augroup END
+
+    " Vim comments don't work after :map statements.
+    " Info: https://learnvimscriptthehardway.stevelosh.com/chapters/03.html
 """
 
 """ { Mappings - Leader Keys
@@ -41,6 +53,7 @@
     " Abbreviations to fix typos
     iabbrev adn and
     iabbrev waht what
+    iabbrev teh the
 """ }
 
 " # --- CONFIGURATION --- #
