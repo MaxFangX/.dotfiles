@@ -266,7 +266,7 @@
 
 """ { Command mode mappings
     " Replace ':vhelp' with ':vert help' to open in vertical split
-    cnoremap vhelp vert help
+    cabbrev vhelp vert help
 """ }
 
 """ { Mappings - Press <Leader>= to re-equalize splits
@@ -745,6 +745,7 @@
         Plug 'tpope/vim-commentary'     " Comment / uncomment
         Plug 'tpope/vim-rsi'            " Readline (emacs) shortcuts in vim
         Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
+        Plug 'ton/vim-bufsurf'          " Buffer history per window
 
         Plug 'preservim/nerdtree'       " File system explorer
         Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Adds :FZF
@@ -811,6 +812,25 @@
     inoremap <C-S>  <Plug>Isurround
     inoremap <C-G>s <Plug>Isurround
     inoremap <C-G>S <Plug>ISurround
+""" }
+
+""" { vim-bufsurf
+    " This plugin exposes :BufSurfForward and :BufSurfBack
+    " <Plug>(buf-surf-forward) and <Plug>(buf-surf-back) are also available
+
+    " Option + QWERTY [ or side mouse: Go back one buffer
+    " Identify the vim name of the mouse button using:
+    " - Unmapping <C-k> :iunmap <C-k>
+    " - Can be confirmed unmapped using :imap <C-k>
+    " - Enter insert mode, type <C-k>, then press the mouse button.
+    "   The full vim name (e.g. <MiddleMouse>) will appear.
+    nnoremap <silent> “ <Plug>(buf-surf-back)
+    nnoremap <silent> <MiddleMouse> <Plug>(buf-surf-back)
+    vnoremap <silent> <MiddleMouse> <Plug>(buf-surf-back)
+
+    " Old mappings in case vim-bufsurf doesn't work
+    " nnoremap <silent> “ <C-^>
+    " nnoremap <silent> <MiddleMouse> <C-^>
 """ }
 
 """ { NERDTree
@@ -955,9 +975,6 @@ EOF
     " Option + QWERTY ] or double click: Go to definition
     nnoremap <silent> ‘             <cmd>lua vim.lsp.buf.definition()<CR>
     nnoremap <silent> <2-LeftMouse> <cmd>lua vim.lsp.buf.definition()<CR>
-    " Option + QWERTY [ or side mouse: Go back
-    nnoremap <silent> “ <C-^>
-    nnoremap <silent> <MiddleMouse> <C-^>
 
     " nnoremap <silent> gh    <cmd>lua vim.lsp.buf.hover()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
