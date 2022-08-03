@@ -952,10 +952,12 @@ EOF
 """ { Code navigation shortcut examples - integrate these
     " https://github.com/sharksforarms/vim-rust/blob/master/neovim-init-lsp-cmp-rust-tools.vim
 
-    " Option + QWERTY ]: Go to definition
-    nnoremap <silent> ‘ <cmd>lua vim.lsp.buf.definition()<CR>
-    " Option + QWERTY [: Go back
-    nnoremap <silent> “ <c-^>
+    " Option + QWERTY ] or double click: Go to definition
+    nnoremap <silent> ‘             <cmd>lua vim.lsp.buf.definition()<CR>
+    nnoremap <silent> <2-LeftMouse> <cmd>lua vim.lsp.buf.definition()<CR>
+    " Option + QWERTY [ or side mouse: Go back
+    nnoremap <silent> “ <C-^>
+    nnoremap <silent> <MiddleMouse> <C-^>
 
     " nnoremap <silent> gh    <cmd>lua vim.lsp.buf.hover()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
