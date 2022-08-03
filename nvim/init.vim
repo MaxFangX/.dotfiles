@@ -210,8 +210,8 @@
 " # --- MAPPINGS --- #
 
 """ { Command mode mappings
-    " Automatically replace ':help' with ':vert help' to open in vertical split
-    cnoremap help vert help
+    " Replace ':vhelp' with ':vert help' to open in vertical split
+    cnoremap vhelp vert help
 """ }
 
 """ { Mappings - Press <Leader>= to re-equalize splits
@@ -596,24 +596,53 @@
     endfunction
 """ }
 
-" # --- LANGUAGE SPECIFIC --- #
+" # --- LANGUAGE SPECIFIC - BY FUNCTION --- #
+" Type :setfiletype <C-d> to see the full list of supported filetypes
 
-""" { Language-specific - Python
-    " For tabs, > is shown at the beginning, - throughout
-    autocmd FileType python setlocal listchars=tab:>-
-
-    " Show empty spaces
-    " set list
+""" { Show empty space
+    " Show tabs as >--- and non-breakable space chars as +
+    " See :help nolist for more info
+    autocmd FileType vim setlocal list
+    autocmd FileType rust setlocal list
+    autocmd FileType python setlocal list
+    autocmd FileType javascript setlocal list
 """ }
 
-""" { Language-specific - Javascript
+""" { Don't set maximum text width for some filetypes
+    autocmd FileType vim setlocal set textwidth=0
+    autocmd FileType toml setlocal set textwidth=0
+""" }
+
+""" { Use iff to fill out if statements
+    " 'Learn Vimscript the Hard Way' exercise
+    autocmd FileType python       :iabbrev <buffer> iff if:<left>
+    autocmd FileType javascript   :iabbrev <buffer> iff if()<left>
+""" }
+
+" # --- LANGUAGE SPECIFIC - BY LANGUAGE --- #
+
+""" { Rust
+    " Expand fn to fn _() {}
+    autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Left><Esc><Up>wi
+
+    " Expand matchr to match _ { Ok(_) => {}\nErr(e) => {} }
+    autocmd FileType rust :iabbrev <buffer> matchr match {<CR>Ok(_) => {<CR>}<CR>Err(e) => {<CR>}}<Esc>5<Up>ea
+    " Expand matcho to match _ { Some(_) => {}\nNone => {} }
+    autocmd FileType rust :iabbrev <buffer> matcho match {<CR>Some(_) => {<CR>}<CR>None => {<CR>}}<Esc>5<Up>ea
+""" }
+
+""" { Python
+""" }
+
+""" { Javascript
     " Two space indent
-    " For tabs, > is shown at the beginning, - throughout
-    autocmd FileType javascript setlocal listchars=tab:>-
     autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+    " Show tabs as >---, show non-breakable space chars as +
+    " See :help nolist for more info
+    autocmd FileType javascript setlocal list
 """ }
 
-""" { Language-specific - Go
+""" { Go
     " Go tabs
     autocmd FileType go setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
 """ }
