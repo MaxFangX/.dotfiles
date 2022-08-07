@@ -17,13 +17,13 @@
     "     autocmd FileType javascript   :iabbrev <buffer> iff if()<left>
     " augroup END
     "
-    " Info: https://learnvimscriptthehardway.stevelosh.com/chapters/14.html
+    " More info: https://learnvimscriptthehardway.stevelosh.com/chapters/14.html
     "
     " Map Comments:
     "
     " Vim comments don't work after :map statements.
     "
-    " Info: https://learnvimscriptthehardway.stevelosh.com/chapters/03.html
+    " More info: https://learnvimscriptthehardway.stevelosh.com/chapters/03.html
     "
     " Operator Pending Mappings:
     "
@@ -35,7 +35,15 @@
     " - Otherwise, Vim will operate on the text between the original cursor
     "   position and the new position.
     "
-    " Info: https://learnvimscriptthehardway.stevelosh.com/chapters/15.html
+    " More info: https://learnvimscriptthehardway.stevelosh.com/chapters/15.html
+    "
+    " Identifying Vim Names:
+    "
+    " e.g. for a mouse button
+    " - Unmap <C-k> :iunmap <C-k>
+    " - Confirme the unmapping using :imap <C-k>
+    " - Enter insert mode, type <C-k>, then press the mouse button.
+    "   The full vim name (e.g. <MiddleMouse>) will appear.
 """
 
 """ { Mappings - Leader Keys
@@ -253,7 +261,7 @@
 
 """ { Configuration - Aesthetics
     " Use 'True colors' (16 million colors)
-    " Info: https://gist.github.com/XVilka/8346728
+    " More info: https://gist.github.com/XVilka/8346728
     set termguicolors
 
     " When set to "dark", Vim will try to use colors that look
@@ -678,8 +686,8 @@
     " 'Learn Vimscript the Hard Way' exercise
     augroup iff_statements
         autocmd!
-        autocmd FileType python       :iabbrev <buffer> iff if:<left>
-        autocmd FileType javascript   :iabbrev <buffer> iff if()<left>
+        autocmd FileType python       :iabbrev <buffer> iff if:<Left>
+        autocmd FileType javascript   :iabbrev <buffer> iff if()<Left>
     augroup END
 """ }
 
@@ -699,7 +707,7 @@
     augroup rust_cmds
         autocmd!
         " Expand fn to fn _() {}
-        autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Left><Esc><Up>wi
+        autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Esc><Up>$bi
         " Expand matchr to match _ { Ok(_) => {}\nErr(e) => {} }
         autocmd FileType rust :iabbrev <buffer> matchr match {<CR>Ok(_) => {<CR>}<CR>Err(e) => {<CR>}}<Esc>5<Up>ea
         " Expand matcho to match _ { Some(_) => {}\nNone => {} }
@@ -708,6 +716,13 @@
 """ }
 
 """ { Python
+    augroup python_cmds
+        autocmd!
+        " Expand def to def ():
+        autocmd Filetype python :iabbrev <buffer> def def():<Left><Left><Left>
+        " Expand forr to for <cursor> in _:
+        autocmd Filetype python :iabbrev <buffer> forr for in _:<Esc>bbbea
+    augroup END
 """ }
 
 """ { Javascript
@@ -818,12 +833,10 @@
     " This plugin exposes :BufSurfForward and :BufSurfBack
     " <Plug>(buf-surf-forward) and <Plug>(buf-surf-back) are also available
 
+    " Option + QWERTY ]: Go forward one buffer
+    nnoremap <silent> ‘ <Plug>(buf-surf-forward)
+
     " Option + QWERTY [ or side mouse: Go back one buffer
-    " Identify the vim name of the mouse button using:
-    " - Unmapping <C-k> :iunmap <C-k>
-    " - Can be confirmed unmapped using :imap <C-k>
-    " - Enter insert mode, type <C-k>, then press the mouse button.
-    "   The full vim name (e.g. <MiddleMouse>) will appear.
     nnoremap <silent> “ <Plug>(buf-surf-back)
     nnoremap <silent> <MiddleMouse> <Plug>(buf-surf-back)
     vnoremap <silent> <MiddleMouse> <Plug>(buf-surf-back)
@@ -884,16 +897,12 @@
     " Namespace fzf.vim commands
     let g:fzf_command_prefix = 'Fzf'
 
-    " <Leader>f to open file search (or QWERTY Option + P)
-    nnoremap π :FzfFiles<Enter>
-    xnoremap π <Esc>:FzfFiles<Enter>
+    " <Leader>f to open file search
     nnoremap <Leader>f :FzfFiles<Enter>
     xnoremap <Leader>f <Esc>:FzfFiles<Enter>
 
-    " <Leader>b to open file search (or QWERTY Option + B)
+    " <Leader>b to open file search
     " Useful after piping rg | vim
-    nnoremap ˜ :FzfBuffers<Enter>
-    xnoremap ˜ <Esc>:FzfBuffers<Enter>
     nnoremap <Leader>b :FzfBuffers<Enter>
     xnoremap <Leader>b <Esc>:FzfBuffers<Enter>
 
@@ -972,8 +981,8 @@ EOF
 """ { Code navigation shortcut examples - integrate these
     " https://github.com/sharksforarms/vim-rust/blob/master/neovim-init-lsp-cmp-rust-tools.vim
 
-    " Option + QWERTY ] or double click: Go to definition
-    nnoremap <silent> ‘             <cmd>lua vim.lsp.buf.definition()<CR>
+    " <Leader>d or double click: Go to definition
+    nnoremap <silent> <Leader>d     <cmd>lua vim.lsp.buf.definition()<CR>
     nnoremap <silent> <2-LeftMouse> <cmd>lua vim.lsp.buf.definition()<CR>
 
     " nnoremap <silent> gh    <cmd>lua vim.lsp.buf.hover()<CR>
