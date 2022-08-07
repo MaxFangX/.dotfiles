@@ -659,6 +659,16 @@
     endfunction
 """ }
 
+" # --- HELPER FUNCTIONS --- #
+
+""" { Consume the space after an abbreviation
+    " TODO Fix
+    func Eatchar(pat)
+      let c = nr2char(getchar(0))
+      return (c =~ a:pat) ? '' : c
+    endfunc
+""" }
+
 " # --- LANGUAGE SPECIFIC - BY FUNCTION --- #
 " Type :setfiletype <C-d> to see the full list of supported filetypes
 
@@ -712,6 +722,13 @@
         autocmd FileType rust :iabbrev <buffer> matchr match {<CR>Ok(_) => {<CR>}<CR>Err(e) => {<CR>}}<Esc>5<Up>ea
         " Expand matcho to match _ { Some(_) => {}\nNone => {} }
         autocmd FileType rust :iabbrev <buffer> matcho match {<CR>Some(_) => {<CR>}<CR>None => {<CR>}}<Esc>5<Up>ea
+        " TODO Make this trigger with 'impl Trait'
+        " Expand impld to Display impl
+        autocmd FileType rust :iabbrev <buffer> impld use std::fmt::{self, Display};<CR>impl Display for_ {<CR>fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {<CR>write!(f, "{}", _)}<Esc>$xxx3<Up>f_s
+        " TODO This needs an EatChar function
+        " Expand implf to From impl
+        autocmd FileType rust :iabbrev <buffer> implf impl From<_> for_ {<CR>fn from(_) -> Self {<CR>}}<Esc>3<Up>2f_s
+
     augroup END
 """ }
 
