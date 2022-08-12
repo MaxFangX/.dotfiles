@@ -83,24 +83,43 @@
     iabbrev teh the
 
     " Operator-Pending Mappings
-    " 'Inside next parenthesis on this line'
+    " '(i)nside/(a)round (n)ext/(l)ast parenthesis on this line'
     onoremap in( :<c-u>normal! f(vi(<cr>
     onoremap in) :<c-u>normal! f(vi(<cr>
-    " 'Inside last parenthesis on this line'
+    onoremap an( :<c-u>normal! f(va(<cr>
+    onoremap an) :<c-u>normal! f(va(<cr>
     onoremap il( :<c-u>normal! F)vi)<cr>
     onoremap il) :<c-u>normal! F)vi)<cr>
-    " 'Inside next brackets on this line'
+    onoremap al( :<c-u>normal! F)va)<cr>
+    onoremap al) :<c-u>normal! F)va)<cr>
+    " '(i)nside/(a)round (n)ext/(l)ast brackets on this line'
     onoremap in[ :<c-u>normal! f[vi[<cr>
     onoremap in] :<c-u>normal! f[vi[<cr>
-    " 'Inside last brackets on this line'
+    onoremap an[ :<c-u>normal! f[va[<cr>
+    onoremap an] :<c-u>normal! f[va[<cr>
     onoremap il[ :<c-u>normal! F]vi]<cr>
     onoremap il] :<c-u>normal! F]vi]<cr>
-    " 'Inside next curly braces on this line'
+    onoremap al[ :<c-u>normal! F]va]<cr>
+    onoremap al] :<c-u>normal! F]va]<cr>
+    " '(i)nside/(a)round (n)ext/(l)ast curly braces on this line'
     onoremap in{ :<c-u>normal! f{vi{<cr>
     onoremap in} :<c-u>normal! f{vi{<cr>
-    " 'Inside last curly braces on this line'
+    onoremap an{ :<c-u>normal! f{va{<cr>
+    onoremap an} :<c-u>normal! f{va{<cr>
     onoremap il{ :<c-u>normal! F}vi}<cr>
     onoremap il} :<c-u>normal! F}vi}<cr>
+    onoremap al{ :<c-u>normal! F}va}<cr>
+    onoremap al} :<c-u>normal! F}va}<cr>
+    " '(i)nside/(a)round (n)ext/(l)ast double quotes (") on this line'
+    onoremap in" :<c-u>normal! f"vi"<cr>
+    onoremap an" :<c-u>normal! f"va"<cr>
+    onoremap il" :<c-u>normal! F"vi"<cr>
+    onoremap al" :<c-u>normal! F"va"<cr>
+    " '(i)nside/(a)round (n)ext/(l)ast single quotes (') on this line'
+    onoremap in' :<c-u>normal! f'vi'<cr>
+    onoremap an' :<c-u>normal! f'va'<cr>
+    onoremap il' :<c-u>normal! F'vi'<cr>
+    onoremap al' :<c-u>normal! F'va'<cr>
 """ }
 
 " # --- CONFIGURATION --- #
