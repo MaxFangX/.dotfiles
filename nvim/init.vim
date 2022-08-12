@@ -287,6 +287,12 @@
 
     " Use # as * but without immediately skipping to the next one
     nnoremap # *N
+
+    " m to repeat the last action then jump to next
+    nnoremap m .n
+
+    " Use M as m
+    nnoremap M m
 """ }
 
 """ { Normal mode mods
