@@ -69,7 +69,7 @@ fi
 # source "/usr/local/opt/fzf/shell/key-bindings.bash"
 # fzf key bindings - see --bind in :Man fzf (in vim) for details
 # FIXME: Doesn't work
-# export FZF_DEFAULT_OPTS='--bind ctrl-å:select-all'
+export FZF_DEFAULT_OPTS='--bind alt-a:select-all'
 
 # Use ripgrep for fzf filename searching
 if [ -x "$(command -v rg)" ]; then
@@ -86,9 +86,6 @@ fi
 # if [ -f ~/.bash_aliases ]; then
 #     . ~/.bash_aliases
 # fi
-
-# Git aliases
-alias grhsh='git reset --soft HEAD~1'
 
 # Some ls aliases
 alias ll='ls -alF'
@@ -182,6 +179,11 @@ alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
 
 # Git
+# Outputs `main` or `master` to stdout
+function main_branch() {
+    git branch | grep -o -m1 '\b\(master\|main\)\b'
+}
+
 alias g="git status"
 unalias gss # OMZ git status -s
 
@@ -193,10 +195,10 @@ alias gds="git diff --staged"
 function gads { git add "$@"; git diff --staged "$@"; }
 
 alias gch="git checkout"
-# This works for both `main` or `master`
-function gchm() {
-    git checkout `git branch | grep -o -m1 '\b\(master\|main\)\b'`
-}
+function gchm() { git checkout `main_branch` }
+
+alias grhsh='git reset --soft HEAD~1'
+alias grsm='git reset . && gchm'
 
 alias gcm="git commit -m"
 alias gca="git commit --amend"
@@ -207,15 +209,15 @@ alias gpom="git push origin master"
 
 alias gl="git pull"
 alias glor="git pull origin"
-function glorm() { git pull origin `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
+function glorm() { git pull origin `main_branch` }
 
 alias glup="git pull upstream"
 unalias glum # For some reason set to 'git pull upstream master'
-function glupm() { git pull upstream `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
+function glupm() { git pull upstream `main_branch` }
 
 alias glr="git pull --rebase"
 alias glror="git pull --rebase origin"
-function glrorm() { git pull --rebase origin `git branch | grep -o -m1 '\b\(master\|main\)\b'` }
+function glrorm() { git pull --rebase origin `main_branch` }
 unalias gup # OMZ git pull --rebase
 unalias gupa # OMZ git pull --rebase --autostash
 unalias gupav # OMZ git pull --rebase --autostash -v
@@ -249,8 +251,8 @@ alias grb="git rebase"
 alias grbi="git rebase -i"
 alias grbc="git rebase --continue"
 alias grbs="git rebase --skip"
-
-# alias glo="git log" # Alias in oh-my-zsh's git plugin is better
+function grbm() { git rebase `main_branch` }
+function glrbm() { git fetch origin `main_branch` && git rebase `main_branch` }
 
 alias gbl="git blame"
 
