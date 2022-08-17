@@ -738,6 +738,14 @@
     augroup END
 """ }
 
+""" { Vim quickfix lists
+    augroup qf_cmds
+        autocmd!
+        " Open quickfix lists at the top
+        autocmd FileType qf wincmd K
+    augroup END
+""" }
+
 """ { Rust
     augroup rust_cmds
         autocmd!
@@ -788,6 +796,8 @@
         autocmd FileType go setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
     augroup END
 """ }
+
+" # --- PLUGINS --- #
 
 """ { Plugin Management - vim-plug
     " Notes:
@@ -851,6 +861,8 @@
     " - `PlugDiff`: Examine changes from the previous update and the pending changes
     " - `PlugSnapshot[!] [output path]`: Generate script for restoring the current snapshot of the plugins
 """ }
+
+" # --- PLUGIN OPTIONS --- #
 
 """ { vim-surround
 
@@ -934,7 +946,7 @@
 """ }
 
 """ { Plugin Options - fzf.vim
-    " NOTE: :FZF is still available
+    " NOTE: :FZF is still available. See :help FZF for details.
 
     " Set the (r)un(t)ime (p)ath
     set rtp+=/usr/local/opt/fzf
@@ -951,14 +963,12 @@
     nnoremap <Leader>b :FzfBuffers<Enter>
     xnoremap <Leader>b <Esc>:FzfBuffers<Enter>
 
-    " (DVORAK) Option + S to search with ripgrep
-    " TODO configure: ALT-A to select all, ALT-D to deselect all
+    " <Leader><Space> to open fulltext search
     " - Tab to select/deselect and move down
     " - Shift+Tab to select/deselect and move up
-    " - Can prefix by filename; e.g. 'inwel' to find 'Welcome' in index.js
+    " - TODO configure: ALT-A to select all, ALT-D to deselect all
     " - FIXME: <Enter> <C-t>, <C-x>, <C-v> to open selected files in
     "   current window / tabs / split / vsplit
-    nnoremap … :FzfRg<Enter>
     " NOTE: This can be removed later if another namespace is needed
     nnoremap <Leader><Space> :FzfRg<Enter>
 
@@ -1036,7 +1046,7 @@ EOF
     " nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR> 
     " nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
     " nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-    nnoremap <silent> grf    <cmd>lua vim.lsp.buf.references()<CR>
+    nnoremap <silent> <LocalLeader>f <cmd>lua vim.lsp.buf.references()<CR>
     " nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
     " nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
