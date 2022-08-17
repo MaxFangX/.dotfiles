@@ -75,7 +75,7 @@ fi
 if [ -x "$(command -v rg)" ]; then
     export FZF_DEFAULT_COMMAND='rg --files --fixed-strings --ignore-case '\
 '--no-ignore --hidden --follow '\
-'--glob "!.git/*" --glob "!target/*" '
+'--glob "!*.git/*" --glob "!*target/*" '
 fi
 
 ###########################
@@ -299,16 +299,16 @@ alias lncli-charlie="lncli --macaroonpath=data/admin.macaroon --rpcserver=localh
 
 # Cargo / Rust
 alias c="cargo"
-alias crc="cargo check"
-alias crr="cargo run"
-alias crrr="cargo run --release"
-alias crb="cargo build"
-alias crbr="cargo build --release"
-alias crf="cargo fmt -- -l"
-alias crfa="cargo fmt --all -- -l"
-alias crfl="cargo fmt --all -- -l"
-alias crfc="cargo fmt --all && cargo clippy --workspace --all-targets"
-alias crt="cargo test"
+alias cc="cargo check"
+alias cr="cargo run"
+alias crr="cargo run --release"
+alias cb="cargo build"
+alias cbr="cargo build --release"
+alias cf="cargo fmt -- -l"
+alias cfa="cargo fmt --all -- -l"
+alias cfl="cargo fmt --all -- -l"
+alias cfc="cargo fmt --all && cargo clippy --workspace --all-targets"
+alias ct="cargo test"
 
 # Misc
 alias lt="ls"
