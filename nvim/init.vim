@@ -954,14 +954,8 @@
     " Namespace fzf.vim commands
     let g:fzf_command_prefix = 'Fzf'
 
-    " <Leader>f to open file search
-    nnoremap <Leader>f :FzfFiles<Enter>
-    xnoremap <Leader>f <Esc>:FzfFiles<Enter>
-
-    " <Leader>b to open file search
-    " Useful after piping rg | vim
-    nnoremap <Leader>b :FzfBuffers<Enter>
-    xnoremap <Leader>b <Esc>:FzfBuffers<Enter>
+    " :H to fuzzy search [neo]vim help tags
+    command H FzfHelptags
 
     " <Leader><Space> to open fulltext search
     " - Tab to select/deselect and move down
@@ -972,8 +966,10 @@
     " NOTE: This can be removed later if another namespace is needed
     nnoremap <Leader><Space> :FzfRg<Enter>
 
-    " Quick search [neo]vim help tags with :H
-    command H FzfHelptags
+    " <Leader>b to open buffer search
+    " Useful after piping rg | vim
+    nnoremap <Leader>b :FzfBuffers<Enter>
+    xnoremap <Leader>b <Esc>:FzfBuffers<Enter>
 
     " Other commands:
     " - :FzfColors - Switch to any installed theme
@@ -984,6 +980,69 @@
     " - :FzfTags - Tags in the project (`ctags -R`)
     " - :FzfBTags - Tags in the current buffer
     " - :FzfMarks - Marks in the current buffer
+""" }
+
+""" { Fixing :FzfGFiles to respect .gitignore when *outside* of a git repo
+
+    " Original Config: non-working, replaced by phlip9's config below
+
+    " <Leader>f, <Leader>g to open file search
+    " nnoremap <Leader>f :FzfGFiles<Enter>
+    " xnoremap <Leader>f <Esc>:FzfGFiles<Enter>
+    " nnoremap <Leader>g :FzfFiles<Enter>
+    " xnoremap <Leader>g <Esc>:FzfFiles<Enter>
+
+    " Fixed Config: adapted from phlip9's init.vim
+
+    " build command!'s and mappings for fzf file searching using some external
+    " file listing command `cmd`. creates two variants: (1) search files,
+    " excluding those in .gitignore files and (2) search _all_ files
+    function! s:SetFzfMappings(cmd, no_ignore_opt)
+        " command! seems to evaluate lazily, so we need to pre-render these
+        let g:phlip9_fzf_files_cmd_ignore = a:cmd
+        let g:phlip9_fzf_files_cmd_noignore = a:cmd . ' ' . a:no_ignore_opt
+
+        " Searching across files, ignoring those in .gitignore.
+        " Unlike stock FzfGFiles, this must work outside git repos (important!).
+        command! -bang -nargs=? -complete=dir FzfGFilesFixed
+                    \ let $FZF_DEFAULT_COMMAND = g:phlip9_fzf_files_cmd_ignore |
+                    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:50%'), <bang>0)
+
+        " Searching across _all_ files (with some basic ignores)
+        command! -bang -nargs=? -complete=dir FzfFilesFixed
+                    \ let $FZF_DEFAULT_COMMAND = g:phlip9_fzf_files_cmd_noignore |
+                    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:50%'), <bang>0)
+
+        " Map <Leader>f and <Leader>g to the two fns above respectively
+        nnoremap <Leader>f :FzfGFilesFixed<Enter>
+        xnoremap <Leader>f <Esc>:FzfGFilesFixed<Enter>
+        nnoremap <Leader>g :FzfFilesFixed<Enter>
+        xnoremap <Leader>g <Esc>:FzfFilesFixed<Enter>
+    endfunction
+
+    " fzf file searching using `fd` or `rg`, preferring `fd` cus it has nicer colors : p
+    if executable('fd')
+        " fd's `--color` option emits ANSI color codes; tell fzf to show them
+        " properly.
+        let g:fzf_files_options = ['--ansi']
+        let fd_command = 'fd ' .
+                    \ '--type f --hidden --follow --color "always" --strip-cwd-prefix ' .
+                    \ '--exclude ".git/*" --exclude "target/*" --exclude "tags" '
+        call s:SetFzfMappings(fd_command, '--no-ignore')
+    elseif executable('rg')
+        " --color 'never': rg doesn't support meaningful colors when listing
+        "                  files, so let's just turn them off.
+        let rg_command = 'rg ' .
+                    \ '--hidden --follow --color "never" --files ' .
+                    \ '--glob "!.git/*" --glob "!target/*" --glob "!tags" '
+        call s:SetFzfMappings(rg_command, '--no-ignore')
+    else
+        " Print an error message
+        nnoremap <Leader>f :echoerr "Error: neither `fd` nor `rg` installed"<CR>
+        xnoremap <Leader>f :echoerr "Error: neither `fd` nor `rg` installed"<CR>
+        nnoremap <Leader>g :echoerr "Error: neither `fd` nor `rg` installed"<CR>
+        xnoremap <Leader>g :echoerr "Error: neither `fd` nor `rg` installed"<CR>
+    endif
 """ }
 
 """ { Plugin Options - rust-analyzer
