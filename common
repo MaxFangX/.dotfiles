@@ -202,6 +202,7 @@ alias grsm='git reset . && gchm'
 
 alias gcm="git commit -m"
 alias gca="git commit --amend"
+alias gcf="git commit --fixup"
 
 alias gp="git push"
 alias gpo="git push origin"
@@ -249,6 +250,7 @@ alias gbr="git branch -r"
 
 alias grb="git rebase"
 alias grbi="git rebase -i"
+alias grbia="git rebase -i --autosquash"
 alias grbc="git rebase --continue"
 alias grbs="git rebase --skip"
 function grbm() { git rebase `main_branch` }
@@ -260,6 +262,7 @@ alias gbl="git blame"
 
 alias grs="git restore"
 alias grss="git restore --staged"
+alias grschm="git restore . && git checkout `main_branch`"
 
 alias gsur="git submodule update --recursive"
 alias gsuri="git submodule update --recursive --init"
