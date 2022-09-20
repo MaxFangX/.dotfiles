@@ -948,9 +948,6 @@
 """ { Plugin Options - fzf.vim
     " NOTE: :FZF is still available. See :help FZF for details.
 
-    " Set the (r)un(t)ime (p)ath
-    set rtp+=/usr/local/opt/fzf
-
     " Namespace fzf.vim commands
     let g:fzf_command_prefix = 'Fzf'
 

@@ -14,60 +14,85 @@ fi
 # https://muru.dev/2015/08/28/vim-for-man.html
 export MANPAGER='nvim -c "%! col -b" -c "set ft=man nomod | let &titlestring=$MAN_PN"'
 
+# Set up ~/github
+mkdir -p ~/github
+
 ###########################
 # ENVIRONMENT VARIABLES
 ###########################
 
-# Non-destructive setup
+# Set up and source the device-specific env var files
 mkdir -p ~/env
 touch ~/env/local.sh ~/env/sensitive.sh
 chmod u+x ~/env/local.sh ~/env/sensitive.sh
-
-# Device-specific environment variables
-if [ -f ~/env/local.sh ]; then
-    . ~/env/local.sh
-fi
-
-# Sensitive environment variables
-if [ -f ~/env/sensitive.sh ]; then
-    . ~/env/sensitive.sh
-fi
+. ~/env/local.sh
+. ~/env/sensitive.sh
 
 # User binaries requiring root access
-export PATH="$PATH:/usr/local/sbin"
+ROOT_BIN_PATH="$(brew --prefix)/sbin"
+if [[ ! "$PATH" == *$ROOT_BIN_PATH* ]]; then
+  export PATH="$PATH:$ROOT_BIN_PATH"
+fi
 
-# Rust
-export PATH="$PATH:$HOME/.cargo/bin"
+# Rust (cargo) binaries
+CARGO_BIN_PATH="$HOME/.cargo/bin"
+if [[ ! "$PATH" == *$CARGO_BIN_PATH* ]]; then
+  export PATH="$CARGO_BIN_PATH:$PATH"
+fi
+
+# Rust backtrack
 export RUST_BACKTRACE=1
 # export RUST_LOG=info # Better to be off for tests
 
 # Go
 export GOPATH=~/gocode
-export PATH=$PATH:$GOPATH/bin
+GO_BIN_PATH="$GOPATH/bin"
+if [[ ! "$PATH" == *$GOPATH* ]]; then
+  export PATH="$PATH:$GOPATH"
+fi
 
 # Ruby - chruby
-if [ -f /usr/local/opt/chruby/share/chruby/chruby.sh ]; then
-    source /usr/local/opt/chruby/share/chruby/chruby.sh
+if [ -f $(brew --prefix)/opt/chruby/share/chruby/chruby.sh ]; then
+    source $(brew --prefix)/opt/chruby/share/chruby/chruby.sh
 fi
 # Enable auto-switching of Rubies specified by .ruby-version files
-if [ -f /usr/local/opt/chruby/share/chruby/auto.sh ]; then
-    source /usr/local/opt/chruby/share/chruby/auto.sh
+if [ -f $(brew --prefix)/opt/chruby/share/chruby/auto.sh ]; then
+    source $(brew --prefix)/opt/chruby/share/chruby/auto.sh
 fi
 # Use 2.7.2 by default
 if [ -x "$(command -v chruby)" ]; then
     chruby ruby-2.7.2
 fi
 
-# fzf
-# Setup
-if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]]; then
-  export PATH="${PATH:+${PATH}:}/usr/local/opt/fzf/bin"
+# Homebrew an pages
+MORE_MANPATHS="/usr/share/man:/usr/local/man"
+if [[ ! "$MANPATH" == *$MORE_MANPATHS* ]]; then
+    export MANPATH="$MORE_MANPATHS:$MANPATH"
 fi
+
+# --- fzf --- #
+
+# Setup
+FZF_BIN_PATH="$(brew --prefix)/opt/fzf/bin"
+if [[ ! "$PATH" == *$FZF_BIN_PATH* ]]; then
+  export PATH="$PATH:$FZF_BIN_PATH"
+fi
+
 # Auto-completion
-[[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.bash" 2> /dev/null
+if [[ "bash" == $0 ]]; then
+    [[ $- == *i* ]] && source "$(brew --prefix)/opt/fzf/shell/completion.bash" 2> /dev/null
+elif [[ "zsh" == $0 ]]; then
+    [[ $- == *i* ]] && source "$(brew --prefix)/opt/fzf/shell/completion.zsh" 2> /dev/null
+fi
+
 # Key bindings
-# source "/usr/local/opt/fzf/shell/key-bindings.bash"
-# fzf key bindings - see --bind in :Man fzf (in vim) for details
+if [[ "bash" == $0 ]]; then
+    source "$(brew --prefix)/opt/fzf/shell/key-bindings.bash"
+elif [[ "zsh" == $0 ]]; then
+    source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
+fi
+
+# --bind in :Man fzf (in vim) for details
 # FIXME: Doesn't work
 export FZF_DEFAULT_OPTS='--bind alt-a:select-all'
 
@@ -268,9 +293,9 @@ alias gsur="git submodule update --recursive"
 alias gsuri="git submodule update --recursive --init"
 
 # Python
-alias py="python3"
-alias py3="python3"
-alias python="python3"
+# alias py="python3"
+# alias py3="python3"
+# alias python="python3"
 
 # Django
 alias pm="python manage.py"
@@ -291,9 +316,9 @@ alias pmmfi="python manage.py migrate --fake-initial"
 alias pmc="python manage.py check -v 2"
 
 # Pip
-alias pip="pip3"
-alias pirr="pip install -r requirements.txt"
-alias pfr="pip freeze > requirements.txt"
+# alias pip="pip3"
+alias pirr="pip3 install -r requirements.txt"
+alias pfr="pip3 freeze > requirements.txt"
 
 # Ctags
 alias ctagshide="ctags -R -f ./.git/tags"
@@ -318,7 +343,6 @@ alias cfc="cargo fmt --all && cargo clippy --workspace --all-targets"
 alias ct="cargo test"
 
 # Misc
-alias lt="ls"
 alias sw="sass --watch"
 alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
 alias sv="grunt server"

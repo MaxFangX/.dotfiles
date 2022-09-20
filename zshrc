@@ -70,13 +70,11 @@ fi
 # plugins=(git) # Default
 plugins=(git rust python fzf ripgrep)
 
-# User configuration
-
-export MANPATH="/usr/local/man:$MANPATH"
-
-# Init zsh
-source $ZSH/oh-my-zsh.sh
-fpath=(/usr/local/share/zsh-completions $fpath)
+# Init Oh My Zsh
+if [ -f $ZSH/oh-my-zsh.sh ]; then
+    source $ZSH/oh-my-zsh.sh
+    fpath=($(brew --prefix)/share/zsh-completions $fpath)
+fi
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
