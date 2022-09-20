@@ -25,6 +25,10 @@
     "
     " More info: https://learnvimscriptthehardway.stevelosh.com/chapters/03.html
     "
+    " Identifying Existing Mappings:
+    "
+    " Existing mappings can be checked for with e.g. :verbose imap <Tab>
+    "
     " Operator Pending Mappings:
     "
     " A good way to keep the multiple ways of creating operator-pending mappings
@@ -150,6 +154,9 @@
     " (typing <CR> in Insert mode or when using the "o" or "O"
     " command).
     set autoindent
+
+    " Do smart autoindenting when starting a line
+    set smartindent
 """ }
 
 """ { Configuration - Splits
@@ -179,6 +186,11 @@
 
     " Always keep at least 2 lines above / below the cursor
     set scrolloff=2
+
+    " Always show the signcolumn, otherwise it would shift the text each time
+    "  diagnostics appear/become resolved.
+    " Source: https://github.com/neoclide/coc.nvim#example-vim-configuration
+    set signcolumn=yes
 """ }
 
 """ { Configuration - Search
@@ -240,25 +252,6 @@
     set formatoptions=c,q,r,t 
 """ }
 
-""" { Configuration - Autocompletion options
-    " Set completeopt to have a better completion experience
-    " - :help completeopt
-    " - menuone: popup even when there's only one match
-    " - noinsert: Do not insert text until a selection is made
-    " - noselect: Do not select, force user to select one from the menu
-    set completeopt=menuone,noinsert,noselect
-
-    " Make <Enter> input a newline if no item was selected in the
-    " autocomplete pop up menu ('pum')
-    " - See 'pumvisible()' in :help eval.txt
-    inoremap <expr> <CR> pumvisible() ?
-        \ (complete_info().selected == -1 ? '<C-y><CR>' : '<C-y>') :
-        \ '<CR>'
-    
-    " Avoid showing extra messages when using completion
-    " set shortmess+=c
-""" }
-
 """ Configuration - Relative line numbers {
     " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
     set relativenumber
@@ -287,6 +280,13 @@
     " good on a dark background. When set to "light", Vim will
     " try to use colors that look good on a light background.
     set background=dark
+""" }
+
+""" { Configuration - Vim program behavior
+    " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+    " delays and poor user experience.
+    " Source: https://github.com/neoclide/coc.nvim#example-vim-configuration
+    set updatetime=300
 """ }
 
 " # --- MAPPINGS --- #
@@ -821,9 +821,10 @@
         Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Adds :FZF
         Plug 'junegunn/fzf.vim'         " Adds the rest of the commands
 
-        """ For code completion
+        """ Code completion
         " FIXME: Switch to an auto-completion engine that respects completeopt
-        Plug 'ycm-core/YouCompleteMe'
+        " Plug 'ycm-core/YouCompleteMe'
+        Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
         """ Rust - simrat39/rust-tools.nvim
         " Common LSP configs
@@ -1042,6 +1043,60 @@
     endif
 """ }
 
+""" { Plugin Options - coc.nvim
+    " NOTE: Use :CocConfig to open the coc.nvim config file.
+
+    " Most of these snippets were adapted from the coc.nvim example config:
+    " https://github.com/neoclide/coc.nvim#example-vim-configuration
+
+    " NOTE: An item is always selected by default, you may want to enable no
+    " select by `"suggest.noselect": true` in your configuration file.
+
+    " Required for the next snippet
+    function! CheckBackspace() abort
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
+    " Tab to navigate to next autocompletion suggestion
+    " Shift+Tab to navigate to previous autocompletion suggestion
+    " By passing 0 (falsy) into coc#pum#next() & coc#pum#prev() instead of 1
+    " (truthy), one can simulate the 'noinsert' option. See :help coc#pum#next
+    inoremap <silent><expr> <TAB>
+        \ coc#pum#visible() ? coc#pum#next(0) :
+        \ CheckBackspace() ? "\<Tab>" :
+        \ coc#refresh()
+    inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(0) : "\<C-h>"
+
+    " Enter to confirm selection or notify coc.nvim to format
+    " NOTE: <C-g>u breaks current undo, please make your own choice.
+    inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+        \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+    """ { Configuration - Autocompletion options
+        " NOTE: These are the desired behaviors but appear to have no effect.
+        " All of these options need to be configured on the coc.nvim side.
+        " Probably still good to specify these in case they are required.
+
+        " Set completeopt to have a better completion experience
+        " - :help completeopt
+        " - menuone: popup even when there's only one match
+        " - noinsert: Do not insert text until a selection is made
+        " - noselect: Do not select, force user to select one from the menu
+        set completeopt=menuone,noinsert,noselect
+
+        " Make <Enter> input a newline if no item was selected in the
+        " autocomplete pop up menu ('pum')
+        " - See 'pumvisible()' in :help eval.txt
+        " inoremap <expr> <CR> pumvisible() ?
+        "     \ (complete_info().selected == -1 ? '<C-y><CR>' : '<C-y>') :
+        "     \ '<CR>'
+
+        " Avoid showing extra messages when using completion
+        " set shortmess+=c
+    """ }
+""" }
+
 """ { Plugin Options - rust-analyzer
 """ }
 
@@ -1121,8 +1176,7 @@ EOF
     lua require('rust-tools').setup({})
 
     " Not sure if this is required
-    lua require('rust-tools.inlay_hints').set_inlay_hints()
-
+    " lua require('rust-tools.inlay_hints').set_inlay_hints()
 
     " Commands: 
     nnoremap <LocalLeader>i :RustSetInlayHints<Enter>
