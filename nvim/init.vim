@@ -186,11 +186,6 @@
 
     " Always keep at least 2 lines above / below the cursor
     set scrolloff=2
-
-    " Always show the signcolumn, otherwise it would shift the text each time
-    "  diagnostics appear/become resolved.
-    " Source: https://github.com/neoclide/coc.nvim#example-vim-configuration
-    set signcolumn=yes
 """ }
 
 """ { Configuration - Search
@@ -280,13 +275,6 @@
     " good on a dark background. When set to "light", Vim will
     " try to use colors that look good on a light background.
     set background=dark
-""" }
-
-""" { Configuration - Vim program behavior
-    " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-    " delays and poor user experience.
-    " Source: https://github.com/neoclide/coc.nvim#example-vim-configuration
-    set updatetime=300
 """ }
 
 " # --- MAPPINGS --- #
@@ -1073,6 +1061,16 @@
     inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
         \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
+    """ { Configurations to better integrate vim with coc.nvim
+        " Always show the signcolumn, otherwise it would shift the text each
+        " time diagnostics appear/become resolved.
+        set signcolumn=yes
+
+        " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+        " delays and poor user experience.
+        set updatetime=300
+    """ }
+
     """ { Configuration - Autocompletion options
         " NOTE: These are the desired behaviors but appear to have no effect.
         " All of these options need to be configured on the coc.nvim side.
@@ -1175,7 +1173,7 @@ EOF
 """ { nvim-lspconfig simrat39/rust-tools.nvim
     lua require('rust-tools').setup({})
 
-    " Not sure if this is required
+    " This doesn't seem to be required?
     " lua require('rust-tools.inlay_hints').set_inlay_hints()
 
     " Commands: 
