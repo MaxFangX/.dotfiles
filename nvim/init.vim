@@ -738,7 +738,8 @@
     augroup rust_cmds
         autocmd!
         " Expand fn to fn _() {}
-        autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Esc><Up>$bi
+        " TODO: Something broke, fix
+        " autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Esc><Up>$bi
         " Expand matchr to match _ { Ok(_) => {}\nErr(e) => {} }
         autocmd FileType rust :iabbrev <buffer> matchr match {<CR>Ok(_) => {<CR>}<CR>Err(e) => {<CR>}}<Esc>5<Up>ea
         " Expand matcho to match _ { Some(_) => {}\nNone => {} }
@@ -1051,10 +1052,10 @@
     " By passing 0 (falsy) into coc#pum#next() & coc#pum#prev() instead of 1
     " (truthy), one can simulate the 'noinsert' option. See :help coc#pum#next
     inoremap <silent><expr> <TAB>
-        \ coc#pum#visible() ? coc#pum#next(0) :
+        \ coc#pum#visible() ? coc#pum#next(1) :
         \ CheckBackspace() ? "\<Tab>" :
         \ coc#refresh()
-    inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(0) : "\<C-h>"
+    inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
     " Enter to confirm selection or notify coc.nvim to format
     " NOTE: <C-g>u breaks current undo, please make your own choice.
