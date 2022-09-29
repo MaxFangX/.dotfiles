@@ -672,6 +672,12 @@
     endfunction
 """ }
 
+""" { General abbreviations
+
+    # Expand 'TODO' to 'TODO(max):'
+    iabbrev TODO TODO(max):
+""" }
+
 " # --- HELPER FUNCTIONS --- #
 
 """ { Consume the space after an abbreviation
