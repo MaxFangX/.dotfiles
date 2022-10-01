@@ -674,8 +674,8 @@
 
 """ { General abbreviations
 
-    # Expand 'TODO' to 'TODO(max):'
-    iabbrev TODO TODO(max):
+    " Expand 'TODO' to 'TODO(max)'
+    iabbrev TODO TODO(max)
 """ }
 
 " # --- HELPER FUNCTIONS --- #
