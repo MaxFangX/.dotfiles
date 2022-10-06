@@ -1,0 +1,12 @@
+[build]
+rustc-wrapper = "/Users/fang/.cargo/bin/sccache"
+
+# Include links to definitions when viewing source in generated docs
+rustdocflags = ["-Z", "unstable-options", "--generate-link-to-definition"]
+
+[target.x86_64-fortanix-unknown-sgx]
+linker = "x86_64-unknown-linux-gnu-ld"
+
+[env]
+CC_x86_64-fortanix-unknown-sgx = "x86_64-unknown-linux-gnu-gcc"
+AR_x86_64-fortanix-unknown-sgx = "x86_64-unknown-linux-gnu-ar"
