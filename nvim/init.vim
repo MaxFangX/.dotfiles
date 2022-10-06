@@ -744,8 +744,7 @@
     augroup rust_cmds
         autocmd!
         " Expand fn to fn _() {}
-        " TODO: Something broke, fix
-        " autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Esc><Up>$bi
+        autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Esc><Up>$bi
         " Expand matchr to match _ { Ok(_) => {}\nErr(e) => {} }
         autocmd FileType rust :iabbrev <buffer> matchr match {<CR>Ok(_) => {<CR>}<CR>Err(e) => {<CR>}}<Esc>5<Up>ea
         " Expand matcho to match _ { Some(_) => {}\nNone => {} }
@@ -754,9 +753,12 @@
         " TODO Make this trigger with 'impl Trait'
         " Expand impld to Display impl
         autocmd FileType rust :iabbrev <buffer> impld use std::fmt::{self, Display};<CR>impl Display for_ {<CR>fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {<CR>write!(f, "{}", _)}}<Esc>$xxxx3<Up>f_s
-        " TODO This needs an EatChar function
+
         " Expand implf to From impl
         autocmd FileType rust :iabbrev <buffer> implf impl From<_> for_ {<CR>fn from(_) -> Self {<CR>}}<Esc>3<Up>2f_s
+
+        " Expand implfs to FromStr impl
+        autocmd FileType rust :iabbrev <buffer> implfs use std::str::FromStr;<CR>impl FromStr for_ {<CR>fn from_str(s: &str) -> Result<Self, Self::Err> {<CR>}}<Esc>3<Up>1f_s
 
         " Expand tokio::select!
         autocmd FileType rust :iabbrev <buffer> tokio::select! tokio::select! {<CR><out> = => {<CR>}<CR><out> = <fut> => {<CR>}}<Esc>4<Up>^Wa
@@ -1065,8 +1067,9 @@
 
     " Enter to confirm selection or notify coc.nvim to format
     " NOTE: <C-g>u breaks current undo, please make your own choice.
-    inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-        \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+    " NOTE: Disabling because this breaks abbreviations that include <CR>.
+    " inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+    "     \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
     """ { Configurations to better integrate vim with coc.nvim
         " Always show the signcolumn, otherwise it would shift the text each
