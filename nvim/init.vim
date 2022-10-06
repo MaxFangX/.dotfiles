@@ -41,6 +41,14 @@
     "
     " More info: https://learnvimscriptthehardway.stevelosh.com/chapters/15.html
     "
+    " Abbreviations:
+    "
+    " Cannot contain "|", as learned from experience. However, they *can* contain:
+    " - "#"
+    " - "<", ">"
+    "
+    " See the rust abbreviations for more examples.
+    "
     " Identifying Vim Names:
     "
     " e.g. for a mouse button
@@ -759,6 +767,9 @@
 
         " Expand implfs to FromStr impl
         autocmd FileType rust :iabbrev <buffer> implfs use std::str::FromStr;<CR>impl FromStr for_ {<CR>fn from_str(s: &str) -> Result<Self, Self::Err> {<CR>}}<Esc>3<Up>1f_s
+
+        " Expand impla to Arbitrary impl
+        autocmd FileType rust :iabbrev <buffer> impla #[cfg(test)]<CR>use proptest::strategy::{BoxedStrategy, Strategy};<CR>#[cfg(test)]<CR>use proptest::arbitrary::Arbitrary;<CR>#[cfg(test)]<CR>use proptest::arbitrary::any;<CR>impl Arbitrary for_ {<CR>type Parameters = ();<CR>type Strategy = BoxedStrategy<Self>;<CR>fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {<CR>any::<_>()<CR>.prop_map(_)<CR>.boxed()<Esc>6<Up>01f_s
 
         " Expand tokio::select!
         autocmd FileType rust :iabbrev <buffer> tokio::select! tokio::select! {<CR><out> = => {<CR>}<CR><out> = <fut> => {<CR>}}<Esc>4<Up>^Wa
