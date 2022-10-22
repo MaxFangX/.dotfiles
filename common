@@ -103,6 +103,10 @@ if [ -x "$(command -v rg)" ]; then
 '--glob "!*.git/*" --glob "!*target/*" '
 fi
 
+# Use gruvbox-dark theme for bat which is used by fzf in vim
+# See https://github.com/sharkdp/bat#highlighting-theme for more info
+export BAT_THEME="gruvbox-dark"
+
 ###########################
 # ALIASES
 ###########################
