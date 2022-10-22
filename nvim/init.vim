@@ -682,8 +682,10 @@
 
 """ { General abbreviations
 
-    " Expand 'TODO' to 'TODO(max)'
+    " Expand 'TODO', 'FIXME', 'XXX' etc to e.g. 'TODO(max)'
     iabbrev TODO TODO(max)
+    iabbrev FIXME FIXME(max)
+    iabbrev XXX XXX(max)
 """ }
 
 " # --- HELPER FUNCTIONS --- #
