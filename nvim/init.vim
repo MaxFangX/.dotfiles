@@ -369,16 +369,22 @@
 
 """ { DVORAK - Splits
     " Option+d,h,t,n to switch splits
-    noremap ˙ <C-W>h
-    noremap ∆ <C-W>j
-    noremap ˚ <C-W>k
-    noremap ¬ <C-W>l
+    nnoremap ˙ <C-W>h
+    nnoremap ∆ <C-W>j
+    nnoremap ˚ <C-W>k
+    nnoremap ¬ <C-W>l
 
     " ctrl+W then d,h,t,n to switch splits
-    noremap <C-W>d <C-W>h
-    noremap <C-W>h <C-W>j
-    noremap <C-W>t <C-W>k
-    noremap <C-W>n <C-W>l
+    nnoremap <C-W>d <C-W>h
+    nnoremap <C-W>h <C-W>j
+    nnoremap <C-W>t <C-W>k
+    nnoremap <C-W>n <C-W>l
+
+    " ctrl+W then D,H,T,N to move splits
+    nnoremap <C-W>D <C-W>H
+    nnoremap <C-W>H <C-W>J
+    nnoremap <C-W>T <C-W>K
+    nnoremap <C-W>N <C-W>L
 """" }
 
 """ { DVORAK - hn for Esc key
