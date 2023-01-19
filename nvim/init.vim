@@ -325,6 +325,10 @@
     " Option + j/k (DVORAK) to move screen up/down by 6 lines
     nnoremap ç 6<C-e>
     nnoremap √ 6<C-y>
+
+    " Use the more intentional Q to record macro, q is a no-op
+    nnoremap Q q
+    nnoremap q <Nop>
 """ }
 
 """ { QWERTY J/K to quickly move cursor up/down by 8 lines
