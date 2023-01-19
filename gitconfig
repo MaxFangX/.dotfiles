@@ -1,6 +1,7 @@
 [user]
 name = Max Fang
 email = protonmail.com@maxfa.ng
+signingkey = 98F08E41D2257775
 
 [credential]
 helper = cache --timeout=3600
@@ -16,3 +17,5 @@ autoSetupRemote = true
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[commit]
+	gpgsign = true
