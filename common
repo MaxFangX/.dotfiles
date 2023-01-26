@@ -64,6 +64,21 @@ if [ -x "$(command -v chruby)" ]; then
     chruby ruby-2.7.2
 fi
 
+# Java - SDKMAN
+export SDKMAN_DIR="$HOME/.local/sdkman" # Default is ~/.local
+[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] \
+	&& source "$SDKMAN_DIR/bin/sdkman-init.sh"
+
+# Android `cmdline-tools
+export ANDROID_HOME=$HOME/.local/android
+ANDROID_SDK_VERSION=33.0.1
+ANDROID_PATH=$ANDROID_HOME/cmdline-tools/latest/bin
+ANDROID_PATH=$ANDROID_PATH:$ANDROID_HOME/build-tools/$ANDROID_SDK_VERSION
+ANDROID_PATH=$ANDROID_PATH:$ANDROID_HOME/platform-tools
+if [[ ! "$PATH" == *$ANDROID_PATH* ]]; then
+    export PATH="$PATH:$ANDROID_PATH"
+fi
+
 # Homebrew an pages
 MORE_MANPATHS="/usr/share/man:/usr/local/man"
 if [[ ! "$MANPATH" == *$MORE_MANPATHS* ]]; then
