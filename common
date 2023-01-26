@@ -14,9 +14,6 @@ fi
 # https://muru.dev/2015/08/28/vim-for-man.html
 export MANPAGER='nvim -c "%! col -b" -c "set ft=man nomod | let &titlestring=$MAN_PN"'
 
-# Set up ~/github
-mkdir -p ~/github
-
 ###########################
 # ENVIRONMENT VARIABLES
 ###########################
@@ -302,7 +299,6 @@ alias gbl="git blame"
 
 alias grs="git restore"
 alias grss="git restore --staged"
-alias grschm="git restore . && git checkout `main_branch`"
 
 alias gsur="git submodule update --recursive"
 alias gsuri="git submodule update --recursive --init"
