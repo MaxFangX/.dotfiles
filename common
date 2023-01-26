@@ -40,7 +40,7 @@ if [[ ! "$PATH" == *$CARGO_BIN_PATH* ]]; then
   export PATH="$CARGO_BIN_PATH:$PATH"
 fi
 
-# Rust backtrack
+# Rust backtrace
 export RUST_BACKTRACE=1
 # export RUST_LOG=info # Better to be off for tests
 
@@ -186,14 +186,6 @@ extract () {
   fi
 }
 
-# batdiff - prettier but less flexible git diff output
-bdi() {
-    git diff --name-only --diff-filter=d | xargs bat --diff
-}
-
-# usage: gerrit [clone] [project]
-gerrit() { git $1 ssh://max@gerrit.sigfig.com:2222/$2; }
-
 # Hack for YCM to work
 # Removed because it causes LibreSSL to not work when downloading
 # packages from crates.io
@@ -235,8 +227,11 @@ alias ga="git add"
 
 alias gd="git diff"
 alias gds="git diff --staged"
+# Syntax-highlighted diff with bat
+bd() { git diff --name-only --diff-filter=d | xargs bat --diff }
+bds() { git diff --staged | bat --style=changes,header,rule,snip }
 
-function gads { git add "$@"; git diff --staged "$@"; }
+function gas { git add "$@"; git diff --staged "$@"; }
 
 alias gch="git checkout"
 function gchm() { git checkout `main_branch` }
