@@ -152,12 +152,12 @@ cdls() { cd "$@" && ls; }
 cdl() { cd "$@" && l; }
 
 # commands to update configs
-alias clean="source ~/.dotfiles/scripts/clean.sh"
+alias resource="source ~/.dotfiles/scripts/resource.sh"
 alias to-dotfiles="source ~/.dotfiles/scripts/to-dotfiles.sh"
 alias from-dotfiles="source ~/.dotfiles/scripts/from-dotfiles.sh"
 
 # Quickly switch between different environments with $ work <project>
-work() { clean && . ~/.dotfiles/scripts/"$@".sh; }
+work() { resource && . ~/.dotfiles/scripts/"$@".sh; }
 
 wordcount() { find ~/Obsidian/ -type f -name "*.md" -exec cat '{}' \+ | wc -w; }
 
