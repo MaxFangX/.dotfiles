@@ -22,8 +22,14 @@ export MANPAGER='nvim -c "%! col -b" -c "set ft=man nomod | let &titlestring=$MA
 mkdir -p ~/env
 touch ~/env/local.sh ~/env/sensitive.sh
 chmod u+x ~/env/local.sh ~/env/sensitive.sh
-. ~/env/local.sh
-. ~/env/sensitive.sh
+source ~/env/local.sh
+source ~/env/sensitive.sh
+
+# Homebrew an pages
+MORE_MANPATHS="/usr/share/man:/usr/local/man"
+if [[ ! "$MANPATH" == *$MORE_MANPATHS* ]]; then
+    export MANPATH="$MORE_MANPATHS:$MANPATH"
+fi
 
 # User binaries requiring root access
 ROOT_BIN_PATH="$(brew --prefix)/sbin"
@@ -61,10 +67,18 @@ if [ -x "$(command -v chruby)" ]; then
     chruby ruby-2.7.2
 fi
 
+# Ruby - Gem
+export GEM_HOME=$HOME/.local/gem
+GEM_BIN=$GEM_HOME/bin
+if [[ ! "$PATH" == *$GEM_BIN* ]]; then
+    export PATH="$PATH:$GEM_BIN"
+fi
+
 # Java - SDKMAN
 export SDKMAN_DIR="$HOME/.local/sdkman" # Default is ~/.local
-[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] \
-	&& source "$SDKMAN_DIR/bin/sdkman-init.sh"
+if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
+    source "$SDKMAN_DIR/bin/sdkman-init.sh"
+fi
 
 # Android `cmdline-tools
 export ANDROID_HOME=$HOME/.local/android
@@ -76,10 +90,10 @@ if [[ ! "$PATH" == *$ANDROID_PATH* ]]; then
     export PATH="$PATH:$ANDROID_PATH"
 fi
 
-# Homebrew an pages
-MORE_MANPATHS="/usr/share/man:/usr/local/man"
-if [[ ! "$MANPATH" == *$MORE_MANPATHS* ]]; then
-    export MANPATH="$MORE_MANPATHS:$MANPATH"
+# Flutter
+export FLUTTER_HOME=$HOME/.local/flutter/bin
+if [[ ! "$PATH" == *$FLUTTER_HOME* ]]; then
+    export PATH="$PATH:$FLUTTER_HOME"
 fi
 
 # --- fzf --- #
