@@ -8,6 +8,7 @@ helper = cache --timeout=3600
 
 [core]
 editor = nvim
+pager = delta
 
 [push]
 autoSetupRemote = true
@@ -21,3 +22,79 @@ autoSetupRemote = true
 	defaultBranch = master
 [commit]
 	gpgsign = true
+
+# --- `delta` options --- #
+
+[interactive]
+    diffFilter = delta --color-only
+[merge]
+    conflictstyle = diff3
+[diff]
+    colorMoved = default
+[delta]
+    # General behavior
+    navigate = true # Can also use n and N to move between diff sections
+    paging = always
+
+    # Note that multiple features can be enabled (space-separated)
+    features = ''
+    # `delta` themes used as inspiration
+    # features = collared-trogon # Clean theme
+    # features = woolly-mammoth  # Intricate theme
+    # features = chameleon       # No highlights theme
+
+    # Values set by features are overridden by the following sections #
+
+    # General appearance
+    dark = true # obviously
+    tabs = 4
+    # side-by-side = false # Keep commented so the gdd and gdds aliases work
+    syntax-theme = gruvbox-dark
+
+    # File style
+    file-style = "#FFFFFF" bold
+    file-added-label = [+]
+    file-copied-label = [==]
+    file-modified-label = [*]
+    file-removed-label = [-]
+    file-renamed-label = [->]
+    file-decoration-style = "#434C5E" ul
+    file-decoration-style = "#84786A" ul
+
+    # No hunk headers, wastes too much space
+    hunk-header-style = omit
+
+    # Line numbers
+    line-numbers = true
+    line-numbers-left-style = "#84786A"
+    line-numbers-right-style = "#84786A"
+    line-numbers-minus-style = "#A02A11" # Color copied from bat
+    line-numbers-plus-style = "#479B36" # Color copied from bat
+    line-numbers-zero-style = "#84786A"
+    line-numbers-left-format = " {nm:>3} │"
+    line-numbers-right-format = " {np:>3} │"
+
+    # Diff contents
+    inline-hint-style = syntax
+    minus-style = syntax "#330011"
+    minus-emph-style = syntax "#80002a"
+    minus-non-emph-style = syntax auto
+    plus-style = syntax "#001a00"
+    plus-emph-style = syntax "#003300"
+    plus-non-emph-style = syntax auto
+
+    # Infrequently-used defaults from 'chameleon' theme
+    blame-code-style = syntax
+    blame-format = "{author:<18} ({commit:>9}) {timestamp:^16}"
+    blame-palette = "#2E3440" "#3B4252" "#434C5E" "#4C566A"
+    merge-conflict-begin-symbol = ~
+    merge-conflict-end-symbol = ~
+    merge-conflict-ours-diff-header-style = "#F1FA8C" bold
+    merge-conflict-ours-diff-header-decoration-style = "#434C5E" box
+    merge-conflict-theirs-diff-header-style = "#F1FA8C" bold
+    merge-conflict-theirs-diff-header-decoration-style = "#434C5E" box
+
+    # Infrequently-used defaults from 'woolly-mammoth' theme
+    commit-decoration-style = 232 130 box
+    commit-style = 232 bold italic 130
+    whitespace-error-style = "#280050" reverse

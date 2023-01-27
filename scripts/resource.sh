@@ -7,7 +7,6 @@ ln -sfF ~/.dotfiles/gitconfig ~/.gitconfig
 mkdir -p ~/.config/nvim
 ln -sfF ~/.dotfiles/nvim ~/.config # Works differently when symlinking folders
 ln -sfF ~/.dotfiles/nvim/init.vim ~/.ideavimrc # IntelliJ's copy
-echo "Recreated symlinks"
 
 source ~/.zshrc
 echo "Sourced ~/.zshrc"

@@ -224,9 +224,12 @@ alias ga="git add"
 
 alias gd="git diff"
 alias gds="git diff --staged"
+alias gdd="DELTA_FEATURES=+side-by-side git diff" # Think 'double-diff'
+alias gdds="DELTA_FEATURES=+side-by-side git diff --staged" # 'double-diff'
+
 # Syntax-highlighted diff with bat
-bd() { git diff --name-only --diff-filter=d | xargs bat --diff }
-bds() { git diff --staged | bat --style=changes,header,rule,snip }
+bd() { git diff --name-only --diff-filter=d | xargs bat --paging=always --diff }
+bds() { git diff --staged | bat --paging=always --style=changes,header,grid,snip }
 
 function gas { git add "$@"; git diff --staged "$@"; }
 
