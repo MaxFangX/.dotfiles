@@ -231,6 +231,24 @@ function main_branch() {
     git branch | grep -o -m1 '\b\(master\|main\)\b'
 }
 
+# Prints the message of the most recent commit attempt, useful for retrying a
+# commit if the commit failed due to e.g. GPG sign.
+function failed-commit-msg() {
+    # (1) Take the failed commit msg, (2) find the start of the useless part,
+    # (3) extract the line number only, then (4) assign the result to INDEX.
+    INDEX=$( \
+        cat $(git rev-parse --git-dir)/COMMIT_EDITMSG \
+        | rg "Please enter the commit message for your changes" -n -m 1 \
+        | sed -n 's/^\([0-9]*\)[:].*/\1/p' \
+    )
+    # Subtract 1 and assign to HEAD_N, which we'll pass to `head -n`
+    HEAD_N=$((INDEX - 1))
+    # Echo the result
+    echo "$(cat $(git rev-parse --git-dir)/COMMIT_EDITMSG | head -n ${HEAD_N})"
+}
+# Retry the most recent failed commit using the same commit message as before
+alias recommit='git commit -m "$(failed-commit-msg)"'
+
 # Run any git command with a split diff, e.g. `DD gshs`. Think 'delta-double'
 alias DD="DELTA_FEATURES=+side-by-side"
 
