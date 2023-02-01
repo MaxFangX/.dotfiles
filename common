@@ -242,6 +242,7 @@ function failed-commit-msg() {
         | sed -n 's/^\([0-9]*\)[:].*/\1/p' \
     )
     # Subtract 1 and assign to HEAD_N, which we'll pass to `head -n`
+    # TODO(max): Fix this in the case that git commit does NOT have -v passed in
     HEAD_N=$((INDEX - 1))
     # Echo the result
     echo "$(cat $(git rev-parse --git-dir)/COMMIT_EDITMSG | head -n ${HEAD_N})"
@@ -290,9 +291,9 @@ alias gl="git pull"
 alias glor="git pull origin"
 function glorm() { git pull origin `main_branch` }
 
-alias glup="git pull upstream"
+alias glu="git pull upstream"
 unalias glum # For some reason set to 'git pull upstream master'
-function glupm() { git pull upstream `main_branch` }
+function glum() { git pull upstream `main_branch` }
 
 alias glr="git pull --rebase"
 alias glror="git pull --rebase origin"
