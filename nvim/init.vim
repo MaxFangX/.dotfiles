@@ -1334,7 +1334,10 @@ EOF
     " colorscheme tender
 
     let g:airline_theme = 'gruvbox'
+    " Can be 'soft', 'medium' or 'hard'
+    let g:gruvbox_contrast_dark = 'hard'
     colorscheme gruvbox
+    " More configs at https://github.com/morhetz/gruvbox/wiki/Configuration
 
     " let g:airline_theme = 'gruvbox-material'
     " colorscheme gruvbox-material
