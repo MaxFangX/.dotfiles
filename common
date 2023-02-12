@@ -260,6 +260,7 @@ unalias gss # OMZ git status -s
 alias gshs="git show --show-signature"
 
 alias ga="git add"
+alias ga.="git add ."
 
 alias gd="git diff"
 alias gds="git diff --staged"
