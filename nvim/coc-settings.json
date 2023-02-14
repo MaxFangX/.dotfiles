@@ -1,4 +1,7 @@
 {
     "suggest.noselect": true,
+    "rust-analyzer.diagnostics.disabled": [
+        "inactive-code"
+    ],
     "dart.showTodos": false
 }
