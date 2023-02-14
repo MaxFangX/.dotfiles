@@ -290,6 +290,9 @@
 """ { Command mode mappings
     " Replace ':vhelp' with ':vert help' to open in vertical split
     cabbrev vhelp vert help
+
+    " Replace :Q with :q; sometimes accidentally make it caps
+    cabbrev Q q
 """ }
 
 """ { Mappings - Press <Leader>= to re-equalize splits
@@ -694,6 +697,8 @@
 
     " Expand 'TODO', 'FIXME', 'XXX' etc to e.g. 'TODO(max)'
     iabbrev TODO TODO(max)
+    iabbrev TODOR TODO(max): Remove
+    iabbrev TODOI TODO(max): Implement
     iabbrev FIXME FIXME(max)
     iabbrev XXX XXX(max)
 """ }
