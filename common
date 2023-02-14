@@ -304,8 +304,9 @@ unalias gupav # OMZ git pull --rebase --autostash -v
 unalias gupv # OMZ git pull --rebase -v
 unalias ggpull # OMZ git pull origin "$(git_current_branch)"
 
-alias gme="git merge"
-alias gmem="git merge master"
+# gm is 'git merge'
+alias gmf="git merge --ff-only"
+alias gmm="git merge $(git_main_branch)"
 
 alias gs="git stash --include-untracked"
 alias gsa="git stash apply"
