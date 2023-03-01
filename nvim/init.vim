@@ -122,6 +122,15 @@
     onoremap il} :<c-u>normal! F}vi}<cr>
     onoremap al{ :<c-u>normal! F}va}<cr>
     onoremap al} :<c-u>normal! F}va}<cr>
+    " '(i)nside/(a)round (n)ext/(l)ast angle brackets on this line'
+    onoremap in< :<c-u>normal! f<vi<<cr>
+    onoremap in> :<c-u>normal! f<vi<<cr>
+    onoremap an< :<c-u>normal! f<va<<cr>
+    onoremap an> :<c-u>normal! f<va<<cr>
+    onoremap il< :<c-u>normal! F>vi><cr>
+    onoremap il> :<c-u>normal! F>vi><cr>
+    onoremap al< :<c-u>normal! F>va><cr>
+    onoremap al> :<c-u>normal! F>va><cr>
     " '(i)nside/(a)round (n)ext/(l)ast double quotes (") on this line'
     onoremap in" :<c-u>normal! f"vi"<cr>
     onoremap an" :<c-u>normal! f"va"<cr>
