@@ -792,7 +792,7 @@
         autocmd FileType rust :iabbrev <buffer> implf impl From<_> for_ {<CR>fn from(_) -> Self {<CR>}}<Esc>3<Up>2f_s
 
         " Expand implfs to FromStr impl
-        autocmd FileType rust :iabbrev <buffer> implfs use std::str::FromStr;<CR>impl FromStr for_ {<CR>fn from_str(s: &str) -> Result<Self, Self::Err> {<CR>}}<Esc>3<Up>1f_s
+        autocmd FileType rust :iabbrev <buffer> implfs use std::str::FromStr;<CR>impl FromStr for_ {<CR>type Err = anyhow::Error;<CR>fn from_str(s: &str) -> Result<Self, Self::Err> {<CR>}}<Esc>4<Up>1f_s
 
         " Expand impla to Arbitrary impl
         autocmd FileType rust :iabbrev <buffer> impla #[cfg(test)]<CR>use proptest::strategy::{BoxedStrategy, Strategy};<CR>#[cfg(test)]<CR>use proptest::arbitrary::Arbitrary;<CR>#[cfg(test)]<CR>use proptest::arbitrary::any;<CR>impl Arbitrary for_ {<CR>type Parameters = ();<CR>type Strategy = BoxedStrategy<Self>;<CR>fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {<CR>any::<_>()<CR>.prop_map(_)<CR>.boxed()<Esc>6<Up>01f_s
