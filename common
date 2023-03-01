@@ -286,6 +286,9 @@ alias gcfh="git commit -v --fixup HEAD"
 alias gp="git push"
 alias gpo="git push origin"
 alias gpom="git push origin master"
+# Push one commit to origin/<current-branch>
+function gpone { git push origin "$@":"$(git symbolic-ref --short HEAD)" }
+function gpfone { git push --force-with-lease --force-if-includes origin "$@":"$(git symbolic-ref --short HEAD)" }
 
 alias gl="git pull"
 alias glor="git pull origin"
@@ -333,7 +336,9 @@ alias grbi="git rebase -i"
 alias grbia="git rebase -i --autosquash"
 alias grbc="git rebase --continue"
 alias grbs="git rebase --skip"
-function grbm() { git rebase `main_branch` }
+alias grbm="git rebase $(git_main_branch)"
+alias grbim="git rebase -i $(git_main_branch)"
+alias grbiam="git rebase -i --autosquash $(git_main_branch)"
 function glrbm() {
     git fetch origin `main_branch`:`main_branch` && git rebase `main_branch`
 }
