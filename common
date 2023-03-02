@@ -336,9 +336,9 @@ alias grbi="git rebase -i"
 alias grbia="git rebase -i --autosquash"
 alias grbc="git rebase --continue"
 alias grbs="git rebase --skip"
-alias grbm="git rebase $(git_main_branch)"
-alias grbim="git rebase -i $(git_main_branch)"
-alias grbiam="git rebase -i --autosquash $(git_main_branch)"
+function grbm() { git rebase `main_branch` }
+function grbim() { git rebase -i `main_branch` }
+function grbiam() { git rebase -i --autosquash `main_branch` }
 function glrbm() {
     git fetch origin `main_branch`:`main_branch` && git rebase `main_branch`
 }
