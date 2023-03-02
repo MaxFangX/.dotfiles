@@ -7,6 +7,12 @@ ln -sfF ~/.dotfiles/gitconfig ~/.gitconfig
 mkdir -p ~/.config/nvim
 ln -sfF ~/.dotfiles/nvim ~/.config # Works differently when symlinking folders
 ln -sfF ~/.dotfiles/nvim/init.vim ~/.ideavimrc # IntelliJ's copy
+# Karabiner
+mkdir -p ~/.config/karabiner/assets/complex_modifications
+ln -sfF \
+    ~/.dotfiles/karabiner/assets/complex_modifications \
+    ~/.config/karabiner/assets # Follow the nvim folder example
+ln -sfF ~/.dotfiles/karabiner/karabiner.json ~/.config/karabiner/karabiner.json
 
 source ~/.zshrc
 echo "Sourced ~/.zshrc"
