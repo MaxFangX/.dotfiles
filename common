@@ -221,6 +221,9 @@ function rggn { rg --files --no-ignore | rg "$@" }
 # - ag -U -g CURR
 # - ag -Ug CURR
 
+# Justfile
+alias j="just"
+
 # Java
 alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
