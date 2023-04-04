@@ -786,7 +786,7 @@
 
         " TODO Make this trigger with 'impl Trait'
         " Expand impld to Display impl
-        autocmd FileType rust :iabbrev <buffer> impld use std::fmt::{self, Display};<CR>impl Display for_ {<CR>fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {<CR>write!(f, "{}", _)}}<Esc>$xxxx3<Up>f_s
+        autocmd FileType rust :iabbrev <buffer> impld use std::fmt::{self, Display};<CR>impl Display for_ {<CR>fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {<CR>write!(f, "{}")}}<Esc>$xxxx3<Up>f_s
 
         " Expand implf to From impl
         autocmd FileType rust :iabbrev <buffer> implf impl From<_> for_ {<CR>fn from(_) -> Self {<CR>}}<Esc>3<Up>2f_s
