@@ -1233,7 +1233,19 @@
     """ }
 """ }
 
-""" { Plugin Options - rust-analyzer
+""" { Restart rust-analyzer
+
+    " Use :RestartRustAnalyzer to quickly restart the rust-analyzer instance
+    " started by the Neovim's native language server integration. Thanks GPT-4!
+    function! RestartRustAnalyzer() abort
+        let l:bufnr = bufnr('%')
+        let l:server_name = 'rust_analyzer'
+        call luaeval('vim.lsp.stop_client(vim.lsp.get_active_clients())')
+        let l:client_id = luaeval('vim.lsp.start_client({ cmd = { "rust-analyzer" } })')
+        call luaeval('vim.lsp.buf_attach_client(' .. l:bufnr .. ', ' .. l:client_id .. ')')
+        echo "Rust Analyzer has been restarted successfully."
+    endfunction
+    command! RestartRustAnalyzer call RestartRustAnalyzer()
 """ }
 
 """ { nvim-lspconfig General
