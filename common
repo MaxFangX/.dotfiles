@@ -14,6 +14,9 @@ fi
 # https://muru.dev/2015/08/28/vim-for-man.html
 export MANPAGER='nvim -c "%! col -b" -c "set ft=man nomod | let &titlestring=$MAN_PN"'
 
+# Increase soft per-process file descriptor limit to 1024
+ulimit -Sn 1024
+
 ###########################
 # ENVIRONMENT VARIABLES
 ###########################
