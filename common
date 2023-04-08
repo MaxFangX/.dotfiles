@@ -399,9 +399,7 @@ alias crr="cargo run --release"
 alias cb="cargo build"
 alias cbr="cargo build --release"
 alias cf="cargo fmt -- -l"
-alias cfa="cargo fmt --all -- -l"
-alias cfl="cargo fmt --all -- -l"
-alias cfc="cargo fmt --all && cargo clippy --workspace --all-targets"
+alias cfx="cargo fix --allow-staged --allow-dirty --all-targets"
 alias ct="cargo test"
 
 # Misc
