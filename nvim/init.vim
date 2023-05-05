@@ -904,6 +904,10 @@
         " Debugging (needs plenary from above as well)
         Plug 'mfussenegger/nvim-dap'
 
+        """ Nix
+        " Nix support, including syntax highlighting
+        Plug 'LnL7/vim-nix'
+
         """ UI
         Plug 'preservim/nerdtree'       " File system explorer
         Plug 'vim-airline/vim-airline'  " Pretty and helpful bottom bar
