@@ -46,10 +46,6 @@ if [[ ! "$PATH" == *$CARGO_BIN_PATH* ]]; then
   export PATH="$CARGO_BIN_PATH:$PATH"
 fi
 
-# Rust backtrace
-export RUST_BACKTRACE=1
-# export RUST_LOG=info # Better to be off for tests
-
 # Go
 export GOPATH=~/gocode
 GO_BIN_PATH="$GOPATH/bin"
