@@ -196,6 +196,16 @@ extract () {
   fi
 }
 
+# Strip out ansi characters from a log file: `strip-ansi example.log`
+strip-ansi() {
+  if [ -f "$1" ]; then
+    perl -i -pe 's/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g' "$1"
+    echo "ANSI escape codes have been removed from $1"
+  else
+    echo "File $1 does not exist."
+  fi
+}
+
 # Hack for YCM to work
 # Removed because it causes LibreSSL to not work when downloading
 # packages from crates.io
