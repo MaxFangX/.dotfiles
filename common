@@ -262,6 +262,13 @@ function failed-commit-msg() {
 # Retry the most recent failed commit using the same commit message as before
 alias recommit='git commit -m "$(failed-commit-msg)"'
 
+# Force push the current branch to `origin` up to the given commit
+function gpfc() {
+  local commit=$1
+  local branch=$(git symbolic-ref --short HEAD)
+  git push --force-with-lease --force-if-includes origin +$commit:$branch
+}
+
 # Run any git command with a split diff, e.g. `DD gshs`. Think 'delta-double'
 alias DD="DELTA_FEATURES=+side-by-side"
 
