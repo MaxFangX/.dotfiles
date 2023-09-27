@@ -95,7 +95,7 @@
     iabbrev teh the
 
     " Operator-Pending Mappings
-    " '(i)nside/(a)round (n)ext/(l)ast parenthesis on this line'
+    " '(i)nside/(a)round (n)ext/(l)ast parenthesis () on this line'
     onoremap in( :<c-u>normal! f(vi(<cr>
     onoremap in) :<c-u>normal! f(vi(<cr>
     onoremap an( :<c-u>normal! f(va(<cr>
@@ -104,7 +104,7 @@
     onoremap il) :<c-u>normal! F)vi)<cr>
     onoremap al( :<c-u>normal! F)va)<cr>
     onoremap al) :<c-u>normal! F)va)<cr>
-    " '(i)nside/(a)round (n)ext/(l)ast brackets on this line'
+    " '(i)nside/(a)round (n)ext/(l)ast brackets [] on this line'
     onoremap in[ :<c-u>normal! f[vi[<cr>
     onoremap in] :<c-u>normal! f[vi[<cr>
     onoremap an[ :<c-u>normal! f[va[<cr>
@@ -113,7 +113,7 @@
     onoremap il] :<c-u>normal! F]vi]<cr>
     onoremap al[ :<c-u>normal! F]va]<cr>
     onoremap al] :<c-u>normal! F]va]<cr>
-    " '(i)nside/(a)round (n)ext/(l)ast curly braces on this line'
+    " '(i)nside/(a)round (n)ext/(l)ast curly braces {} on this line'
     onoremap in{ :<c-u>normal! f{vi{<cr>
     onoremap in} :<c-u>normal! f{vi{<cr>
     onoremap an{ :<c-u>normal! f{va{<cr>
@@ -122,7 +122,7 @@
     onoremap il} :<c-u>normal! F}vi}<cr>
     onoremap al{ :<c-u>normal! F}va}<cr>
     onoremap al} :<c-u>normal! F}va}<cr>
-    " '(i)nside/(a)round (n)ext/(l)ast angle brackets on this line'
+    " '(i)nside/(a)round (n)ext/(l)ast angle brackets <> on this line'
     onoremap in< :<c-u>normal! f<vi<<cr>
     onoremap in> :<c-u>normal! f<vi<<cr>
     onoremap an< :<c-u>normal! f<va<<cr>
@@ -131,12 +131,12 @@
     onoremap il> :<c-u>normal! F>vi><cr>
     onoremap al< :<c-u>normal! F>va><cr>
     onoremap al> :<c-u>normal! F>va><cr>
-    " '(i)nside/(a)round (n)ext/(l)ast double quotes (") on this line'
+    " '(i)nside/(a)round (n)ext/(l)ast double quotes "" on this line'
     onoremap in" :<c-u>normal! f"vi"<cr>
     onoremap an" :<c-u>normal! f"va"<cr>
     onoremap il" :<c-u>normal! F"vi"<cr>
     onoremap al" :<c-u>normal! F"va"<cr>
-    " '(i)nside/(a)round (n)ext/(l)ast single quotes (') on this line'
+    " '(i)nside/(a)round (n)ext/(l)ast single quotes '' on this line'
     onoremap in' :<c-u>normal! f'vi'<cr>
     onoremap an' :<c-u>normal! f'va'<cr>
     onoremap il' :<c-u>normal! F'vi'<cr>
@@ -706,10 +706,10 @@
 
     " Expand 'TODO', 'FIXME', 'XXX' etc to e.g. 'TODO(max)'
     iabbrev TODO TODO(max)
-    iabbrev TODOR TODO(max): Remove
-    iabbrev TODOI TODO(max): Implement
-    iabbrev FIXME FIXME(max)
     iabbrev XXX XXX(max)
+    iabbrev TODOR TODO(max): Remove<Esc>
+    iabbrev TODOI TODO(max): Implement<Esc>
+    iabbrev FIXME FIXME(max)<Esc>
 """ }
 
 " # --- HELPER FUNCTIONS --- #
@@ -777,6 +777,10 @@
 """ { Rust
     augroup rust_cmds
         autocmd!
+        " Tip: Adding <Esc> to the end of an abbreviation prevents it from adding a trailing space
+        " Tip: Use <C+]> (Ctrl plus '+' in DVORAK) to trigger the abbreviation
+        " without adding a trailing space
+
         " Expand fn to fn _() {}
         autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Esc><Up>$bi
         " Expand matchr to match _ { Ok(_) => {}\nErr(e) => {} }
@@ -800,6 +804,14 @@
         " Expand tokio::select!
         autocmd FileType rust :iabbrev <buffer> tokio::select! tokio::select! {<CR><out> = => {<CR>}<CR><out> = <fut> => {<CR>}}<Esc>4<Up>^Wa
 
+        " #[allow(..)] expansions
+        autocmd FileType rust :iabbrev <buffer> au #[allow(unused)] // TODO(max): Remove<Esc>
+        autocmd FileType rust :iabbrev <buffer> adc #[allow(dead_code)] // TODO(max): Remove<Esc>
+
+        " #[derive(..)] expansions:
+        autocmd FileType rust :iabbrev <buffer> dsd #[derive(Serialize, Deserialize)]<Esc>
+        autocmd FileType rust :iabbrev <buffer> ds #[derive(Serialize)]<Esc>
+        autocmd FileType rust :iabbrev <buffer> dd #[derive(Deserialize)]<Esc>
     augroup END
 
     " Recurses upwards until we find a Cargo.toml.
