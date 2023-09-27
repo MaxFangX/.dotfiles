@@ -864,6 +864,14 @@
     augroup END
 """ }
 
+""" { HTML
+    augroup html_cmds
+        autocmd!
+        " Don't reflow text that exceeds 80 chars when editing html files
+        autocmd FileType html setlocal textwidth=0
+    augroup END
+""" }
+
 " # --- PLUGINS --- #
 
 """ { Plugin Management - vim-plug
