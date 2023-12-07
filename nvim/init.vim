@@ -1269,9 +1269,10 @@
         nnoremap <silent> <LocalLeader>rf :call CocActionAsync('refactor')<CR>
         " <LocalLeader>i: Toggle inlay hints
         nnoremap <silent> <LocalLeader>i :CocCommand document.toggleInlayHint<Enter>
+
         " Code actions: `:help coc-code-actions`
-        " Choose code action to quick(fix) the current line, if any.
-        nnoremap <silent> <LocalLeader>fix <Plug>(coc-fix-current)
+        " Choose code action to quickfi(x) the current line, if any.
+        nnoremap <silent> <LocalLeader>x <Plug>(coc-fix-current)
         " Choose code actions at (cursor).
         nnoremap <silent> <LocalLeader>cursor <Plug>(coc-codeaction-cursor)
         " Choose code actions at current (line).
