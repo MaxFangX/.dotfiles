@@ -1271,6 +1271,14 @@
         nnoremap <silent> <LocalLeader>i :CocCommand document.toggleInlayHint<Enter>
 
         " Code actions: `:help coc-code-actions`
+        "
+        " NOTE: Some sources say that we should not use `noremap` for <Plug>
+        " mappings, as plugins themselves may rely upon recursive mappings. This
+        " seems pretty dumb, since few if any users would know this, and using
+        " recursive mappings within plugin code creates footguns that users are
+        " likely to forget. So I'm ignoring this unless something breaks.
+        " https://github.com/autozimu/LanguageClient-neovim#quick-start
+        "
         " Choose code action to quickfi(x) the current line, if any.
         nnoremap <silent> <LocalLeader>x <Plug>(coc-fix-current)
         " Choose code actions at (cursor).
