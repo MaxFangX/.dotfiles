@@ -21,7 +21,7 @@ autoSetupRemote = true
 [init]
 	defaultBranch = master
 [commit]
-	gpgsign = true
+	gpgsign = false
 
 # --- `delta` options --- #
 
