@@ -1050,6 +1050,52 @@
     augroup END
 """ }
 
+""" { Plugin Options - lightline.vim
+    " :help lightline
+
+    " Generally everything is default except:
+    " - use relativepath (default: %f) instead of filename (default: %t)
+    " - relativepath overflows into the right side (%<)
+    " - fileformat and fileencoding are empty in narrow windows (<80 chars)
+    " - colorscheme is set via lightline.colorscheme in a different section
+    let g:lightline = {
+      \ 'active': {
+      \     'left': [
+      \         [ 'mode', 'paste' ],
+      \         [ 'readonly', 'relativepath', 'modified' ]
+      \     ],
+      \     'right': [
+      \         [ 'lineinfo' ],
+      \         [ 'percent' ],
+      \         [ 'fileformat', 'fileencoding', 'filetype' ]
+      \     ]
+      \ },
+      \ 'inactive': {
+      \     'left': [ [ 'mode', 'paste' ] ],
+      \     'right': [ [ 'lineinfo' ], [ 'percent' ] ]
+      \ },
+      \ 'tabline': {
+      \     'left': [ [ 'tabs' ] ],
+      \     'right': [ [ 'close' ] ]
+      \ },
+      \ 'component': {
+      \   'relativepath': '%f%<'
+      \ },
+      \ 'component_function': {
+      \   'fileformat': 'LightlineFileformat',
+      \   'filetype': 'LightlineFiletype',
+      \ },
+    \ }
+
+    " No file format and encoding information on narrow windows
+    function! LightlineFileformat()
+        return winwidth(0) >= 80 ? &fileformat : ''
+    endfunction
+    function! LightlineFiletype()
+        return winwidth(0) >= 80 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+    endfunction
+""" }
+
 """ { Plugin Options - fzf.vim
     " NOTE: :FZF is still available. See :help FZF for details.
 
@@ -1509,6 +1555,7 @@
     " let g:airline_theme = 'tender'
     " colorscheme tender
 
+    let g:lightline.colorscheme = 'gruvbox'
     let g:airline_theme = 'gruvbox'
     " Can be 'soft', 'medium' or 'hard'
     let g:gruvbox_contrast_dark = 'hard'
