@@ -1,7 +1,10 @@
 {
-    "suggest.noselect": true,
+    "[json][rust]": {
+        "coc.preferences.formatOnSave": true
+    },
+    "dart.showTodos": false,
     "rust-analyzer.diagnostics.disabled": [
         "inactive-code"
     ],
-    "dart.showTodos": false
+    "suggest.noselect": true
 }

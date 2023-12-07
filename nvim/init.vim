@@ -67,8 +67,8 @@
     let mapleader = "\<Space>"
 
     " Local leader key -
-    " This is meant for mappings that only take effect for certain types of
-    " files, e.g. Python, Rust
+    " This is meant for mappings that are used much less frequently,
+    " or are language-specific
     let maplocalleader = "-"
 """ }
 
@@ -762,7 +762,8 @@
         " Disable auto-pairs in vim configs, required for the following abbrev
         autocmd Filetype vim let b:autopairs_loaded=1
         " Expand """ to """ { """ }
-        autocmd FileType vim :iabbrev <buffer> """ """ {<CR>""" }<Up>
+        " TODO: Broken; contains <CR> used by coc complete. Switch to snippets.
+        " autocmd FileType vim :iabbrev <buffer> """ """ {<CR>""" }<Up>
     augroup END
 """ }
 
@@ -782,27 +783,35 @@
         " without adding a trailing space
 
         " Expand fn to fn _() {}
-        autocmd FileType rust :iabbrev <buffer> fn fn() {<CR>}<Esc><Up>$bi
+        " TODO: Broken; contains <CR> used by coc complete. Switch to snippets.
+        " autocmd FileType rust :iabbrev <buffer> fn fn() {<Enter>}<Esc><Up>$bi
         " Expand matchr to match _ { Ok(_) => {}\nErr(e) => {} }
-        autocmd FileType rust :iabbrev <buffer> matchr match {<CR>Ok(_) => {<CR>}<CR>Err(e) => {<CR>}}<Esc>5<Up>ea
+        " TODO: Broken; contains <CR> used by coc complete. Switch to snippets.
+        " autocmd FileType rust :iabbrev <buffer> matchr match {<CR>Ok(_) => {<CR>}<CR>Err(e) => {<CR>}}<Esc>5<Up>ea
         " Expand matcho to match _ { Some(_) => {}\nNone => {} }
-        autocmd FileType rust :iabbrev <buffer> matcho match {<CR>Some(_) => {<CR>}<CR>None => {<CR>}}<Esc>5<Up>ea
+        " TODO: Broken; contains <CR> used by coc complete. Switch to snippets.
+        " autocmd FileType rust :iabbrev <buffer> matcho match {<CR>Some(_) => {<CR>}<CR>None => {<CR>}}<Esc>5<Up>ea
 
         " TODO Make this trigger with 'impl Trait'
         " Expand impld to Display impl
-        autocmd FileType rust :iabbrev <buffer> impld use std::fmt::{self, Display};<CR>impl Display for_ {<CR>fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {<CR>write!(f, "{}")}}<Esc>$xxxx3<Up>f_s
+        " TODO: Broken; contains <CR> used by coc complete. Switch to snippets.
+        " autocmd FileType rust :iabbrev <buffer> impld use std::fmt::{self, Display};<CR>impl Display for_ {<CR>fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {<CR>write!(f, "{}")}}<Esc>$xxxx3<Up>f_s
 
         " Expand implf to From impl
-        autocmd FileType rust :iabbrev <buffer> implf impl From<_> for_ {<CR>fn from(_) -> Self {<CR>}}<Esc>3<Up>2f_s
+        " TODO: Broken; contains <CR> used by coc complete. Switch to snippets.
+        " autocmd FileType rust :iabbrev <buffer> implf impl From<_> for_ {<CR>fn from(_) -> Self {<CR>}}<Esc>3<Up>2f_s
 
         " Expand implfs to FromStr impl
-        autocmd FileType rust :iabbrev <buffer> implfs use std::str::FromStr;<CR>impl FromStr for_ {<CR>type Err = anyhow::Error;<CR>fn from_str(s: &str) -> Result<Self, Self::Err> {<CR>}}<Esc>4<Up>1f_s
+        " TODO: Broken; contains <CR> used by coc complete. Switch to snippets.
+        " autocmd FileType rust :iabbrev <buffer> implfs use std::str::FromStr;<CR>impl FromStr for_ {<CR>type Err = anyhow::Error;<CR>fn from_str(s: &str) -> Result<Self, Self::Err> {<CR>}}<Esc>4<Up>1f_s
 
         " Expand impla to Arbitrary impl
-        autocmd FileType rust :iabbrev <buffer> impla #[cfg(test)]<CR>use proptest::strategy::{BoxedStrategy, Strategy};<CR>#[cfg(test)]<CR>use proptest::arbitrary::Arbitrary;<CR>#[cfg(test)]<CR>use proptest::arbitrary::any;<CR>impl Arbitrary for_ {<CR>type Parameters = ();<CR>type Strategy = BoxedStrategy<Self>;<CR>fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {<CR>any::<_>()<CR>.prop_map(_)<CR>.boxed()<Esc>6<Up>01f_s
+        " TODO: Broken; contains <CR> used by coc complete. Switch to snippets.
+        " autocmd FileType rust :iabbrev <buffer> impla #[cfg(test)]<CR>use proptest::strategy::{BoxedStrategy, Strategy};<CR>#[cfg(test)]<CR>use proptest::arbitrary::Arbitrary;<CR>#[cfg(test)]<CR>use proptest::arbitrary::any;<CR>impl Arbitrary for_ {<CR>type Parameters = ();<CR>type Strategy = BoxedStrategy<Self>;<CR>fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {<CR>any::<_>()<CR>.prop_map(_)<CR>.boxed()<Esc>6<Up>01f_s
 
         " Expand tokio::select!
-        autocmd FileType rust :iabbrev <buffer> tokio::select! tokio::select! {<CR><out> = => {<CR>}<CR><out> = <fut> => {<CR>}}<Esc>4<Up>^Wa
+        " TODO: Broken; contains <CR> used by coc complete. Switch to snippets.
+        " autocmd FileType rust :iabbrev <buffer> tokio::select! tokio::select! {<CR><out> = => {<CR>}<CR><out> = <fut> => {<CR>}}<Esc>4<Up>^Wa
 
         " #[allow(..)] expansions
         autocmd FileType rust :iabbrev <buffer> au #[allow(unused)] // TODO(max): Remove<Esc>
@@ -825,6 +834,8 @@
         endif
     endfunction
 
+    " NOTE: Currently using "coc.preferences.formatOnSave": true
+    "
     " Every time a file is saved, run `cargo fmt` on it (thanks GPT-4!)
     " - First uses `find_cargo_toml` to find a `Cargo.toml` to pass to
     "   `--manifest-path`. The manifest path is required if vim was opened
@@ -836,15 +847,15 @@
     "   These rules aren't respected unless cargo fmt is run with the nightly
     "   toolchain, so we add +nightly to the cargo invocation.
     " - `redraw!` forces neovim to redraw the buffer after formatting is done.
-    augroup rust_fmt_on_save
-        autocmd!
-        autocmd BufWritePost *.rs
-            \ let g:manifest_path = s:find_cargo_toml(expand('%:p:h')) |
-            \ if !empty(g:manifest_path) |
-            \     silent! execute "!cargo +nightly fmt --manifest-path " . g:manifest_path . " -- %:p" |
-            \     redraw! |
-            \ endif
-    augroup END
+    " augroup rust_fmt_on_save
+    "     autocmd!
+    "     autocmd BufWritePost *.rs
+    "         \ let g:manifest_path = s:find_cargo_toml(expand('%:p:h')) |
+    "         \ if !empty(g:manifest_path) |
+    "         \     silent! execute "!cargo +nightly fmt --manifest-path " . g:manifest_path . " -- %:p" |
+    "         \     redraw! |
+    "         \ endif
+    " augroup END
 """ }
 
 """ { Python
@@ -908,29 +919,28 @@
         Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Adds :FZF
         Plug 'junegunn/fzf.vim'         " Adds the rest of the commands
 
-        """ Code completion
-        " FIXME: Switch to an auto-completion engine that respects completeopt
-        " Plug 'ycm-core/YouCompleteMe'
+        """ Code completion, LSP, etc
         Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
         """ Rust - simrat39/rust-tools.nvim
         " Common LSP configs
-        Plug 'neovim/nvim-lspconfig'
-        Plug 'simrat39/rust-tools.nvim'
+        " Plug 'neovim/nvim-lspconfig'
+        " Plug 'simrat39/rust-tools.nvim'
         " Optional dependencies
-        Plug 'nvim-lua/popup.nvim'
-        Plug 'nvim-lua/plenary.nvim'
-        Plug 'nvim-telescope/telescope.nvim'
+        " Plug 'nvim-lua/popup.nvim'
+        " Plug 'nvim-lua/plenary.nvim'
+        " Plug 'nvim-telescope/telescope.nvim'
         " Debugging (needs plenary from above as well)
-        Plug 'mfussenegger/nvim-dap'
+        " Plug 'mfussenegger/nvim-dap'
 
         """ Nix
         " Nix support, including syntax highlighting
         Plug 'LnL7/vim-nix'
 
         """ UI
-        Plug 'preservim/nerdtree'       " File system explorer
-        Plug 'vim-airline/vim-airline'  " Pretty and helpful bottom bar
+        Plug 'preservim/nerdtree'         " File system explorer
+        Plug 'itchyny/lightline.vim'      " Clean and minimal bottom bar
+        " Plug 'vim-airline/vim-airline'  " Bottom bar, too much info IMO
         " Plug 'skywind3000/vim-quickui'  " Cuz we ain't gon remember all that
 
         """ Themes
@@ -1029,13 +1039,14 @@
         autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
 
         " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
-        autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+        autocmd BufEnter * if winnr() == winnr('h') && bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+            \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+
         " Exit Vim if NERDTree is the only window remaining in the only tab.
         autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
         " Close the tab if NERDTree is the only window remaining in it.
         autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-            \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
     augroup END
 """ }
 
@@ -1228,48 +1239,120 @@
 """ { Plugin Options - coc.nvim
     " NOTE: Use :CocConfig to open the coc.nvim config file.
 
-    " Most of these snippets were adapted from the coc.nvim example config:
-    " https://github.com/neoclide/coc.nvim#example-vim-configuration
+    " CoC extensions
+    let g:coc_global_extensions = [
+        \   'coc-json',
+        \   'coc-rust-analyzer',
+        \   'coc-flutter',
+        \ ]
 
-    " NOTE: An item is always selected by default, you may want to enable no
-    " select by `"suggest.noselect": true` in your configuration file.
+    " TODO(max): Integrate snippets: `:help coc-snippets`
 
-    " Required for the next snippet
-    function! CheckBackspace() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~# '\s'
-    endfunction
+    """ { Main keybindings
+        " List of all CoC actions: `:help coc-actions`
 
-    " Tab to navigate to next autocompletion suggestion
-    " Shift+Tab to navigate to previous autocompletion suggestion
-    " By passing 0 (falsy) into coc#pum#next() & coc#pum#prev() instead of 1
-    " (truthy), one can simulate the 'noinsert' option. See :help coc#pum#next
-    inoremap <silent><expr> <TAB>
-        \ coc#pum#visible() ? coc#pum#next(1) :
-        \ CheckBackspace() ? "\<Tab>" :
-        \ coc#refresh()
-    inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+        " <Leader>h: Hover
+        nnoremap <silent> <Leader>h     :call CocActionAsync('doHover')<CR>
+        " <Leader>d or double click: Go to (d)efinition of this item
+        nnoremap <silent> <Leader>d     :call CocActionAsync('jumpDefinition')<CR>
+        nnoremap <silent> <2-LeftMouse> :call CocActionAsync('jumpDefinition')<CR>
+        " <Leader>r: Go to the definition of the (t)ype of this item
+        nnoremap <silent> <Leader>t :call CocActionAsync('jumpTypeDefinition')<CR>
+        " <Leader>r: Go to (r)e(f)erences of this item (includes the definition)
+        nnoremap <silent> <Leader>r     :call CocActionAsync('jumpReferences')<CR>
+        " <Leader>r: Go to (u)sages of this item (excludes the definition)
+        nnoremap <silent> <Leader>u     :call CocActionAsync('jumpReferences')<CR>
 
-    " Enter to confirm selection or notify coc.nvim to format
-    " NOTE: <C-g>u breaks current undo, please make your own choice.
-    " NOTE: Disabling because this breaks abbreviations that include <CR>.
-    " inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-    "     \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+        " <Leader>r: Structural (r)e(n)ame of this item
+        nnoremap <silent> <LocalLeader>rn :call CocActionAsync('rename')<CR>
+        " <Leader>r: Open a (r)e(f)acter window for this item
+        nnoremap <silent> <LocalLeader>rf :call CocActionAsync('refactor')<CR>
+        " <LocalLeader>i: Toggle inlay hints
+        nnoremap <silent> <LocalLeader>i :CocCommand document.toggleInlayHint<Enter>
+        " Code actions: `:help coc-code-actions`
+        " Choose code action to quick(fix) the current line, if any.
+        nnoremap <silent> <LocalLeader>fix <Plug>(coc-fix-current)
+        " Choose code actions at (cursor).
+        nnoremap <silent> <LocalLeader>cursor <Plug>(coc-codeaction-cursor)
+        " Choose code actions at current (line).
+        nnoremap <silent> <LocalLeader>line <Plug>(coc-codeaction-line)
+        " Choose code actions of current (file).
+        nnoremap <silent> <LocalLeader>file <Plug>(coc-codeaction)
+        " Choose code action of current file (source).
+        nnoremap <silent> <LocalLeader>source <Plug>(coc-codeaction-source)
+        " Choose code actions from selected (range).
+        nnoremap <silent> <LocalLeader>range <Plug>(coc-codeaction-selected)
+        " Choose code action to (refactor) at the cursor position.
+        nnoremap <silent> <LocalLeader>refactor <Plug>(coc-codeaction-refactor)
+        " Choose code action to refactor at the (selected)
+        nnoremap <silent> <LocalLeader>selected <Plug>(coc-codeaction-refactor-selected)
+    """ }
 
-    """ { Configurations to better integrate vim with coc.nvim
-        " Always show the signcolumn, otherwise it would shift the text each
-        " time diagnostics appear/become resolved.
-        set signcolumn=yes
+    """ { General configuration
+        " Adapted from the coc.nvim example config:
+        " https://github.com/neoclide/coc.nvim#example-vim-configuration
+
+        " Some servers have issues with backup files, see #649
+        set nobackup
+        set nowritebackup
 
         " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
         " delays and poor user experience.
         set updatetime=300
+
+        " Always show the signcolumn, otherwise it would shift the text each
+        " time diagnostics appear/become resolved.
+        set signcolumn=yes
     """ }
 
-    """ { Configuration - Autocompletion options
-        " NOTE: These are the desired behaviors but appear to have no effect.
-        " All of these options need to be configured on the coc.nvim side.
-        " Probably still good to specify these in case they are required.
+    """ { coc.nvim completion options
+        " Also adapted from the coc.nvim example config.
+        " https://github.com/neoclide/coc.nvim#example-vim-configuration
+
+        " NOTE: An item is always selected by default, you may want to enable
+        " no select by `"suggest.noselect": true` in your configuration file.
+
+        " Required for the next snippet
+        function! CheckBackspace() abort
+            let col = col('.') - 1
+            return !col || getline('.')[col - 1]  =~# '\s'
+        endfunction
+
+        " Tab to navigate to next autocompletion suggestion
+        " Shift+Tab to navigate to previous autocompletion suggestion
+        "
+        " If you want to simulate the 'noinsert' option, you can pass 0 (falsy)
+        " into coc#pum#next() & coc#pum#prev() instead of 1 (truthy).
+        " See `:help coc#pum#next`
+        inoremap <silent><expr> <TAB>
+            \ coc#pum#visible() ? coc#pum#next(1) :
+            \ CheckBackspace() ? "\<Tab>" :
+            \ coc#refresh()
+        inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+        " Enter to confirm selection or notify coc.nvim to format
+        " NOTE: <C-g>u breaks current undo, please make your own choice.
+        " NOTE: This breaks abbreviations that include <CR>. Switch to snippets.
+        inoremap <expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+            \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+    """ }
+
+    """ { CoC statusline
+        " Info: `help coc-status`
+        " set statusline^=%{coc#status()}
+        " augroup coc_stuff
+        "     autocmd!
+        "     # Automatically refresh statusline
+        "     autocmd User CocStatusChange redrawstatus
+        "     " Try to enable the inlay hints as soon as vim loads
+        "     autocmd VimEnter :RustSetInlayHints<Enter> silent " When opening vim
+        "     autocmd CursorHold :RustSetInlayHints<Enter> silent " Keep trying
+        " augroup END
+    """ }
+
+    """ { Old vim built-in completion options
+        " coc.nvim does not use vim's builtin completion, so these options are
+        " not respected. See :help coc-completion for more info.
 
         " Set completeopt to have a better completion experience
         " - :help completeopt
@@ -1288,21 +1371,22 @@
         " Avoid showing extra messages when using completion
         " set shortmess+=c
     """ }
+
 """ }
 
 """ { Restart rust-analyzer
 
     " Use :RestartRustAnalyzer to quickly restart the rust-analyzer instance
     " started by the Neovim's native language server integration. Thanks GPT-4!
-    function! RestartRustAnalyzer() abort
-        let l:bufnr = bufnr('%')
-        let l:server_name = 'rust_analyzer'
-        call luaeval('vim.lsp.stop_client(vim.lsp.get_active_clients())')
-        let l:client_id = luaeval('vim.lsp.start_client({ cmd = { "rust-analyzer" } })')
-        call luaeval('vim.lsp.buf_attach_client(' .. l:bufnr .. ', ' .. l:client_id .. ')')
-        echo "Rust Analyzer has been restarted successfully."
-    endfunction
-    command! RestartRustAnalyzer call RestartRustAnalyzer()
+    " function! RestartRustAnalyzer() abort
+    "     let l:bufnr = bufnr('%')
+    "     let l:server_name = 'rust_analyzer'
+    "     call luaeval('vim.lsp.stop_client(vim.lsp.get_active_clients())')
+    "     let l:client_id = luaeval('vim.lsp.start_client({ cmd = { "rust-analyzer" } })')
+    "     call luaeval('vim.lsp.buf_attach_client(' .. l:bufnr .. ', ' .. l:client_id .. ')')
+    "     echo "Rust Analyzer has been restarted successfully."
+    " endfunction
+    " command! RestartRustAnalyzer call RestartRustAnalyzer()
 """ }
 
 """ { nvim-lspconfig General
@@ -1314,47 +1398,48 @@
     " Need loadOutDirsFromCheck for compiled .proto files (confirmed err o.w.)
     " - See: https://crates.io/crates/tonic
 
-lua << EOF
-local nvim_lsp = require'lspconfig'
+" lua << EOF
+" local nvim_lsp = require'lspconfig'
 
-local on_attach = function(client)
-    require'completion'.on_attach(client)
-end
+" local on_attach = function(client)
+"     require'completion'.on_attach(client)
+" end
 
-nvim_lsp.rust_analyzer.setup({
-    on_attach=on_attach,
-    settings = {
-        ["rust-analyzer"] = {
-            assist = {
-                importGranularity = "module",
-                importPrefix = "by_self",
-            },
-            cargo = {
-                -- Enable or disable features
-                -- features = "all",
-                -- Required to see compiled .proto
-                loadOutDirsFromCheck = true,
-            },
-            diagnostics = {
-                -- Prevents cfg'd code from being all underlined as warning
-                disabled = {"inactive-code"},
-            },
-            procMacro = {
-                enable = true
-            },
-        }
-    }
-})
-EOF
+" nvim_lsp.rust_analyzer.setup({
+"     on_attach=on_attach,
+"     settings = {
+"         ["rust-analyzer"] = {
+"             assist = {
+"                 importGranularity = "module",
+"                 importPrefix = "by_self",
+"             },
+"             cargo = {
+"                 -- Enable or disable features
+"                 -- features = "all",
+"                 -- Required to see compiled .proto
+"                 loadOutDirsFromCheck = true,
+"             },
+"             diagnostics = {
+"                 -- Prevents cfg'd code from being all underlined as warning
+"                 disabled = {"inactive-code"},
+"             },
+"             procMacro = {
+"                 enable = true
+"             },
+"         }
+"     }
+" })
+" EOF
 
 """ }
 
-""" { Code navigation shortcut examples - integrate these
+""" { Old nvim LSP code navigation shortcuts, other settings
+    " Some examples which can be integrated
     " https://github.com/sharksforarms/vim-rust/blob/master/neovim-init-lsp-cmp-rust-tools.vim
 
     " <Leader>d or double click: Go to definition
-    nnoremap <silent> <Leader>d     <cmd>lua vim.lsp.buf.definition()<CR>
-    nnoremap <silent> <2-LeftMouse> <cmd>lua vim.lsp.buf.definition()<CR>
+    " nnoremap <silent> <Leader>d     <cmd>lua vim.lsp.buf.definition()<CR>
+    " nnoremap <silent> <2-LeftMouse> <cmd>lua vim.lsp.buf.definition()<CR>
 
     " nnoremap <silent> gh    <cmd>lua vim.lsp.buf.hover()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
@@ -1362,33 +1447,32 @@ EOF
     " nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR> 
     " nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
     " nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-    nnoremap <silent> <LocalLeader>f <cmd>lua vim.lsp.buf.references()<CR>
+    " nnoremap <silent> <LocalLeader>f <cmd>lua vim.lsp.buf.references()<CR>
     " nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
     " nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
     " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
 
-    augroup _
-        autocmd!
-        " Try to enable the inlay hints as soon as vim loads
-        autocmd VimEnter :RustSetInlayHints<Enter> silent " When opening vim
-        autocmd CursorHold :RustSetInlayHints<Enter> silent " Keep trying
-    augroup END
+    " augroup auto_set_inlay_hints
+    "     autocmd!
+    "     " Try to enable the inlay hints as soon as vim loads
+    "     autocmd VimEnter :RustSetInlayHints<Enter> silent " When opening vim
+    "     autocmd CursorHold :RustSetInlayHints<Enter> silent " Keep trying
+    " augroup END
 """ }
 
-
 """ { nvim-lspconfig simrat39/rust-tools.nvim
-    lua require('rust-tools').setup({})
+    " lua require('rust-tools').setup({})
 
     " This doesn't seem to be required?
     " lua require('rust-tools.inlay_hints').set_inlay_hints()
 
     " Commands: 
-    nnoremap <LocalLeader>i :RustSetInlayHints<Enter>
-    nnoremap <LocalLeader>di :RustDisableInlayHints<Enter>
+    " nnoremap <LocalLeader>i :RustSetInlayHints<Enter>
+    " nnoremap <LocalLeader>di :RustDisableInlayHints<Enter>
     " - RustToggleInlayHints
-    nnoremap <LocalLeader>r :RustRunnables<Enter>
-    nnoremap <LocalLeader>d :RustDebuggables<Enter>
+    " nnoremap <LocalLeader>r :RustRunnables<Enter>
+    " nnoremap <LocalLeader>d :RustDebuggables<Enter>
     " - RustExpandMacro
     " - RustOpenCargo 
     " - RustParentModule
@@ -1397,8 +1481,8 @@ EOF
     " This one is already covered by lsp
     " nnoremap <LocalLeader>h :RustHoverActions<Enter>
     " - RustHoverRange
-    nnoremap <LocalLeader>md :RustMoveItemDown<Enter>
-    nnoremap <LocalLeader>mu :RustMoveItemUp<Enter>
+    " nnoremap <LocalLeader>md :RustMoveItemDown<Enter>
+    " nnoremap <LocalLeader>mu :RustMoveItemUp<Enter>
     " - RustStartStandaloneServerForBuffer 
     " - RustViewCrateGraph (requires dot from graphviz)
 
