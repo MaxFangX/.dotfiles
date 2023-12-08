@@ -1051,12 +1051,12 @@
 """ }
 
 """ { Plugin Options - lightline.vim
-    " :help lightline
 
-    " Generally everything is default except:
+    " Main configuration - see `:help lightline` for the default config.
     " - use relativepath (default: %f) instead of filename (default: %t)
     " - relativepath overflows into the right side (%<)
     " - fileformat and fileencoding are empty in narrow windows (<80 chars)
+    " - inactive windows still show left components, but nothing on the right
     " - colorscheme is set via lightline.colorscheme in a different section
     let g:lightline = {
       \ 'active': {
@@ -1071,8 +1071,11 @@
       \     ]
       \ },
       \ 'inactive': {
-      \     'left': [ [ 'mode', 'paste' ] ],
-      \     'right': [ [ 'lineinfo' ], [ 'percent' ] ]
+      \     'left': [
+      \         [ 'mode', 'paste' ],
+      \         [ 'readonly', 'relativepath', 'modified' ]
+      \     ],
+      \     'right': [ ]
       \ },
       \ 'tabline': {
       \     'left': [ [ 'tabs' ] ],
