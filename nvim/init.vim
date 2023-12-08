@@ -1300,23 +1300,23 @@
     """ { Main keybindings
         " List of all CoC actions: `:help coc-actions`
 
-        " <Leader>h: Hover
+        " Hover
         nnoremap <silent> <Leader>h     :call CocActionAsync('doHover')<CR>
         " <Leader>d or double click: Go to (d)efinition of this item
         nnoremap <silent> <Leader>d     :call CocActionAsync('jumpDefinition')<CR>
         nnoremap <silent> <2-LeftMouse> :call CocActionAsync('jumpDefinition')<CR>
-        " <Leader>r: Go to the definition of the (t)ype of this item
+        " Go to the definition of the (t)ype of this item
         nnoremap <silent> <Leader>t :call CocActionAsync('jumpTypeDefinition')<CR>
-        " <Leader>r: Go to (r)e(f)erences of this item (includes the definition)
+        " Go to (r)e(f)erences of this item (includes the definition)
         nnoremap <silent> <Leader>r     :call CocActionAsync('jumpReferences')<CR>
-        " <Leader>r: Go to (u)sages of this item (excludes the definition)
+        " Go to (u)sages of this item (excludes the definition)
         nnoremap <silent> <Leader>u     :call CocActionAsync('jumpReferences')<CR>
 
-        " <Leader>r: Structural (r)e(n)ame of this item
+        " Structural (r)e(n)ame of this item
         nnoremap <silent> <LocalLeader>rn :call CocActionAsync('rename')<CR>
-        " <Leader>r: Open a (r)e(f)acter window for this item
+        " Open a (r)e(f)acter window for this item
         nnoremap <silent> <LocalLeader>rf :call CocActionAsync('refactor')<CR>
-        " <LocalLeader>i: Toggle inlay hints
+        " Toggle inlay hints
         nnoremap <silent> <LocalLeader>i :CocCommand document.toggleInlayHint<Enter>
 
         " Code actions: `:help coc-code-actions`
@@ -1328,22 +1328,25 @@
         " likely to forget. So I'm ignoring this unless something breaks.
         " https://github.com/autozimu/LanguageClient-neovim#quick-start
         "
-        " Choose code action to quickfi(x) the current line, if any.
+        " Do code action to quickfi(x) the current line, if any.
         nnoremap <silent> <LocalLeader>x <Plug>(coc-fix-current)
-        " Choose code actions at (cursor).
-        nnoremap <silent> <LocalLeader>cursor <Plug>(coc-codeaction-cursor)
-        " Choose code actions at current (line).
-        nnoremap <silent> <LocalLeader>line <Plug>(coc-codeaction-line)
-        " Choose code actions of current (file).
-        nnoremap <silent> <LocalLeader>file <Plug>(coc-codeaction)
-        " Choose code action of current file (source).
-        nnoremap <silent> <LocalLeader>source <Plug>(coc-codeaction-source)
-        " Choose code actions from selected (range).
-        nnoremap <silent> <LocalLeader>range <Plug>(coc-codeaction-selected)
-        " Choose code action to (refactor) at the cursor position.
-        nnoremap <silent> <LocalLeader>refactor <Plug>(coc-codeaction-refactor)
-        " Choose code action to refactor at the (selected)
-        nnoremap <silent> <LocalLeader>selected <Plug>(coc-codeaction-refactor-selected)
+        " View code actions at (c)ursor.
+        " - This usually works for auto-importing the item under the cursor.
+        nnoremap <silent> <LocalLeader>c <Plug>(coc-codeaction-cursor)
+        " View code actions at current (l)ine.
+        nnoremap <silent> <LocalLeader>l <Plug>(coc-codeaction-line)
+        " View code actions of current (f)ile.
+        nnoremap <silent> <LocalLeader>f <Plug>(coc-codeaction)
+        " View code action of current file (s)ource.
+        nnoremap <silent> <LocalLeader>s <Plug>(coc-codeaction-source)
+        " View code action to (r)efactor at the cursor position.
+        nnoremap <silent> <LocalLeader>r <Plug>(coc-codeaction-refactor)
+
+        " Visual mode code actions:
+        " View code actions for the (s)elected range.
+        vnoremap <silent> <LocalLeader>s <Plug>(coc-codeaction-selected)
+        " View code actions to (r)efactor the selected range
+        vnoremap <silent> <LocalLeader>r <Plug>(coc-codeaction-refactor-selected)
     """ }
 
     """ { General configuration
