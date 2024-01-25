@@ -417,6 +417,7 @@ alias cbr="cargo build --release"
 alias cf="cargo fmt -- -l"
 alias cx="cargo fix --allow-staged --allow-dirty --all-targets"
 alias ct="cargo test"
+alias cw="cargo watch"
 
 # Misc
 alias sw="sass --watch"
