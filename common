@@ -277,6 +277,8 @@ unalias gss # OMZ git status -s
 
 # gsh is already set to "git show" by zsh
 alias gshs="git show --show-signature"
+alias ddgsh="DELTA_FEATURES=+side-by-side git show"
+alias ddgshs="DELTA_FEATURES=+side-by-side git show --show-signature"
 
 alias ga="git add"
 alias gap="git add --patch"
