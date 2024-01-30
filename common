@@ -281,6 +281,7 @@ alias ddgsh="DELTA_FEATURES=+side-by-side git show"
 alias ddgshs="DELTA_FEATURES=+side-by-side git show --show-signature"
 
 alias ga="git add"
+alias ga.="git add ."
 alias gap="git add --patch"
 
 alias gd="git diff"
