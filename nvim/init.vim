@@ -1347,6 +1347,15 @@
         vnoremap <silent> <LocalLeader>s <Plug>(coc-codeaction-selected)
         " View code actions to (r)efactor the selected range
         vnoremap <silent> <LocalLeader>r <Plug>(coc-codeaction-refactor-selected)
+
+        " rust-analyzer commands
+        " See full list at https://github.com/fannheyward/coc-rust-analyzer?tab=readme-ov-file#commands
+        " or type :CocCommand and tab through rust-analyzer.<command>
+        "
+        " Run cargo (c)heck
+        nnoremap <silent> <Leader>c     :CocCommand rust-analyzer.runFlycheck<CR>
+        " nnoremap <silent> <Leader>xxx :CocCommand rust-analyzer.cancelFlycheck<CR>
+        " nnoremap <silent> <Leader>xxx :CocCommand rust-analyzer.reload<CR>
     """ }
 
     """ { General configuration
