@@ -4,8 +4,12 @@
     },
     "dart.showTodos": false,
     "rust-analyzer.cargo.extraEnv": {
-        "SKIP_BUILDSCRIPT": 1
+        "SKIP_BUILDSCRIPT": "1"
     },
+    "rust-analyzer.check.extraArgs": [
+        "--target-dir",
+        "/tmp/rust-analyzer-check"
+    ],
     "rust-analyzer.diagnostics.disabled": [
         "inactive-code"
     ],
