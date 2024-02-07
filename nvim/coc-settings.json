@@ -3,6 +3,9 @@
         "coc.preferences.formatOnSave": true
     },
     "dart.showTodos": false,
+    "rust-analyzer.cargo.extraEnv": {
+        "SKIP_BUILDSCRIPT": 1
+    },
     "rust-analyzer.diagnostics.disabled": [
         "inactive-code"
     ],
