@@ -266,21 +266,32 @@
 
 """ Configuration - Relative line numbers {
     " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
+
+    " Whether the current line (at the cursor) shows relative or absolute
+    " number => absolute; nonumber => relative (always 0, useless)
+    set number
+    " Whether other lines show relative or absolute
+    " The augroup below will override this if enabled
     set relativenumber
 
-    " Ctrl + n to switch between relative and absolute
-    function! NumberToggle()
+    " LocalLeader + n to switch between relative and absolute
+    function! RelativeNumberToggle()
       if(&relativenumber == 1)
-        set number
+        set norelativenumber
       else
         set relativenumber
       endif
     endfunc
-    nnoremap <C-n> :call NumberToggle()<cr>
-    
-    " Set/unset when lose/gain focus
-    :au FocusLost * :set number
-    :au FocusGained * :set relativenumber
+    nnoremap <LocalLeader>n :call RelativeNumberToggle()<cr>
+
+    " Set window to relative line numbers when gaining focus
+    " Retvrn to absolute line numbers when losing focus
+    " Apply to all filetypes except vim help
+    augroup relative_numbers_for_focused_window_only
+        autocmd!
+        autocmd WinEnter,FocusGained * if &filetype != 'help' | setlocal relativenumber | endif
+        autocmd WinLeave,FocusLost * if &filetype != 'help' | setlocal norelativenumber | endif
+    augroup END
 """ }
 
 """ { Configuration - Aesthetics
