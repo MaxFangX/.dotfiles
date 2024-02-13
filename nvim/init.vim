@@ -1310,11 +1310,13 @@
         " Go to (r)e(f)erences of this item (includes the definition)
         nnoremap <silent> <Leader>r     :call CocActionAsync('jumpReferences')<CR>
         " Go to (u)sages of this item (excludes the definition)
-        nnoremap <silent> <Leader>u     :call CocActionAsync('jumpReferences')<CR>
+        nnoremap <silent> <Leader>u     :call CocActionAsync('jumpUsed')<CR>
+        " Go to (i)mplementation of this item
+        nnoremap <silent> <Leader>i     :call CocActionAsync('jumpImplementation')<CR>
 
         " Structural (r)e(n)ame of this item
         nnoremap <silent> <LocalLeader>rn :call CocActionAsync('rename')<CR>
-        " Open a (r)e(f)acter window for this item
+        " Open a (r)e(f)actor window for this item
         nnoremap <silent> <LocalLeader>rf :call CocActionAsync('refactor')<CR>
         " Toggle inlay hints
         nnoremap <silent> <LocalLeader>i :CocCommand document.toggleInlayHint<Enter>
