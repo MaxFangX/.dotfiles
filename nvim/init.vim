@@ -401,43 +401,17 @@
     set selectmode=mouse
 """ }
 
-""" { DVORAK - Splits
-    " Option+d,h,t,n to switch splits
-    nnoremap ˙ <C-W>h
-    nnoremap ∆ <C-W>j
-    nnoremap ˚ <C-W>k
-    nnoremap ¬ <C-W>l
-
-    " ctrl+W then d,h,t,n to switch splits
-    nnoremap <C-W>d <C-W>h
-    nnoremap <C-W>h <C-W>j
-    nnoremap <C-W>t <C-W>k
-    nnoremap <C-W>n <C-W>l
-
-    " ctrl+W then D,H,T,N to move splits
-    nnoremap <C-W>D <C-W>H
-    nnoremap <C-W>H <C-W>J
-    nnoremap <C-W>T <C-W>K
-    nnoremap <C-W>N <C-W>L
-"""" }
-
-""" { DVORAK - hn for Esc key
-    " l at the end because the cursor moves left one tick by default
-    inoremap hn <Esc>l
-""" }
-
-""" { DVORAK - Fix weird hjkl positioning
+""" { DVORAK - Fixes
+    " Fix weird hjkl positioning
     nnoremap d h
     nnoremap h j
     nnoremap t k
     nnoremap n l
-
     " Apply during visual mode
     xnoremap d h
     xnoremap h j
     xnoremap t k
     xnoremap n l
-
     " Has to apply during commands as well, such as delete up, yank down
     " Only for up and down, kk
     onoremap h j
@@ -458,7 +432,38 @@
 
     " L for Join lines (which was just overridden by find prev) (Think: "(L)ine")
     nnoremap L J
+
+    " `'` and `"` to till forwards / backwards (Think "tick (') to just before")
+    nnoremap ' t
+    xnoremap ' t
+    onoremap ' t
+    nnoremap " T
+    xnoremap " T
+    onoremap " T
 """ }
+
+""" { DVORAK - hn for Esc key
+    " l at the end because the cursor moves left one tick by default
+    inoremap hn <Esc>l
+""" }
+
+""" { DVORAK - Splits
+    " Option+d,h,t,n to switch splits
+    nnoremap ˙ <C-W>h
+    nnoremap ∆ <C-W>j
+    nnoremap ˚ <C-W>k
+    nnoremap ¬ <C-W>l
+    " ctrl+W then d,h,t,n to switch splits
+    nnoremap <C-W>d <C-W>h
+    nnoremap <C-W>h <C-W>j
+    nnoremap <C-W>t <C-W>k
+    nnoremap <C-W>n <C-W>l
+    " ctrl+W then D,H,T,N to move splits
+    nnoremap <C-W>D <C-W>H
+    nnoremap <C-W>H <C-W>J
+    nnoremap <C-W>T <C-W>K
+    nnoremap <C-W>N <C-W>L
+"""" }
 
 """ { Emacs in vim because I'm a blasphemer
 
