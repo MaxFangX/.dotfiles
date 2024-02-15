@@ -1154,8 +1154,17 @@
     " - :Helptags	Help tags 1
     " - :Filetypes	File types
 
+    " Initialize configuration dictionary
+    let g:fzf_vim = {}
+
     " Add 'Fzf' prefix to all fzf.vim commands
     " let g:fzf_command_prefix = 'Fzf'
+
+    " [Buffers] Jump to the existing window if possible
+    " Appears to fix the "not allowed to edit another buffer now" issue I've
+    " been having when trying to open multiple files selected via a fzf search
+    " https://github.com/junegunn/fzf.vim/issues/569
+    let g:fzf_vim.buffers_jump = 0
 
     " :H to fuzzy search [neo]vim help tags
     command H Helptags
