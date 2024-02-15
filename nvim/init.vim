@@ -703,7 +703,9 @@
 
     " Alt + QWERTY x to copy
     " https://stackoverflow.com/questions/41798130/copy-paste-in-iterm-vim
-    vmap ≈ "*y
+    xnoremap ≈ "+y
+    " + is supposedly more correct than * but I don't see a difference?
+    " xnoremap ≈ "*y
 
     " This alternative way to do it doesn't seem to work
     " https://stackoverflow.com/questions/677986/vim-copy-selection-to-os-x-clipboard
