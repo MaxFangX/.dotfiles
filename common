@@ -28,10 +28,15 @@ chmod u+x ~/env/local.sh ~/env/sensitive.sh
 source ~/env/local.sh
 source ~/env/sensitive.sh
 
-# Homebrew an pages
-MORE_MANPATHS="/usr/share/man:/usr/local/man"
-if [[ ! "$MANPATH" == *$MORE_MANPATHS* ]]; then
-    export MANPATH="$MORE_MANPATHS:$MANPATH"
+# Add more paths to $MANPATH; confirm with man --path
+SYSTEM_MANPATH="/usr/share/man"
+if [[ ! "$MANPATH" == *$SYSTEM_MANPATH* ]]; then
+    export MANPATH="$SYSTEM_MANPATH:$MANPATH"
+fi
+USER_MANPATH="$HOME/.local/share/man"
+mkdir -p $USER_MANPATH
+if [[ ! "$MANPATH" == *$USER_MANPATH* ]]; then
+    export MANPATH="$USER_MANPATH:$MANPATH"
 fi
 
 # User binaries requiring root access
