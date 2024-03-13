@@ -418,7 +418,8 @@ alias lncli-charlie="lncli --macaroonpath=data/admin.macaroon --rpcserver=localh
 
 # Cargo / Rust
 alias c="cargo"
-alias cc="cargo clippy"
+alias cc="SKIP_BUILDSCRIPT=1 cargo check"
+alias ccc="SKIP_BUILDSCRIPT=1 cargo clippy"
 alias cr="cargo run"
 alias crr="cargo run --release"
 alias cb="cargo build"
