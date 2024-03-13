@@ -106,6 +106,9 @@ if [[ ! "$PATH" == *$LOCAL_BIN* ]]; then
     export PATH="$PATH:$LOCAL_BIN"
 fi
 
+# Aider config
+export AIDER_AUTO_COMMITS=False
+
 # --- fzf --- #
 
 # Setup
