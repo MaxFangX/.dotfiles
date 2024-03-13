@@ -100,6 +100,12 @@ if [[ ! "$PATH" == *$FLUTTER_HOME* ]]; then
     export PATH="$PATH:$FLUTTER_HOME"
 fi
 
+# ~/.local/bin (used by pipx)
+export LOCAL_BIN=$HOME/.local/bin
+if [[ ! "$PATH" == *$LOCAL_BIN* ]]; then
+    export PATH="$PATH:$LOCAL_BIN"
+fi
+
 # --- fzf --- #
 
 # Setup
