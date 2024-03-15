@@ -329,7 +329,7 @@ function gpfone { git push --force-with-lease --force-if-includes origin "$@":"$
 
 alias gl="git pull"
 alias glor="git pull origin"
-function glorm() { git pull origin `main_branch` }
+function glom() { git pull origin `main_branch` }
 
 alias glu="git pull upstream"
 unalias glum # For some reason set to 'git pull upstream master'
