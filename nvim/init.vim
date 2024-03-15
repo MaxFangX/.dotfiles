@@ -1176,7 +1176,17 @@
     " - FIXME: <Enter> <C-t>, <C-x>, <C-v> to open selected files in
     "   current window / tabs / split / vsplit
     " See :Rg command definition with :command Rg
-    nnoremap <Leader><Space> :Rg<Enter>
+    " NOTE: Prefer RgWithHidden below, since :Rg ignores .hidden files.
+    " nnoremap <Leader><Space> :Rg<Enter>
+
+    " Exactly `:Rg` but with `--hidden` added to the ripgrep invocation
+    command! -bang -nargs=* RgWithHidden
+        \ call fzf#vim#grep(
+        \     "rg --hidden --no-heading --line-number --column --smart-case --color=always -- ".fzf#shellescape(<q-args>),
+        \     fzf#vim#with_preview(),
+        \     <bang>0
+        \ )
+    nnoremap <Leader><Space> :RgWithHidden<Enter>
 
     " An instructive example that demonstrates a number of quirks of rg + fzf.
     "
@@ -1192,12 +1202,13 @@
     " - --smart-case allows case insensitive search normally, case-sensitive if
     "   any letter typed is uppercase
     " - --color=always just makes it look nicer
+    " - The `rg` invocation needs to end with a trailing space, errors otherwise
     " - The (len(<q-args>) > 0 ? <q-args> : '""') thing prevents the command
     "   from showing only an empty list if it was invoked without arguments:
     "   https://github.com/junegunn/fzf.vim/issues/419#issuecomment-872147450
     command! -bang -nargs=* RgFzfExample
         \ call fzf#vim#grep(
-        \     'rg --no-heading --line-number --column --smart-case --color=always --max-count=1 ' 
+        \     'rg --no-heading --line-number --column --smart-case --color=always ' 
         \     . (len(<q-args>) > 0 ? <q-args> : '""'), 1,
         \     fzf#vim#with_preview(),
         \     <bang>0
@@ -1228,7 +1239,7 @@
     "   ripgrep, remove the shellescape() wrapper and the -- separator.
     "   More info: https://github.com/junegunn/fzf.vim/issues/838
     function! RipgrepOnePerFile(query, fullscreen)
-        let command_fmt = 'rg --no-heading --line-number --column --smart-case --color=always --max-count=1 -- %s || true'
+        let command_fmt = 'rg --hidden --no-heading --line-number --column --smart-case --color=always --max-count=1 -- %s || true'
         let initial_command = printf(command_fmt, shellescape(a:query))
         let reload_command = printf(command_fmt, '{q}')
         let spec = {'options': ['--disabled', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
