@@ -329,11 +329,13 @@ function gpfone { git push --force-with-lease --force-if-includes origin "$@":"$
 
 alias gl="git pull"
 alias glor="git pull origin"
-function glom() { git pull origin `main_branch` }
+# Update main/master from the `origin` remote without having to switch to it
+function glom() { git update-ref refs/heads/`main_branch` origin/`main_branch` }
 
 alias glu="git pull upstream"
 unalias glum # For some reason set to 'git pull upstream master'
-function glum() { git pull upstream `main_branch` }
+# Update main/master from the `upstream` remote without having to switch to it
+function glum() { git update-ref refs/heads/`main_branch` upstream/`main_branch` }
 
 alias glr="git pull --rebase"
 alias glror="git pull --rebase origin"
