@@ -320,6 +320,9 @@ alias gca="git commit -v --amend"
 alias gcf="git commit -v --fixup"
 alias gcfh="git commit -v --fixup HEAD"
 
+# OMZ has already set gf and gfo to "git fetch" and "git fetch origin"
+alias gfu="git fetch upstream"
+
 alias gp="git push"
 alias gpo="git push origin"
 alias gpom="git push origin master"
