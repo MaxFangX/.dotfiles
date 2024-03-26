@@ -226,8 +226,9 @@ strip-ansi() {
 # export DYLD_FORCE_FLAT_NAMESPACE=1
 
 # Vim
-alias vim=nvim
+alias v=nvim
 alias vi=nvim
+alias vim=nvim
 
 # Ripgrep
 alias rgf="rg --files"
