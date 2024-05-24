@@ -847,40 +847,6 @@
         autocmd FileType rust :iabbrev <buffer> ds #[derive(Serialize)]<Esc>
         autocmd FileType rust :iabbrev <buffer> dd #[derive(Deserialize)]<Esc>
     augroup END
-
-    " Recurses upwards until we find a Cargo.toml.
-    function! s:find_cargo_toml(dir)
-        if empty(a:dir) || a:dir ==# '/'
-            return ''
-        elseif filereadable(a:dir . '/Cargo.toml')
-            return a:dir . '/Cargo.toml'
-        else
-            return s:find_cargo_toml(fnamemodify(a:dir, ':h'))
-        endif
-    endfunction
-
-    " NOTE: Currently using "coc.preferences.formatOnSave": true
-    "
-    " Every time a file is saved, run `cargo fmt` on it (thanks GPT-4!)
-    " - First uses `find_cargo_toml` to find a `Cargo.toml` to pass to
-    "   `--manifest-path`. The manifest path is required if vim was opened
-    "   outside of a Cargo project or workspace, otherwise `cargo fmt` errors
-    "   with 'Failed to find targets'.
-    " - If a `Cargo.toml` was found, then we run `cargo fmt` with the manifest
-    "   path, specifying the absolute path of the file to be formatted.
-    " - Some projects have `rustfmt.toml` rules which require nightly rust.
-    "   These rules aren't respected unless cargo fmt is run with the nightly
-    "   toolchain, so we add +nightly to the cargo invocation.
-    " - `redraw!` forces neovim to redraw the buffer after formatting is done.
-    " augroup rust_fmt_on_save
-    "     autocmd!
-    "     autocmd BufWritePost *.rs
-    "         \ let g:manifest_path = s:find_cargo_toml(expand('%:p:h')) |
-    "         \ if !empty(g:manifest_path) |
-    "         \     silent! execute "!cargo +nightly fmt --manifest-path " . g:manifest_path . " -- %:p" |
-    "         \     redraw! |
-    "         \ endif
-    " augroup END
 """ }
 
 """ { Python
