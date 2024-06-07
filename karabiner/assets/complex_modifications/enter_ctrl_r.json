@@ -29,6 +29,35 @@
                     "type": "basic"
                 }
             ]
+        },
+        {
+            "description": "Enter with ctrl t",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "t",
+                        "modifiers": {
+                            "mandatory": [
+                                "control"
+                            ],
+                            "optional": [
+                                "caps_lock"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "return_or_enter"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "frontmost_application_unless"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
         }
     ]
 }
