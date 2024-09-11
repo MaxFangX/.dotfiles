@@ -13,6 +13,9 @@
     "rust-analyzer.diagnostics.disabled": [
         "inactive-code"
     ],
+    "rust-analyzer.rustfmt.extraArgs": [
+        "+nightly-2024-05-03"
+    ],
     "rust-analyzer.updates.checkOnStartup": false,
     "rust-analyzer.server.path": "${userHome}/.cargo/bin/rust-analyzer",
     "suggest.noselect": true
