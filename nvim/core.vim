@@ -690,10 +690,16 @@
 
     " Expand 'TODO', 'FIXME', 'XXX' etc to e.g. 'TODO(max)'
     iabbrev TODO TODO(max)
+    " iabbrev todo TODO(max) # False positive with Rust's todo!()
     iabbrev XXX XXX(max)
+    iabbrev xxx XXX(max)
     iabbrev TODOR TODO(max): Remove<Esc>
+    iabbrev todor TODO(max): Remove<Esc>
     iabbrev TODOI TODO(max): Implement<Esc>
+    iabbrev todoi TODO(max): Implement<Esc>
+    iabbrev todod TODO(max): Document<Esc>
     iabbrev FIXME FIXME(max)<Esc>
+    iabbrev fixme FIXME(max)<Esc>
 
     " Abbreviations to fix typos
     iabbrev adn and
