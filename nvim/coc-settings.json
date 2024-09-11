@@ -18,5 +18,25 @@
     ],
     "rust-analyzer.updates.checkOnStartup": false,
     "rust-analyzer.server.path": "${userHome}/.cargo/bin/rust-analyzer",
-    "suggest.noselect": true
+    "suggest.noselect": true,
+    "languageserver": {
+        "nix": {
+            "command": "nil",
+            "filetypes": [
+                "nix"
+            ],
+            "rootPatterns": [
+                "flake.nix"
+            ],
+            "settings": {
+                "nil": {
+                    "formatting": {
+                        "command": [
+                            "nixpkgs-fmt"
+                        ]
+                    }
+                }
+            }
+        }
+    }
 }
