@@ -680,6 +680,8 @@
     " Quickly edit init.vim in the midst of coding
     " (v)im: (e)dit my init.vim
     nnoremap <leader>ve :vsplit $MYVIMRC<cr>
+    " (v)im: edit (c)ore.vim
+    nnoremap <leader>vc :vsplit ~/.dotfiles/nvim/core.vim<cr>
     " (v)im: (s)ource my init.vim
     nnoremap <leader>vs :source $MYVIMRC<cr>
 """ }
