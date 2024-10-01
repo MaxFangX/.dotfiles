@@ -99,9 +99,18 @@ if ! shopt -oq posix; then
   fi
 fi
 
-###########################
-# GENERAL SETTINGS
-###########################
+##########################
+# BASH-SPECIFIC SETTINGS #
+##########################
+
+# gh copilot aliases
+if [ -x "$(command -v gh)" ]; then
+    eval "$(gh copilot alias -- bash)"
+fi
+
+####################
+# GENERAL SETTINGS #
+####################
 
 # Load common settings
 source ~/.common

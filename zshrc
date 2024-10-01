@@ -1,9 +1,9 @@
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-###########################
-# ZSH SETTINGS
-###########################
+#########################
+# ZSH-SPECIFIC SETTINGS #
+#########################
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -93,6 +93,11 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# gh copilot aliases
+if [ -x "$(command -v gh)" ]; then
+    eval "$(gh copilot alias -- zsh)"
+fi
 
 ###########################
 # GENERAL SETTINGS
