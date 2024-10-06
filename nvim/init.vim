@@ -656,6 +656,13 @@
 
 """ }
 
+""" { GitHub Copilot config
+    " Use <Ctrl-Tab> to accept a Copilot suggestion
+    " Disable the tab mapping since it conflicts with CoC autocompletion
+    imap <silent><script><expr> <C-Tab> copilot#Accept("\<CR>")
+    let g:copilot_no_tab_map = v:true
+""" }
+
 """ { Restart rust-analyzer
 
     " Use :RestartRustAnalyzer to quickly restart the rust-analyzer instance
