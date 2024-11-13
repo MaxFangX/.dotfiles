@@ -319,7 +319,6 @@ alias grsm='git reset . && gchm'
 alias gcm="git commit -m"
 alias gca="git commit -v --amend"
 alias gcf="git commit -v --fixup"
-alias gcfh="git commit -v --fixup HEAD"
 
 # OMZ has already set gf and gfo to "git fetch" and "git fetch origin"
 alias gfu="git fetch upstream"
@@ -343,6 +342,7 @@ function glum() { git update-ref refs/heads/`main_branch` upstream/`main_branch`
 
 alias glr="git pull --rebase"
 alias glror="git pull --rebase origin"
+function glrum() { git pull --rebase upstream `main_branch` }
 function glrorm() { git pull --rebase origin `main_branch` }
 unalias gup # OMZ git pull --rebase
 unalias gupa # OMZ git pull --rebase --autostash
