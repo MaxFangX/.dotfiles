@@ -108,6 +108,11 @@
         """ Code completion, LSP, etc
         Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+        """ Javascript: syntax highlighting and indentation
+        Plug 'othree/html5.vim'
+        Plug 'pangloss/vim-javascript'
+        Plug 'evanleck/vim-svelte', {'branch': 'main'}
+
         """ Rust - simrat39/rust-tools.nvim
         " Common LSP configs
         " Plug 'neovim/nvim-lspconfig'
@@ -497,9 +502,10 @@
 
     " CoC extensions
     let g:coc_global_extensions = [
+        \   'coc-flutter',
         \   'coc-json',
         \   'coc-rust-analyzer',
-        \   'coc-flutter',
+        \   'coc-tsserver',
         \ ]
 
     " TODO(max): Integrate snippets: `:help coc-snippets`
