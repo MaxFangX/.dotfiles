@@ -51,6 +51,13 @@ if [[ ! "$PATH" == *$CARGO_BIN_PATH* ]]; then
   export PATH="$CARGO_BIN_PATH:$PATH"
 fi
 
+# Javascript - Node Version Manager (NVM)
+export NVM_DIR="$HOME/.nvm"
+if [ -d "$NVM_DIR" ]; then
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # Load nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Load completion
+fi
+
 # Go
 export GOPATH=~/gocode
 GO_BIN_PATH="$GOPATH/bin"
