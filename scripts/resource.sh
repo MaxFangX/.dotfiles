@@ -12,7 +12,9 @@ mkdir -p ~/.config/karabiner/assets/complex_modifications
 ln -sfF \
     ~/.dotfiles/karabiner/assets/complex_modifications \
     ~/.config/karabiner/assets # Follow the nvim folder example
-ln -sfF ~/.dotfiles/karabiner/karabiner.json ~/.config/karabiner/karabiner.json
+
+# Backup Karabiner config
+cp ~/.config/karabiner/karabiner.json ~/.dotfiles/karabiner/
 
 source ~/.zshrc
 echo "Sourced ~/.zshrc"
