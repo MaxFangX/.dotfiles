@@ -157,18 +157,19 @@
     " number => absolute; nonumber => relative (always 0, useless)
     set number
     " Whether other lines show relative or absolute
-    " The augroup below will override this if enabled
+    " - The augroup below will override this if enabled
+    " - Options: relativenumber, norelativenumber
     set norelativenumber
 
     " LocalLeader + n to switch between relative and absolute
-    function! RelativeNumberToggle()
-      if(&relativenumber == 1)
-        set norelativenumber
-      else
-        set relativenumber
-      endif
-    endfunc
-    nnoremap <LocalLeader>n :call RelativeNumberToggle()<cr>
+    " function! RelativeNumberToggle()
+    "   if(&relativenumber == 1)
+    "     set norelativenumber
+    "   else
+    "     set relativenumber
+    "   endif
+    " endfunc
+    " nnoremap <LocalLeader>n :call RelativeNumberToggle()<cr>
 
     " Set window to relative line numbers when gaining focus
     " Retvrn to absolute line numbers when losing focus
