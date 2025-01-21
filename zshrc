@@ -99,6 +99,9 @@ if [ -x "$(command -v gh)" ]; then
     eval "$(gh copilot alias -- zsh)"
 fi
 
+# Turn '$' into a no-op to allow easily copy-pasting commands
+alias -g '$'=''
+
 ###########################
 # GENERAL SETTINGS
 ###########################
