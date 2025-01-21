@@ -181,22 +181,10 @@
     " augroup END
 """ }
 
-""" { Configuration - Aesthetics
-    " Use 'True colors' (16 million colors)
-    " More info: https://gist.github.com/XVilka/8346728
-    set termguicolors
-
-    " When set to "dark", Vim will try to use colors that look
-    " good on a dark background. When set to "light", Vim will
-    " try to use colors that look good on a light background.
-    set background=dark
-
-    " GUI cursor config
-    " Default: n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
-    " Comment out last two lines to disable cursor blink
-    set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr-o:hor20,
-        " \a:blinkwait250-blinkoff250-blinkon250-Cursor/lCursor,
-        " \sm:block-blinkwait175-blinkoff150-blinkon175
+""" Configuration - Mistyped commands {
+    command! Vne vnew
+    command! Bd bdelete
+    command! Tabe tabedit
 """ }
 
 " # --- MAPPINGS --- #
