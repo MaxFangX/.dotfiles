@@ -124,6 +124,15 @@
         " Debugging (needs plenary from above as well)
         " Plug 'mfussenegger/nvim-dap'
 
+        """ AI - avante.nvim
+        " Deps
+        Plug 'stevearc/dressing.nvim'
+        Plug 'nvim-lua/plenary.nvim'
+        Plug 'MunifTanjim/nui.nvim'
+        " Library
+        " Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+        Plug 'yetone/avante.nvim', { 'tag': 'v0.0.13', 'do': 'make' }
+
         """ Nix
         " Nix support, including syntax highlighting
         Plug 'LnL7/vim-nix'
@@ -668,6 +677,22 @@
     imap <silent><script><expr> <C-Tab> copilot#Accept("\<CR>")
     let g:copilot_no_tab_map = v:true
 """ }
+
+""" { Plugin Options - avante.nvim
+
+    " Load avante.nvim Lua modules when plugin becomes available
+    augroup avante_group
+        autocmd!
+        autocmd User avante.nvim
+          \ lua require('avante_lib').load() |
+          \ lua require('avante').setup()
+        call plug#end()
+    augroup END
+
+    " Recommended option: Set global statusline to enable full view collapsing
+    set laststatus=3
+""" }
+
 
 """ { Restart rust-analyzer
 
