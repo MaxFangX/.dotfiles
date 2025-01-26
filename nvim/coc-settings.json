@@ -3,22 +3,9 @@
         "coc.preferences.formatOnSave": true
     },
     "dart.showTodos": false,
-    "rust-analyzer.cargo.extraEnv": {
-        "LEXE_SKIP_BUILDSCRIPT": "1"
-    },
-    "rust-analyzer.check.extraArgs": [
-        "--target-dir",
-        "/tmp/rust-analyzer-check"
-    ],
-    "rust-analyzer.diagnostics.disabled": [
-        "inactive-code"
-    ],
-    "rust-analyzer.rustfmt.extraArgs": [
-        "+nightly-2024-05-03"
-    ],
-    "rust-analyzer.updates.checkOnStartup": false,
-    "rust-analyzer.server.path": "${userHome}/.cargo/bin/rust-analyzer",
-    "suggest.noselect": true,
+    "inlayHint.enable": true,
+    "inlayHint.enableParameter": false,
+    "inlayHint.display": false,
     "languageserver": {
         "nix": {
             "command": "nil",
@@ -38,5 +25,24 @@
                 }
             }
         }
-    }
+    },
+    "rust-analyzer.check.extraArgs": [
+        "--target-dir",
+        "/tmp/rust-analyzer-check"
+    ],
+    "rust-analyzer.cargo.extraEnv": {
+        "LEXE_SKIP_BUILDSCRIPT": "1"
+    },
+    "rust-analyzer.diagnostics.disabled": [
+        "inactive-code"
+    ],
+    "rust-analyzer.inlayHints.typeHints.enable": true,
+    "rust-analyzer.inlayHints.parameterHints.enable": true,
+    "rust-analyzer.inlayHints.chainingHints.enable": true,
+    "rust-analyzer.rustfmt.extraArgs": [
+        "+nightly-2024-05-03"
+    ],
+    "rust-analyzer.server.path": "${userHome}/.cargo/bin/rust-analyzer",
+    "rust-analyzer.updates.checkOnStartup": false,
+    "suggest.noselect": true
 }
