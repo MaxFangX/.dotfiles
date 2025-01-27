@@ -130,8 +130,7 @@
         Plug 'nvim-lua/plenary.nvim'
         Plug 'MunifTanjim/nui.nvim'
         " Library
-        " Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
-        Plug 'yetone/avante.nvim', { 'tag': 'v0.0.13', 'do': 'make' }
+        Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
 
         """ Nix
         " Nix support, including syntax highlighting
