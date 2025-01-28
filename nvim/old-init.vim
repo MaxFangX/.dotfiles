@@ -688,8 +688,9 @@
         call plug#end()
     augroup END
 
-    " Recommended option: Set global statusline to enable full view collapsing
-    set laststatus=3
+    " Dev recommands a global statusline (`set laststatus=3`) to enable full
+    " view collapsing, but I don't like how this impacts filename display.
+    " set laststatus=3
 """ }
 
 
