@@ -776,22 +776,35 @@
     augroup END
 """ }
 
-""" { Javascript
-    augroup javascript_cmds
+""" { JavaScript
+    augroup javascript_settings
         autocmd!
-        " Two space indent
-        autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
-        " Show tabs as >---, show non-breakable space chars as +
-        " See :help nolist for more info
-        autocmd FileType javascript setlocal list
+        autocmd FileType javascript setlocal
+            \ shiftwidth=2
+            \ tabstop=2
+            \ softtabstop=2
+            \ list
+    augroup END
+""" }
+
+""" { JSON
+    augroup json_settings
+        autocmd!
+        autocmd FileType json setlocal
+            \ shiftwidth=2
+            \ tabstop=2
+            \ softtabstop=2
+            \ list
     augroup END
 """ }
 
 """ { Go
-    augroup go_cmds
+    augroup go_settings
         autocmd!
-        " Go tabs
-        autocmd FileType go setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
+        autocmd FileType go setlocal
+            \ noexpandtab
+            \ tabstop=4
+            \ shiftwidth=4
     augroup END
 """ }
 
