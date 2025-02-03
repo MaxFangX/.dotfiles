@@ -113,6 +113,12 @@ if [[ ! "$PATH" == *$LOCAL_BIN* ]]; then
     export PATH="$PATH:$LOCAL_BIN"
 fi
 
+# LM Studio
+export LM_STUDIO_BIN="$HOME/.lmstudio/bin"
+if [[ ! "$PATH" == *$LM_STUDIO_BIN* ]]; then
+    export PATH="$PATH:$LM_STUDIO_BIN"
+fi
+
 # Aider config
 export AIDER_ARCHITECT=true
 export AIDER_AUTO_COMMITS=false
