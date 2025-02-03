@@ -114,9 +114,12 @@ if [[ ! "$PATH" == *$LOCAL_BIN* ]]; then
 fi
 
 # Aider config
+export AIDER_ARCHITECT=true
 export AIDER_AUTO_COMMITS=false
 export AIDER_DARK_MODE=true
-export AIDER_MODEL=openrouter/anthropic/claude-3.5-sonnet:beta
+export AIDER_EDITOR_MODEL=openrouter/anthropic/claude-3.5-sonnet
+# export AIDER_MODEL=openrouter/anthropic/claude-3.5-sonnet
+export AIDER_MODEL=openrouter/deepseek/deepseek-r1
 export AIDER_SHOW_MODEL_WARNINGS=false
 
 # --- fzf --- #
