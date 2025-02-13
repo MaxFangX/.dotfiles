@@ -125,7 +125,8 @@ export AIDER_AUTO_COMMITS=false
 export AIDER_DARK_MODE=true
 export AIDER_EDITOR_MODEL=openrouter/anthropic/claude-3.5-sonnet
 # export AIDER_MODEL=openrouter/anthropic/claude-3.5-sonnet
-export AIDER_MODEL=openrouter/deepseek/deepseek-r1
+# export AIDER_MODEL=openrouter/deepseek/deepseek-r1
+export AIDER_MODEL=openai/o1
 export AIDER_SHOW_MODEL_WARNINGS=false
 
 # --- fzf --- #
