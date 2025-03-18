@@ -167,6 +167,17 @@ fi
 export BAT_THEME="gruvbox-dark"
 
 ###########################
+# Init
+###########################
+
+# Source Nix profile script if nix isn't already available and script exists
+if ! command -v nix >/dev/null 2>&1; then
+  if [ -f "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
+    source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  fi
+fi
+
+###########################
 # ALIASES
 ###########################
 
