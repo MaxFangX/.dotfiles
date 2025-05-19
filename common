@@ -119,6 +119,12 @@ if [[ ! "$PATH" == *$LM_STUDIO_BIN* ]]; then
     export PATH="$PATH:$LM_STUDIO_BIN"
 fi
 
+# Windsurf
+export WINDSURF_BIN="$HOME/.codeium/windsurf/bin"
+if [[ ! "$PATH" == *$WINDSURF_BIN* ]]; then
+    export PATH="$PATH:$WINDSURF_BIN"
+fi
+
 # Aider config
 export AIDER_ARCHITECT=true
 export AIDER_AUTO_COMMITS=false
