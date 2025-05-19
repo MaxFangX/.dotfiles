@@ -671,6 +671,8 @@
     nnoremap <leader>ve :vsplit $MYVIMRC<cr>
     " (v)im: edit (c)ore.vim
     nnoremap <leader>vc :vsplit ~/.dotfiles/nvim/core.vim<cr>
+    " (v)im: edit (o)ld-init.vim
+    nnoremap <leader>vo :vsplit ~/.dotfiles/nvim/old-init.vim<cr>
     " (v)im: (s)ource my init.vim
     nnoremap <leader>vs :source $MYVIMRC<cr>
 """ }
