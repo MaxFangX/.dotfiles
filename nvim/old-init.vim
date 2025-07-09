@@ -92,7 +92,6 @@
     "   directly with e.g. Plug 'https://github.com/username/reponame.git'
     " - See [[vim-plug]] for one line install command
     call plug#begin()
-        Plug 'tpope/vim-sensible'       " 'Defaults everyone can agree on'
         Plug 'tpope/vim-surround'       " Parentheses, tags, and shit
         Plug 'tpope/vim-repeat'         " Plugin maps are repeatable
         Plug 'tpope/vim-fugitive'       " Arbitrary git with :Git or just :G
