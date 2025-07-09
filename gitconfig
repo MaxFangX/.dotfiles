@@ -1,6 +1,6 @@
 [user]
-name = Max Fang
-email = protonmail.com@maxfa.ng
+	name = Max Fang
+	email = protonmail.com@maxfa.ng
 signingkey = 98F08E41D2257775
 
 [credential]
@@ -101,3 +101,6 @@ autoSetupRemote = true
     merge-conflict-theirs-diff-header-style = "#FABD2F" bold overline
     merge-conflict-ours-diff-header-decoration-style = ''
     merge-conflict-theirs-diff-header-decoration-style = ''
+
+[blame]
+	ignoreRevsFile = .git-blame-ignore-revs
