@@ -92,11 +92,6 @@
     "   directly with e.g. Plug 'https://github.com/username/reponame.git'
     " - See [[vim-plug]] for one line install command
     call plug#begin()
-        Plug 'tpope/vim-surround'       " Parentheses, tags, and shit
-        Plug 'tpope/vim-repeat'         " Plugin maps are repeatable
-        Plug 'tpope/vim-fugitive'       " Arbitrary git with :Git or just :G
-        Plug 'tpope/vim-commentary'     " Comment / uncomment
-        Plug 'tpope/vim-rsi'            " Readline (emacs) shortcuts in vim
         Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
         Plug 'ton/vim-bufsurf'          " Buffer history per window
 
@@ -158,28 +153,6 @@
 """ }
 
 " # --- PLUGIN OPTIONS --- #
-
-""" { vim-surround
-
-    " Remove mapping since ds is is causing moving left to require two keystrokes
-    " https://github.com/tpope/vim-surround/blob/master/plugin/surround.vim#L599
-    let g:surround_no_mappings = '1'
-
-    " Manually add back key mappings, replacing ds with ks
-    nnoremap ks     <Plug>Dsurround
-    nnoremap cs     <Plug>Csurround
-    nnoremap cS     <Plug>CSurround
-    nnoremap ys     <Plug>Ysurround
-    nnoremap yS     <Plug>YSurround
-    nnoremap yss    <Plug>Yssurround
-    nnoremap ySs    <Plug>YSsurround
-    nnoremap ySS    <Plug>YSsurround
-    xnoremap S      <Plug>VSurround
-    xnoremap gS     <Plug>VgSurround
-    inoremap <C-S>  <Plug>Isurround
-    inoremap <C-G>s <Plug>Isurround
-    inoremap <C-G>S <Plug>ISurround
-""" }
 
 """ { vim-bufsurf
     " This plugin exposes :BufSurfForward and :BufSurfBack
