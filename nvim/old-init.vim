@@ -81,32 +81,6 @@
     endfunc
 """ }
 
-" # --- PLUGINS --- #
-
-""" { Plugin Management - vim-plug
-    " Notes:
-    " - Try to use vim-plug only; I have a comparison between Vim plugin
-    "   managers in my [[Vim]] Obsidian note containing the rationale.
-    " - It also doesn't require any of that git submodules crap
-    " - Git repositories can be referred to via Plug `username/reponame` or
-    "   directly with e.g. Plug 'https://github.com/username/reponame.git'
-    " - See [[vim-plug]] for one line install command
-    call plug#begin()
-    call plug#end() " Note that this call automagically executes:
-                    " - `filetype plugin indent on`
-                    " - `syntax enable`
-                    " This can be disabled immediately after if needed.
-
-    " Commands:
-    " - `PlugInstall [name ...] [#threads]`: Install plugins
-    " - `PlugUpdate [name ...] [#threads]`: Install or update plugins
-    " - `PlugClean[!]`: Remove unlisted plugins (bang version will clean without prompt)
-    " - `PlugUpgrade`: Upgrade vim-plug itself
-    " - `PlugStatus`: Check the status of plugins
-    " - `PlugDiff`: Examine changes from the previous update and the pending changes
-    " - `PlugSnapshot[!] [output path]`: Generate script for restoring the current snapshot of the plugins
-""" }
-
 " # --- PLUGIN OPTIONS --- #
 
 """ { GitHub Copilot config
