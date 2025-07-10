@@ -93,7 +93,6 @@
     " - See [[vim-plug]] for one line install command
     call plug#begin()
         Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
-        Plug 'ton/vim-bufsurf'          " Buffer history per window
 
         """ UI
         " Plug 'preservim/nerdtree'         " File system explorer
@@ -116,23 +115,6 @@
 """ }
 
 " # --- PLUGIN OPTIONS --- #
-
-""" { vim-bufsurf
-    " This plugin exposes :BufSurfForward and :BufSurfBack
-    " <Plug>(buf-surf-forward) and <Plug>(buf-surf-back) are also available
-
-    " Option + QWERTY ]: Go forward one buffer
-    nnoremap <silent> ‘ <Plug>(buf-surf-forward)
-
-    " Option + QWERTY [ or side mouse: Go back one buffer
-    nnoremap <silent> “ <Plug>(buf-surf-back)
-    nnoremap <silent> <MiddleMouse> <Plug>(buf-surf-back)
-    vnoremap <silent> <MiddleMouse> <Plug>(buf-surf-back)
-
-    " Old mappings in case vim-bufsurf doesn't work
-    " nnoremap <silent> “ <C-^>
-    " nnoremap <silent> <MiddleMouse> <C-^>
-""" }
 
 " NOTE: Currently disabled since I don't really use it
 " """ { NERDTree
