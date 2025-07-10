@@ -37,6 +37,31 @@ return {
                 vim.g.lightline = vim.g.lightline or {}
                 vim.g.lightline.colorscheme = 'gruvbox'
                 vim.g.airline_theme = 'gruvbox'
+
+                -- Override diff colors to match my delta config, replacing
+                -- gruvbox's bright inverse style with subtle backgrounds.
+                -- Yellow colors are calculated from red/green brightness, and
+                -- syntax highlighting is preserved.
+                vim.cmd([[
+                    " Split diff view (e.g. fugitive's :Gdiffsplit)
+                    highlight DiffDelete guifg=#330011 guibg=#330011 gui=NONE
+                    highlight DiffAdd    guifg=NONE guibg=#001a00 gui=NONE
+                    highlight DiffChange guifg=NONE guibg=#262600 gui=NONE
+                    highlight DiffText   guifg=NONE guibg=#595900 gui=NONE
+
+                    " Inline diff colors (e.g. fugitive's :Git)
+                    highlight diffAdded   guifg=#479B36 guibg=NONE gui=NONE
+                    highlight diffRemoved guifg=#A02A11 guibg=NONE gui=NONE
+                    highlight diffChanged guifg=#84786A guibg=NONE gui=NONE
+                    highlight diffLine    guifg=#83a598 guibg=NONE gui=NONE
+
+                    " File headers and metadata
+                    highlight diffFile      guifg=#FFFFFF guibg=NONE gui=bold
+                    highlight diffNewFile   guifg=#FFFFFF guibg=NONE gui=bold
+                    highlight diffOldFile   guifg=#FFFFFF guibg=NONE gui=bold
+                    highlight diffIndexLine guifg=#84786A guibg=NONE gui=NONE
+                    highlight diffSubname   guifg=#84786A guibg=NONE gui=NONE
+                ]])
             end,
         },
 
