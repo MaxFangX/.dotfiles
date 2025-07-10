@@ -95,7 +95,6 @@
         Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
 
         """ UI
-        Plug 'itchyny/lightline.vim'      " Clean and minimal bottom bar
         " Plug 'vim-airline/vim-airline'  " Bottom bar, too much info IMO
         " Plug 'skywind3000/vim-quickui'  " Cuz we ain't gon remember all that
     call plug#end() " Note that this call automagically executes:
@@ -114,55 +113,6 @@
 """ }
 
 " # --- PLUGIN OPTIONS --- #
-
-""" { Plugin Options - lightline.vim
-
-    " Main configuration - see `:help lightline` for the default config.
-    " - use relativepath (default: %f) instead of filename (default: %t)
-    " - relativepath overflows into the right side (%<)
-    " - fileformat and fileencoding are empty in narrow windows (<80 chars)
-    " - inactive windows still show left components, but nothing on the right
-    " - colorscheme is set via lightline.colorscheme in a different section
-    let g:lightline = {
-      \ 'active': {
-      \     'left': [
-      \         [ 'mode', 'paste' ],
-      \         [ 'readonly', 'relativepath', 'modified' ]
-      \     ],
-      \     'right': [
-      \         [ 'lineinfo' ],
-      \         [ 'percent' ],
-      \         [ 'fileformat', 'fileencoding', 'filetype' ]
-      \     ]
-      \ },
-      \ 'inactive': {
-      \     'left': [
-      \         [ 'mode', 'paste' ],
-      \         [ 'readonly', 'relativepath', 'modified' ]
-      \     ],
-      \     'right': [ ]
-      \ },
-      \ 'tabline': {
-      \     'left': [ [ 'tabs' ] ],
-      \     'right': [ [ 'close' ] ]
-      \ },
-      \ 'component': {
-      \   'relativepath': '%f%<'
-      \ },
-      \ 'component_function': {
-      \   'fileformat': 'LightlineFileformat',
-      \   'filetype': 'LightlineFiletype',
-      \ },
-    \ }
-
-    " No file format and encoding information on narrow windows
-    function! LightlineFileformat()
-        return winwidth(0) >= 80 ? &fileformat : ''
-    endfunction
-    function! LightlineFiletype()
-        return winwidth(0) >= 80 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
-    endfunction
-""" }
 
 """ { GitHub Copilot config
     " Use <Ctrl-Tab> to accept a Copilot suggestion
