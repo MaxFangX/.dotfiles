@@ -108,15 +108,6 @@
         Plug 'itchyny/lightline.vim'      " Clean and minimal bottom bar
         " Plug 'vim-airline/vim-airline'  " Bottom bar, too much info IMO
         " Plug 'skywind3000/vim-quickui'  " Cuz we ain't gon remember all that
-
-        """ Themes
-        Plug 'sjl/badwolf'              " Classic ChangeTip theme
-        Plug 'jacoborus/tender.vim'     " Theme through later college
-        Plug 'morhetz/gruvbox'          " Eutykhia theme
-        Plug 'sainnhe/gruvbox-material' " Lighter version of Gruvbox
-        Plug 'cocopon/iceberg.vim'      " Cold, icy blue theme
-        Plug 'kaicataldo/material.vim'  " Crisp dark material theme
-        Plug 'AlessandroYorba/Alduin'   " Dark sepia-ish
     call plug#end() " Note that this call automagically executes:
                     " - `filetype plugin indent on`
                     " - `syntax enable`
@@ -266,38 +257,3 @@
     " view collapsing, but I don't like how this impacts filename display.
     " set laststatus=3
 """ }
-
-""" Plugin options - Color Schemes
-    """ Prerequisites
-    " set termguicolors     " Required for most, already set elsewhere
-    " syntax enable         " Required for most, already set in plug#end()
-
-    """ Toggles
-    " let g:airline_theme = 'badwolf'
-    " colorscheme badwolf
-
-    " let g:airline_theme = 'tender'
-    " colorscheme tender
-
-    let g:lightline.colorscheme = 'gruvbox'
-    let g:airline_theme = 'gruvbox'
-    " Can be 'soft', 'medium' or 'hard'
-    let g:gruvbox_contrast_dark = 'hard'
-    colorscheme gruvbox
-    " More configs at https://github.com/morhetz/gruvbox/wiki/Configuration
-
-    " let g:airline_theme = 'gruvbox-material'
-    " colorscheme gruvbox-material
-
-    " let g:airline_theme = 'iceberg'
-    " colorscheme iceberg
-
-    " let g:airline_theme = 'material'
-    " let g:material_theme_style = 'ocean' " Use `ocean` or `darker`
-    " colorscheme material
-
-    " let g:airline_theme = 'alduin'
-    " let g:alduin_Shout_Dragon_Aspect = 1 " Almost black background
-    " let g:alduin_Shout_Become_Ethereal = 1 " Black background
-    " colorscheme alduin
-"""
