@@ -95,7 +95,6 @@
         Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
 
         """ UI
-        " Plug 'preservim/nerdtree'         " File system explorer
         Plug 'itchyny/lightline.vim'      " Clean and minimal bottom bar
         " Plug 'vim-airline/vim-airline'  " Bottom bar, too much info IMO
         " Plug 'skywind3000/vim-quickui'  " Cuz we ain't gon remember all that
@@ -115,50 +114,6 @@
 """ }
 
 " # --- PLUGIN OPTIONS --- #
-
-" NOTE: Currently disabled since I don't really use it
-" """ { NERDTree
-"     " Toggle show NERDTree with Option+8
-"     nnoremap • :NERDTreeToggle<Enter>
-
-"     " No existing mapping h
-"     " Undo existing mapping t
-"     let NERDTreeMapOpenInTab='<Nul>'
-"     " No existing mapping v
-"     " Undo existing mapping s
-"     let NERDTreeMapOpenVSplit='<Nul>'
-"     " Undo existing mapping T
-"     let NERDTreeMapOpenInTabSilent='<Nul>'
-
-"     " Set my own mappings
-"     let NERDTreeMenuDown='h'      " Navigation
-"     let NERDTreeMenuUp='t'        " Navigation
-"     let NERDTreeMapOpenVSplit='v' " vsplit
-"     let NERDTreeMapOpenSplit='s'  " split
-"     " let NERDTreeMenuOpenInTabSilent='T' " can't get tab to work
-"     " let NERDTreeMenuOpenInTab='T'       " can't get tab to work
-
-"     augroup _
-"         autocmd!
-"         " Start NERDTree if Vim is started with 0 file arguments or >=2 file args,
-"         " move the cursor to the other window if so
-"         " autocmd VimEnter * if argc() == 0 || argc() >= 2 | NERDTree | endif
-"         " autocmd VimEnter * if argc() == 0 || argc() >= 2 | wincmd p | endif
-
-"         " Open the existing NERDTree on each new tab.
-"         autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
-
-"         " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
-"         autocmd BufEnter * if winnr() == winnr('h') && bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
-"             \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
-
-"         " Exit Vim if NERDTree is the only window remaining in the only tab.
-"         autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-
-"         " Close the tab if NERDTree is the only window remaining in it.
-"         autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-"     augroup END
-" """ }
 
 """ { Plugin Options - lightline.vim
 
