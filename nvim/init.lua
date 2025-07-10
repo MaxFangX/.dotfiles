@@ -1,9 +1,9 @@
 -- TODO(max): Docs
 
--- Source existing Vimscript config while I migrate
--- ~/.config/nvim/
+-- Source core Vimscript config
+-- Core configs which are dependency-free and safe to install on remote VMs
 local config_dir = vim.fn.stdpath('config')
-vim.cmd('source ' .. config_dir .. '/old-init.vim')
+vim.cmd('source ' .. config_dir .. '/core.vim')
 
 --- { Plugins
     -- Set up lazy.nvim: lua/config/lazy.lua
