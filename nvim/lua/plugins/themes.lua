@@ -26,9 +26,10 @@ return {
         -- },
 
         -- Eutykhia theme
+        -- More configs at https://github.com/morhetz/gruvbox/wiki/Configuration
         {
             "morhetz/gruvbox",
-            -- priority = 1000,  -- If needed, load theme before other plugins
+            lazy = false,
             config = function()
                 -- Can be 'soft', 'medium' or 'hard'
                 vim.g.gruvbox_contrast_dark = 'hard'
@@ -36,7 +37,6 @@ return {
                 vim.g.lightline = vim.g.lightline or {}
                 vim.g.lightline.colorscheme = 'gruvbox'
                 vim.g.airline_theme = 'gruvbox'
-                -- More configs at https://github.com/morhetz/gruvbox/wiki/Configuration
             end,
         },
 

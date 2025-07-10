@@ -9,7 +9,13 @@ return {
     -- - inactive windows still show left components, but nothing on the right
     -- - colorscheme is set via lightline.colorscheme in a different section
     config = function()
-        vim.g.lightline = {
+        -- Preserve existing lightline settings (like colorscheme from themes)
+        local existing_lightline = vim.g.lightline or {}
+
+        vim.g.lightline = vim.tbl_extend("force", {
+            -- Default colorscheme (change in themes.lua if switching themes)
+            colorscheme = 'gruvbox',
+
             active = {
                 left = {
                     { 'mode', 'paste' },
@@ -39,7 +45,7 @@ return {
                 fileformat = 'LightlineFileformat',
                 filetype = 'LightlineFiletype',
             },
-        }
+        }, existing_lightline)
 
         -- No file format and encoding information on narrow windows
         function _G.LightlineFileformat()
@@ -50,5 +56,16 @@ return {
             return vim.fn.winwidth(0) >= 80 and
                 (vim.o.filetype ~= '' and vim.o.filetype or 'no ft') or ''
         end
+
+        -- Refresh lightline after colorscheme changes
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            pattern = "*",
+            callback = function()
+                -- Reinitialize lightline with the current settings
+                vim.cmd("call lightline#init()")
+                vim.cmd("call lightline#colorscheme()")
+                vim.cmd("call lightline#update()")
+            end,
+        })
     end,
 }
