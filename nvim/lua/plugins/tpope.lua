@@ -9,11 +9,13 @@ return {
   -- vim-surround: Parentheses, tags, and shit
   {
     "tpope/vim-surround",
-    config = function()
+    init = function()
       -- Remove mapping since ds is is causing moving left to require two
       -- keystrokes: https://github.com/tpope/vim-surround/blob/master/plugin/surround.vim#L599
-      vim.g.surround_no_mappings = '1'
-
+      -- IMPORTANT: This must be set BEFORE the plugin loads
+      vim.g.surround_no_mappings = 1
+    end,
+    config = function()
       -- Manually add back key mappings, replacing ds with ks
       vim.keymap.set("n", "ks",     "<Plug>Dsurround")
       vim.keymap.set("n", "cs",     "<Plug>Csurround")
