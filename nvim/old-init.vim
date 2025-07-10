@@ -92,11 +92,6 @@
     "   directly with e.g. Plug 'https://github.com/username/reponame.git'
     " - See [[vim-plug]] for one line install command
     call plug#begin()
-        Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
-
-        """ UI
-        " Plug 'vim-airline/vim-airline'  " Bottom bar, too much info IMO
-        " Plug 'skywind3000/vim-quickui'  " Cuz we ain't gon remember all that
     call plug#end() " Note that this call automagically executes:
                     " - `filetype plugin indent on`
                     " - `syntax enable`

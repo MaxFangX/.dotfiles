@@ -1,4 +1,5 @@
 {
+  "auto-pairs": { "branch": "master", "commit": "39f06b873a8449af8ff6a3eee716d3da14d63a76" },
   "avante.nvim": { "branch": "main", "commit": "1748b9120a0455bca8d9f583eb45d32b7434068d" },
   "coc.nvim": { "branch": "release", "commit": "b9c77ea04b8700beb6295c97e92eb13d36c29ca8" },
   "dressing.nvim": { "branch": "master", "commit": "2d7c2db2507fa3c4956142ee607431ddb2828639" },
