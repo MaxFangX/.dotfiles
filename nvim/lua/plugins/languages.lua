@@ -1,10 +1,138 @@
 -- Language-specific plugin configurations
 return {
-  -- """ Javascript: syntax highlighting and indentation
+  --- { Javascript: syntax highlighting and indentation
   "othree/html5.vim",
   "pangloss/vim-javascript",
   {
     "evanleck/vim-svelte",
     branch = "main",
   },
+  --- }
+
+  --- { Rust - simrat39/rust-tools.nvim
+  -- Common LSP configs
+  -- "neovim/nvim-lspconfig",
+  -- "simrat39/rust-tools.nvim",
+  -- Optional dependencies
+  -- "nvim-lua/popup.nvim",
+  -- "nvim-lua/plenary.nvim",
+  -- "nvim-telescope/telescope.nvim",
+  -- Debugging (needs plenary from above as well)
+  -- "mfussenegger/nvim-dap",
+  --- }
+
+  --- { Restart rust-analyzer
+  --
+  -- Use :RestartRustAnalyzer to quickly restart the rust-analyzer instance
+  -- started by the Neovim's native language server integration. Thanks GPT-4!
+  -- function RestartRustAnalyzer()
+  --   local bufnr = vim.fn.bufnr('%')
+  --   local server_name = 'rust_analyzer'
+  --   vim.lsp.stop_client(vim.lsp.get_active_clients())
+  --   local client_id = vim.lsp.start_client({ cmd = { "rust-analyzer" } })
+  --   vim.lsp.buf_attach_client(bufnr, client_id)
+  --   vim.api.nvim_echo({{"Rust Analyzer has been restarted successfully.", "Normal"}}, false, {})
+  -- end
+  -- vim.api.nvim_create_user_command('RestartRustAnalyzer', RestartRustAnalyzer, {})
+  --- }
+
+  --- { nvim-lspconfig General
+  -- https://github.com/neovim/nvim-lspconfig#rust_analyzer
+  --
+  -- Default minimal config - insufficient
+  -- require('lspconfig').rust_analyzer.setup{}
+  --
+  -- Need loadOutDirsFromCheck for compiled .proto files (confirmed err o.w.)
+  -- - See: https://crates.io/crates/tonic
+  --
+  -- local nvim_lsp = require('lspconfig')
+  --
+  -- local on_attach = function(client)
+  --   require('completion').on_attach(client)
+  -- end
+  --
+  -- nvim_lsp.rust_analyzer.setup({
+  --   on_attach=on_attach,
+  --   settings = {
+  --     ["rust-analyzer"] = {
+  --       assist = {
+  --         importGranularity = "module",
+  --         importPrefix = "by_self",
+  --       },
+  --       cargo = {
+  --         -- Enable or disable features
+  --         -- features = "all",
+  --         -- Required to see compiled .proto
+  --         loadOutDirsFromCheck = true,
+  --       },
+  --       diagnostics = {
+  --         -- Prevents cfg'd code from being all underlined as warning
+  --         disabled = {"inactive-code"},
+  --       },
+  --       procMacro = {
+  --         enable = true
+  --       },
+  --     }
+  --   }
+  -- })
+  --- }
+
+  --- { Old nvim LSP code navigation shortcuts, other settings
+  -- Some examples which can be integrated
+  -- https://github.com/sharksforarms/vim-rust/blob/master/neovim-init-lsp-cmp-rust-tools.vim
+  --
+  -- <Leader>d or double click: Go to definition
+  -- vim.keymap.set("n", "<Leader>d", vim.lsp.buf.definition, { silent = true })
+  -- vim.keymap.set("n", "<2-LeftMouse>", vim.lsp.buf.definition, { silent = true })
+  --
+  -- vim.keymap.set("n", "gh", vim.lsp.buf.hover, { silent = true })
+  -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, { silent = true })
+  -- Just shows local usages
+  -- vim.keymap.set("n", "gD", vim.lsp.buf.implementation, { silent = true })
+  -- vim.keymap.set("n", "<c-k>", vim.lsp.buf.signature_help, { silent = true })
+  -- vim.keymap.set("n", "1gD", vim.lsp.buf.type_definition, { silent = true })
+  -- vim.keymap.set("n", "<LocalLeader>f", vim.lsp.buf.references, { silent = true })
+  -- vim.keymap.set("n", "g0", vim.lsp.buf.document_symbol, { silent = true })
+  -- vim.keymap.set("n", "gW", vim.lsp.buf.workspace_symbol, { silent = true })
+  -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, { silent = true })
+  -- vim.keymap.set("n", "gd", vim.lsp.buf.declaration, { silent = true })
+  --
+  -- vim.api.nvim_create_augroup("auto_set_inlay_hints", { clear = true })
+  -- vim.api.nvim_create_autocmd("VimEnter", {
+  --   group = "auto_set_inlay_hints",
+  --   command = "silent! RustSetInlayHints",
+  --   desc = "Try to enable the inlay hints as soon as vim loads"
+  -- })
+  -- vim.api.nvim_create_autocmd("CursorHold", {
+  --   group = "auto_set_inlay_hints",
+  --   command = "silent! RustSetInlayHints",
+  --   desc = "Keep trying"
+  -- })
+  --- }
+
+  --- { nvim-lspconfig simrat39/rust-tools.nvim
+  -- require('rust-tools').setup({})
+  --
+  -- This doesn't seem to be required?
+  -- require('rust-tools.inlay_hints').set_inlay_hints()
+  --
+  -- Commands:
+  -- vim.keymap.set("n", "<LocalLeader>i", ":RustSetInlayHints<CR>")
+  -- vim.keymap.set("n", "<LocalLeader>di", ":RustDisableInlayHints<CR>")
+  -- - RustToggleInlayHints
+  -- vim.keymap.set("n", "<LocalLeader>r", ":RustRunnables<CR>")
+  -- vim.keymap.set("n", "<LocalLeader>d", ":RustDebuggables<CR>")
+  -- - RustExpandMacro
+  -- - RustOpenCargo
+  -- - RustParentModule
+  -- - RustJoinLines
+  -- First command opens the window, second command enters it
+  -- This one is already covered by lsp
+  -- vim.keymap.set("n", "<LocalLeader>h", ":RustHoverActions<CR>")
+  -- - RustHoverRange
+  -- vim.keymap.set("n", "<LocalLeader>md", ":RustMoveItemDown<CR>")
+  -- vim.keymap.set("n", "<LocalLeader>mu", ":RustMoveItemUp<CR>")
+  -- - RustStartStandaloneServerForBuffer
+  -- - RustViewCrateGraph (requires dot from graphviz)
+  --- }
 }

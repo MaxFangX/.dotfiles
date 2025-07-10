@@ -95,17 +95,6 @@
         Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
         Plug 'ton/vim-bufsurf'          " Buffer history per window
 
-        """ Rust - simrat39/rust-tools.nvim
-        " Common LSP configs
-        " Plug 'neovim/nvim-lspconfig'
-        " Plug 'simrat39/rust-tools.nvim'
-        " Optional dependencies
-        " Plug 'nvim-lua/popup.nvim'
-        " Plug 'nvim-lua/plenary.nvim'
-        " Plug 'nvim-telescope/telescope.nvim'
-        " Debugging (needs plenary from above as well)
-        " Plug 'mfussenegger/nvim-dap'
-
         """ AI - avante.nvim
         " Deps
         Plug 'stevearc/dressing.nvim'
@@ -280,121 +269,6 @@
     " Dev recommands a global statusline (`set laststatus=3`) to enable full
     " view collapsing, but I don't like how this impacts filename display.
     " set laststatus=3
-""" }
-
-
-""" { Restart rust-analyzer
-
-    " Use :RestartRustAnalyzer to quickly restart the rust-analyzer instance
-    " started by the Neovim's native language server integration. Thanks GPT-4!
-    " function! RestartRustAnalyzer() abort
-    "     let l:bufnr = bufnr('%')
-    "     let l:server_name = 'rust_analyzer'
-    "     call luaeval('vim.lsp.stop_client(vim.lsp.get_active_clients())')
-    "     let l:client_id = luaeval('vim.lsp.start_client({ cmd = { "rust-analyzer" } })')
-    "     call luaeval('vim.lsp.buf_attach_client(' .. l:bufnr .. ', ' .. l:client_id .. ')')
-    "     echo "Rust Analyzer has been restarted successfully."
-    " endfunction
-    " command! RestartRustAnalyzer call RestartRustAnalyzer()
-""" }
-
-""" { nvim-lspconfig General
-    " https://github.com/neovim/nvim-lspconfig#rust_analyzer
-
-    " Default minimal config - insufficient
-    " lua require'lspconfig'.rust_analyzer.setup{}
-
-    " Need loadOutDirsFromCheck for compiled .proto files (confirmed err o.w.)
-    " - See: https://crates.io/crates/tonic
-
-" lua << EOF
-" local nvim_lsp = require'lspconfig'
-
-" local on_attach = function(client)
-"     require'completion'.on_attach(client)
-" end
-
-" nvim_lsp.rust_analyzer.setup({
-"     on_attach=on_attach,
-"     settings = {
-"         ["rust-analyzer"] = {
-"             assist = {
-"                 importGranularity = "module",
-"                 importPrefix = "by_self",
-"             },
-"             cargo = {
-"                 -- Enable or disable features
-"                 -- features = "all",
-"                 -- Required to see compiled .proto
-"                 loadOutDirsFromCheck = true,
-"             },
-"             diagnostics = {
-"                 -- Prevents cfg'd code from being all underlined as warning
-"                 disabled = {"inactive-code"},
-"             },
-"             procMacro = {
-"                 enable = true
-"             },
-"         }
-"     }
-" })
-" EOF
-
-""" }
-
-""" { Old nvim LSP code navigation shortcuts, other settings
-    " Some examples which can be integrated
-    " https://github.com/sharksforarms/vim-rust/blob/master/neovim-init-lsp-cmp-rust-tools.vim
-
-    " <Leader>d or double click: Go to definition
-    " nnoremap <silent> <Leader>d     <cmd>lua vim.lsp.buf.definition()<CR>
-    " nnoremap <silent> <2-LeftMouse> <cmd>lua vim.lsp.buf.definition()<CR>
-
-    " nnoremap <silent> gh    <cmd>lua vim.lsp.buf.hover()<CR>
-    " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
-    " Just shows local usages
-    " nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR> 
-    " nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-    " nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-    " nnoremap <silent> <LocalLeader>f <cmd>lua vim.lsp.buf.references()<CR>
-    " nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-    " nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-    " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
-    " nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
-
-    " augroup auto_set_inlay_hints
-    "     autocmd!
-    "     " Try to enable the inlay hints as soon as vim loads
-    "     autocmd VimEnter :RustSetInlayHints<Enter> silent " When opening vim
-    "     autocmd CursorHold :RustSetInlayHints<Enter> silent " Keep trying
-    " augroup END
-""" }
-
-""" { nvim-lspconfig simrat39/rust-tools.nvim
-    " lua require('rust-tools').setup({})
-
-    " This doesn't seem to be required?
-    " lua require('rust-tools.inlay_hints').set_inlay_hints()
-
-    " Commands: 
-    " nnoremap <LocalLeader>i :RustSetInlayHints<Enter>
-    " nnoremap <LocalLeader>di :RustDisableInlayHints<Enter>
-    " - RustToggleInlayHints
-    " nnoremap <LocalLeader>r :RustRunnables<Enter>
-    " nnoremap <LocalLeader>d :RustDebuggables<Enter>
-    " - RustExpandMacro
-    " - RustOpenCargo 
-    " - RustParentModule
-    " - RustJoinLines
-    " First command opens the window, second command enters it
-    " This one is already covered by lsp
-    " nnoremap <LocalLeader>h :RustHoverActions<Enter>
-    " - RustHoverRange
-    " nnoremap <LocalLeader>md :RustMoveItemDown<Enter>
-    " nnoremap <LocalLeader>mu :RustMoveItemUp<Enter>
-    " - RustStartStandaloneServerForBuffer 
-    " - RustViewCrateGraph (requires dot from graphviz)
-
 """ }
 
 """ Plugin options - Color Schemes
