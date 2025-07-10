@@ -95,11 +95,6 @@
         Plug 'jiangmiao/auto-pairs'     " Insert / delete ' '' [ { in pairs
         Plug 'ton/vim-bufsurf'          " Buffer history per window
 
-        """ Javascript: syntax highlighting and indentation
-        Plug 'othree/html5.vim'
-        Plug 'pangloss/vim-javascript'
-        Plug 'evanleck/vim-svelte', {'branch': 'main'}
-
         """ Rust - simrat39/rust-tools.nvim
         " Common LSP configs
         " Plug 'neovim/nvim-lspconfig'
