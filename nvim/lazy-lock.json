@@ -1,4 +1,5 @@
 {
+  "coc.nvim": { "branch": "release", "commit": "b9c77ea04b8700beb6295c97e92eb13d36c29ca8" },
   "fzf": { "branch": "master", "commit": "0076ec2e8d66a725555c256acbe46292019dc1a7" },
   "fzf.vim": { "branch": "master", "commit": "3725f364ccd25b85a91970720ba9bc2931861910" },
   "lazy.nvim": { "branch": "main", "commit": "d8f26efd456190241afd1b0f5235fe6fdba13d4a" },
