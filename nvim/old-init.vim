@@ -103,10 +103,6 @@
         " Library
         Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
 
-        """ Nix
-        " Nix support, including syntax highlighting
-        Plug 'LnL7/vim-nix'
-
         """ UI
         " Plug 'preservim/nerdtree'         " File system explorer
         Plug 'itchyny/lightline.vim'      " Clean and minimal bottom bar

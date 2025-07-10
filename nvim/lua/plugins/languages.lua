@@ -9,6 +9,11 @@ return {
   },
   --- }
 
+  --- { Nix
+      -- Nix support, including syntax highlighting
+      "LnL7/vim-nix",
+  --- }
+
   --- { Rust - simrat39/rust-tools.nvim
   -- Common LSP configs
   -- "neovim/nvim-lspconfig",
