@@ -20,13 +20,16 @@ return {
 
         local opts = { noremap = true, silent = true }
 
-        -- Hover
+        -- === <Leader> mappings === --
+
+        -- Double click: Hover (show type/documentation)
+        vim.keymap.set("n", "<2-LeftMouse>",
+          ":call CocActionAsync('doHover')<CR>", opts)
+        -- (h)over item
         vim.keymap.set("n", "<Leader>h", ":call CocActionAsync('doHover')<CR>",
           opts)
-        -- <Leader>d or double click: Go to (d)efinition of this item
+        -- Go to (d)efinition of this item
         vim.keymap.set("n", "<Leader>d",
-          ":call CocActionAsync('jumpDefinition')<CR>", opts)
-        vim.keymap.set("n", "<2-LeftMouse>",
           ":call CocActionAsync('jumpDefinition')<CR>", opts)
         -- Go to the definition of the (t)ype of this item
         vim.keymap.set("n", "<Leader>t",
@@ -41,14 +44,17 @@ return {
         vim.keymap.set("n", "<Leader>i",
           ":call CocActionAsync('jumpImplementation')<CR>", opts)
 
-        -- Structural (r)e(n)ame of this item
-        vim.keymap.set("n", "<LocalLeader>rn",
+        -- === <LocalLeader> mappings === --
+        -- All are namespaced with <LocalLeader>c: (c)oc
+
+        -- (c)oc: Structural re(n)ame of this item
+        vim.keymap.set("n", "<LocalLeader>cn",
           ":call CocActionAsync('rename')<CR>", opts)
-        -- Open a (r)e(f)actor window for this item
-        vim.keymap.set("n", "<LocalLeader>rf",
+        -- (c)oc: Open a re(f)actor window for this item
+        vim.keymap.set("n", "<LocalLeader>cf",
           ":call CocActionAsync('refactor')<CR>", opts)
-        -- Toggle inlay hints
-        vim.keymap.set("n", "<LocalLeader>i",
+        -- (c)oc: Toggle (i)nlay hints
+        vim.keymap.set("n", "<LocalLeader>ci",
           ":CocCommand document.toggleInlayHint<CR>", opts)
 
         -- Code actions: `:help coc-code-actions`
@@ -60,30 +66,31 @@ return {
         -- likely to forget. So I'm ignoring this unless something breaks.
         -- https://github.com/autozimu/LanguageClient-neovim#quick-start
         --
-        -- Do code action to quickfi(x) the current line, if any.
-        vim.keymap.set("n", "<LocalLeader>x", "<Plug>(coc-fix-current)", opts)
-        -- View code actions at (c)ursor.
+        -- (c)oc: Do code action to quickfi(x) the current line, if any.
+        -- TODO(max): Would be nice to auto open buffer diff view on select
+        vim.keymap.set("n", "<LocalLeader>cx", "<Plug>(coc-fix-current)", opts)
+        -- (c)oc: View code (a)ctions at cursor.
         -- - This usually works for auto-importing the item under the cursor.
-        vim.keymap.set("n", "<LocalLeader>c", "<Plug>(coc-codeaction-cursor)",
+        vim.keymap.set("n", "<LocalLeader>ca", "<Plug>(coc-codeaction-cursor)",
           opts)
-        -- View code actions at current (l)ine.
-        vim.keymap.set("n", "<LocalLeader>l", "<Plug>(coc-codeaction-line)",
+        -- (c)oc: View code actions at current (l)ine.
+        vim.keymap.set("n", "<LocalLeader>cl", "<Plug>(coc-codeaction-line)",
           opts)
-        -- View code actions of current (f)ile.
-        vim.keymap.set("n", "<LocalLeader>f", "<Plug>(coc-codeaction)", opts)
-        -- View code action of current file (s)ource.
-        vim.keymap.set("n", "<LocalLeader>s", "<Plug>(coc-codeaction-source)",
+        -- (c)oc: View code actions of current file (entirely).
+        vim.keymap.set("n", "<LocalLeader>ce", "<Plug>(coc-codeaction)", opts)
+        -- (c)oc: View code action of current file (s)ource.
+        vim.keymap.set("n", "<LocalLeader>cs", "<Plug>(coc-codeaction-source)",
           opts)
-        -- View code action to (r)efactor at the cursor position.
-        vim.keymap.set("n", "<LocalLeader>r",
+        -- (c)oc: View code action to (r)efactor at the cursor position.
+        vim.keymap.set("n", "<LocalLeader>cr",
           "<Plug>(coc-codeaction-refactor)", opts)
 
         -- Visual mode code actions:
-        -- View code actions for the (s)elected range.
-        vim.keymap.set("v", "<LocalLeader>s",
+        -- (c)oc: View code (a)ctions for the selected range.
+        vim.keymap.set("v", "<LocalLeader>ca",
           "<Plug>(coc-codeaction-selected)", opts)
-        -- View code actions to (r)efactor the selected range
-        vim.keymap.set("v", "<LocalLeader>r",
+        -- (c)oc: View code actions to (r)efactor the selected range
+        vim.keymap.set("v", "<LocalLeader>cr",
           "<Plug>(coc-codeaction-refactor-selected)", opts)
 
         -- rust-analyzer commands
@@ -91,12 +98,12 @@ return {
         -- https://github.com/fannheyward/coc-rust-analyzer?tab=readme-ov-file#commands
         -- or type :CocCommand and tab through rust-analyzer.<command>
         --
-        -- Run cargo (c)heck
-        vim.keymap.set("n", "<Leader>c",
+        -- (c)oc: Run fly(c)heck
+        vim.keymap.set("n", "<LocalLeader>cc",
           ":CocCommand rust-analyzer.runFlycheck<CR>", opts)
-        -- vim.keymap.set("n", "<Leader>xxx",
+        -- vim.keymap.set("n", "<LocalLeader>cxxx",
         --   ":CocCommand rust-analyzer.cancelFlycheck<CR>", opts)
-        -- vim.keymap.set("n", "<Leader>xxx",
+        -- vim.keymap.set("n", "<LocalLeader>cxxx",
         --   ":CocCommand rust-analyzer.reload<CR>", opts)
     --- }
 
