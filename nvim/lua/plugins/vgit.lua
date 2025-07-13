@@ -21,13 +21,13 @@ return {
           once = true,
           callback = function()
             vim.defer_fn(function()
-              -- Refresh the current buffer's git status
-              local git_buffer_store = require('vgit.git.git_buffer_store')
-              local buffer = git_buffer_store.current()
-              if buffer then
-                buffer:sync()
-                buffer:render_signs()
-              end
+              -- Trigger a simple gutter refresh without coroutines
+              pcall(function()
+                -- Force vgit to refresh by toggling gutter
+                local vgit = require('vgit')
+                vgit.toggle_live_gutter()
+                vgit.toggle_live_gutter()
+              end)
             end, 50)
           end
         })
