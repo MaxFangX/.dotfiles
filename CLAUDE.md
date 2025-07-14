@@ -1,0 +1,1 @@
+All files should maintain a maximum line width of 80 characters.
