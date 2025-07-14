@@ -35,27 +35,42 @@ return {
     end
 
     -- Generate quickfix list of files with unstaged changes
-    helpers.unstaged_hunks_to_quickfix = function()
+    helpers.quickfix_files_with_unstaged_changes = function()
       local items = {}
+      local seen = {}
 
       -- Get unstaged files
       local unstaged_files = vim.fn.systemlist('git diff --name-only')
-
       for _, file in ipairs(unstaged_files) do
-        -- Add one entry per file
-        table.insert(items, {
-          filename = file,
-          lnum = 1,
-          text = 'Unstaged changes'
-        })
+        if not seen[file] then
+          table.insert(items, {
+            filename = file,
+            lnum = 1,
+            text = 'Unstaged changes'
+          })
+          seen[file] = true
+        end
+      end
+
+      -- Get untracked files (not in git tree)
+      local untracked_files = vim.fn.systemlist('git ls-files --others --exclude-standard')
+      for _, file in ipairs(untracked_files) do
+        if not seen[file] then
+          table.insert(items, {
+            filename = file,
+            lnum = 1,
+            text = 'Untracked file'
+          })
+          seen[file] = true
+        end
       end
 
       if #items == 0 then
-        print('No unstaged changes found')
+        print('No unstaged changes or untracked files found')
       else
         vim.fn.setqflist(items, 'r')
         vim.cmd('copen')
-        print(string.format('Found %d files with unstaged changes', #items))
+        print(string.format('Found %d files with changes', #items))
       end
     end
 
@@ -98,10 +113,10 @@ return {
         ['n <LocalLeader>gp'] = helpers.with_gutter_refresh(function()
           require('vgit').project_diff_preview()
         end),
-        -- (q)uickfix list of all unstaged hunks
-        ['n <LocalLeader>gq'] = helpers.unstaged_hunks_to_quickfix,
+        -- (q)uickfix list of files with unstaged changes
+        ['n <LocalLeader>gq'] = helpers.quickfix_files_with_unstaged_changes,
 
-                -- (s)tage current hunk
+        -- (s)tage current hunk
         ['n <LocalLeader>gs'] = function() require('vgit').buffer_hunk_stage() end,
         -- (S)tage entire file
         ['n <LocalLeader>gS'] = function() require('vgit').buffer_stage() end,
