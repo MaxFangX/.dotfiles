@@ -45,6 +45,8 @@ return {
       end
 
       if #items == 0 then
+        -- Close quickfix window if open
+        vim.cmd('cclose')
         print('No unstaged changes or untracked files found')
       else
         vim.fn.setqflist(items, 'r')
