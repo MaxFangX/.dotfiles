@@ -11,29 +11,6 @@ return {
     -- Helper functions defined in a table for better organization
     local helpers = {}
 
-    -- Refresh gutter after preview closes
-    helpers.with_gutter_refresh = function(fn)
-      return function()
-        fn()
-        -- Set up autocmd to refresh gutter when preview closes
-        vim.api.nvim_create_autocmd({'BufWinLeave', 'WinClosed'}, {
-          pattern = '*',
-          once = true,
-          callback = function()
-            vim.defer_fn(function()
-              -- Trigger a simple gutter refresh without coroutines
-              pcall(function()
-                -- Force vgit to refresh by toggling gutter
-                local vgit = require('vgit')
-                vgit.toggle_live_gutter()
-                vgit.toggle_live_gutter()
-              end)
-            end, 50)
-          end
-        })
-      end
-    end
-
     -- Generate quickfix list of files with unstaged changes
     helpers.quickfix_files_with_unstaged_changes = function()
       local items = {}
@@ -53,7 +30,9 @@ return {
       end
 
       -- Get untracked files (not in git tree)
-      local untracked_files = vim.fn.systemlist('git ls-files --others --exclude-standard')
+      local untracked_files = vim.fn.systemlist(
+        'git ls-files --others --exclude-standard'
+      )
       for _, file in ipairs(untracked_files) do
         if not seen[file] then
           table.insert(items, {
@@ -78,12 +57,12 @@ return {
     vgit.setup({
       -- Keymaps for git diff viewing and staging workflow
       keymaps = {
-        -- === <Leader> mappings === --
+        -- === Global (non-namespaced) mappings === --
 
-        -- (P)revious hunk
-        ['n <Leader>p'] = function() require('vgit').hunk_up() end,
-        -- (N)ext hunk
-        ['n <Leader>n'] = function() require('vgit').hunk_down() end,
+        -- Navigate between hunks with shift+arrows
+        -- These work everywhere including in diff preview
+        ['n <S-Up>'] = function() require('vgit').hunk_up() end,
+        ['n <S-Down>'] = function() require('vgit').hunk_down() end,
 
         -- (H)unk preview
         -- ['n <Leader>H'] = helpers.with_gutter_refresh(function()
@@ -102,51 +81,69 @@ return {
         -- All are namespaced with <LocalLeader>g: (g)it
 
         -- (h)unk preview
-        ['n <LocalLeader>gh'] = helpers.with_gutter_refresh(function()
+        ['n <LocalLeader>gh'] = function()
           require('vgit').buffer_hunk_preview()
-        end),
+        end,
         -- (d)iff preview of current buffer
-        ['n <LocalLeader>gd'] = helpers.with_gutter_refresh(function()
+        ['n <LocalLeader>gd'] = function()
           require('vgit').buffer_diff_preview()
-        end),
+        end,
         -- (p)roject diff preview
-        ['n <LocalLeader>gp'] = helpers.with_gutter_refresh(function()
+        ['n <LocalLeader>gp'] = function()
           require('vgit').project_diff_preview()
-        end),
+        end,
         -- (q)uickfix list of files with unstaged changes
         ['n <LocalLeader>gq'] = helpers.quickfix_files_with_unstaged_changes,
 
         -- (s)tage current hunk
-        ['n <LocalLeader>gs'] = function() require('vgit').buffer_hunk_stage() end,
+        ['n <LocalLeader>gs'] = function()
+          require('vgit').buffer_hunk_stage()
+        end,
         -- (S)tage entire file
-        ['n <LocalLeader>gS'] = function() require('vgit').buffer_stage() end,
+        ['n <LocalLeader>gS'] = function()
+          require('vgit').buffer_stage()
+        end,
 
         -- (u)nstage/reset current hunk
-        ['n <LocalLeader>gu'] = function() require('vgit').buffer_hunk_reset() end,
+        ['n <LocalLeader>gu'] = function()
+          require('vgit').buffer_hunk_reset()
+        end,
         -- (U)nstage entire file
-        ['n <LocalLeader>gU'] = function() require('vgit').buffer_unstage() end,
+        ['n <LocalLeader>gU'] = function()
+          require('vgit').buffer_unstage()
+        end,
 
         -- (r)eset current hunk to HEAD
-        ['n <LocalLeader>gr'] = function() require('vgit').buffer_hunk_reset() end,
+        ['n <LocalLeader>gr'] = function()
+          require('vgit').buffer_hunk_reset()
+        end,
         -- (R)eset entire file to HEAD
-        ['n <LocalLeader>gR'] = function() require('vgit').buffer_reset() end,
+        ['n <LocalLeader>gR'] = function()
+          require('vgit').buffer_reset()
+        end,
 
         -- (b)lame preview for current line
-        ['n <LocalLeader>gb'] = helpers.with_gutter_refresh(function()
+        ['n <LocalLeader>gb'] = function()
           require('vgit').buffer_blame_preview()
-        end),
+        end,
         -- (l)og history of current file (like git log)
-        ['n <LocalLeader>gl'] = helpers.with_gutter_refresh(function()
+        ['n <LocalLeader>gl'] = function()
           require('vgit').buffer_history_preview()
-        end),
+        end,
 
         -- e(x)change/toggle between split and unified diff view
-        ['n <LocalLeader>gx'] = function() require('vgit').toggle_diff_preference() end,
+        ['n <LocalLeader>gx'] = function()
+          require('vgit').toggle_diff_preference()
+        end,
 
         -- Toggle live (B)lame annotations
-        ['n <LocalLeader>gB'] = function() require('vgit').toggle_live_blame() end,
+        ['n <LocalLeader>gB'] = function()
+          require('vgit').toggle_live_blame()
+        end,
         -- Toggle live gutter signs
-        ['n <LocalLeader>g<C-g>'] = function() require('vgit').toggle_live_gutter() end,
+        ['n <LocalLeader>g<C-g>'] = function()
+          require('vgit').toggle_live_gutter()
+        end,
       },
 
       settings = {
@@ -182,7 +179,8 @@ return {
               return string.format(' %s • Uncommitted changes', author)
             end
 
-            local time = os.difftime(os.time(), blame.author_time) / (60 * 60 * 24)
+            local time = os.difftime(os.time(), blame.author_time)
+                        / (60 * 60 * 24)
             local time_str = string.format('%d days ago', math.floor(time))
             if time < 1 then
               time_str = 'today'
@@ -197,10 +195,12 @@ return {
             local commit_message = blame.commit_message
             local max_commit_message_length = 60
             if #commit_message > max_commit_message_length then
-              commit_message = commit_message:sub(1, max_commit_message_length) .. '...'
+              commit_message = commit_message:sub(1, max_commit_message_length)
+                              .. '...'
             end
 
-            return string.format(' %s, %s • %s', author, time_str, commit_message)
+            return string.format(' %s, %s • %s', author, time_str,
+                               commit_message)
           end,
         },
 
@@ -223,7 +223,8 @@ return {
             -- (v)iew: Changed from 't' to avoid DVORAK conflict
             toggle_view = 'v',
             -- Navigate between hunks in diff preview
-            -- Doesn't appear to work
+            -- Note: These don't work as scene-specific keymaps
+            -- Use global <S-Up>/<S-Down> instead
             -- previous_hunk = '<Up>',
             -- next_hunk = '<Down>',
           },
@@ -306,6 +307,60 @@ return {
           void = ' ', -- Remove dots filler in empty lines
         },
       }
+    })
+
+    -- VGIT GUTTER REFRESH WORKAROUND
+    -- After staging changes in the diff preview, the gutter doesn't update
+    -- immediately due to timing issues with vgit's file watcher. This
+    -- workaround forces a refresh when returning from the diff preview.
+
+    -- Track when we're coming from a vgit preview buffer
+    local coming_from_vgit = false
+
+    vim.api.nvim_create_autocmd('BufEnter', {
+      pattern = '*',
+      callback = function()
+        local filetype = vim.bo.filetype
+        local buftype = vim.bo.buftype
+
+        -- vgit preview buffers have buftype 'nofile' and empty filetype
+        if buftype == 'nofile' and filetype == '' then
+          coming_from_vgit = true
+        end
+      end
+    })
+
+    -- Force gutter refresh when returning from vgit preview
+    vim.api.nvim_create_autocmd({'WinEnter', 'BufEnter'}, {
+      pattern = '*',
+      callback = function()
+        local buftype = vim.bo.buftype
+
+        -- Check if we're returning to a normal buffer from vgit
+        if buftype == '' and coming_from_vgit then
+          coming_from_vgit = false
+
+          -- Force refresh after a small delay
+          vim.defer_fn(function()
+            local bufnr = vim.api.nvim_get_current_buf()
+
+            -- Clear existing signs to force refresh
+            vim.fn.sign_unplace('vgit_signs', { buffer = bufnr })
+
+            -- Use vim.schedule to avoid coroutine issues
+            vim.schedule(function()
+              pcall(function()
+                local vgit = require('vgit')
+                -- Toggle gutter to force refresh
+                vgit.toggle_live_gutter()
+                vim.defer_fn(function()
+                  vgit.toggle_live_gutter()
+                end, 50)
+              end)
+            end)
+          end, 100)
+        end
+      end
     })
   end,
 }
