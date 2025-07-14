@@ -729,6 +729,12 @@
     xnoremap \ dp`[V`]
 """ }
 
+""" { Mappings - Terminal mode
+    " Double escape to exit terminal mode
+    " More ergonomic than the default <C-\><C-n>
+    tnoremap <Esc><Esc> <C-\><C-n>
+""" }
+
 """ { Mappings - Quick edit vim configs while coding
     " From 'Learn Vimscript the Hard Way'
 
