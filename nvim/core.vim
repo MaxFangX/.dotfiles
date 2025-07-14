@@ -756,9 +756,10 @@
 """ }
 
 """ { Mappings - Terminal mode
-    " Double escape to exit terminal mode
+    " <C-Space> to exit terminal mode
     " More ergonomic than the default <C-\><C-n>
-    tnoremap <Esc><Esc> <C-\><C-n>
+    " Using <C-Space> to avoid any conflicts with <Esc> sequences
+    tnoremap <C-Space> <C-\><C-n>
 """ }
 
 """ { Mappings - Quick edit vim configs while coding
