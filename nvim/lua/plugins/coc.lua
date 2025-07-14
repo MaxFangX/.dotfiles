@@ -34,11 +34,11 @@ return {
         -- Go to the definition of the (t)ype of this item
         vim.keymap.set("n", "<Leader>t",
           ":call CocActionAsync('jumpTypeDefinition')<CR>", opts)
-        -- Go to (r)e(f)erences of this item (includes the definition)
+        -- Go to (r)eferences of this item (includes the definition)
+        -- vim.keymap.set("n", "<Leader>r",
+        --   ":call CocActionAsync('jumpReferences')<CR>", opts)
+        -- Go to (r)references of this item (excludes the definition)
         vim.keymap.set("n", "<Leader>r",
-          ":call CocActionAsync('jumpReferences')<CR>", opts)
-        -- Go to (u)sages of this item (excludes the definition)
-        vim.keymap.set("n", "<Leader>u",
           ":call CocActionAsync('jumpUsed')<CR>", opts)
         -- Go to (i)mplementation of this item
         vim.keymap.set("n", "<Leader>i",
