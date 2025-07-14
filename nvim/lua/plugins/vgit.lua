@@ -59,8 +59,10 @@ return {
       keymaps = {
         -- === Global (non-namespaced) mappings === --
 
-        -- Navigate between hunks with shift+arrows
+        -- Navigate between hunks with <Leader> Up/Down or Shift + up/down
         -- These work everywhere including in diff preview
+        ['n <Leader><Up>'] = function() require('vgit').hunk_up() end,
+        ['n <Leader><Down>'] = function() require('vgit').hunk_down() end,
         ['n <S-Up>'] = function() require('vgit').hunk_up() end,
         ['n <S-Down>'] = function() require('vgit').hunk_down() end,
 
