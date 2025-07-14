@@ -253,6 +253,32 @@
     command! Tabe tabedit
 """ }
 
+""" Configuration - Auto-reload changed files {
+    " Automatically reload files changed outside of Vim
+    " This is useful when files are modified by linters or AI tools
+    set autoread
+
+    " Check for file changes when:
+    " - Vim gains focus
+    " - Moving between windows
+    " - After 4 seconds of idle time
+    augroup auto_reload_changed_files
+        autocmd!
+        " When switching buffers, entering a window, or regaining focus
+        autocmd FocusGained,BufEnter,WinEnter * if mode() != 'c' | checktime | endif
+        " Also check periodically when cursor stops moving
+        autocmd CursorHold,CursorHoldI * checktime
+    augroup END
+
+    " Reduce the time before CursorHold triggers (default is 4000ms)
+    " This makes the auto-reload more responsive
+    set updatetime=2000
+
+    " Optionally, show a message when a file is reloaded
+    " (commented out by default to reduce noise)
+    " autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+""" }
+
 " # --- MAPPINGS --- #
 
 """ { Command mode mappings
