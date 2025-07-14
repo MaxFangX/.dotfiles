@@ -27,7 +27,7 @@
     " All autocmds should be wrapped in a group prefixed with autocmd! to
     " prevent setting duplicate autocmds each time init.vim is resourced.
     "
-    " Example: 
+    " Example:
     " augroup my_autocmd_group
     "     autocmd!
     "     autocmd FileType python       :iabbrev <buffer> iff if:<left>
@@ -167,7 +167,7 @@
     set incsearch
 
     " Ignore case in search patterns.
-    set ignorecase 
+    set ignorecase
 
     " Override the 'ignorecase' option if the search pattern
     " contains upper case characters.
@@ -179,7 +179,7 @@
     set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.DS_Store
     set wildignore+=*/node_modules/*,*/build/*,*/target/*,*/dist/*
 
-    " Force saving files that require root permission 
+    " Force saving files that require root permission
     cmap w!! w !sudo tee > /dev/null %
 """ }
 
@@ -210,10 +210,10 @@
     "           the current comment leader automatically.
     " q         Allow formatting of comments with "gq".
     " r         Automatically insert the current comment leader
-    "           after hitting <Enter> in Insert mode. 
+    "           after hitting <Enter> in Insert mode.
     " t         Auto-wrap text using textwidth (does not apply
     "           to comments)
-    set formatoptions=c,q,r,t 
+    set formatoptions=c,q,r,t
 """ }
 
 """ Configuration - Relative line numbers {
@@ -618,7 +618,7 @@
     " Unmapped:
     inoremap <M-i><M-g><M-o><M-t> unmapped
     inoremap <M-i><M-o><M-g><M-t> unmapped
-""" } 
+""" }
 
 """ { Mappings - Redo
     " Option + r (DVORAK) to redo last change
@@ -650,8 +650,8 @@
 
     " This alternative way to do it doesn't seem to work
     " https://stackoverflow.com/questions/677986/vim-copy-selection-to-os-x-clipboard
-    " vmap <C-x> :!pbcopy<CR>  
-    " vmap <C-c> :w !pbcopy<CR><CR> 
+    " vmap <C-x> :!pbcopy<CR>
+    " vmap <C-c> :w !pbcopy<CR><CR>
 
     " Avoid undesired side-effects while pasting
     " This hack automatically toggles :set paste just prior to a paste and
