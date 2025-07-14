@@ -48,10 +48,10 @@ return {
         -- All are namespaced with <LocalLeader>c: (c)oc
 
         -- (c)oc: Structural re(n)ame of this item
-        vim.keymap.set("n", "<LocalLeader>cn",
+        vim.keymap.set("n", "<LocalLeader>crn",
           ":call CocActionAsync('rename')<CR>", opts)
         -- (c)oc: Open a re(f)actor window for this item
-        vim.keymap.set("n", "<LocalLeader>cf",
+        vim.keymap.set("n", "<LocalLeader>crf",
           ":call CocActionAsync('refactor')<CR>", opts)
         -- (c)oc: Toggle (i)nlay hints
         vim.keymap.set("n", "<LocalLeader>ci",
@@ -65,14 +65,14 @@ return {
         -- recursive mappings within plugin code creates footguns that users are
         -- likely to forget. So I'm ignoring this unless something breaks.
         -- https://github.com/autozimu/LanguageClient-neovim#quick-start
-        --
-        -- (c)oc: Do code action to quickfi(x) the current line, if any.
-        -- TODO(max): Would be nice to auto open buffer diff view on select
-        vim.keymap.set("n", "<LocalLeader>cx", "<Plug>(coc-fix-current)", opts)
+
         -- (c)oc: View code (a)ctions at cursor.
         -- - This usually works for auto-importing the item under the cursor.
         vim.keymap.set("n", "<LocalLeader>ca", "<Plug>(coc-codeaction-cursor)",
           opts)
+        -- (c)oc: Do code action to quickfi(x) the current line, if any.
+        -- TODO(max): Would be nice to auto open buffer diff view on select
+        vim.keymap.set("n", "<LocalLeader>cx", "<Plug>(coc-fix-current)", opts)
         -- (c)oc: View code actions at current (l)ine.
         vim.keymap.set("n", "<LocalLeader>cl", "<Plug>(coc-codeaction-line)",
           opts)
