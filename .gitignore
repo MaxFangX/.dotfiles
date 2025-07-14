@@ -3,3 +3,4 @@
 *.DS_STORE
 .aider*
 Session.vim
+nvim/lazy-lock.json
