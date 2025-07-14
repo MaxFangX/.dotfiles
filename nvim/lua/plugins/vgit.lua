@@ -5,8 +5,8 @@ return {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons'
   },
-  -- Load on BufReadPre to catch the initial buffer events
-  event = { 'BufReadPre', 'BufNewFile' },
+  -- Load immediately to ensure keybindings are available
+  lazy = false,
   config = function()
     -- Helper functions defined in a table for better organization
     local helpers = {}
