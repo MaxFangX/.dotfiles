@@ -385,5 +385,54 @@ return {
         end
       end
     })
+
+    -- Set colorcolumn at 80, 100 chars for vgit diff preview windows
+    vim.api.nvim_create_autocmd({'BufWinEnter', 'FileType'}, {
+      pattern = '*',
+      callback = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local winnr = vim.api.nvim_get_current_win()
+
+        -- Check if this is a vgit diff buffer
+        local is_vgit_diff = vim.bo[bufnr].buftype == 'nofile'
+                          and vim.bo[bufnr].modifiable == false
+                          and vim.bo[bufnr].buflisted == false
+                          and vim.bo[bufnr].bufhidden == 'wipe'
+                          and (vim.wo[winnr].cursorbind
+                               or vim.wo[winnr].scrollbind)
+
+        if is_vgit_diff then
+          -- Detect line number prefix width and set colorcolumn
+          local function set_colorcolumn()
+            local lines = vim.api.nvim_buf_get_lines(
+              bufnr, 0, math.min(10, vim.api.nvim_buf_line_count(bufnr)), false
+            )
+
+            -- Find line number prefix width
+            local offset = 0
+            for _, line in ipairs(lines) do
+              local prefix = line:match("^(%s*%d+%s)")
+              if prefix then
+                offset = #prefix
+                break
+              end
+            end
+
+            -- Apply offset to standard column positions
+            local col80 = 80 + offset
+            local col100 = 100 + offset
+            vim.wo[winnr].colorcolumn = col80 .. ',' .. col100
+          end
+
+          -- Set immediately and after a delay to ensure it sticks
+          set_colorcolumn()
+          vim.defer_fn(function()
+            if vim.api.nvim_win_is_valid(winnr) then
+              set_colorcolumn()
+            end
+          end, 100)
+        end
+      end
+    })
   end,
 }
