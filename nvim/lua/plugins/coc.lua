@@ -43,6 +43,9 @@ return {
         -- Go to (i)mplementation of this item
         vim.keymap.set("n", "<Leader>i",
           ":call CocActionAsync('jumpImplementation')<CR>", opts)
+        -- View code (a)ctions at cursor.
+        -- - This usually works for auto-importing the item under the cursor.
+        vim.keymap.set("n", "<Leader>c", "<Plug>(coc-codeaction-cursor)", opts)
 
         -- === <LocalLeader> mappings === --
         -- All are namespaced with <LocalLeader>c: (c)oc
@@ -66,10 +69,6 @@ return {
         -- likely to forget. So I'm ignoring this unless something breaks.
         -- https://github.com/autozimu/LanguageClient-neovim#quick-start
 
-        -- (c)oc: View code (a)ctions at cursor.
-        -- - This usually works for auto-importing the item under the cursor.
-        vim.keymap.set("n", "<LocalLeader>ca", "<Plug>(coc-codeaction-cursor)",
-          opts)
         -- (c)oc: Do code action to quickfi(x) the current line, if any.
         -- TODO(max): Would be nice to auto open buffer diff view on select
         vim.keymap.set("n", "<LocalLeader>cx", "<Plug>(coc-fix-current)", opts)
