@@ -20,7 +20,7 @@ return {
 
         local opts = { noremap = true, silent = true }
 
-        -- === <Leader> mappings === --
+        -- === Global (non-namespaced) mappings === --
 
         -- Double click: Hover (show type/documentation)
         vim.keymap.set("n", "<2-LeftMouse>",
@@ -46,16 +46,16 @@ return {
         -- View code (a)ctions at cursor.
         -- - This usually works for auto-importing the item under the cursor.
         vim.keymap.set("n", "<Leader>c", "<Plug>(coc-codeaction-cursor)", opts)
+        -- Structural (r)e(n)ame of this item
+        vim.keymap.set("n", "<LocalLeader>rn",
+          ":call CocActionAsync('rename')<CR>", opts)
+        -- Open a (r)e(f)actor window for this item
+        vim.keymap.set("n", "<LocalLeader>rf",
+          ":call CocActionAsync('refactor')<CR>", opts)
 
         -- === <LocalLeader> mappings === --
         -- All are namespaced with <LocalLeader>c: (c)oc
 
-        -- (c)oc: Structural re(n)ame of this item
-        vim.keymap.set("n", "<LocalLeader>crn",
-          ":call CocActionAsync('rename')<CR>", opts)
-        -- (c)oc: Open a re(f)actor window for this item
-        vim.keymap.set("n", "<LocalLeader>crf",
-          ":call CocActionAsync('refactor')<CR>", opts)
         -- (c)oc: Toggle (i)nlay hints
         vim.keymap.set("n", "<LocalLeader>ci",
           ":CocCommand document.toggleInlayHint<CR>", opts)
