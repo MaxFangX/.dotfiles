@@ -313,6 +313,25 @@ return {
       }
     })
 
+    -- Auto-jump to first hunk when opening file from quickfix
+    vim.api.nvim_create_autocmd('BufReadPost', {
+      pattern = '*',
+      callback = function()
+        -- Check if we came from quickfix window
+        local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
+        local prev_wininfo = vim.fn.getwininfo(prev_win)[1]
+
+        if prev_wininfo and prev_wininfo.quickfix == 1 then
+          -- Small delay to ensure vgit has processed the file
+          vim.defer_fn(function()
+            pcall(function()
+              require('vgit').hunk_down()
+            end)
+          end, 100)
+        end
+      end
+    })
+
     -- VGIT GUTTER REFRESH WORKAROUND
     -- After staging changes in the diff preview, the gutter doesn't update
     -- immediately due to timing issues with vgit's file watcher. This
