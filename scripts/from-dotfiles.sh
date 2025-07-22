@@ -6,7 +6,7 @@ cp ~/.dotfiles/gitconfig ~/.gitconfig
 
 # Neovim
 mkdir -p ~/.config/nvim
-cp ~/.dotfiles/nvim/init.vim ~/.config/nvim
+cp ~/.dotfiles/nvim/init.lua ~/.config/nvim
 cp ~/.dotfiles/nvim/coc-settings.json ~/.config/nvim
 rm -rf ~/.config/nvim/after
 cp -R ~/.dotfiles/nvim/after ~/.config/nvim
