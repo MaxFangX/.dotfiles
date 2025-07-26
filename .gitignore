@@ -4,3 +4,4 @@
 .aider*
 Session.vim
 nvim/lazy-lock.json
+prompts.md
