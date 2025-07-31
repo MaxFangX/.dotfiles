@@ -43,8 +43,15 @@ return {
         vim.api.nvim_create_autocmd("BufWinEnter", {
             group = augroup,
             callback = function()
+                -- Check if we're allowed to modify buffers and not in a special context
                 if vim.fn.getcmdwintype() == '' then
-                    vim.cmd("silent NERDTreeMirror")
+                    -- Defer execution to avoid conflicts with other autocommands
+                    vim.schedule(function()
+                        -- Use pcall to safely execute the command
+                        pcall(function()
+                            vim.cmd("silent NERDTreeMirror")
+                        end)
+                    end)
                 end
             end,
         })

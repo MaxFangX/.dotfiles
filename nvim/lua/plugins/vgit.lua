@@ -434,6 +434,10 @@ return {
       group = vgit_group,
       pattern = '*',
       callback = function()
+        -- Guard against restricted contexts
+        if vim.fn.getcmdwintype() ~= '' then
+          return
+        end
         local bufnr = vim.api.nvim_get_current_buf()
         local winnr = vim.api.nvim_get_current_win()
 
