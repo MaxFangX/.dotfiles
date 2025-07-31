@@ -1,27 +1,21 @@
 -- File system explorer plugin
 return {
     "preservim/nerdtree",
-    enabled = false,  -- Disabled for now as I don't really use it
+    enabled = true,
     config = function()
         -- Toggle show NERDTree with Option+8
         vim.keymap.set("n", "•", ":NERDTreeToggle<CR>")
 
-        -- No existing mapping h
-        -- Undo existing mapping t
-        vim.g.NERDTreeMapOpenInTab = '<Nul>'
-        -- No existing mapping v
-        -- Undo existing mapping s
-        vim.g.NERDTreeMapOpenVSplit = '<Nul>'
-        -- Undo existing mapping T
-        vim.g.NERDTreeMapOpenInTabSilent = '<Nul>'
+        -- Disable default mappings that conflict with navigation
+        -- Use a non-existent key sequence to effectively disable the mapping
+        vim.g.NERDTreeMapOpenInTab = '<F99>'          -- Disable 't' mapping
+        vim.g.NERDTreeMapOpenInTabSilent = '<F99>'    -- Disable 'T' mapping
+        vim.g.NERDTreeMapHelp = '?'                   -- Keep help on '?'
 
-        -- Set my own mappings
-        vim.g.NERDTreeMenuDown = 'h'      -- Navigation
-        vim.g.NERDTreeMenuUp = 't'        -- Navigation
-        vim.g.NERDTreeMapOpenVSplit = 'v' -- vsplit
-        vim.g.NERDTreeMapOpenSplit = 's'  -- split
-        -- vim.g.NERDTreeMenuOpenInTabSilent = 'T' -- can't get tab to work
-        -- vim.g.NERDTreeMenuOpenInTab = 'T'       -- can't get tab to work
+        -- Set split mappings that don't conflict
+        vim.g.NERDTreeMapOpenVSplit = 'v'             -- vsplit
+        vim.g.NERDTreeMapOpenSplit = 's'              -- split
+
 
         -- Autocommands for NERDTree behavior
         local augroup = vim.api.nvim_create_augroup("NERDTree", {})
