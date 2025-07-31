@@ -104,6 +104,37 @@ return {
         --   ":CocCommand rust-analyzer.cancelFlycheck<CR>", opts)
         -- vim.keymap.set("n", "<LocalLeader>cxxx",
         --   ":CocCommand rust-analyzer.reload<CR>", opts)
+
+        -- Flutter commands
+        -- See full list at :CocList --input=flutter commands
+        --
+        -- (f)lutter (r)un
+        vim.keymap.set("n", "<LocalLeader>fr",
+          ":CocCommand flutter.run<CR>", opts)
+        -- (f)lutter (a)ttach
+        vim.keymap.set("n", "<LocalLeader>fa",
+          ":CocCommand flutter.attach<CR>", opts)
+        -- (f)lutter hot (r)eload
+        vim.keymap.set("n", "<LocalLeader>fR",
+          ":CocCommand flutter.dev.hotReload<CR>", opts)
+        -- (f)lutter hot re(s)tart
+        vim.keymap.set("n", "<LocalLeader>fs",
+          ":CocCommand flutter.dev.hotRestart<CR>", opts)
+        -- (f)lutter (q)uit
+        vim.keymap.set("n", "<LocalLeader>fq",
+          ":CocCommand flutter.dev.quit<CR>", opts)
+        -- (f)lutter (d)evices
+        vim.keymap.set("n", "<LocalLeader>fd",
+          ":CocList FlutterDevices<CR>", opts)
+        -- (f)lutter (e)mulators
+        vim.keymap.set("n", "<LocalLeader>fe",
+          ":CocList FlutterEmulators<CR>", opts)
+        -- (f)lutter (l)og
+        vim.keymap.set("n", "<LocalLeader>fl",
+          ":CocCommand flutter.dev.openDevLog<CR>", opts)
+        -- (f)lutter (p)ub get
+        vim.keymap.set("n", "<LocalLeader>fp",
+          ":CocCommand flutter.pub.get<CR>", opts)
     --- }
 
     --- { General configuration

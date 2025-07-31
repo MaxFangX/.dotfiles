@@ -8,7 +8,18 @@
   "[typescript]": {
     "coc.preferences.formatOnSave": false
   },
+  "[dart]": {
+    "coc.preferences.formatOnSave": true
+  },
   "dart.showTodos": false,
+  "dart.lineLength": 80,
+  "dart.completeFunctionCalls": true,
+  "flutter.provider.hot-reload": true,
+  "flutter.provider.enableSnippet": true,
+  "flutter.autoOpenDevLog": false,
+  "flutter.autoHideDevLog": false,
+  "flutter.lsp.initialization.closingLabels": true,
+  "flutter.openDevLogSplitCommand": "botright 10split",
   "inlayHint.enable": true,
   "inlayHint.enableParameter": false,
   "inlayHint.display": false,
