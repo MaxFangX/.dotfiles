@@ -11,6 +11,22 @@ return {
     -- Helper functions defined in a table for better organization
     local helpers = {}
 
+    -- Track the window we came from before opening vgit preview
+    local previous_window = nil
+
+    -- Helper to save current window before opening vgit preview
+    helpers.save_window = function()
+      previous_window = vim.api.nvim_get_current_win()
+    end
+
+    -- Helper to restore previous window after closing vgit preview
+    helpers.restore_window = function()
+      if previous_window and vim.api.nvim_win_is_valid(previous_window) then
+        vim.api.nvim_set_current_win(previous_window)
+        previous_window = nil
+      end
+    end
+
     -- Generate quickfix list of files with unstaged changes
     helpers.quickfix_files_with_unstaged_changes = function()
       local items = {}
@@ -86,14 +102,17 @@ return {
 
         -- (h)unk preview
         ['n <LocalLeader>gh'] = function()
+          helpers.save_window()
           require('vgit').buffer_hunk_preview()
         end,
         -- (d)iff preview of current buffer
         ['n <LocalLeader>gd'] = function()
+          helpers.save_window()
           require('vgit').buffer_diff_preview()
         end,
         -- (p)roject diff preview
         ['n <LocalLeader>gp'] = function()
+          helpers.save_window()
           require('vgit').project_diff_preview()
         end,
         -- (q)uickfix list of files with unstaged changes
@@ -313,8 +332,12 @@ return {
       }
     })
 
+    -- Create augroup for vgit autocmds
+    local vgit_group = vim.api.nvim_create_augroup('VgitConfig', { clear = true })
+
     -- Auto-jump to first hunk when opening file from quickfix
     vim.api.nvim_create_autocmd('BufReadPost', {
+      group = vgit_group,
       pattern = '*',
       callback = function()
         -- Check if we came from quickfix window
@@ -341,6 +364,7 @@ return {
     local coming_from_vgit = false
 
     vim.api.nvim_create_autocmd('BufEnter', {
+      group = vgit_group,
       pattern = '*',
       callback = function()
         local filetype = vim.bo.filetype
@@ -353,8 +377,24 @@ return {
       end
     })
 
+    -- Restore window when closing vgit preview with 'q'
+    vim.api.nvim_create_autocmd('BufWipeout', {
+      group = vgit_group,
+      pattern = '*',
+      callback = function()
+        local buftype = vim.bo.buftype
+        -- Check if this is a vgit preview buffer being closed
+        if buftype == 'nofile' and coming_from_vgit then
+          vim.schedule(function()
+            helpers.restore_window()
+          end)
+        end
+      end
+    })
+
     -- Force gutter refresh when returning from vgit preview
     vim.api.nvim_create_autocmd({'WinEnter', 'BufEnter'}, {
+      group = vgit_group,
       pattern = '*',
       callback = function()
         local buftype = vim.bo.buftype
@@ -362,6 +402,9 @@ return {
         -- Check if we're returning to a normal buffer from vgit
         if buftype == '' and coming_from_vgit then
           coming_from_vgit = false
+
+          -- Restore previous window position
+          helpers.restore_window()
 
           -- Force refresh after a small delay
           vim.defer_fn(function()
@@ -388,6 +431,7 @@ return {
 
     -- Set colorcolumn at 80, 100 chars for vgit diff preview windows
     vim.api.nvim_create_autocmd({'BufWinEnter', 'FileType'}, {
+      group = vgit_group,
       pattern = '*',
       callback = function()
         local bufnr = vim.api.nvim_get_current_buf()
