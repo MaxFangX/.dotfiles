@@ -394,6 +394,9 @@
     onoremap k d
 
     " j and J for find next and prev (Think: "down (j)")
+    " NOTE: When the vim-illuminate plugin is loaded, these are overridden to
+    " navigate references instead, with regular search moved to <Leader>j/J.
+    " We keep these mappings for standalone use of core.vim on secure machines.
     nnoremap j n
     nnoremap J N
 
