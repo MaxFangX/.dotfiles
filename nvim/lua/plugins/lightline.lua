@@ -58,7 +58,10 @@ return {
         end
 
         -- Refresh lightline after colorscheme changes
+        local group = vim.api.nvim_create_augroup("LightlineRefresh",
+          { clear = true })
         vim.api.nvim_create_autocmd("ColorScheme", {
+            group = group,
             pattern = "*",
             callback = function()
                 -- Reinitialize lightline with the current settings

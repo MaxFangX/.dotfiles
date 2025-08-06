@@ -4,6 +4,12 @@
 
 All files should maintain a maximum line width of 80 characters.
 
+## Neovim Conventions
+
+- Always wrap autocmds in an augroup with `clear = true` to prevent duplicates
+  when configs are reloaded. Use `vim.api.nvim_create_augroup()` with a
+  descriptive name.
+
 ## Debugging Neovim
 
 - Remember you can run nvim headless to poke around, view key mappings, etc.
