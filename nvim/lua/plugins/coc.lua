@@ -206,6 +206,56 @@ return {
         -- })
     --- }
 
+    --- { Custom root patterns per language for monorepo support
+        -- Problem: CoC's default root detection uses the top-level .git in
+        -- monorepos as the workspace for ALL files. When a session opens
+        -- with a Dart file first, CoC locks to the monorepo root, preventing
+        -- rust-analyzer from attaching to Rust files in subdirectories.
+        --
+        -- Fix: Set b:coc_root_patterns per filetype to prioritize
+        -- language-specific project markers over .git:
+        local group = vim.api.nvim_create_augroup("CocRootPatterns", { clear = true })
+        vim.api.nvim_create_autocmd("FileType", {
+          group = group,
+          pattern = "rust",
+          callback = function()
+            -- Look for Cargo.toml before .git
+            vim.b.coc_root_patterns = {'Cargo.toml', '.git'}
+          end,
+        })
+        vim.api.nvim_create_autocmd("FileType", {
+          group = group,
+          pattern = "dart",
+          callback = function()
+            -- Look for pubspec.yaml before .git
+            vim.b.coc_root_patterns = {'pubspec.yaml', '.git'}
+          end,
+        })
+        vim.api.nvim_create_autocmd("FileType", {
+          group = group,
+          pattern = {"typescript", "typescriptreact", "javascript", "javascriptreact"},
+          callback = function()
+            -- Look for package.json or tsconfig.json before .git
+            vim.b.coc_root_patterns = {'package.json', 'tsconfig.json', '.git'}
+          end,
+        })
+        vim.api.nvim_create_autocmd("FileType", {
+          group = group,
+          pattern = "nix",
+          callback = function()
+            -- Look for flake.nix before .git
+            vim.b.coc_root_patterns = {'flake.nix', '.git'}
+          end,
+        })
+        -- This ensures each language server finds its correct project root
+        -- instead of sharing the monorepo root.
+        --
+        -- References:
+        -- https://github.com/neoclide/coc.nvim/wiki/Using-workspaceFolders
+        -- https://github.com/neoclide/coc.nvim/issues/4938
+        -- https://chatgpt.com/share/6892c011-f818-800d-b1a6-39c5fb96f724
+    --- }
+
     --- { Old vim built-in completion options
         -- coc.nvim does not use vim's builtin completion, so these options are
         -- not respected. See :help coc-completion for more info.
