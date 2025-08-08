@@ -28,3 +28,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 Please DON'T include this. While I value your work, this adds needless noise.
+
+## Neovim repo clones
+
+I have most of my neovim plugins cloned to `~/dev/nvim`.
+If you are debugging something, chances are you can find the source in there.
