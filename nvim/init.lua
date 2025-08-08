@@ -17,3 +17,17 @@ vim.cmd('source ' .. config_dir .. '/core.vim')
     -- vim.cmd('filetype off')
     -- vim.cmd('syntax off')
 --- }
+
+--- { Notes for future switch to native LSP:
+
+    -- Original chat: https://chatgpt.com/c/6892b755-7300-8332-8b8d-c0a9dbf71f36
+    --
+    -- Refinement: Only use this subset of the suggested repos.
+    -- I have vetted all of them and cloned them locally.
+    -- - https://github.com/nvim-flutter/flutter-tools.nvim
+    -- - https://github.com/neovim/nvim-lspconfig
+    -- - https://github.com/hrsh7th/nvim-cmp
+    -- - https://github.com/mrcjkb/rustaceanvim
+    --   - This replaces simrat39/rust-tools.nvim which is no longer maintained.
+
+--- }
