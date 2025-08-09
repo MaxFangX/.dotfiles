@@ -26,23 +26,15 @@ return {
 
         -- Radical keymap change: j/J for illuminate, <Leader>j/J for search
 
-        -- j to go to next reference (replaces regular find next)
+        -- q to go to next reference (replaces regular record macro)
         vim.keymap.set("n", "j", function()
             require("illuminate").goto_next_reference()
         end, { desc = "Next reference" })
 
-        -- J to go to previous reference (replaces regular find previous)
+        -- Q to go to previous reference (replaces regular enter Ex mode)
         vim.keymap.set("n", "J", function()
             require("illuminate").goto_prev_reference()
         end, { desc = "Previous reference" })
-
-        -- <Leader>j for regular vim search next (moved from j)
-        vim.keymap.set("n", "<Leader>j", "n",
-            { desc = "Find next (regular search)" })
-
-        -- <Leader>J for regular vim search previous (moved from J)
-        vim.keymap.set("n", "<Leader>J", "N",
-            { desc = "Find previous (regular search)" })
 
         -- Text object for the reference under cursor
         vim.keymap.set({ "o", "x" }, "ir", function()

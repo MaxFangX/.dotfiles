@@ -323,10 +323,6 @@
     " Option + j/k (DVORAK) to move screen up/down by 6 lines
     nnoremap ç 6<C-e>
     nnoremap √ 6<C-y>
-
-    " Use the more intentional Q to record macro, q is a no-op
-    nnoremap Q q
-    nnoremap q <Nop>
 """ }
 
 """ { QWERTY J/K to quickly move cursor up/down by 8 lines
@@ -394,12 +390,20 @@
     " kk to delete line: the second k is in command mode
     onoremap k d
 
-    " j and J for find next and prev (Think: "down (j)")
-    " NOTE: When the vim-illuminate plugin is loaded, these are overridden to
-    " navigate references instead, with regular search moved to <Leader>j/J.
-    " We keep these mappings for standalone use of core.vim on secure machines.
+    " j/J and q/Q for next and prev (Think: "down (j)")
+    "
+    " - j/J below will be overridden by vim-illuminate to navigate references
+    "   instead, which is much more useful than recording macros or entering Ex
+    "   mode. We set these mappings only as a sane default when using a
+    "   standalone core.vim on secure machines.
+    " - q/Q is always mapped to n/N.
+    " - <Leader>q is used to record macro, since it is done rarely.
     nnoremap j n
     nnoremap J N
+    nnoremap q n
+    nnoremap Q N
+    nnoremap <Leader>q q
+
 
     " L for Join lines (which was just overridden by find prev) (Think: "(L)ine")
     nnoremap L J
