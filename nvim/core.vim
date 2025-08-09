@@ -286,7 +286,8 @@
     cabbrev vhelp vert help
 
     " Replace :Q with :q; sometimes accidentally make it caps
-    cabbrev Q q
+    " - Disabled, can't search for 'Q'
+    " cabbrev Q q
 """ }
 
 """ { Mappings - Press <Leader>= to re-equalize splits
