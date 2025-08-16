@@ -266,13 +266,14 @@
         autocmd!
         " When switching buffers, entering a window, or regaining focus
         autocmd FocusGained,BufEnter,WinEnter * if mode() != 'c' | checktime | endif
-        " Also check periodically when cursor stops moving
-        autocmd CursorHold,CursorHoldI * checktime
+        " Check periodically when cursor stops moving, but not in search mode
+        " mode() =~# '[/?]' checks if we're in search mode
+        autocmd CursorHold,CursorHoldI * if mode() !~# '[/?]' | checktime | endif
     augroup END
 
     " Reduce the time before CursorHold triggers (default is 4000ms)
     " This makes the auto-reload more responsive
-    set updatetime=2000
+    set updatetime=1000
 
     " Optionally, show a message when a file is reloaded
     " (commented out by default to reduce noise)
