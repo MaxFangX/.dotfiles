@@ -22,6 +22,9 @@ return {
 
             -- disable default keymaps since we'll define dvorak-friendly ones
             disable_keymaps = true,
+
+            -- increase large file cutoff for rust-lightning's huge files
+            large_file_cutoff = 20000,
         })
 
         -- Radical keymap change: j/J for illuminate, <Leader>j/J for search
