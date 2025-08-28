@@ -46,7 +46,7 @@ return {
           -- Refresh quickfix list if it's open
           local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
           if qf_winid ~= 0 then
-            helpers.quickfix_files_with_unstaged_changes()
+            helpers.quickfix_unstaged_hunks(false)  -- don't log status
           end
         end, 100)
       end
@@ -102,7 +102,7 @@ return {
     end
 
     -- Generate quickfix list with individual hunks for unstaged changes
-    helpers.quickfix_files_with_unstaged_changes = function()
+    helpers.quickfix_unstaged_hunks = function(log_status)
       local items = {}
 
       -- Get unstaged files and their hunks
@@ -152,11 +152,15 @@ return {
       if #items == 0 then
         -- Close quickfix window if open
         vim.cmd('cclose')
-        print('No unstaged changes or untracked files found')
+        if log_status then
+          print('No unstaged changes or untracked files found')
+        end
       else
         vim.fn.setqflist(items, 'r')
         vim.cmd('copen')
-        print(string.format('Found %d unstaged hunks', #items))
+        if log_status then
+          print(string.format('Found %d unstaged hunks', #items))
+        end
       end
     end
 
@@ -221,8 +225,11 @@ return {
           helpers.save_window()
           require('vgit').project_diff_preview()
         end,
-        -- (q)uickfix list of files with unstaged changes
-        ['n <LocalLeader>gq'] = helpers.quickfix_files_with_unstaged_changes,
+        -- (q)uickfix list of unstaged hunks
+        ['n <LocalLeader>gq'] = function()
+          local log_status = true
+          helpers.quickfix_unstaged_hunks(log_status)
+        end,
 
         -- (s)tage current hunk
         ['n <LocalLeader>gs'] = function()
