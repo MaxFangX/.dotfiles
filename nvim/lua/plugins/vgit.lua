@@ -46,6 +46,55 @@ return {
       end
     end
 
+    -- Open diff staging view for first unstaged file
+    helpers.open_first_unstaged_diff = function()
+      -- Get first file with unstaged changes
+      local unstaged_files = vim.fn.systemlist('git diff --name-only')
+      if #unstaged_files > 0 then
+        -- Save window BEFORE opening the file
+        helpers.save_window()
+        local first_file = unstaged_files[1]
+        -- Open the file
+        vim.cmd('edit ' .. vim.fn.fnameescape(first_file))
+        -- Open diff preview
+        require('vgit').buffer_diff_preview()
+      else
+        print('No unstaged changes found')
+      end
+    end
+
+    -- Jump to first unstaged diff in any file
+    helpers.jump_to_first_unstaged = function()
+      -- Get first file with unstaged changes
+      local unstaged_files = vim.fn.systemlist('git diff --name-only')
+      if #unstaged_files == 0 then
+        print('No unstaged changes found')
+        return
+      end
+
+      local first_file = unstaged_files[1]
+
+      -- Get the first hunk's line number from git diff
+      local diff_output = vim.fn.systemlist(
+        'git diff -U0 ' .. vim.fn.shellescape(first_file)
+      )
+
+      local line_num = 1
+      for _, line in ipairs(diff_output) do
+        -- Parse unified diff header: @@ -l,s +l,s @@
+        local new_line = line:match('^@@.*%+(%d+)')
+        if new_line then
+          line_num = tonumber(new_line)
+          break
+        end
+      end
+
+      -- Open file and jump to line
+      vim.cmd('edit ' .. vim.fn.fnameescape(first_file))
+      vim.cmd('normal! ' .. line_num .. 'Gzz')
+      print(string.format('Jumped to %s:%d', first_file, line_num))
+    end
+
     -- Generate quickfix list with individual hunks for unstaged changes
     helpers.quickfix_files_with_unstaged_changes = function()
       local items = {}
@@ -118,55 +167,21 @@ return {
         ['n <S-Up>'] = function() require('vgit').hunk_up() end,
         ['n <S-Down>'] = function() require('vgit').hunk_down() end,
 
+        -- (s)tage current hunk and go to next (shorter binding)
+        ['n gs'] = function()
+          require('vgit').buffer_hunk_stage()
+          -- Go to next hunk after staging
+          require('vgit').hunk_down()
+        end,
+
         -- (g)it (d)iff - Open diff staging view for first unstaged file
         -- Reverts back to previous window / buffer on quit
-        ['n <LocalLeader>gd'] = function()
-          -- Get first file with unstaged changes
-          local unstaged_files = vim.fn.systemlist('git diff --name-only')
-          if #unstaged_files > 0 then
-            -- Save window BEFORE opening the file
-            helpers.save_window()
-            local first_file = unstaged_files[1]
-            -- Open the file
-            vim.cmd('edit ' .. vim.fn.fnameescape(first_file))
-            -- Open diff preview
-            require('vgit').buffer_diff_preview()
-          else
-            print('No unstaged changes found')
-          end
-        end,
+        ['n gd'] = helpers.open_first_unstaged_diff,
+        ['n <LocalLeader>gd'] = helpers.open_first_unstaged_diff,
 
         -- (g)it (j)ump - Jump to first unstaged diff in any file
-        ['n <LocalLeader>gj'] = function()
-          -- Get first file with unstaged changes
-          local unstaged_files = vim.fn.systemlist('git diff --name-only')
-          if #unstaged_files == 0 then
-            print('No unstaged changes found')
-            return
-          end
-
-          local first_file = unstaged_files[1]
-
-          -- Get the first hunk's line number from git diff
-          local diff_output = vim.fn.systemlist(
-            'git diff -U0 ' .. vim.fn.shellescape(first_file)
-          )
-
-          local line_num = 1
-          for _, line in ipairs(diff_output) do
-            -- Parse unified diff header: @@ -l,s +l,s @@
-            local new_line = line:match('^@@.*%+(%d+)')
-            if new_line then
-              line_num = tonumber(new_line)
-              break
-            end
-          end
-
-          -- Open file and jump to line
-          vim.cmd('edit ' .. vim.fn.fnameescape(first_file))
-          vim.cmd('normal! ' .. line_num .. 'Gzz')
-          print(string.format('Jumped to %s:%d', first_file, line_num))
-        end,
+        ['n gj'] = helpers.jump_to_first_unstaged,
+        ['n <LocalLeader>gj'] = helpers.jump_to_first_unstaged,
 
         -- (H)unk preview
         -- ['n <Leader>H'] = helpers.with_gutter_refresh(function()
@@ -269,7 +284,7 @@ return {
         -- Live gutter signs for changes
         live_gutter = {
           enabled = true,
-          edge_navigation = true, -- Navigate within hunks
+          edge_navigation = false, -- Jump between hunks, not edges
         },
 
         -- Live blame annotations
