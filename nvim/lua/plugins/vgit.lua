@@ -12,43 +12,50 @@ return {
     local helpers = {}
 
     -- Track the window and buffer we came from before opening vgit preview
-    local previous_window = nil
-    local previous_buffer = nil
+    local prev_window = nil
+    local prev_buffer = nil
 
     -- Helper to save current window and buffer before opening vgit preview
     helpers.save_window = function()
-      previous_window = vim.api.nvim_get_current_win()
-      previous_buffer = vim.api.nvim_get_current_buf()
+      prev_window = vim.api.nvim_get_current_win()
+      prev_buffer = vim.api.nvim_get_current_buf()
     end
 
     -- Helper to restore previous window and buffer after closing vgit preview
     helpers.restore_window = function()
-      if previous_window and vim.api.nvim_win_is_valid(previous_window) then
-        vim.api.nvim_set_current_win(previous_window)
-        -- Also restore the original buffer in that window
-        if previous_buffer and vim.api.nvim_buf_is_valid(previous_buffer) then
-          vim.api.nvim_win_set_buf(previous_window, previous_buffer)
-        end
-        previous_window = nil
-        previous_buffer = nil
+      if prev_window and vim.api.nvim_win_is_valid(prev_window) then
+        vim.api.nvim_set_current_win(prev_window)
+        
+        -- Choose ONE of the following behaviors after closing staging view:
+        
+        -- Option 1: Restore original buffer (uncomment to enable)
+        -- if prev_buffer and vim.api.nvim_buf_is_valid(prev_buffer) then
+        --   vim.api.nvim_win_set_buf(prev_window, prev_buffer)
+        -- end
+        
+        -- Option 2: Navigate to next hunk (currently active)
+        pcall(function()
+          require('vgit').hunk_down()
+        end)
+        
+        prev_window = nil
+        prev_buffer = nil
 
         -- Show count of remaining unstaged files
-        vim.defer_fn(function()
-          local unstaged_files = vim.fn.systemlist('git diff --name-only')
-          local count = #unstaged_files
-          if count > 0 then
-            print(string.format('%d file%s with unstaged changes remaining',
-                              count, count == 1 and '' or 's'))
-          else
-            print('All files staged!')
-          end
+        local unstaged_files = vim.fn.systemlist('git diff --name-only')
+        local count = #unstaged_files
+        if count > 0 then
+          print(string.format('%d file%s with unstaged changes remaining',
+                            count, count == 1 and '' or 's'))
+        else
+          print('All files staged!')
+        end
 
-          -- Refresh quickfix list if it's open
-          local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
-          if qf_winid ~= 0 then
-            helpers.quickfix_unstaged_hunks(false)  -- don't log status
-          end
-        end, 100)
+        -- Refresh quickfix list if it's open
+        local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
+        if qf_winid ~= 0 then
+          helpers.quickfix_unstaged_hunks(false)  -- don't log status
+        end
       end
     end
 
