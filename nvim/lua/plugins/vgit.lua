@@ -76,8 +76,8 @@ return {
       end
     end
 
-    -- Jump to next unstaged hunk (or first if not in a hunk)
-    helpers.jump_to_unstaged_hunk = function()
+    -- Jump to unstaged hunk with direction (next/prev)
+    helpers.jump_to_unstaged_hunk = function(direction)
       -- Get current file and cursor position
       local current_file = vim.fn.expand('%:p')
       local current_line = vim.fn.line('.')
@@ -134,15 +134,35 @@ return {
 
       -- Determine which hunk to jump to
       local target_hunk
-      if current_hunk_index then
-        -- We're in a hunk, jump to the next one (with wraparound)
-        -- Note: Lua arrays are 1-indexed, so (index % count) + 1 ensures
-        -- we get 1..n, never 0
-        local next_index = (current_hunk_index % #all_hunks) + 1
-        target_hunk = all_hunks[next_index]
-      else
-        -- Not in a hunk, jump to the first one
-        target_hunk = all_hunks[1]
+      local action_description
+
+      if direction == 'next' then
+        if current_hunk_index then
+          -- We're in a hunk, jump to the next one (with wraparound)
+          -- Note: Lua arrays are 1-indexed, so (index % count) + 1 ensures
+          -- we get 1..n, never 0
+          local next_index = (current_hunk_index % #all_hunks) + 1
+          target_hunk = all_hunks[next_index]
+          action_description = 'next'
+        else
+          -- Not in a hunk, jump to the first one
+          target_hunk = all_hunks[1]
+          action_description = 'first'
+        end
+      else -- direction == 'prev'
+        if current_hunk_index then
+          -- We're in a hunk, jump to the previous one (with wraparound)
+          local prev_index = current_hunk_index - 1
+          if prev_index < 1 then
+            prev_index = #all_hunks
+          end
+          target_hunk = all_hunks[prev_index]
+          action_description = 'previous'
+        else
+          -- Not in a hunk, jump to the last one
+          target_hunk = all_hunks[#all_hunks]
+          action_description = 'last'
+        end
       end
 
       -- Jump to the target hunk
@@ -152,13 +172,19 @@ return {
       vim.cmd('normal! ' .. target_hunk.start_line .. 'Gzz')
 
       -- Report what we did
-      if current_hunk_index then
-        print(string.format('Jumped to next hunk: %s:%d',
-                          target_hunk.file, target_hunk.start_line))
-      else
-        print(string.format('Jumped to first hunk: %s:%d',
-                          target_hunk.file, target_hunk.start_line))
-      end
+      print(string.format('Jumped to %s hunk: %s:%d',
+                        action_description, target_hunk.file,
+                        target_hunk.start_line))
+    end
+
+    -- Jump to next unstaged hunk (or first if not in a hunk)
+    helpers.jump_to_next_unstaged_hunk = function()
+      helpers.jump_to_unstaged_hunk('next')
+    end
+
+    -- Jump to previous unstaged hunk (or last if not in a hunk)
+    helpers.jump_to_prev_unstaged_hunk = function()
+      helpers.jump_to_unstaged_hunk('prev')
     end
 
     -- Generate quickfix list with individual hunks for unstaged changes
@@ -254,12 +280,19 @@ return {
           require('vgit').buffer_diff_preview()
         end,
 
-        -- (g)it (j)ump:
+        -- (g)it (j)ump forward:
         -- - Jump to first unstaged hunk if cursor is not over a hunk.
         -- - Jump to next unstaged hunk (possibly in a different file) if cursor
         --   is on a hunk.
-        ['n gj'] = helpers.jump_to_unstaged_hunk,
-        ['n <LocalLeader>gj'] = helpers.jump_to_unstaged_hunk,
+        ['n gj'] = helpers.jump_to_next_unstaged_hunk,
+        ['n <LocalLeader>gj'] = helpers.jump_to_next_unstaged_hunk,
+
+        -- (g)it (J)ump backward:
+        -- - Jump to last unstaged hunk if cursor is not over a hunk.
+        -- - Jump to previous unstaged hunk (possibly in a different file) if
+        --   cursor is on a hunk.
+        ['n gJ'] = helpers.jump_to_prev_unstaged_hunk,
+        ['n <LocalLeader>gJ'] = helpers.jump_to_prev_unstaged_hunk,
 
         -- (H)unk preview
         -- ['n <Leader>H'] = helpers.with_gutter_refresh(function()
