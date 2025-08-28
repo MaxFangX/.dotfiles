@@ -191,10 +191,15 @@ return {
           require('vgit').hunk_down()
         end,
 
-        -- (g)it (d)iff - Open diff staging view for first unstaged file
-        -- Reverts back to previous window / buffer on quit
-        ['n gd'] = helpers.open_first_unstaged_diff,
-        ['n <LocalLeader>gd'] = helpers.open_first_unstaged_diff,
+        -- (g)it (d)iff - Open diff preview of current buffer
+        ['n gd'] = function()
+          helpers.save_window()
+          require('vgit').buffer_diff_preview()
+        end,
+        ['n <LocalLeader>gd'] = function()
+          helpers.save_window()
+          require('vgit').buffer_diff_preview()
+        end,
 
         -- (g)it (j)ump - Jump to first unstaged diff in any file
         ['n gj'] = helpers.jump_to_first_unstaged,
@@ -221,12 +226,9 @@ return {
           helpers.save_window()
           require('vgit').buffer_hunk_preview()
         end,
-        -- (d)iff preview of current buffer
-        -- NOTE: Disable as we have <LocalLeader>gd to open first unstaged file
-        -- ['n <LocalLeader>gd'] = function()
-        --   helpers.save_window()
-        --   require('vgit').buffer_diff_preview()
-        -- end,
+        -- (g)it (D)iff first - Open diff staging view for *first* unstaged file
+        ['n gD'] = helpers.open_first_unstaged_diff,
+        ['n <LocalLeader>gD'] = helpers.open_first_unstaged_diff,
         -- (p)roject diff preview
         ['n <LocalLeader>gp'] = function()
           helpers.save_window()
