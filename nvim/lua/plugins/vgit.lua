@@ -11,19 +11,38 @@ return {
     -- Helper functions defined in a table for better organization
     local helpers = {}
 
-    -- Track the window we came from before opening vgit preview
+    -- Track the window and buffer we came from before opening vgit preview
     local previous_window = nil
+    local previous_buffer = nil
 
-    -- Helper to save current window before opening vgit preview
+    -- Helper to save current window and buffer before opening vgit preview
     helpers.save_window = function()
       previous_window = vim.api.nvim_get_current_win()
+      previous_buffer = vim.api.nvim_get_current_buf()
     end
 
-    -- Helper to restore previous window after closing vgit preview
+    -- Helper to restore previous window and buffer after closing vgit preview
     helpers.restore_window = function()
       if previous_window and vim.api.nvim_win_is_valid(previous_window) then
         vim.api.nvim_set_current_win(previous_window)
+        -- Also restore the original buffer in that window
+        if previous_buffer and vim.api.nvim_buf_is_valid(previous_buffer) then
+          vim.api.nvim_win_set_buf(previous_window, previous_buffer)
+        end
         previous_window = nil
+        previous_buffer = nil
+
+        -- Show count of remaining unstaged files
+        vim.defer_fn(function()
+          local unstaged_files = vim.fn.systemlist('git diff --name-only')
+          local count = #unstaged_files
+          if count > 0 then
+            print(string.format('%d file%s with unstaged changes remaining',
+                              count, count == 1 and '' or 's'))
+          else
+            print('All files staged!')
+          end
+        end, 100)
       end
     end
 
@@ -84,6 +103,56 @@ return {
         ['n <S-Up>'] = function() require('vgit').hunk_up() end,
         ['n <S-Down>'] = function() require('vgit').hunk_down() end,
 
+        -- (g)it (d)iff - Open diff staging view for first unstaged file
+        -- Reverts back to previous window / buffer on quit
+        ['n <LocalLeader>gd'] = function()
+          -- Get first file with unstaged changes
+          local unstaged_files = vim.fn.systemlist('git diff --name-only')
+          if #unstaged_files > 0 then
+            -- Save window BEFORE opening the file
+            helpers.save_window()
+            local first_file = unstaged_files[1]
+            -- Open the file
+            vim.cmd('edit ' .. vim.fn.fnameescape(first_file))
+            -- Open diff preview
+            require('vgit').buffer_diff_preview()
+          else
+            print('No unstaged changes found')
+          end
+        end,
+
+        -- (g)it (j)ump - Jump to first unstaged diff in any file
+        ['n <LocalLeader>gj'] = function()
+          -- Get first file with unstaged changes
+          local unstaged_files = vim.fn.systemlist('git diff --name-only')
+          if #unstaged_files == 0 then
+            print('No unstaged changes found')
+            return
+          end
+
+          local first_file = unstaged_files[1]
+
+          -- Get the first hunk's line number from git diff
+          local diff_output = vim.fn.systemlist(
+            'git diff -U0 ' .. vim.fn.shellescape(first_file)
+          )
+
+          local line_num = 1
+          for _, line in ipairs(diff_output) do
+            -- Parse unified diff header: @@ -l,s +l,s @@
+            local new_line = line:match('^@@.*%+(%d+)')
+            if new_line then
+              line_num = tonumber(new_line)
+              break
+            end
+          end
+
+          -- Open file and jump to line
+          vim.cmd('edit ' .. vim.fn.fnameescape(first_file))
+          vim.cmd('normal! ' .. line_num .. 'Gzz')
+          print(string.format('Jumped to %s:%d', first_file, line_num))
+        end,
+
         -- (H)unk preview
         -- ['n <Leader>H'] = helpers.with_gutter_refresh(function()
         --   require('vgit').buffer_hunk_preview()
@@ -100,16 +169,17 @@ return {
         -- === <LocalLeader> mappings === --
         -- All are namespaced with <LocalLeader>g: (g)it
 
-        -- (h)unk preview
-        ['n <LocalLeader>gh'] = function()
+        -- (H)over git hunk
+        ['n <Leader>H'] = function()
           helpers.save_window()
           require('vgit').buffer_hunk_preview()
         end,
         -- (d)iff preview of current buffer
-        ['n <LocalLeader>gd'] = function()
-          helpers.save_window()
-          require('vgit').buffer_diff_preview()
-        end,
+        -- NOTE: Disable as we have <LocalLeader>gd to open first unstaged file
+        -- ['n <LocalLeader>gd'] = function()
+        --   helpers.save_window()
+        --   require('vgit').buffer_diff_preview()
+        -- end,
         -- (p)roject diff preview
         ['n <LocalLeader>gp'] = function()
           helpers.save_window()
@@ -333,7 +403,8 @@ return {
     })
 
     -- Create augroup for vgit autocmds
-    local vgit_group = vim.api.nvim_create_augroup('VgitConfig', { clear = true })
+    local vgit_group = vim.api.nvim_create_augroup('VgitConfig',
+                                                     { clear = true })
 
     -- Auto-jump to first hunk when opening file from quickfix
     vim.api.nvim_create_autocmd('BufReadPost', {
