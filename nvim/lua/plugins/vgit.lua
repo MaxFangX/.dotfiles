@@ -78,6 +78,13 @@ return {
 
     -- Jump to unstaged hunk with direction (next/prev)
     helpers.jump_to_unstaged_hunk = function(direction)
+      -- Validate direction parameter
+      if direction ~= 'next' and direction ~= 'prev' then
+        print(string.format(
+          "Invalid direction '%s'. Must be 'next' or 'prev'", direction))
+        return
+      end
+
       -- Get current file and cursor position
       local current_file = vim.fn.expand('%:p')
       local current_line = vim.fn.line('.')
@@ -89,6 +96,15 @@ return {
         return
       end
 
+      -- Get git root to convert relative paths to absolute
+      local git_root_output = vim.fn.systemlist(
+        'git rev-parse --show-toplevel')
+      local git_root = git_root_output[1]
+      if not git_root or vim.v.shell_error ~= 0 then
+        print('Error: Not in a git repository')
+        return
+      end
+
       -- Build list of all hunks across all files
       local all_hunks = {}
       for _, file in ipairs(unstaged_files) do
@@ -97,15 +113,22 @@ return {
         )
 
         for _, line in ipairs(diff_output) do
-          -- Parse unified diff header: @@ -old_start,old_count +new_start,new_count @@
+          -- Parse unified diff header:
+          -- @@ -old_start,old_count +new_start,new_count @@
           local new_start, new_count = line:match('^@@.*%+(%d+),?(%d*)')
           if new_start then
             local start_line = tonumber(new_start)
             local count = tonumber(new_count) or 1
+            -- For zero-line hunks (pure deletions),
+            -- end_line should equal start_line
             local end_line = start_line + math.max(0, count - 1)
 
             table.insert(all_hunks, {
               file = file,
+              -- Store absolute path for consistent comparison
+              absolute_file = vim.fn.fnamemodify(
+                git_root .. '/' .. file, ':p'
+              ),
               start_line = start_line,
               end_line = end_line
             })
@@ -123,12 +146,18 @@ return {
       local absolute_current_file = vim.fn.fnamemodify(current_file, ':p')
 
       for i, hunk in ipairs(all_hunks) do
-        local absolute_hunk_file = vim.fn.fnamemodify(hunk.file, ':p')
-        if absolute_hunk_file == absolute_current_file and
-           current_line >= hunk.start_line and
-           current_line <= hunk.end_line then
-          current_hunk_index = i
-          break
+        if hunk.absolute_file == absolute_current_file then
+          -- Special case: deletion at beginning of file (start_line = 0)
+          -- Consider user "in" this hunk if at line 1
+          if hunk.start_line == 0 and current_line == 1 then
+            current_hunk_index = i
+            break
+          -- Normal case: check if line is within hunk range
+          elseif current_line >= hunk.start_line and
+                 current_line <= hunk.end_line then
+            current_hunk_index = i
+            break
+          end
         end
       end
 
@@ -136,42 +165,106 @@ return {
       local target_hunk
       local action_description
 
-      if direction == 'next' then
-        if current_hunk_index then
-          -- We're in a hunk, jump to the next one (with wraparound)
+      if current_hunk_index then
+        -- We're inside a hunk, jump with wraparound
+        if direction == 'next' then
+          -- Jump to the next hunk (with wraparound)
           -- Note: Lua arrays are 1-indexed, so (index % count) + 1 ensures
           -- we get 1..n, never 0
           local next_index = (current_hunk_index % #all_hunks) + 1
           target_hunk = all_hunks[next_index]
           action_description = 'next'
-        else
-          -- Not in a hunk, jump to the first one
-          target_hunk = all_hunks[1]
-          action_description = 'first'
-        end
-      else -- direction == 'prev'
-        if current_hunk_index then
-          -- We're in a hunk, jump to the previous one (with wraparound)
+        elseif direction == 'prev' then
+          -- Jump to the previous hunk (with wraparound)
           local prev_index = current_hunk_index - 1
           if prev_index < 1 then
             prev_index = #all_hunks
           end
           target_hunk = all_hunks[prev_index]
           action_description = 'previous'
+        end
+      else
+        -- Not inside a hunk - check if we're between hunks in
+        -- current file
+
+        -- Find all hunks in current file
+        local hunks_in_current_file = {}
+        for i, hunk in ipairs(all_hunks) do
+          if hunk.absolute_file == absolute_current_file then
+            table.insert(hunks_in_current_file, i)
+          end
+        end
+
+        if #hunks_in_current_file > 0 then
+          -- We're in a file with hunks but between them
+          local found_index = nil
+
+          if direction == 'next' then
+            -- Find first hunk after current line
+            for _, idx in ipairs(hunks_in_current_file) do
+              if all_hunks[idx].start_line > current_line then
+                found_index = idx
+                break
+              end
+            end
+
+            if found_index then
+              -- Found a hunk after cursor in same file
+              target_hunk = all_hunks[found_index]
+              action_description = 'next'
+            else
+              -- After all hunks in file, wrap to next file
+              local last_idx = hunks_in_current_file[
+                #hunks_in_current_file]
+              local next_idx = (last_idx % #all_hunks) + 1
+              target_hunk = all_hunks[next_idx]
+              action_description = 'next'
+            end
+          elseif direction == 'prev' then
+            -- Find last hunk before current line
+            for i = #hunks_in_current_file, 1, -1 do
+              local idx = hunks_in_current_file[i]
+              if all_hunks[idx].end_line < current_line then
+                found_index = idx
+                break
+              end
+            end
+
+            if found_index then
+              -- Found a hunk before cursor in same file
+              target_hunk = all_hunks[found_index]
+              action_description = 'previous'
+            else
+              -- Before all hunks in file, wrap to previous file
+              local first_idx = hunks_in_current_file[1]
+              local prev_idx = first_idx - 1
+              if prev_idx < 1 then
+                prev_idx = #all_hunks
+              end
+              target_hunk = all_hunks[prev_idx]
+              action_description = 'previous'
+            end
+          end
         else
-          -- Not in a hunk, jump to the last one
-          target_hunk = all_hunks[#all_hunks]
-          action_description = 'last'
+          -- We're in a file without any hunks
+          if direction == 'next' then
+            target_hunk = all_hunks[1]
+            action_description = 'first'
+          elseif direction == 'prev' then
+            target_hunk = all_hunks[#all_hunks]
+            action_description = 'last'
+          end
         end
       end
 
       -- Jump to the target hunk
-      if target_hunk.file ~= vim.fn.expand('%:p') then
-        vim.cmd('edit ' .. vim.fn.fnameescape(target_hunk.file))
+      if target_hunk.absolute_file ~= absolute_current_file then
+        vim.cmd('edit ' .. vim.fn.fnameescape(target_hunk.absolute_file))
       end
       vim.cmd('normal! ' .. target_hunk.start_line .. 'Gzz')
 
       -- Report what we did
+      -- Use relative file name for cleaner output
       print(string.format('Jumped to %s hunk: %s:%d',
                         action_description, target_hunk.file,
                         target_hunk.start_line))
