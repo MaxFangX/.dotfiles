@@ -291,6 +291,10 @@ return {
           require('vgit').project_diff_preview()
         end,
         -- (q)uickfix list of unstaged hunks
+        ['n gq'] = function()
+          local log_status = true
+          helpers.quickfix_unstaged_hunks(log_status)
+        end,
         ['n <LocalLeader>gq'] = function()
           local log_status = true
           helpers.quickfix_unstaged_hunks(log_status)
