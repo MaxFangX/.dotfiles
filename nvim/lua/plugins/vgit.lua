@@ -42,6 +42,12 @@ return {
           else
             print('All files staged!')
           end
+
+          -- Refresh quickfix list if it's open
+          local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
+          if qf_winid ~= 0 then
+            helpers.quickfix_files_with_unstaged_changes()
+          end
         end, 100)
       end
     end
