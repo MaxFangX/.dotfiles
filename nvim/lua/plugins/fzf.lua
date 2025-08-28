@@ -218,11 +218,11 @@ return {
       -- Key mappings
       local opts = { noremap = true, silent = true }
 
-      -- Map <Leader>f and <Leader>g to the two fns above respectively
+      -- Map <Leader>f and <Leader>F to the two fns above respectively
       vim.keymap.set("n", "<Leader>f", ":GFilesFixed<CR>", opts)
       vim.keymap.set("x", "<Leader>f", "<Esc>:GFilesFixed<CR>", opts)
-      vim.keymap.set("n", "<Leader>g", ":FilesFixed<CR>", opts)
-      vim.keymap.set("x", "<Leader>g", "<Esc>:FilesFixed<CR>", opts)
+      vim.keymap.set("n", "<Leader>F", ":FilesFixed<CR>", opts)
+      vim.keymap.set("x", "<Leader>F", "<Esc>:FilesFixed<CR>", opts)
 
       -- <Leader><Space> - Full text search with hidden files
       vim.keymap.set("n", "<Leader><Space>", ":RgWithHidden<CR>", opts)
@@ -254,9 +254,9 @@ return {
           ':echoerr "Error: neither `fd` nor `rg` installed"<CR>', opts)
         vim.keymap.set("x", "<Leader>f",
           ':echoerr "Error: neither `fd` nor `rg` installed"<CR>', opts)
-        vim.keymap.set("n", "<Leader>g",
+        vim.keymap.set("n", "<Leader>F",
           ':echoerr "Error: neither `fd` nor `rg` installed"<CR>', opts)
-        vim.keymap.set("x", "<Leader>g",
+        vim.keymap.set("x", "<Leader>F",
           ':echoerr "Error: neither `fd` nor `rg` installed"<CR>', opts)
       end
     end,
