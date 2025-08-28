@@ -46,21 +46,39 @@ return {
       end
     end
 
-    -- Generate quickfix list of files with unstaged changes
+    -- Generate quickfix list with individual hunks for unstaged changes
     helpers.quickfix_files_with_unstaged_changes = function()
       local items = {}
-      local seen = {}
 
-      -- Get unstaged files
+      -- Get unstaged files and their hunks
       local unstaged_files = vim.fn.systemlist('git diff --name-only')
       for _, file in ipairs(unstaged_files) do
-        if not seen[file] then
+        -- Get hunks for this file
+        local diff_output = vim.fn.systemlist(
+          'git diff -U0 ' .. vim.fn.shellescape(file)
+        )
+
+        local hunk_num = 0
+        for _, line in ipairs(diff_output) do
+          -- Parse unified diff header: @@ -l,s +l,s @@
+          local new_line = line:match('^@@.*%+(%d+)')
+          if new_line then
+            hunk_num = hunk_num + 1
+            table.insert(items, {
+              filename = file,
+              lnum = tonumber(new_line),
+              text = string.format('Hunk %d: Unstaged changes', hunk_num)
+            })
+          end
+        end
+
+        -- If no hunks found (shouldn't happen), add file with line 1
+        if hunk_num == 0 then
           table.insert(items, {
             filename = file,
             lnum = 1,
             text = 'Unstaged changes'
           })
-          seen[file] = true
         end
       end
 
@@ -69,14 +87,11 @@ return {
         'git ls-files --others --exclude-standard'
       )
       for _, file in ipairs(untracked_files) do
-        if not seen[file] then
-          table.insert(items, {
-            filename = file,
-            lnum = 1,
-            text = 'Untracked file'
-          })
-          seen[file] = true
-        end
+        table.insert(items, {
+          filename = file,
+          lnum = 1,
+          text = 'Untracked file'
+        })
       end
 
       if #items == 0 then
@@ -86,7 +101,7 @@ return {
       else
         vim.fn.setqflist(items, 'r')
         vim.cmd('copen')
-        print(string.format('Found %d files with changes', #items))
+        print(string.format('Found %d unstaged hunks', #items))
       end
     end
 
