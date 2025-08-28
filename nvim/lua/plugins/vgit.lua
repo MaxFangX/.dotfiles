@@ -25,19 +25,19 @@ return {
     helpers.restore_window = function()
       if prev_window and vim.api.nvim_win_is_valid(prev_window) then
         vim.api.nvim_set_current_win(prev_window)
-        
+
         -- Choose ONE of the following behaviors after closing staging view:
-        
+
         -- Option 1: Restore original buffer (uncomment to enable)
         -- if prev_buffer and vim.api.nvim_buf_is_valid(prev_buffer) then
         --   vim.api.nvim_win_set_buf(prev_window, prev_buffer)
         -- end
-        
+
         -- Option 2: Navigate to next hunk (currently active)
         pcall(function()
           require('vgit').hunk_down()
         end)
-        
+
         prev_window = nil
         prev_buffer = nil
 
@@ -76,36 +76,89 @@ return {
       end
     end
 
-    -- Jump to first unstaged diff in any file
-    helpers.jump_to_first_unstaged = function()
-      -- Get first file with unstaged changes
+    -- Jump to next unstaged hunk (or first if not in a hunk)
+    helpers.jump_to_unstaged_hunk = function()
+      -- Get current file and cursor position
+      local current_file = vim.fn.expand('%:p')
+      local current_line = vim.fn.line('.')
+
+      -- Get all files with unstaged changes
       local unstaged_files = vim.fn.systemlist('git diff --name-only')
       if #unstaged_files == 0 then
         print('No unstaged changes found')
         return
       end
 
-      local first_file = unstaged_files[1]
+      -- Build list of all hunks across all files
+      local all_hunks = {}
+      for _, file in ipairs(unstaged_files) do
+        local diff_output = vim.fn.systemlist(
+          'git diff -U0 ' .. vim.fn.shellescape(file)
+        )
 
-      -- Get the first hunk's line number from git diff
-      local diff_output = vim.fn.systemlist(
-        'git diff -U0 ' .. vim.fn.shellescape(first_file)
-      )
+        for _, line in ipairs(diff_output) do
+          -- Parse unified diff header: @@ -old_start,old_count +new_start,new_count @@
+          local new_start, new_count = line:match('^@@.*%+(%d+),?(%d*)')
+          if new_start then
+            local start_line = tonumber(new_start)
+            local count = tonumber(new_count) or 1
+            local end_line = start_line + math.max(0, count - 1)
 
-      local line_num = 1
-      for _, line in ipairs(diff_output) do
-        -- Parse unified diff header: @@ -l,s +l,s @@
-        local new_line = line:match('^@@.*%+(%d+)')
-        if new_line then
-          line_num = tonumber(new_line)
+            table.insert(all_hunks, {
+              file = file,
+              start_line = start_line,
+              end_line = end_line
+            })
+          end
+        end
+      end
+
+      if #all_hunks == 0 then
+        print('No hunks found')
+        return
+      end
+
+      -- Find if we're currently in a hunk
+      local current_hunk_index = nil
+      local absolute_current_file = vim.fn.fnamemodify(current_file, ':p')
+
+      for i, hunk in ipairs(all_hunks) do
+        local absolute_hunk_file = vim.fn.fnamemodify(hunk.file, ':p')
+        if absolute_hunk_file == absolute_current_file and
+           current_line >= hunk.start_line and
+           current_line <= hunk.end_line then
+          current_hunk_index = i
           break
         end
       end
 
-      -- Open file and jump to line
-      vim.cmd('edit ' .. vim.fn.fnameescape(first_file))
-      vim.cmd('normal! ' .. line_num .. 'Gzz')
-      print(string.format('Jumped to %s:%d', first_file, line_num))
+      -- Determine which hunk to jump to
+      local target_hunk
+      if current_hunk_index then
+        -- We're in a hunk, jump to the next one (with wraparound)
+        -- Note: Lua arrays are 1-indexed, so (index % count) + 1 ensures
+        -- we get 1..n, never 0
+        local next_index = (current_hunk_index % #all_hunks) + 1
+        target_hunk = all_hunks[next_index]
+      else
+        -- Not in a hunk, jump to the first one
+        target_hunk = all_hunks[1]
+      end
+
+      -- Jump to the target hunk
+      if target_hunk.file ~= vim.fn.expand('%:p') then
+        vim.cmd('edit ' .. vim.fn.fnameescape(target_hunk.file))
+      end
+      vim.cmd('normal! ' .. target_hunk.start_line .. 'Gzz')
+
+      -- Report what we did
+      if current_hunk_index then
+        print(string.format('Jumped to next hunk: %s:%d',
+                          target_hunk.file, target_hunk.start_line))
+      else
+        print(string.format('Jumped to first hunk: %s:%d',
+                          target_hunk.file, target_hunk.start_line))
+      end
     end
 
     -- Generate quickfix list with individual hunks for unstaged changes
@@ -201,9 +254,12 @@ return {
           require('vgit').buffer_diff_preview()
         end,
 
-        -- (g)it (j)ump - Jump to first unstaged diff in any file
-        ['n gj'] = helpers.jump_to_first_unstaged,
-        ['n <LocalLeader>gj'] = helpers.jump_to_first_unstaged,
+        -- (g)it (j)ump:
+        -- - Jump to first unstaged hunk if cursor is not over a hunk.
+        -- - Jump to next unstaged hunk (possibly in a different file) if cursor
+        --   is on a hunk.
+        ['n gj'] = helpers.jump_to_unstaged_hunk,
+        ['n <LocalLeader>gj'] = helpers.jump_to_unstaged_hunk,
 
         -- (H)unk preview
         -- ['n <Leader>H'] = helpers.with_gutter_refresh(function()
