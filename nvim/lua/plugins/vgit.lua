@@ -26,17 +26,35 @@ return {
       if prev_window and vim.api.nvim_win_is_valid(prev_window) then
         vim.api.nvim_set_current_win(prev_window)
 
-        -- Choose ONE of the following behaviors after closing staging view:
+        -- Choose up to 1 of the following behaviors when quitting staging view:
 
         -- Option 1: Restore original buffer (uncomment to enable)
         -- if prev_buffer and vim.api.nvim_buf_is_valid(prev_buffer) then
         --   vim.api.nvim_win_set_buf(prev_window, prev_buffer)
         -- end
 
-        -- Option 2: Navigate to next hunk (currently active)
-        pcall(function()
-          require('vgit').hunk_down()
-        end)
+        -- Option 2: Navigate to next hunk (uncomment to enable)
+        -- pcall(function()
+        --   require('vgit').hunk_down()
+        -- end)
+
+        -- Option 3: Jump to next hunk ONLY if no hunks in current file
+        -- (currently active)
+        local current_file = vim.fn.expand('%:p')
+        local diff_output = vim.fn.systemlist(
+          'git diff -U0 ' .. vim.fn.shellescape(current_file))
+        local has_hunks = false
+        for _, line in ipairs(diff_output) do
+          if line:match('^@@') then
+            has_hunks = true
+            break
+          end
+        end
+        if not has_hunks then
+          pcall(function()
+            helpers.jump_to_next_unstaged_hunk()
+          end)
+        end
 
         prev_window = nil
         prev_buffer = nil
