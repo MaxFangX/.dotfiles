@@ -281,6 +281,34 @@ return {
       end
       vim.cmd('normal! ' .. target_hunk.start_line .. 'Gzz')
 
+      -- Update quickfix list highlighting if it's open
+      local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
+      if qf_winid ~= 0 then
+        -- Get the quickfix list
+        local qf_list = vim.fn.getqflist()
+
+        -- Find the matching quickfix entry
+        for i, item in ipairs(qf_list) do
+          -- Get the filename from quickfix entry
+          -- It might be stored as filename or via bufnr
+          local qf_file
+          if item.bufnr and item.bufnr > 0 then
+            qf_file = vim.fn.fnamemodify(
+              vim.fn.bufname(item.bufnr), ':p')
+          elseif item.filename then
+            qf_file = vim.fn.fnamemodify(item.filename, ':p')
+          end
+
+          -- Check if this entry matches our target hunk
+          if qf_file and qf_file == target_hunk.absolute_file and
+             item.lnum == target_hunk.start_line then
+            -- Set the quickfix index to highlight this entry
+            vim.fn.setqflist({}, 'r', { idx = i })
+            break
+          end
+        end
+      end
+
       -- Report what we did
       -- Use relative file name for cleaner output
       print(string.format('Jumped to %s hunk: %s:%d',
