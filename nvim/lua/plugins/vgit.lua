@@ -432,6 +432,12 @@ return {
           require('vgit').buffer_diff_preview()
         end,
 
+        -- (g)it (h)over hunk - Show hunk preview
+        ['n gh'] = function()
+          helpers.save_window()
+          require('vgit').buffer_hunk_preview()
+        end,
+
         -- (g)it (j)ump forward:
         -- - Jump to first unstaged hunk if cursor is not over a hunk.
         -- - Jump to next unstaged hunk (possibly in a different file) if cursor
@@ -461,12 +467,6 @@ return {
 
         -- === <LocalLeader> mappings === --
         -- All are namespaced with <LocalLeader>g: (g)it
-
-        -- (H)over git hunk
-        ['n <Leader>H'] = function()
-          helpers.save_window()
-          require('vgit').buffer_hunk_preview()
-        end,
         -- (g)it (D)iff first - Open diff staging view for *first* unstaged file
         ['n gD'] = helpers.open_first_unstaged_diff,
         ['n <LocalLeader>gD'] = helpers.open_first_unstaged_diff,
@@ -497,11 +497,11 @@ return {
         end,
 
         -- (u)nstage/reset current hunk
-        ['n <LocalLeader>gu'] = function()
+        ['n gu'] = function()
           require('vgit').buffer_hunk_reset()
         end,
-        -- (U)nstage entire file
-        ['n <LocalLeader>gU'] = function()
+        -- (u)nstage entire file
+        ['n gU'] = function()
           require('vgit').buffer_unstage()
         end,
 
