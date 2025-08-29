@@ -14,11 +14,13 @@ return {
     -- Track the window and buffer we came from before opening vgit preview
     local prev_window = nil
     local prev_buffer = nil
+    local prev_cursor_line = nil  -- Track cursor position in diff view
 
     -- Helper to save current window and buffer before opening vgit preview
     helpers.save_window = function()
       prev_window = vim.api.nvim_get_current_win()
       prev_buffer = vim.api.nvim_get_current_buf()
+      prev_cursor_line = nil  -- Reset cursor tracking
     end
 
     -- Helper to restore previous window and buffer after closing vgit preview
@@ -38,7 +40,7 @@ return {
         --   require('vgit').hunk_down()
         -- end)
 
-        -- Option 3: Jump to next hunk ONLY if no hunks in current file
+        -- Option 3: Smart behavior based on remaining hunks
         -- (currently active)
         local current_file = vim.fn.expand('%:p')
         local diff_output = vim.fn.systemlist(
@@ -50,7 +52,14 @@ return {
             break
           end
         end
-        if not has_hunks then
+        
+        if has_hunks then
+          -- File still has hunks - restore cursor position if we have it
+          if prev_cursor_line then
+            vim.cmd('normal! ' .. prev_cursor_line .. 'Gzz')
+          end
+        else
+          -- No hunks left in file - jump to next file with hunks
           pcall(function()
             helpers.jump_to_next_unstaged_hunk()
           end)
@@ -58,6 +67,7 @@ return {
 
         prev_window = nil
         prev_buffer = nil
+        prev_cursor_line = nil
 
         -- Show count of remaining unstaged files
         local unstaged_files = vim.fn.systemlist('git diff --name-only')
@@ -728,6 +738,28 @@ return {
         -- vgit preview buffers have buftype 'nofile' and empty filetype
         if buftype == 'nofile' and filetype == '' then
           coming_from_vgit = true
+        end
+      end
+    })
+
+    -- Capture cursor position when moving in diff view
+    vim.api.nvim_create_autocmd('CursorMoved', {
+      group = vgit_group,
+      pattern = '*',
+      callback = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local winnr = vim.api.nvim_get_current_win()
+
+        -- Check if this is a vgit diff buffer (right side - modified file)
+        local is_vgit_diff = vim.bo[bufnr].buftype == 'nofile'
+                          and vim.bo[bufnr].modifiable == false
+                          and vim.bo[bufnr].buflisted == false
+                          and vim.bo[bufnr].bufhidden == 'wipe'
+                          and vim.wo[winnr].cursorbind
+
+        if is_vgit_diff then
+          -- Record the cursor line in the diff view
+          prev_cursor_line = vim.fn.line('.')
         end
       end
     })
