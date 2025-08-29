@@ -52,7 +52,7 @@ return {
             break
           end
         end
-        
+
         if has_hunks then
           -- File still has hunks - restore cursor position if we have it
           if prev_cursor_line then
@@ -418,8 +418,8 @@ return {
         -- (s)tage current hunk and go to next (shorter binding)
         ['n gs'] = function()
           require('vgit').buffer_hunk_stage()
-          -- Go to next hunk after staging
-          require('vgit').hunk_down()
+          -- Jump to next unstaged hunk after staging
+          pcall(helpers.jump_to_next_unstaged_hunk)
         end,
 
         -- (g)it (d)iff - Open diff preview of current buffer
@@ -488,6 +488,8 @@ return {
         -- (s)tage current hunk
         ['n <LocalLeader>gs'] = function()
           require('vgit').buffer_hunk_stage()
+          -- Jump to next unstaged hunk after staging
+          pcall(helpers.jump_to_next_unstaged_hunk)
         end,
         -- (S)tage entire file
         ['n <LocalLeader>gS'] = function()
