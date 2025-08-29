@@ -690,7 +690,7 @@
 
     " <Leader>p to copy relative (p)ath to clipboard
     " <Leader>P to copy absolute (P)ath to clipboard
-    nnoremap <Leader>p :let @+ = expand('%')<CR>:echo 'Copied path: ' . @+<CR>
+    nnoremap <Leader>p :let @+ = fnamemodify(expand('%'), ':~:.')<CR>:echo 'Copied path: ' . @+<CR>
     nnoremap <Leader>P :let @+ = expand('%:p')<CR>:echo 'Copied path: ' . @+<CR>
 
     " Avoid undesired side-effects while pasting
