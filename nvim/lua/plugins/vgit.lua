@@ -291,13 +291,10 @@ return {
       end
       vim.cmd('normal! ' .. target_hunk.start_line .. 'Gzz')
 
-      -- Update quickfix list if it's open
+      -- Update quickfix list highlighting if it's open
       local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
       if qf_winid ~= 0 then
-        -- Refresh the quickfix list to reflect current state
-        helpers.quickfix_unstaged_hunks(false)  -- false = don't log status
-
-        -- Get the updated quickfix list
+        -- Get the current quickfix list (don't refresh)
         local qf_list = vim.fn.getqflist()
 
         -- Find the matching quickfix entry to highlight
