@@ -275,12 +275,77 @@ return {
           end
         else
           -- We're in a file without any hunks
+          -- Find the next/previous file alphabetically with hunks
+
+          -- Get unique files from all_hunks
+          -- (already in git's alphabetical order)
+          local files_with_hunks = {}
+          local seen_files = {}
+          for _, hunk in ipairs(all_hunks) do
+            if not seen_files[hunk.file] then
+              table.insert(files_with_hunks, hunk.file)
+              seen_files[hunk.file] = true
+            end
+          end
+
+          -- Get current file's relative path for comparison
+          local escaped_root = vim.fn.escape(git_root, '/\\')
+          local pattern = '^' .. escaped_root .. '/?'
+          local current_file_relative = vim.fn.fnamemodify(
+            current_file:gsub(pattern, ''), ':.'
+          )
+
           if direction == 'next' then
-            target_hunk = all_hunks[1]
-            action_description = 'first'
+            -- Find first file alphabetically after current file
+            local next_file = nil
+            for _, file in ipairs(files_with_hunks) do
+              if file > current_file_relative then
+                next_file = file
+                break
+              end
+            end
+
+            if next_file then
+              -- Jump to first hunk in the next file alphabetically
+              for i, hunk in ipairs(all_hunks) do
+                if hunk.file == next_file then
+                  target_hunk = all_hunks[i]
+                  action_description = 'next file'
+                  break
+                end
+              end
+            else
+              -- No files after current, wrap to first file
+              target_hunk = all_hunks[1]
+              action_description = 'first file'
+            end
           elseif direction == 'prev' then
-            target_hunk = all_hunks[#all_hunks]
-            action_description = 'last'
+            -- Find last file alphabetically before current file
+            local prev_file = nil
+            for i = #files_with_hunks, 1, -1 do
+              local file = files_with_hunks[i]
+              if file < current_file_relative then
+                prev_file = file
+                break
+              end
+            end
+
+            if prev_file then
+              -- Jump to last hunk in the previous file alphabetically
+              local last_hunk_in_prev_file = nil
+              for i = #all_hunks, 1, -1 do
+                if all_hunks[i].file == prev_file then
+                  last_hunk_in_prev_file = all_hunks[i]
+                  target_hunk = last_hunk_in_prev_file
+                  action_description = 'previous file'
+                  break
+                end
+              end
+            else
+              -- No files before current, wrap to last file's last hunk
+              target_hunk = all_hunks[#all_hunks]
+              action_description = 'last file'
+            end
           end
         end
       end
@@ -701,26 +766,6 @@ return {
     -- Create augroup for vgit autocmds
     local vgit_group = vim.api.nvim_create_augroup('VgitConfig',
                                                      { clear = true })
-
-    -- Auto-jump to first hunk when opening file from quickfix
-    vim.api.nvim_create_autocmd('BufReadPost', {
-      group = vgit_group,
-      pattern = '*',
-      callback = function()
-        -- Check if we came from quickfix window
-        local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
-        local prev_wininfo = vim.fn.getwininfo(prev_win)[1]
-
-        if prev_wininfo and prev_wininfo.quickfix == 1 then
-          -- Small delay to ensure vgit has processed the file
-          vim.defer_fn(function()
-            pcall(function()
-              require('vgit').hunk_down()
-            end)
-          end, 100)
-        end
-      end
-    })
 
     -- VGIT GUTTER REFRESH WORKAROUND
     -- After staging changes in the diff preview, the gutter doesn't update
