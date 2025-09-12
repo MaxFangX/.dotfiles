@@ -767,6 +767,41 @@ return {
     local vgit_group = vim.api.nvim_create_augroup('VgitConfig',
                                                      { clear = true })
 
+    -- Safeguard: detect and fix lost syntax highlighting
+    vim.api.nvim_create_autocmd({'BufEnter', 'WinEnter', 'CursorHold'}, {
+      group = vgit_group,
+      pattern = '*',
+      callback = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local buftype = vim.bo[bufnr].buftype
+
+        -- Only check normal file buffers
+        if buftype == '' then
+          local filetype = vim.bo[bufnr].filetype
+          local syntax = vim.bo[bufnr].syntax
+          local filename = vim.api.nvim_buf_get_name(bufnr)
+
+          -- If we have a real file but no filetype, something went wrong
+          if filename ~= '' and vim.fn.filereadable(filename) == 1 then
+            if filetype == '' then
+              -- Re-detect filetype
+              vim.cmd('silent! doautocmd BufRead ' .. vim.fn.fnameescape(filename))
+
+              -- If still no filetype, try filetype detect
+              if vim.bo[bufnr].filetype == '' then
+                vim.cmd('silent! filetype detect')
+              end
+            end
+
+            -- If we have a filetype but no syntax, re-enable syntax
+            if vim.bo[bufnr].filetype ~= '' and syntax == '' then
+              vim.cmd('silent! syntax enable')
+            end
+          end
+        end
+      end
+    })
+
     -- VGIT GUTTER REFRESH WORKAROUND
     -- After staging changes in the diff preview, the gutter doesn't update
     -- immediately due to timing issues with vgit's file watcher. This
@@ -844,6 +879,13 @@ return {
           vim.defer_fn(function()
             local bufnr = vim.api.nvim_get_current_buf()
 
+            -- Save all relevant buffer state before any modifications
+            local saved_state = {
+              filetype = vim.bo[bufnr].filetype,
+              syntax = vim.bo[bufnr].syntax,
+              filename = vim.api.nvim_buf_get_name(bufnr)
+            }
+
             -- Clear existing signs to force refresh
             vim.fn.sign_unplace('vgit_signs', { buffer = bufnr })
 
@@ -855,6 +897,29 @@ return {
                 vgit.toggle_live_gutter()
                 vim.defer_fn(function()
                   vgit.toggle_live_gutter()
+
+                  -- Ensure filetype and syntax are preserved/restored
+                  vim.defer_fn(function()
+                    if vim.api.nvim_buf_is_valid(bufnr) then
+                      -- Check if filetype was lost
+                      if vim.bo[bufnr].filetype == '' and saved_state.filetype ~= '' then
+                        vim.bo[bufnr].filetype = saved_state.filetype
+                      elseif vim.bo[bufnr].filetype == '' and saved_state.filename ~= '' then
+                        -- Fallback: re-detect filetype from filename
+                        vim.cmd('doautocmd BufRead ' .. vim.fn.fnameescape(saved_state.filename))
+                      end
+
+                      -- Check if syntax was lost
+                      if vim.bo[bufnr].syntax == '' then
+                        if saved_state.syntax ~= '' then
+                          vim.bo[bufnr].syntax = saved_state.syntax
+                        elseif vim.bo[bufnr].filetype ~= '' then
+                          -- Re-enable syntax based on filetype
+                          vim.cmd('syntax enable')
+                        end
+                      end
+                    end
+                  end, 50)
                 end, 50)
               end)
             end)
