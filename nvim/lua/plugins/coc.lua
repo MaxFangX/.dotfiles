@@ -46,6 +46,9 @@ return {
         -- View code (a)ctions at cursor.
         -- - This usually works for auto-importing the item under the cursor.
         vim.keymap.set("n", "<Leader>c", "<Plug>(coc-codeaction-cursor)", opts)
+        -- Do code action to quickfi(x) the current line, if any.
+        -- TODO(max): Would be nice to auto open buffer diff view on select
+        vim.keymap.set("n", "<Leader>x", "<Plug>(coc-fix-current)", opts)
         -- Structural (r)e(n)ame of this item
         vim.keymap.set("n", "<LocalLeader>rn",
           ":call CocActionAsync('rename')<CR>", opts)
@@ -69,9 +72,6 @@ return {
         -- likely to forget. So I'm ignoring this unless something breaks.
         -- https://github.com/autozimu/LanguageClient-neovim#quick-start
 
-        -- (c)oc: Do code action to quickfi(x) the current line, if any.
-        -- TODO(max): Would be nice to auto open buffer diff view on select
-        vim.keymap.set("n", "<LocalLeader>cx", "<Plug>(coc-fix-current)", opts)
         -- (c)oc: View code actions at current (l)ine.
         vim.keymap.set("n", "<LocalLeader>cl", "<Plug>(coc-codeaction-line)",
           opts)
