@@ -251,6 +251,7 @@
     command! Vne vnew
     command! Bd bdelete
     command! Tabe tabedit
+    command! Tabc tabclose
 """ }
 
 """ Configuration - Auto-reload changed files {
