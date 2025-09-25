@@ -665,8 +665,14 @@
 
     " Don't overwrite yank register when pasting over existing text
     " in visual mode
+    xnoremap p "_dP
+
+    " Modern alternative for the below: see `:help v_P`
+    " xnoremap p P
+
+    " Old map which served me for years:
     " http://stackoverflow.com/questions/290465/vim-how-to-paste-over-without-overwriting-register
-    xnoremap p pgvy
+    " xnoremap p pgvy
 """ }
 
 """ { Mappings - OS Copy and Paste
@@ -693,6 +699,10 @@
     " <Leader>P to copy absolute (P)ath to clipboard
     nnoremap <Leader>p :let @+ = fnamemodify(expand('%'), ':~:.')<CR>:echo 'Copied path: ' . @+<CR>
     nnoremap <Leader>P :let @+ = expand('%:p')<CR>:echo 'Copied path: ' . @+<CR>
+
+    " Auto-copy visual mode yanks to system clipboard
+    " This maps y in visual mode to yank to both default and system registers
+    xnoremap y "+y
 
     " Avoid undesired side-effects while pasting
     " This hack automatically toggles :set paste just prior to a paste and
