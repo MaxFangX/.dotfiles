@@ -57,7 +57,7 @@
   "rust-analyzer.inlayHints.parameterHints.enable": true,
   "rust-analyzer.inlayHints.chainingHints.enable": true,
   "rust-analyzer.rustfmt.extraArgs": [
-    "+nightly-2024-05-03"
+    "+nightly-2025-10-16"
   ],
   "rust-analyzer.server.path": "${userHome}/.cargo/bin/rust-analyzer",
   "rust-analyzer.updates.checkOnStartup": false,
