@@ -781,10 +781,18 @@
 """ }
 
 """ { Mappings - Terminal mode
-    " <C-Space> to exit terminal mode
-    " More ergonomic than the default <C-\><C-n>
-    " Using <C-Space> to avoid any conflicts with <Esc> sequences
-    tnoremap <C-Space> <C-\><C-n>
+    " <Esc> to exit terminal mode, with special handling for fzf
+    " - In fzf: <Esc> exits terminal mode AND closes the window (1 keypress)
+    " - In other terminals: <Esc> just exits terminal mode
+    augroup terminal_escape
+        autocmd!
+        autocmd TermOpen * if &filetype == 'fzf' || bufname('%') =~# 'fzf' |
+            \ tnoremap <buffer> <silent> <Esc> <C-\><C-n>:close<CR> |
+            \ nnoremap <buffer> <silent> q :close<CR> |
+        \ else |
+            \ tnoremap <buffer> <Esc> <C-\><C-n> |
+        \ endif
+    augroup END
 """ }
 
 """ { Mappings - Quick edit vim configs while coding
