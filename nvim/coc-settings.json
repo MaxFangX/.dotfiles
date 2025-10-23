@@ -48,7 +48,9 @@
     "/tmp/rust-analyzer-check"
   ],
   "rust-analyzer.cargo.extraEnv": {
-    "LEXE_SKIP_BUILDSCRIPT": "1"
+    "LEXE_SKIP_BUILDSCRIPT": "1",
+    "BITCOIND_SKIP_DOWNLOAD": "1",
+    "ELECTRSD_SKIP_DOWNLOAD": "1"
   },
   "rust-analyzer.diagnostics.disabled": [
     "inactive-code"
