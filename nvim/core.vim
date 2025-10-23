@@ -784,8 +784,11 @@
     " <Esc> to exit terminal mode, with special handling for fzf
     " - In fzf: <Esc> exits terminal mode AND closes the window (1 keypress)
     " - In other terminals: <Esc> just exits terminal mode
+    " Also disable line numbers and color column in terminal windows
     augroup terminal_escape
         autocmd!
+        autocmd TermOpen * setlocal nonumber norelativenumber
+            \ colorcolumn=
         autocmd TermOpen * if &filetype == 'fzf' || bufname('%') =~# 'fzf' |
             \ tnoremap <buffer> <silent> <Esc> <C-\><C-n>:close<CR> |
             \ nnoremap <buffer> <silent> q :close<CR> |
