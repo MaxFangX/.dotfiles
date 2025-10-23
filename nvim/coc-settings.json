@@ -52,7 +52,6 @@
     "BITCOIND_SKIP_DOWNLOAD": "1",
     "ELECTRSD_SKIP_DOWNLOAD": "1"
   },
-  "rust-analyzer.cargo.cfgs": [],
   "rust-analyzer.diagnostics.disabled": [
     "inactive-code"
   ],
