@@ -11,6 +11,9 @@ ln -sfF ~/.dotfiles/nvim/init.lua ~/.ideavimrc # IntelliJ's copy
 # Cargo
 mkdir -p ~/.cargo
 ln -sfF ~/.dotfiles/cargo/config.toml ~/.cargo/config.toml
+# Claude
+mkdir -p ~/.claude
+ln -sfF ~/.dotfiles/GLOBAL_CLAUDE.md ~/.claude/CLAUDE.md
 # Karabiner
 mkdir -p ~/.config/karabiner/assets
 ln -sfn \
