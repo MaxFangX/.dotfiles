@@ -939,7 +939,10 @@ return {
     })
 
     -- Set colorcolumn at 80, 100 chars for vgit diff preview windows
-    vim.api.nvim_create_autocmd({'BufWinEnter', 'FileType'}, {
+    -- Track which windows we've configured to avoid redundant updates
+    local colorcolumn_configured = {}
+
+    vim.api.nvim_create_autocmd('BufWinEnter', {
       group = vgit_group,
       pattern = '*',
       callback = function()
@@ -950,44 +953,51 @@ return {
         local bufnr = vim.api.nvim_get_current_buf()
         local winnr = vim.api.nvim_get_current_win()
 
+        -- Early exit if already configured or not a nofile buffer
+        if colorcolumn_configured[winnr] or vim.bo[bufnr].buftype ~= 'nofile' then
+          return
+        end
+
         -- Check if this is a vgit diff buffer
-        local is_vgit_diff = vim.bo[bufnr].buftype == 'nofile'
-                          and vim.bo[bufnr].modifiable == false
+        local is_vgit_diff = vim.bo[bufnr].modifiable == false
                           and vim.bo[bufnr].buflisted == false
                           and vim.bo[bufnr].bufhidden == 'wipe'
                           and (vim.wo[winnr].cursorbind
                                or vim.wo[winnr].scrollbind)
 
         if is_vgit_diff then
+          colorcolumn_configured[winnr] = true
+
           -- Detect line number prefix width and set colorcolumn
-          local function set_colorcolumn()
-            local lines = vim.api.nvim_buf_get_lines(
-              bufnr, 0, math.min(10, vim.api.nvim_buf_line_count(bufnr)), false
-            )
+          local lines = vim.api.nvim_buf_get_lines(
+            bufnr, 0, math.min(10, vim.api.nvim_buf_line_count(bufnr)), false
+          )
 
-            -- Find line number prefix width
-            local offset = 0
-            for _, line in ipairs(lines) do
-              local prefix = line:match("^(%s*%d+%s)")
-              if prefix then
-                offset = #prefix
-                break
-              end
+          -- Find line number prefix width
+          local offset = 0
+          for _, line in ipairs(lines) do
+            local prefix = line:match("^(%s*%d+%s)")
+            if prefix then
+              offset = #prefix
+              break
             end
-
-            -- Apply offset to standard column positions
-            local col80 = 80 + offset
-            local col100 = 100 + offset
-            vim.wo[winnr].colorcolumn = col80 .. ',' .. col100
           end
 
-          -- Set immediately and after a delay to ensure it sticks
-          set_colorcolumn()
-          vim.defer_fn(function()
-            if vim.api.nvim_win_is_valid(winnr) then
-              set_colorcolumn()
-            end
-          end, 100)
+          -- Apply offset to standard column positions
+          local col80 = 80 + offset
+          local col100 = 100 + offset
+          vim.wo[winnr].colorcolumn = col80 .. ',' .. col100
+        end
+      end
+    })
+
+    -- Clean up colorcolumn tracking when windows close
+    vim.api.nvim_create_autocmd('WinClosed', {
+      group = vgit_group,
+      callback = function(args)
+        local winnr = tonumber(args.match)
+        if winnr then
+          colorcolumn_configured[winnr] = nil
         end
       end
     })
