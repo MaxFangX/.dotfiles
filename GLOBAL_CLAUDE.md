@@ -99,7 +99,3 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 Please DON'T include this. While I value your work, this adds needless noise.
-
-Finally, after every commit, you should also rebase your branch onto the parent.
-
-
