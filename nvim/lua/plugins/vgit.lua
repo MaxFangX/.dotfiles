@@ -949,21 +949,6 @@ return {
       end
     })
 
-    -- Restore window when closing vgit preview with 'q'
-    vim.api.nvim_create_autocmd('BufWipeout', {
-      group = vgit_group,
-      pattern = '*',
-      callback = function()
-        local buftype = vim.bo.buftype
-        -- Check if this is a vgit preview buffer being closed
-        if buftype == 'nofile' and coming_from_vgit then
-          vim.schedule(function()
-            helpers.restore_window()
-          end)
-        end
-      end
-    })
-
     -- Force gutter refresh when returning from vgit preview
     vim.api.nvim_create_autocmd({'WinEnter', 'BufEnter'}, {
       group = vgit_group,
