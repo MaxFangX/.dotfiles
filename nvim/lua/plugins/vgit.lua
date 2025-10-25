@@ -20,6 +20,9 @@ return {
     local prev_buffer = nil
     local prev_cursor_line = nil  -- Track cursor position in diff view
 
+    -- Configuration flags
+    local enable_gutter_refresh = false  -- Toggle gutter refresh on exit
+
     -- Track timers for cleanup to prevent leaks
     local pending_timers = {}
 
@@ -976,32 +979,34 @@ return {
           helpers.restore_window()
 
           -- Force gutter refresh with a simplified approach
-          defer_fn_tracked(function()
-            local bufnr = vim.api.nvim_get_current_buf()
-            if not vim.api.nvim_buf_is_valid(bufnr) then
-              return
-            end
+          if enable_gutter_refresh then
+            defer_fn_tracked(function()
+              local bufnr = vim.api.nvim_get_current_buf()
+              if not vim.api.nvim_buf_is_valid(bufnr) then
+                return
+              end
 
-            -- Clear existing signs to force refresh
-            vim.fn.sign_unplace('vgit_signs', { buffer = bufnr })
+              -- Clear existing signs to force refresh
+              vim.fn.sign_unplace('vgit_signs', { buffer = bufnr })
 
-            -- Toggle gutter to force vgit to re-detect changes
-            vim.schedule(function()
-              pcall(function()
-                local vgit = require('vgit')
-                vgit.toggle_live_gutter()
+              -- Toggle gutter to force vgit to re-detect changes
+              vim.schedule(function()
+                pcall(function()
+                  local vgit = require('vgit')
+                  vgit.toggle_live_gutter()
 
-                -- Toggle back after a brief delay
-                defer_fn_tracked(function()
-                  pcall(function()
-                    vgit.toggle_live_gutter()
-                    -- Restore syntax if it was lost during toggle
-                    restore_syntax_if_needed(bufnr)
-                  end)
-                end, 100)
+                  -- Toggle back after a brief delay
+                  defer_fn_tracked(function()
+                    pcall(function()
+                      vgit.toggle_live_gutter()
+                      -- Restore syntax if it was lost during toggle
+                      restore_syntax_if_needed(bufnr)
+                    end)
+                  end, 100)
+                end)
               end)
-            end)
-          end, 100)
+            end, 100)
+          end
         end
       end
     })
