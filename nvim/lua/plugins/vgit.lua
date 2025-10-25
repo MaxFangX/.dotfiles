@@ -903,6 +903,8 @@ return {
         -- vgit preview buffers have buftype 'nofile' and empty filetype
         if buftype == 'nofile' and filetype == '' then
           coming_from_vgit = true
+          -- Cancel any pending timers from previous preview to avoid races
+          cancel_pending_timers()
         end
       end
     })
