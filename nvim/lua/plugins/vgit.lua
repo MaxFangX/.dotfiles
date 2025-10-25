@@ -18,13 +18,14 @@ return {
     -- Track the window and buffer we came from before opening vgit preview
     local prev_window = nil
     local prev_buffer = nil
-    local prev_cursor_line = nil  -- Track cursor position in diff view
+    local prev_cursor_pos = nil  -- Track cursor position {line, col}
 
     -- Configuration flags
     local enable_gutter_refresh = false  -- Toggle gutter refresh on exit
 
     -- Track timers for cleanup to prevent leaks
     local pending_timers = {}
+    local cursor_restore_timer = nil
 
     -- Helper to cancel all pending timers and clear the list
     local function cancel_pending_timers()
@@ -35,6 +36,7 @@ return {
         end
       end
       pending_timers = {}
+      -- Don't cancel cursor_restore_timer - that needs to complete
     end
 
     -- Wrapper around vim.defer_fn that tracks timers for cleanup
@@ -72,11 +74,36 @@ return {
     helpers.save_window = function()
       prev_window = vim.api.nvim_get_current_win()
       prev_buffer = vim.api.nvim_get_current_buf()
-      prev_cursor_line = vim.fn.line('.')  -- Save cursor position
+      prev_cursor_pos = vim.api.nvim_win_get_cursor(0)  -- {line, col}
+    end
+
+    -- Helper to restore cursor position for untracked files after opening diff
+    helpers.restore_cursor_for_untracked = function(saved_pos)
+      if cursor_restore_timer and not cursor_restore_timer:is_closing() then
+        cursor_restore_timer:stop()
+        cursor_restore_timer:close()
+      end
+      cursor_restore_timer = vim.loop.new_timer()
+      cursor_restore_timer:start(200, 0, function()
+        vim.schedule(function()
+          pcall(vim.api.nvim_win_set_cursor, 0, saved_pos)
+          vim.cmd('normal! zz')
+          if not cursor_restore_timer:is_closing() then
+            cursor_restore_timer:close()
+          end
+        end)
+      end)
     end
 
     -- Helper to restore previous window and buffer after closing vgit preview
     helpers.restore_window = function()
+      -- Cancel cursor restore timer if it's still pending
+      if cursor_restore_timer and not cursor_restore_timer:is_closing() then
+        cursor_restore_timer:stop()
+        cursor_restore_timer:close()
+        cursor_restore_timer = nil
+      end
+
       if prev_window and vim.api.nvim_win_is_valid(prev_window) then
         vim.api.nvim_set_current_win(prev_window)
 
@@ -110,8 +137,9 @@ return {
 
         if has_hunks or is_untracked then
           -- File still has hunks or is untracked - restore cursor position
-          if prev_cursor_line then
-            vim.cmd('normal! ' .. prev_cursor_line .. 'Gzz')
+          if prev_cursor_pos then
+            pcall(vim.api.nvim_win_set_cursor, 0, prev_cursor_pos)
+            vim.cmd('normal! zz')
           end
         else
           -- No hunks left in file - jump to next file with hunks
@@ -122,7 +150,7 @@ return {
 
         prev_window = nil
         prev_buffer = nil
-        prev_cursor_line = nil
+        prev_cursor_pos = nil
 
         -- Show count of remaining unstaged and untracked files
         local unstaged_count = #vim.fn.systemlist('git diff --name-only')
@@ -571,12 +599,22 @@ return {
 
         -- (g)it (d)iff - Open diff preview of current buffer
         ['n gd'] = function()
+          local is_untracked = helpers.is_untracked(vim.fn.expand('%:p'))
+          local saved_pos = vim.api.nvim_win_get_cursor(0)
           helpers.save_window()
           require('vgit').buffer_diff_preview()
+          if is_untracked then
+            helpers.restore_cursor_for_untracked(saved_pos)
+          end
         end,
         ['n <LocalLeader>gd'] = function()
+          local is_untracked = helpers.is_untracked(vim.fn.expand('%:p'))
+          local saved_pos = vim.api.nvim_win_get_cursor(0)
           helpers.save_window()
           require('vgit').buffer_diff_preview()
+          if is_untracked then
+            helpers.restore_cursor_for_untracked(saved_pos)
+          end
         end,
 
         -- (g)it (h)over hunk - Show hunk preview
@@ -955,8 +993,8 @@ return {
                           and vim.wo[winnr].cursorbind
 
         if is_vgit_diff then
-          -- Record the cursor line in the diff view
-          prev_cursor_line = vim.fn.line('.')
+          -- Record the cursor position in the diff view
+          prev_cursor_pos = vim.api.nvim_win_get_cursor(0)
         end
       end
     })
