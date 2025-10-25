@@ -61,11 +61,18 @@ return {
       end)
     end
 
+    -- Check if file is untracked
+    helpers.is_untracked = function(filepath)
+      local relative = vim.fn.fnamemodify(filepath, ':.')
+      return vim.fn.system('git ls-files --others --exclude-standard ' ..
+        vim.fn.shellescape(relative)):match('%S') ~= nil
+    end
+
     -- Helper to save current window and buffer before opening vgit preview
     helpers.save_window = function()
       prev_window = vim.api.nvim_get_current_win()
       prev_buffer = vim.api.nvim_get_current_buf()
-      prev_cursor_line = nil  -- Reset cursor tracking
+      prev_cursor_line = vim.fn.line('.')  -- Save cursor position
     end
 
     -- Helper to restore previous window and buffer after closing vgit preview
@@ -88,6 +95,9 @@ return {
         -- Option 3: Smart behavior based on remaining hunks
         -- (currently active)
         local current_file = vim.fn.expand('%:p')
+        local is_untracked = helpers.is_untracked(current_file)
+
+        -- Check if file has unstaged hunks
         local diff_output = vim.fn.systemlist(
           'git diff -U0 ' .. vim.fn.shellescape(current_file))
         local has_hunks = false
@@ -98,8 +108,8 @@ return {
           end
         end
 
-        if has_hunks then
-          -- File still has hunks - restore cursor position if we have it
+        if has_hunks or is_untracked then
+          -- File still has hunks or is untracked - restore cursor position
           if prev_cursor_line then
             vim.cmd('normal! ' .. prev_cursor_line .. 'Gzz')
           end
