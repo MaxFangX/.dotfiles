@@ -73,12 +73,24 @@ return {
         prev_buffer = nil
         prev_cursor_line = nil
 
-        -- Show count of remaining unstaged files
-        local unstaged_files = vim.fn.systemlist('git diff --name-only')
-        local count = #unstaged_files
-        if count > 0 then
-          print(string.format('%d file%s with unstaged changes remaining',
-                            count, count == 1 and '' or 's'))
+        -- Show count of remaining unstaged and untracked files
+        local unstaged_count = #vim.fn.systemlist('git diff --name-only')
+        local untracked_count = #vim.fn.systemlist(
+          'git ls-files --others --exclude-standard')
+        local total_count = unstaged_count + untracked_count
+
+        if total_count > 0 then
+          local parts = {}
+          if unstaged_count > 0 then
+            table.insert(parts, string.format('%d unstaged', unstaged_count))
+          end
+          if untracked_count > 0 then
+            table.insert(parts, string.format('%d untracked', untracked_count))
+          end
+          print(string.format('%d file%s remaining (%s)',
+                            total_count,
+                            total_count == 1 and '' or 's',
+                            table.concat(parts, ', ')))
         else
           print('All files staged!')
         end
@@ -121,13 +133,6 @@ return {
       local current_file = vim.fn.expand('%:p')
       local current_line = vim.fn.line('.')
 
-      -- Get all files with unstaged changes
-      local unstaged_files = vim.fn.systemlist('git diff --name-only')
-      if #unstaged_files == 0 then
-        print('No unstaged changes found')
-        return
-      end
-
       -- Get git root to convert relative paths to absolute
       local git_root_output = vim.fn.systemlist(
         'git rev-parse --show-toplevel')
@@ -137,8 +142,20 @@ return {
         return
       end
 
+      -- Get all files with unstaged changes and untracked files
+      local unstaged_files = vim.fn.systemlist('git diff --name-only')
+      local untracked_files = vim.fn.systemlist(
+        'git ls-files --others --exclude-standard')
+
+      if #unstaged_files == 0 and #untracked_files == 0 then
+        print('No unstaged changes or untracked files found')
+        return
+      end
+
       -- Build list of all hunks across all files
       local all_hunks = {}
+
+      -- Add hunks from unstaged files
       for _, file in ipairs(unstaged_files) do
         local diff_output = vim.fn.systemlist(
           'git diff -U0 ' .. vim.fn.shellescape(file)
@@ -162,10 +179,22 @@ return {
                 git_root .. '/' .. file, ':p'
               ),
               start_line = start_line,
-              end_line = end_line
+              end_line = end_line,
+              is_untracked = false
             })
           end
         end
+      end
+
+      -- Add untracked files (entire file is a "hunk")
+      for _, file in ipairs(untracked_files) do
+        table.insert(all_hunks, {
+          file = file,
+          absolute_file = vim.fn.fnamemodify(git_root .. '/' .. file, ':p'),
+          start_line = 1,
+          end_line = 1,
+          is_untracked = true
+        })
       end
 
       if #all_hunks == 0 then
@@ -390,8 +419,9 @@ return {
 
       -- Report what we did
       -- Use relative file name for cleaner output
-      print(string.format('Jumped to %s hunk: %s:%d',
-                        action_description, target_hunk.file,
+      local file_status = target_hunk.is_untracked and 'untracked file' or 'hunk'
+      print(string.format('Jumped to %s %s: %s:%d',
+                        action_description, file_status, target_hunk.file,
                         target_hunk.start_line))
     end
 
