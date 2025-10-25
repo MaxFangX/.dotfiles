@@ -20,6 +20,44 @@ return {
     local prev_buffer = nil
     local prev_cursor_line = nil  -- Track cursor position in diff view
 
+    -- Track timers for cleanup to prevent leaks
+    local pending_timers = {}
+
+    -- Helper to cancel all pending timers and clear the list
+    local function cancel_pending_timers()
+      for _, timer in ipairs(pending_timers) do
+        if timer and not timer:is_closing() then
+          timer:stop()
+          timer:close()
+        end
+      end
+      pending_timers = {}
+    end
+
+    -- Wrapper around vim.defer_fn that tracks timers for cleanup
+    local function defer_fn_tracked(fn, ms)
+      local timer = vim.loop.new_timer()
+      table.insert(pending_timers, timer)
+
+      timer:start(ms, 0, function()
+        vim.schedule(function()
+          -- Remove this timer from pending list when it fires
+          for i, t in ipairs(pending_timers) do
+            if t == timer then
+              table.remove(pending_timers, i)
+              break
+            end
+          end
+
+          fn()
+
+          if not timer:is_closing() then
+            timer:close()
+          end
+        end)
+      end)
+    end
+
     -- Helper to save current window and buffer before opening vgit preview
     helpers.save_window = function()
       prev_window = vim.api.nvim_get_current_win()
@@ -877,7 +915,7 @@ return {
         -- Only run when returning to normal buffer from vgit
         if buftype == '' and coming_from_vgit then
           -- Defer to ensure buffer is fully loaded
-          vim.defer_fn(function()
+          defer_fn_tracked(function()
             if vim.api.nvim_buf_is_valid(bufnr) then
               restore_syntax_if_needed(bufnr)
             end
@@ -938,7 +976,7 @@ return {
           helpers.restore_window()
 
           -- Force gutter refresh with a simplified approach
-          vim.defer_fn(function()
+          defer_fn_tracked(function()
             local bufnr = vim.api.nvim_get_current_buf()
             if not vim.api.nvim_buf_is_valid(bufnr) then
               return
@@ -954,7 +992,7 @@ return {
                 vgit.toggle_live_gutter()
 
                 -- Toggle back after a brief delay
-                vim.defer_fn(function()
+                defer_fn_tracked(function()
                   pcall(function()
                     vgit.toggle_live_gutter()
                     -- Restore syntax if it was lost during toggle
