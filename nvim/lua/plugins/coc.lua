@@ -135,6 +135,10 @@ return {
         -- (f)lutter (p)ub get
         vim.keymap.set("n", "<LocalLeader>fp",
           ":CocCommand flutter.pub.get<CR>", opts)
+
+        -- (e)rrors: Show all diagnostics in telescope
+        vim.keymap.set("n", "<Leader>e",
+          ":lua require('coc_telescope').diagnostics()<CR>", opts)
     --- }
 
     --- { General configuration
