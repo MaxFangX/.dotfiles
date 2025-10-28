@@ -64,5 +64,6 @@
   ],
   "rust-analyzer.server.path": "${userHome}/.cargo/bin/rust-analyzer",
   "rust-analyzer.updates.checkOnStartup": false,
-  "suggest.noselect": true
+  "suggest.noselect": true,
+  "sumneko-lua.enableNvimLuaDev": true
 }
