@@ -2,7 +2,7 @@
 rustc-wrapper = "/Users/fang/.cargo/bin/sccache"
 
 # Include links to definitions when viewing source in generated docs
-rustdocflags = ["-Z", "unstable-options", "--generate-link-to-definition"]
+# rustdocflags = ["-Z", "unstable-options", "--generate-link-to-definition"]
 
 [target.x86_64-fortanix-unknown-sgx]
 linker = "x86_64-unknown-linux-gnu-ld"
