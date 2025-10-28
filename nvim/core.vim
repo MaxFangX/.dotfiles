@@ -706,10 +706,10 @@
     " vmap <C-x> :!pbcopy<CR>
     " vmap <C-c> :w !pbcopy<CR><CR>
 
-    " <Leader>p to copy relative (p)ath to clipboard
-    " <Leader>P to copy absolute (P)ath to clipboard
-    nnoremap <Leader>p :let @+ = fnamemodify(expand('%'), ':~:.') <Bar> let @" = @+ <Bar> echo 'Copied path: ' . @+<CR>
-    nnoremap <Leader>P :let @+ = expand('%:p') <Bar> let @" = @+ <Bar> echo 'Copied path: ' . @+<CR>
+    " <Leader>y to (y)ank relative filepath to clipboard
+    " <Leader>Y to (Y)ank absolute filepath to clipboard
+    nnoremap <Leader>y :let @+ = fnamemodify(expand('%'), ':~:.') <Bar> let @" = @+ <Bar> echo 'Copied path: ' . @+<CR>
+    nnoremap <Leader>Y :let @+ = expand('%:p') <Bar> let @" = @+ <Bar> echo 'Copied path: ' . @+<CR>
 
     " Auto-copy visual mode yanks to system clipboard
     " This maps y in visual mode to yank to both default and system registers
