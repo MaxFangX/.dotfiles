@@ -730,6 +730,15 @@
     endfunction
 """ }
 
+""" { Mappings - Buffer navigation
+    " <Leader>p to go to (p)revious buffer
+    " <Leader>n to go to (n)ext buffer
+    " <Leader>N to go to previous buffer
+    nnoremap <Leader>p :bp<CR>
+    nnoremap <Leader>n :bn<CR>
+    nnoremap <Leader>N :bp<CR>
+""" }
+
 """ { Mappings - Operator pending mappings
     " From 'Learn Vimscript the Hard Way'
 
