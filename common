@@ -267,6 +267,7 @@ strip-ansi() {
 alias v=nvim
 alias vi=nvim
 alias vim=nvim
+alias vs="nvim -S"
 
 # Ripgrep
 alias rgf="rg --files"
