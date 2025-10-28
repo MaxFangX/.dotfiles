@@ -53,7 +53,8 @@
     "ELECTRSD_SKIP_DOWNLOAD": "1"
   },
   "rust-analyzer.diagnostics.disabled": [
-    "inactive-code"
+    "inactive-code",
+    "unlinked-file"
   ],
   "rust-analyzer.inlayHints.typeHints.enable": true,
   "rust-analyzer.inlayHints.parameterHints.enable": true,
