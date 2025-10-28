@@ -31,5 +31,6 @@ Please DON'T include this. While I value your work, this adds needless noise.
 
 ## Neovim repo clones
 
-I have most of my neovim plugins cloned to `~/dev/nvim`.
+I have most of my neovim plugins cloned to `~/dev/nvim` run `ls ~/dev/nvim`
+before beginning your work to see what repos are available.
 If you are debugging something, chances are you can find the source in there.
