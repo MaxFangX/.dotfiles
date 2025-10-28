@@ -254,6 +254,13 @@
     command! Tabc tabclose
 """ }
 
+""" Configuration - Session commands {
+    " :mwq - Make session, write all, and quit all
+    command! Mwq mks! | wqa
+    " :mq - Make session and quit all
+    command! Mq mks! | qa
+""" }
+
 """ Configuration - Auto-reload changed files {
     " Automatically reload files changed outside of Vim
     " This is useful when files are modified by linters or AI tools
@@ -286,6 +293,10 @@
 """ { Command mode mappings
     " Replace ':vhelp' with ':vert help' to open in vertical split
     cabbrev vhelp vert help
+
+    " Session commands
+    cabbrev mwq Mwq
+    cabbrev mq Mq
 
     " Replace :Q with :q; sometimes accidentally make it caps
     " - Disabled, can't search for 'Q'
