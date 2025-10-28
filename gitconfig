@@ -103,4 +103,4 @@ autoSetupRemote = true
     merge-conflict-theirs-diff-header-decoration-style = ''
 
 [blame]
-	ignoreRevsFile = .git-blame-ignore-revs
+	# ignoreRevsFile = .git-blame-ignore-revs
