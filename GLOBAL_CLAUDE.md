@@ -65,6 +65,14 @@ commit to your current branch rather than to the parent branch or `master`.
   `git diff`, or similar. If I have made an error by asking you to commit
   changes without `git add`ing them first, please stop and let me know.
 
+## Git commands in other directories
+
+When running git commands in directories other than the current working
+directory, always use `cd foo && git bar` instead of `git -C foo bar`.
+This avoids needing permission approval for each git command. For example:
+- Use: `cd ~/dev/nvim/vgit.nvim && git status`
+- Not: `git -C ~/dev/nvim/vgit.nvim status`
+
 Your commits should be styled like so:
 
 ```
