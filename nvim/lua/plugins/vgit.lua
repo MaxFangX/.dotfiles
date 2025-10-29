@@ -231,7 +231,7 @@ return {
         -- Refresh quickfix list if it's open
         local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
         if qf_winid ~= 0 then
-          helpers.quickfix_unstaged_hunks(false)  -- don't log status
+          require('git_hunks').populate_quickfix(false)  -- don't log status
         end
       end
     end
@@ -568,68 +568,6 @@ return {
       helpers.jump_to_unstaged_hunk('prev')
     end
 
-    -- Generate quickfix list with individual hunks for unstaged changes
-    helpers.quickfix_unstaged_hunks = function(log_status)
-      local items = {}
-
-      -- Get unstaged files and their hunks
-      local unstaged_files = vim.fn.systemlist('git diff --name-only')
-      for _, file in ipairs(unstaged_files) do
-        -- Get hunks for this file
-        local diff_output = vim.fn.systemlist(
-          'git diff -U0 ' .. vim.fn.shellescape(file)
-        )
-
-        local hunk_num = 0
-        for _, line in ipairs(diff_output) do
-          -- Parse unified diff header: @@ -l,s +l,s @@
-          local new_line = line:match('^@@.*%+(%d+)')
-          if new_line then
-            hunk_num = hunk_num + 1
-            table.insert(items, {
-              filename = file,
-              lnum = tonumber(new_line),
-              text = string.format('Hunk %d: Unstaged changes', hunk_num)
-            })
-          end
-        end
-
-        -- If no hunks found (shouldn't happen), add file with line 1
-        if hunk_num == 0 then
-          table.insert(items, {
-            filename = file,
-            lnum = 1,
-            text = 'Unstaged changes'
-          })
-        end
-      end
-
-      -- Get untracked files (not in git tree)
-      local untracked_files = vim.fn.systemlist(
-        'git ls-files --others --exclude-standard'
-      )
-      for _, file in ipairs(untracked_files) do
-        table.insert(items, {
-          filename = file,
-          lnum = 1,
-          text = 'Untracked file'
-        })
-      end
-
-      if #items == 0 then
-        -- Close quickfix window if open
-        vim.cmd('cclose')
-        if log_status then
-          print('No unstaged changes or untracked files found')
-        end
-      else
-        vim.fn.setqflist(items, 'r')
-        vim.cmd('copen')
-        if log_status then
-          print(string.format('Found %d unstaged hunks', #items))
-        end
-      end
-    end
 
     local vgit = require('vgit')
     vgit.setup({
@@ -716,12 +654,10 @@ return {
         end,
         -- (q)uickfix list of unstaged hunks
         ['n gq'] = function()
-          local log_status = true
-          helpers.quickfix_unstaged_hunks(log_status)
+          require('git_hunks').populate_quickfix(true)
         end,
         ['n <LocalLeader>gq'] = function()
-          local log_status = true
-          helpers.quickfix_unstaged_hunks(log_status)
+          require('git_hunks').populate_quickfix(true)
         end,
 
         -- (s)tage current hunk
