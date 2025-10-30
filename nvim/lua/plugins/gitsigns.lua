@@ -41,7 +41,13 @@ return {
         algorithm = 'histogram',
         indent_heuristic = true,
       },
+      -- Prevent gitsigns from attaching to any buffer to avoid interfering
+      -- with vgit's gutter colors (both use GitSigns* highlight groups)
+      ---@diagnostic disable-next-line: unused-local
       on_attach = function(bufnr)
+        return false  -- Disable all gitsigns functionality
+
+        --[[ Old gitsigns keymaps (disabled):
         local gs = require('gitsigns')
 
         local function map(mode, lhs, rhs, opts)
@@ -84,15 +90,16 @@ return {
 
         -- Text object for hunks
         map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        ]]--
       end
     })
 
-    -- Custom highlights to match vgit style
-    vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#479B36' })
-    vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#D79921' })
-    vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#A02A11' })
-    vim.api.nvim_set_hl(0, 'GitSignsAddLn', { bg = '#001a00' })
-    vim.api.nvim_set_hl(0, 'GitSignsDeleteLn', { bg = '#330011' })
-    vim.api.nvim_set_hl(0, 'GitSignsChangeLn', { bg = '#1a1a00' })
+    -- Custom highlights to match vgit style (disabled as we use vgit currently)
+    -- vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#479B36' })
+    -- vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#D79921' })
+    -- vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#A02A11' })
+    -- vim.api.nvim_set_hl(0, 'GitSignsAddLn', { bg = '#001a00' })
+    -- vim.api.nvim_set_hl(0, 'GitSignsDeleteLn', { bg = '#330011' })
+    -- vim.api.nvim_set_hl(0, 'GitSignsChangeLn', { bg = '#1a1a00' })
   end,
 }
