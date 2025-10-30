@@ -255,6 +255,8 @@
 """ }
 
 """ Configuration - Session commands {
+    " :m - Make session
+    command! M mks!
     " :mwq - Make session, write all, and quit all
     command! Mwq mks! | wqa
     " :mq - Make session and quit all
@@ -295,6 +297,7 @@
     cabbrev vhelp vert help
 
     " Session commands
+    cabbrev m M
     cabbrev mwq Mwq
     cabbrev mq Mq
 
