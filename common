@@ -429,6 +429,12 @@ alias gbl="git blame"
 
 alias grs="git restore"
 alias grss="git restore --staged"
+# Pull remote changes as unstaged while keeping staged changes intact
+grsr() {
+  git fetch && \
+  git reset --soft @{u} && \
+  git restore --worktree --source=HEAD -- .
+}
 
 alias gsur="git submodule update --recursive"
 alias gsuri="git submodule update --recursive --init"
