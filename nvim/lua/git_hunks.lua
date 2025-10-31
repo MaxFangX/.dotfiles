@@ -57,6 +57,36 @@ function M.get_all_hunks()
   return items
 end
 
+-- Get files with unstaged changes or untracked files
+-- Returns: array of { file, text, is_untracked }
+function M.get_files_with_changes()
+  local items = {}
+
+  -- Get unstaged files
+  local unstaged_files = vim.fn.systemlist('git diff --name-only')
+  for _, file in ipairs(unstaged_files) do
+    table.insert(items, {
+      file = file,
+      text = 'Unstaged changes',
+      is_untracked = false,
+    })
+  end
+
+  -- Get untracked files (not in git tree)
+  local untracked_files = vim.fn.systemlist(
+    'git ls-files --others --exclude-standard'
+  )
+  for _, file in ipairs(untracked_files) do
+    table.insert(items, {
+      file = file,
+      text = 'Untracked file',
+      is_untracked = true,
+    })
+  end
+
+  return items
+end
+
 -- Populate quickfix list with unstaged hunks
 function M.populate_quickfix(log_status)
   local hunks = M.get_all_hunks()

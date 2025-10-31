@@ -46,41 +46,61 @@ return {
       -- Load fzf extension
       telescope.load_extension("fzf")
 
-      -- Git hunks picker (<Leader>g)
+      -- Git files picker (<Leader>g)
       vim.keymap.set('n', '<Leader>g', function()
         local pickers = require("telescope.pickers")
         local finders = require("telescope.finders")
-        local make_entry = require("telescope.make_entry")
         local conf = require("telescope.config").values
+        local entry_display = require("telescope.pickers.entry_display")
 
         local git_hunks = require('git_hunks')
-        local hunks = git_hunks.get_all_hunks()
+        local files = git_hunks.get_files_with_changes()
 
-        if #hunks == 0 then
+        if #files == 0 then
           print('No unstaged changes or untracked files found')
           return
         end
 
-        -- Convert to quickfix format for telescope
-        local entries = {}
-        for _, hunk in ipairs(hunks) do
-          table.insert(entries, {
-            filename = hunk.file,
-            lnum = hunk.lnum,
-            col = 1,
-            text = hunk.text,
+        -- Custom entry maker to show status first
+        local displayer = entry_display.create({
+          separator = " │ ",
+          items = {
+            { width = 16 },  -- Status column
+            { remaining = true },  -- Filename column
+          },
+        })
+
+        local make_display = function(entry)
+          return displayer({
+            entry.status,
+            entry.filename,
           })
         end
 
-        -- Use telescope's built-in quickfix entry maker
+        local entry_maker = function(item)
+          return {
+            value = item,
+            display = make_display,
+            ordinal = item.text .. " " .. item.file,
+            filename = item.file,
+            lnum = 1,
+            status = item.text,
+          }
+        end
+
         pickers.new({}, {
-          prompt_title = "Git Hunks",
+          prompt_title = "Git Files (Unstaged)",
           finder = finders.new_table({
-            results = entries,
-            entry_maker = make_entry.gen_from_quickfix({}),
+            results = files,
+            entry_maker = entry_maker,
           }),
           sorter = conf.generic_sorter({}),
           previewer = conf.qflist_previewer({}),
+          layout_config = {
+            width = 0.55,
+            height = 0.75,
+            preview_width = 0.55,
+          },
         }):find()
       end, { noremap = true, silent = true })
     end,
