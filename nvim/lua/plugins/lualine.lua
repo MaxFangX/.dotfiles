@@ -118,6 +118,66 @@ return {
                             alternate_file = '',  -- Remove # for alternate file
                             directory = '',
                         },
+                        -- Custom formatter: abbreviate based on flags below
+                        fmt = function(name, context)
+                            -- - false -> "backend/src/server/lexe.rs"
+                            -- - true  -> "b/s/s/lexe.rs"
+                            local abbreviate_relative = false
+                            -- - false -> "/Users/fang/.dotfiles/nvim/init.lua"
+                            -- - true  -> "/U/f/.d/n/init.lua"
+                            local abbreviate_absolute = false
+
+                            local file = vim.api.nvim_buf_get_name(
+                              context.bufnr)
+                            if file == '' then
+                                return name  -- [No Name]
+                            end
+
+                            local home = vim.env.HOME
+
+                            -- Handle Cargo registry sources
+                            -- Pattern: "$HOME/.cargo/registry/src/<registry>/..."
+                            -- Output: "<index.crates.io>/webpki-roots-0.26.7/src/lib.rs"
+                            local cargo_pattern = '^' .. home ..
+                              '/.cargo/registry/src/([^/]+)/(.+)$'
+                            local registry, cargo_path = file:match(
+                              cargo_pattern)
+                            if registry then
+                                -- Extract registry name (strip hash suffix)
+                                local registry_name = registry:match(
+                                  '^(.-)%-[0-9a-f]+$') or registry
+                                return '<' .. registry_name .. '>/' ..
+                                  cargo_path
+                            end
+
+                            -- Handle Rust standard library sources
+                            -- Pattern: "$HOME/.rustup/toolchains/*/lib/rustlib/src/rust/..."
+                            -- Output: "<rust>/library/core/src/option.rs"
+                            local rustup_pattern = '^' .. home ..
+                              '/.rustup/toolchains/[^/]+/lib/rustlib/src/' ..
+                              'rust/(.+)$'
+                            local rust_path = file:match(rustup_pattern)
+                            if rust_path then
+                                return '<rust>/' .. rust_path
+                            end
+
+                            -- Get relative path from cwd
+                            local rel_path = vim.fn.fnamemodify(file, ':p:.')
+                            -- If starts with /, it's outside cwd (absolute)
+                            if rel_path:match('^/') then
+                                if abbreviate_absolute then
+                                    return vim.fn.pathshorten(rel_path)
+                                else
+                                    return rel_path
+                                end
+                            end
+                            -- Otherwise it's relative to cwd
+                            if abbreviate_relative then
+                                return vim.fn.pathshorten(rel_path)
+                            else
+                                return rel_path
+                            end
+                        end,
                     }
                 },
                 lualine_c = {},
