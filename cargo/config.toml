@@ -1,5 +1,6 @@
-[build]
-rustc-wrapper = "/Users/fang/.cargo/bin/sccache"
+# Breaks Android app release
+# [build]
+# rustc-wrapper = "/Users/fang/.cargo/bin/sccache"
 
 # Include links to definitions when viewing source in generated docs
 # rustdocflags = ["-Z", "unstable-options", "--generate-link-to-definition"]
