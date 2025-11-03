@@ -680,9 +680,9 @@ return {
         ['n gu'] = function()
           require('vgit').buffer_hunk_reset()
         end,
-        -- (u)nstage entire file
+        -- (U)nstage/reset all hunks in file
         ['n gU'] = function()
-          require('vgit').buffer_unstage()
+          require('vgit').buffer_reset()
         end,
 
         -- (r)eset current hunk to HEAD
@@ -786,8 +786,8 @@ return {
 
         -- Diff preview settings
         diff_preview = {
-          keymaps = {
-            reset = 'r',
+          keymaps = vim.tbl_extend('force', {
+            reset = 'R',
             buffer_stage = 'S',
             buffer_unstage = 'U',
             buffer_hunk_stage = 's',
@@ -800,6 +800,10 @@ return {
             -- previous_hunk = '<Up>',
             -- next_hunk = '<Down>',
           },
+          -- TODO: Remove this macOS-specific override once hunk reset
+          -- patch is upstreamed to tanvirtin/vgit.nvim
+          is_macos and { buffer_hunk_reset = 'r' } or {}
+          ),
         },
 
         -- Project diff preview settings
