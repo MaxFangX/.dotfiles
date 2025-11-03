@@ -680,9 +680,9 @@ return {
         ['n gu'] = function()
           require('vgit').buffer_hunk_reset()
         end,
-        -- (U)nstage/reset all hunks in file
+        -- (U)nstage entire file
         ['n gU'] = function()
-          require('vgit').buffer_reset()
+          require('vgit').buffer_unstage()
         end,
 
         -- (r)eset current hunk to HEAD
@@ -690,6 +690,9 @@ return {
           require('vgit').buffer_hunk_reset()
         end,
         -- (R)eset entire file to HEAD
+        ['n gR'] = function()
+          require('vgit').buffer_reset()
+        end,
         ['n <LocalLeader>gR'] = function()
           require('vgit').buffer_reset()
         end,
