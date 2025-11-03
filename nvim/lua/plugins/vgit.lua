@@ -589,6 +589,11 @@ return {
           pcall(helpers.jump_to_next_unstaged_hunk)
         end,
 
+        -- (S)tage entire file
+        ['n gS'] = function()
+          require('vgit').buffer_stage()
+        end,
+
         -- (g)it (d)iff - Open diff preview of current buffer
         ['n gd'] = function()
           local is_untracked = helpers.is_untracked(vim.fn.expand('%:p'))
