@@ -718,6 +718,9 @@
     " This maps y in visual mode to yank to both default and system registers
     xnoremap y "+y
 
+    " Auto-copy yy (yank line) to system clipboard
+    nnoremap yy "+yy
+
     " Avoid undesired side-effects while pasting
     " This hack automatically toggles :set paste just prior to a paste and
     " and toggles back to :set nopaste immediately after paste
