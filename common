@@ -377,8 +377,8 @@ function glom() { git update-ref refs/heads/`main_branch` origin/`main_branch` }
 
 alias glu="git pull upstream"
 unalias glum # For some reason set to 'git pull upstream master'
-# Update main/master from the `upstream` remote without having to switch to it
-function glum() { git update-ref refs/heads/`main_branch` upstream/`main_branch` }
+# Update current branch from upstream main/master with fast-forward only
+function glum() { git fetch upstream && git merge --ff-only upstream/`main_branch` }
 
 alias glr="git pull --rebase"
 alias glror="git pull --rebase origin"
