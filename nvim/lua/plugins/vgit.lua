@@ -15,6 +15,20 @@ return {
     -- Helper functions defined in a table for better organization
     local helpers = {}
 
+    -- Wrap vgit stage operations to temporarily disable live gutter for perf
+    helpers.stage_with_gutter_disabled = function(stage_fn)
+      local live_gutter_setting = require('vgit.settings.live_gutter')
+      local was_enabled = live_gutter_setting:get('enabled')
+      live_gutter_setting:set('enabled', false)
+
+      stage_fn()
+
+      -- Re-enable after staging completes
+      vim.defer_fn(function()
+        live_gutter_setting:set('enabled', was_enabled)
+      end, 100)
+    end
+
     -- Track the window and buffer we came from before opening vgit preview
     local prev_window = nil
     local prev_buffer = nil
@@ -584,7 +598,9 @@ return {
 
         -- (s)tage current hunk and go to next (shorter binding)
         ['n gs'] = function()
-          require('vgit').buffer_hunk_stage()
+          helpers.stage_with_gutter_disabled(function()
+            require('vgit').buffer_hunk_stage()
+          end)
           -- Jump to next unstaged hunk after staging
           pcall(helpers.jump_to_next_unstaged_hunk)
         end,
@@ -667,7 +683,9 @@ return {
 
         -- (s)tage current hunk
         ['n <LocalLeader>gs'] = function()
-          require('vgit').buffer_hunk_stage()
+          helpers.stage_with_gutter_disabled(function()
+            require('vgit').buffer_hunk_stage()
+          end)
           -- Jump to next unstaged hunk after staging
           pcall(helpers.jump_to_next_unstaged_hunk)
         end,
