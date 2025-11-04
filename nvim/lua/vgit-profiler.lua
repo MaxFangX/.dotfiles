@@ -2,15 +2,21 @@
 -- Auto-loaded by vgit config
 -- Use :VgitProfileResults to see results, :VgitProfileReset to reset
 
-local times = {}
+local stats = {}
 
--- Wrap a function to record execution time
+-- Wrap a function to record execution time and call count
 local function time_wrapped(key, fn)
   return function(...)
     local start = vim.loop.hrtime()
     local result = {fn(...)}
     local elapsed = (vim.loop.hrtime() - start) / 1e6 -- Convert to ms
-    times[key] = (times[key] or 0) + elapsed
+
+    if not stats[key] then
+      stats[key] = { total_ms = 0, count = 0 }
+    end
+    stats[key].total_ms = stats[key].total_ms + elapsed
+    stats[key].count = stats[key].count + 1
+
     return unpack(result)
   end
 end
@@ -57,18 +63,38 @@ end
 return {
   show_times = function()
     print("\n=== Profiling Results ===")
-    local op_count = vim.tbl_count(times)
-    print(string.format("Total operations profiled: %d\n", op_count))
-
-    -- Sort by time (slowest first)
-    local sorted = {}
-    for k, v in pairs(times) do
-      table.insert(sorted, {name = k, time = v})
+    local unique_ops = vim.tbl_count(stats)
+    local total_calls = 0
+    for _, stat in pairs(stats) do
+      total_calls = total_calls + stat.count
     end
-    table.sort(sorted, function(a, b) return a.time > b.time end)
+    print(string.format("Unique operations: %d", unique_ops))
+    print(string.format("Total calls: %d\n", total_calls))
+
+    -- Sort by total time (slowest first)
+    local sorted = {}
+    for k, v in pairs(stats) do
+      table.insert(sorted, {
+        name = k,
+        total_ms = v.total_ms,
+        count = v.count,
+        avg_ms = v.total_ms / v.count
+      })
+    end
+    table.sort(sorted, function(a, b) return a.total_ms > b.total_ms end)
 
     for _, item in ipairs(sorted) do
-      print(string.format("%.2fms - %s", item.time, item.name))
+      if item.count > 1 then
+        print(string.format(
+          "%.2fms total (%dx, %.2fms avg) - %s",
+          item.total_ms,
+          item.count,
+          item.avg_ms,
+          item.name
+        ))
+      else
+        print(string.format("%.2fms - %s", item.total_ms, item.name))
+      end
     end
 
     print("\n=== Git Buffer Store State ===")
@@ -86,7 +112,6 @@ return {
   end,
 
   reset = function()
-    times = {}
-    print("Times reset")
+    stats = {}
   end
 }
