@@ -327,6 +327,8 @@ function gpfc() {
 alias DD="DELTA_FEATURES=+side-by-side"
 
 alias g="git status"
+unalias gsb # OMZ git status --short --branch
+unalias gst # OMZ git status
 unalias gss # OMZ git status -s
 
 # gsh is already set to "git show" by zsh
@@ -395,19 +397,14 @@ unalias ggpull # OMZ git pull origin "$(git_current_branch)"
 alias gmf="git merge --ff-only"
 alias gmm="git merge $(git_main_branch)"
 
-alias gs="git stash --include-untracked"
-alias gsa="git stash apply"
-alias gsd="git stash drop"
-alias gsl="git stash list"
-alias gsp="git stash pop"
-alias gss="git stash show --text"
+alias gst="git stash --include-untracked"
+alias gsta="git stash apply"
+alias gstd="git stash drop"
+alias gstl="git stash list"
+alias gstp="git stash pop"
+alias gsts="git stash show --text"
 unalias gstaa # OMZ git stash apply
 unalias gstc # OMZ git stash clear
-unalias gstd # OMZ git stash drop
-unalias gstl # OMZ git stash list
-unalias gstp # OMZ git stash pop
-unalias gsts # OMZ git stash show --text
-unalias gsta # OMZ git stash push
 unalias gstall # OMZ git stash --all
 
 alias grm="git rm"
