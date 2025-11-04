@@ -46,17 +46,19 @@ return {
       -- Load fzf extension
       telescope.load_extension("fzf")
 
-      -- Git files picker (<Leader>g)
-      vim.keymap.set('n', '<Leader>g', function()
+      -- Git picker helper function
+      local function git_picker(files_only)
         local pickers = require("telescope.pickers")
         local finders = require("telescope.finders")
         local conf = require("telescope.config").values
         local entry_display = require("telescope.pickers.entry_display")
 
         local git_hunks = require('git_hunks')
-        local files = git_hunks.get_files_with_changes()
+        local items = files_only
+          and git_hunks.get_files_with_changes()
+          or git_hunks.get_all_hunks()
 
-        if #files == 0 then
+        if #items == 0 then
           print('No unstaged changes or untracked files found')
           return
         end
@@ -83,15 +85,19 @@ return {
             display = make_display,
             ordinal = item.text .. " " .. item.file,
             filename = item.file,
-            lnum = 1,
+            lnum = item.lnum or 1,
             status = item.text,
           }
         end
 
+        local prompt_title = files_only
+          and "Git Files (Unstaged)"
+          or "Git Hunks (Unstaged)"
+
         pickers.new({}, {
-          prompt_title = "Git Files (Unstaged)",
+          prompt_title = prompt_title,
           finder = finders.new_table({
-            results = files,
+            results = items,
             entry_maker = entry_maker,
           }),
           sorter = conf.generic_sorter({}),
@@ -102,6 +108,16 @@ return {
             preview_width = 0.55,
           },
         }):find()
+      end
+
+      -- Git hunks picker (<Leader>g)
+      vim.keymap.set('n', '<Leader>g', function()
+        git_picker(false)
+      end, { noremap = true, silent = true })
+
+      -- Git files picker (<Leader>G)
+      vim.keymap.set('n', '<Leader>G', function()
+        git_picker(true)
       end, { noremap = true, silent = true })
     end,
   },
