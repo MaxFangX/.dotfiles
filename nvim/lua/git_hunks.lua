@@ -87,6 +87,31 @@ function M.get_files_with_changes()
   return items
 end
 
+-- Check if a file has unstaged hunks or is untracked
+-- Returns: boolean
+function M.has_hunks(filepath)
+  -- Check if file is untracked
+  local relative = vim.fn.fnamemodify(filepath, ':.')
+  local ls_files_cmd = 'git ls-files --others --exclude-standard '
+                       .. vim.fn.shellescape(relative)
+  local is_untracked = vim.fn.system(ls_files_cmd):match('%S') ~= nil
+
+  if is_untracked then
+    return true
+  end
+
+  -- Check if file has unstaged hunks
+  local diff_output = vim.fn.systemlist(
+    'git diff -U0 ' .. vim.fn.shellescape(filepath))
+  for _, line in ipairs(diff_output) do
+    if line:match('^@@') then
+      return true
+    end
+  end
+
+  return false
+end
+
 -- Populate quickfix list with unstaged hunks
 function M.populate_quickfix(log_status)
   local hunks = M.get_all_hunks()

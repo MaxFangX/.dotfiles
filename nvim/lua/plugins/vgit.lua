@@ -582,6 +582,26 @@ return {
       helpers.jump_to_unstaged_hunk('prev')
     end
 
+    -- Open diff preview, jumping to next hunk first if current file has none
+    helpers.open_diff_with_jump = function()
+      local current_file = vim.fn.expand('%:p')
+      local git_hunks = require('git_hunks')
+
+      -- If current file has no hunks, jump to next file with hunks
+      if not git_hunks.has_hunks(current_file) then
+        helpers.jump_to_next_unstaged_hunk()
+      end
+
+      -- Save window state and open diff preview
+      local is_untracked = helpers.is_untracked(vim.fn.expand('%:p'))
+      local saved_pos = vim.api.nvim_win_get_cursor(0)
+      helpers.save_window()
+      require('vgit').buffer_diff_preview()
+      if is_untracked then
+        helpers.restore_cursor_for_untracked(saved_pos)
+      end
+    end
+
 
     local vgit = require('vgit')
     vgit.setup({
@@ -611,24 +631,9 @@ return {
         end,
 
         -- (g)it (d)iff - Open diff preview of current buffer
-        ['n gd'] = function()
-          local is_untracked = helpers.is_untracked(vim.fn.expand('%:p'))
-          local saved_pos = vim.api.nvim_win_get_cursor(0)
-          helpers.save_window()
-          require('vgit').buffer_diff_preview()
-          if is_untracked then
-            helpers.restore_cursor_for_untracked(saved_pos)
-          end
-        end,
-        ['n <LocalLeader>gd'] = function()
-          local is_untracked = helpers.is_untracked(vim.fn.expand('%:p'))
-          local saved_pos = vim.api.nvim_win_get_cursor(0)
-          helpers.save_window()
-          require('vgit').buffer_diff_preview()
-          if is_untracked then
-            helpers.restore_cursor_for_untracked(saved_pos)
-          end
-        end,
+        -- If current file has no hunks, jump to next hunk first
+        ['n gd'] = helpers.open_diff_with_jump,
+        ['n <LocalLeader>gd'] = helpers.open_diff_with_jump,
 
         -- (g)it (h)over hunk - Show hunk preview
         ['n gh'] = function()
