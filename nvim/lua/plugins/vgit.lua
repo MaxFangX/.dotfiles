@@ -1062,5 +1062,34 @@ return {
         end
       end
     })
+
+    -- TODO(max): Remove profiler script once performance issues fixed
+    -- Auto-load profiler
+    local ok, profiler = pcall(require, 'vgit-profiler')
+    if ok then
+      _G.vgit_profiler = profiler
+
+      -- Create command to show profiling results
+      vim.api.nvim_create_user_command('VgitProfileResults', function()
+        if _G.vgit_profiler then
+          _G.vgit_profiler.show_times()
+        else
+          vim.notify('VGit profiler not loaded', vim.log.levels.ERROR)
+        end
+      end, {
+        desc = 'Show VGit profiling results'
+      })
+
+      -- Create command to reset profiling data
+      vim.api.nvim_create_user_command('VgitProfileReset', function()
+        if _G.vgit_profiler then
+          _G.vgit_profiler.reset()
+        else
+          vim.notify('VGit profiler not loaded', vim.log.levels.ERROR)
+        end
+      end, {
+        desc = 'Reset VGit profiling data'
+      })
+    end
   end,
 }
