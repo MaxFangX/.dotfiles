@@ -340,10 +340,10 @@ alias ga="git add"
 alias ga.="git add ."
 alias gap="git add --patch"
 
-alias gd="git diff"
-alias gds="git diff --staged"
-alias gdd="DELTA_FEATURES=+side-by-side git diff" # Think 'double-diff'
-alias gdds="DELTA_FEATURES=+side-by-side git diff --staged" # 'double-diff'
+alias gd="DELTA_FEATURES=+side-by-side git diff"
+alias gds="DELTA_FEATURES=+side-by-side git diff --staged"
+alias gdd="git diff" # unified view
+alias gdds="git diff --staged" # unified view
 
 # Syntax-highlighted diff with bat
 bd() { git diff --name-only --diff-filter=d | xargs bat --paging=always --diff }
