@@ -11,6 +11,8 @@ return {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make"
       },
+      -- telescope-coc provides coc.nvim integration
+      "fannheyward/telescope-coc.nvim",
     },
     config = function()
       local telescope = require("telescope")
@@ -45,6 +47,29 @@ return {
 
       -- Load fzf extension
       telescope.load_extension("fzf")
+
+      -- Load coc extension
+      local coc = telescope.load_extension("coc")
+
+      -- CoC symbol pickers
+      local coc_telescope = require("coc_telescope")
+
+      vim.keymap.set("n", "<Leader>s", coc_telescope.document_symbols,
+        { noremap = true, silent = true, desc = "document symbols" })
+
+      -- Verbose view: Show all symbols (variables, fields, enum variants,
+      -- trait method implementations)
+      vim.keymap.set("n", "<Leader>S", function()
+        coc_telescope.document_symbols({
+          show_variables = true,
+          show_fields = true,
+          show_enum_members = true,
+          filter_trait_method_impls = false,
+        })
+      end, { noremap = true, silent = true, desc = "document symbols (verbose)" })
+
+      vim.keymap.set("n", "<Leader>w", coc_telescope.workspace_symbols,
+        { noremap = true, silent = true, desc = "workspace symbols" })
 
       -- Git picker helper function
       local function git_picker(files_only)
