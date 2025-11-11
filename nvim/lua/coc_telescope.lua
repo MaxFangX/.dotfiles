@@ -142,6 +142,7 @@ function M.document_symbols(opts)
     Struct = "struct ",
     Enum = "enum ",
     Interface = "trait ",
+    Module = "mod ",
   }
 
   local make_display = function(entry)
@@ -185,19 +186,38 @@ function M.document_symbols(opts)
     })
   end
 
-  -- Custom sorter: filters but preserves document order
+  -- Helper: Fuzzy match prompt against line
+  local function fuzzy_match(prompt, line)
+    local prompt_idx = 1
+    local line_idx = 1
+    local prompt_len = #prompt
+    local line_len = #line
+
+    while prompt_idx <= prompt_len and line_idx <= line_len do
+      if prompt:sub(prompt_idx, prompt_idx) == line:sub(line_idx, line_idx) then
+        prompt_idx = prompt_idx + 1
+      end
+      line_idx = line_idx + 1
+    end
+
+    return prompt_idx > prompt_len
+  end
+
+  -- Custom sorter: fuzzy filters but preserves document order
   local document_order_sorter = sorters.Sorter:new({
     discard = true,
     scoring_function = function(_, prompt, line)
       if prompt == "" then
         return 1
       end
+
       local lower_prompt = prompt:lower()
       local lower_line = line:lower()
-      if lower_line:find(lower_prompt, 1, true) then
-        return 1
+
+      if fuzzy_match(lower_prompt, lower_line) then
+        return 1  -- All matches get same score (preserves order)
       else
-        return -1
+        return -1  -- Filtered out
       end
     end,
   })
@@ -234,8 +254,24 @@ function M.document_symbols(opts)
       -- Build ordinal for filtering (preserves document order)
       local ordinal_type =
         transform_symbol_type(symbol_type, symbol_name, context)
-      local ordinal =
-        string.format("%05d %s %s", s.lnum, symbol_name, ordinal_type)
+
+      -- Add Rust keyword prefix to ordinal for searchability
+      local searchable_name = symbol_name
+      if filetype == "rust" then
+        local prefix = nil
+        if symbol_type == "Function" or symbol_type == "Method"
+           or context == "trait_method" or context == "trait_method_impl" then
+          prefix = "fn "
+        else
+          prefix = keyword_map[symbol_type]
+        end
+        if prefix then
+          searchable_name = prefix .. symbol_name
+        end
+      end
+
+      local ordinal = string.format("%05d %s %s",
+        s.lnum, searchable_name, ordinal_type)
 
       local entry = {
         filename = filename,
