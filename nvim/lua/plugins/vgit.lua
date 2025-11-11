@@ -581,8 +581,16 @@ return {
 
     -- Open diff preview, jumping to next hunk first if current file has none
     helpers.open_diff_with_jump = function()
-      local current_file = vim.fn.expand('%:p')
       local git_hunks = require('git_hunks')
+
+      -- Check if there are any hunks at all
+      local all_hunks = git_hunks.get_all_hunks()
+      if #all_hunks == 0 then
+        print('No unstaged changes or untracked files found')
+        return
+      end
+
+      local current_file = vim.fn.expand('%:p')
 
       -- If current file has no hunks, jump to next file with hunks
       if not git_hunks.has_hunks(current_file) then
