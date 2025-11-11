@@ -29,6 +29,8 @@ return {
             },
           },
 
+          -- Default layout config shared by all pickers (document symbols,
+          -- git hunks, etc.) unless overridden
           layout_config = {
             horizontal = {
               preview_width = 0.5,
@@ -127,11 +129,6 @@ return {
           }),
           sorter = conf.generic_sorter({}),
           previewer = conf.qflist_previewer({}),
-          layout_config = {
-            width = 0.55,
-            height = 0.75,
-            preview_width = 0.55,
-          },
         }):find()
       end
 
