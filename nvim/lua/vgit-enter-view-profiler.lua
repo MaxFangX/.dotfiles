@@ -1,6 +1,6 @@
--- Profile script to measure where time is spent during staging
+-- Profile script to measure time spent entering diff staging view
 -- Auto-loaded by vgit config
--- Use :VgitProfileResults to see results, :VgitProfileReset to reset
+-- Use :VGitEnterViewProfileResult to see results
 
 local stats = {}
 
@@ -43,13 +43,12 @@ local function time_method(class_path, method_name)
   end
 end
 
--- Profile key vgit functions
-time_function("vgit.git.git_stager", "stage_hunk")
-time_function("vgit.git.git_buffer_store", "for_each")
-time_function("vgit.git.git_buffer_store", "dispatch")
+-- Profile key vgit functions for entering diff view
+time_function("vgit", "buffer_diff_preview")
+time_method("vgit.features.screens.DiffScreen", "new")
+time_method("vgit.features.screens.DiffScreen", "open")
 time_method("vgit.git.GitBuffer", "diff")
-time_method("vgit.features.buffer.LiveGutter", "fetch")
-time_method("vgit.features.screens.DiffScreen", "stage_hunk")
+time_method("vgit.git.GitBuffer", "hunks")
 
 -- Profile git commands (with truncated command names)
 local gitcli = require('vgit.git.gitcli')
@@ -62,7 +61,7 @@ end
 
 return {
   show_times = function()
-    print("\n=== Staging Profiling Results ===")
+    print("\n=== Enter View Profiling Results ===")
     local unique_ops = vim.tbl_count(stats)
     local total_calls = 0
     for _, stat in pairs(stats) do
@@ -96,19 +95,6 @@ return {
         print(string.format("%.2fms - %s", item.total_ms, item.name))
       end
     end
-
-    print("\n=== Git Buffer Store State ===")
-    local git_buffer_store = require('vgit.git.git_buffer_store')
-    print(string.format("Tracked buffers: %d", git_buffer_store.size()))
-
-    print("\n=== Autocmd Count ===")
-    local autocmds = vim.api.nvim_get_autocmds({ group = "VGitGroup" })
-    print(string.format("Total VGitGroup autocmds: %d", #autocmds))
-
-    local user_autocmds = vim.tbl_filter(function(au)
-      return au.event == "User"
-    end, autocmds)
-    print(string.format("User (custom) autocmds: %d", #user_autocmds))
   end,
 
   reset = function()

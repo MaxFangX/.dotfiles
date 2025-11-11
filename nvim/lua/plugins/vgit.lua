@@ -1112,33 +1112,63 @@ return {
       end
     })
 
-    -- TODO(max): Remove profiler script once performance issues fixed
-    -- Auto-load profiler
-    local ok, profiler = pcall(require, 'vgit-profiler')
-    if ok then
-      _G.vgit_profiler = profiler
+    -- TODO(max): Remove profiler scripts once performance issues fixed
+    -- Auto-load profilers
+    local ok_stage, stage_profiler = pcall(require, 'vgit-profiler')
+    local ok_view, view_profiler = pcall(require, 'vgit-enter-view-profiler')
 
-      -- Create command to show profiling results
-      vim.api.nvim_create_user_command('VgitProfileResults', function()
-        if _G.vgit_profiler then
-          _G.vgit_profiler.show_times()
-        else
-          vim.notify('VGit profiler not loaded', vim.log.levels.ERROR)
-        end
-      end, {
-        desc = 'Show VGit profiling results'
-      })
-
-      -- Create command to reset profiling data
-      vim.api.nvim_create_user_command('VgitProfileReset', function()
-        if _G.vgit_profiler then
-          _G.vgit_profiler.reset()
-        else
-          vim.notify('VGit profiler not loaded', vim.log.levels.ERROR)
-        end
-      end, {
-        desc = 'Reset VGit profiling data'
-      })
+    if ok_stage then
+      _G.vgit_stage_profiler = stage_profiler
+      -- Reset profiler on Neovim restart to clear old data
+      stage_profiler.reset()
     end
+
+    if ok_view then
+      _G.vgit_view_profiler = view_profiler
+      -- Reset profiler on Neovim restart to clear old data
+      view_profiler.reset()
+    end
+
+    -- Create command to show staging profiling results
+    vim.api.nvim_create_user_command('VGitStageHunkProfileResult', function()
+      if _G.vgit_stage_profiler then
+        _G.vgit_stage_profiler.show_times()
+      else
+        vim.notify('VGit stage profiler not loaded', vim.log.levels.ERROR)
+      end
+    end, {
+      desc = 'Show VGit staging profiling results'
+    })
+
+    -- Create command to show enter view profiling results
+    vim.api.nvim_create_user_command('VGitEnterViewProfileResult', function()
+      if _G.vgit_view_profiler then
+        _G.vgit_view_profiler.show_times()
+      else
+        vim.notify('VGit view profiler not loaded', vim.log.levels.ERROR)
+      end
+    end, {
+      desc = 'Show VGit enter view profiling results'
+    })
+
+    -- Create command to reset both profilers
+    vim.api.nvim_create_user_command('VGitProfileReset', function()
+      local reset_count = 0
+      if _G.vgit_stage_profiler then
+        _G.vgit_stage_profiler.reset()
+        reset_count = reset_count + 1
+      end
+      if _G.vgit_view_profiler then
+        _G.vgit_view_profiler.reset()
+        reset_count = reset_count + 1
+      end
+      if reset_count > 0 then
+        print(string.format('Reset %d profiler(s)', reset_count))
+      else
+        vim.notify('No VGit profilers loaded', vim.log.levels.ERROR)
+      end
+    end, {
+      desc = 'Reset all VGit profiling data'
+    })
   end,
 }
