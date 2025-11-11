@@ -47,7 +47,13 @@ function M.document_symbols(opts)
   local raw_symbols = vim.fn.CocAction('documentSymbols', current_buf)
   local filetype = vim.bo.filetype
 
-  if not raw_symbols or vim.tbl_isempty(raw_symbols) then
+  -- Check if symbols were returned and are a valid table
+  if not raw_symbols or type(raw_symbols) ~= 'table' then
+    print("No symbols found")
+    return
+  end
+
+  if vim.tbl_isempty(raw_symbols) then
     print("No symbols found")
     return
   end
@@ -421,7 +427,7 @@ function M.diagnostics()
     return
   end
 
-  if vim.tbl_isempty(diagnostics) then
+  if type(diagnostics) ~= 'table' or vim.tbl_isempty(diagnostics) then
     print("No diagnostics found")
     return
   end
