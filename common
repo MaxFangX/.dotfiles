@@ -375,8 +375,24 @@ function gpfone { git push --force-with-lease --force-if-includes origin "$@":"$
 
 alias gl="git pull"
 alias glor="git pull origin"
-# Update main/master from the `origin` remote without having to switch to it
-function glom() { git update-ref refs/heads/`main_branch` origin/`main_branch` }
+
+# Fast-forward commands (update branches without switching to them)
+# Uses fetch with refspec for safety - will fail if not a fast-forward
+function gffom() { git fetch origin `main_branch`:`main_branch` }
+function gffum() { git fetch upstream `main_branch`:`main_branch` }
+function gffo() { git fetch origin $(git_current_branch):$(git_current_branch) }
+function gffu() { git fetch upstream $(git_current_branch):$(git_current_branch) }
+function gff() {
+  local current_branch=$(git_current_branch)
+  local upstream=$(git rev-parse --abbrev-ref @{upstream} 2>/dev/null)
+  if [[ -z "$upstream" ]]; then
+    echo "Error: No upstream configured for branch '$current_branch'"
+    return 1
+  fi
+  local remote=${upstream%%/*}
+  local remote_branch=${upstream#*/}
+  git fetch "$remote" "$remote_branch:$current_branch"
+}
 
 alias glu="git pull upstream"
 unalias glum # For some reason set to 'git pull upstream master'
