@@ -613,13 +613,29 @@ return {
         ['n <S-Up>'] = function() require('vgit').hunk_up() end,
         ['n <S-Down>'] = function() require('vgit').hunk_down() end,
 
-        -- (s)tage current hunk and go to next (shorter binding)
+        -- (s)tage current hunk
+        -- NOTE: Auto-jump to next hunk is disabled due to timing issues with
+        -- vgit's async coroutine architecture:
+        --
+        -- Problem: buffer_hunk_stage() is wrapped in loop.coroutine(), making it
+        -- async. Any code that runs after calling it (including vim.schedule)
+        -- executes before the coroutine's cursor_hunk() call, causing:
+        --   1. Cursor moves to next hunk (via jump)
+        --   2. cursor_hunk() runs and sees the NEW cursor position
+        --   3. Wrong hunk gets staged
+        --
+        -- Attempted fixes that failed:
+        --   - Direct call to jump: Runs immediately, cursor moves too early
+        --   - vim.schedule(jump): Still runs before coroutine completes
+        --   - Passing cursor position: Would require modifying vgit upstream
+        --
+        -- Workaround: Use 'gj' to manually jump after staging if desired
         ['n gs'] = function()
           helpers.stage_with_suppressed_sync(function()
             require('vgit').buffer_hunk_stage()
           end)
           -- Jump to next unstaged hunk after staging
-          pcall(helpers.jump_to_next_unstaged_hunk)
+          -- pcall(helpers.jump_to_next_unstaged_hunk)  -- Disabled, see above
         end,
 
         -- (S)tage entire file
@@ -691,7 +707,8 @@ return {
             require('vgit').buffer_hunk_stage()
           end)
           -- Jump to next unstaged hunk after staging
-          pcall(helpers.jump_to_next_unstaged_hunk)
+          -- Disabled; see above
+          -- pcall(helpers.jump_to_next_unstaged_hunk)
         end,
         -- (S)tage entire file
         ['n <LocalLeader>gS'] = function()
