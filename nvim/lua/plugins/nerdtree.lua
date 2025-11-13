@@ -1,7 +1,7 @@
 -- File system explorer plugin
 return {
     "preservim/nerdtree",
-    enabled = true,
+    enabled = false,
     config = function()
         -- Toggle show NERDTree with Option+8
         vim.keymap.set("n", "•", ":NERDTreeToggle<CR>")
