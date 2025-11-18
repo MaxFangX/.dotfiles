@@ -3,6 +3,11 @@
 -- Use :VGitEnterViewProfileResult to see results
 
 local stats = {}
+local suppression_stats = {
+  suppress_calls = 0,
+  vgitsync_suppressed = 0,
+  vgitsync_fired = 0,
+}
 
 -- Wrap a function to record execution time and call count
 local function time_wrapped(key, fn)
@@ -59,6 +64,14 @@ gitcli.run = function(args)
   return time_wrapped(key, original_run)(args)
 end
 
+-- Track VGitSync suppression behavior
+local git_buffer_store = require('vgit.git.git_buffer_store')
+local original_suppress = git_buffer_store.suppress_sync_for
+git_buffer_store.suppress_sync_for = function(ms)
+  suppression_stats.suppress_calls = suppression_stats.suppress_calls + 1
+  return original_suppress(ms)
+end
+
 return {
   show_times = function()
     print("\n=== Enter View Profiling Results ===")
@@ -69,6 +82,11 @@ return {
     end
     print(string.format("Unique operations: %d", unique_ops))
     print(string.format("Total calls: %d\n", total_calls))
+
+    print("=== VGitSync Suppression ===")
+    print(string.format("suppress_sync_for() called: %dx", suppression_stats.suppress_calls))
+    print(string.format("VGitSync suppressed: %dx", suppression_stats.vgitsync_suppressed))
+    print(string.format("VGitSync fired: %dx\n", suppression_stats.vgitsync_fired))
 
     -- Sort by total time (slowest first)
     local sorted = {}
@@ -99,5 +117,19 @@ return {
 
   reset = function()
     stats = {}
-  end
+    suppression_stats = {
+      suppress_calls = 0,
+      vgitsync_suppressed = 0,
+      vgitsync_fired = 0,
+    }
+  end,
+
+  -- Called by git_buffer_store VGitSync handler to track suppression
+  track_vgitsync_suppressed = function()
+    suppression_stats.vgitsync_suppressed = suppression_stats.vgitsync_suppressed + 1
+  end,
+
+  track_vgitsync_fired = function()
+    suppression_stats.vgitsync_fired = suppression_stats.vgitsync_fired + 1
+  end,
 }
