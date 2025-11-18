@@ -10,7 +10,7 @@ M.config = {
   show_enum_members = false,         -- Show enum variants/members
 
   -- Trait-specific filtering (Rust)
-  filter_trait_method_impls = true,  -- Hide methods in trait impls
+  filter_trait_method_impls = false, -- Show methods in trait impls
 
   -- Display options
   indent_kinds = true,               -- Indent kinds by nesting level
