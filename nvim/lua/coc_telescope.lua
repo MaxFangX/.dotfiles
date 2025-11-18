@@ -145,6 +145,7 @@ function M.document_symbols(opts)
   -- Rust keyword prefixes (defined once, not per-display)
   local keyword_map = {
     Variable = "let ",
+    Constant = "const ",
     Struct = "struct ",
     Enum = "enum ",
     Interface = "trait ",
