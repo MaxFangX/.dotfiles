@@ -67,10 +67,10 @@ end
 
 -- Track VGitSync suppression behavior
 local git_buffer_store = require('vgit.git.git_buffer_store')
-local original_suppress = git_buffer_store.suppress_sync_for
-git_buffer_store.suppress_sync_for = function(ms)
+local original_suppress = git_buffer_store.suppress_sync_and_refresh
+git_buffer_store.suppress_sync_and_refresh = function(buffer, ms)
   suppression_stats.suppress_calls = suppression_stats.suppress_calls + 1
-  return original_suppress(ms)
+  return original_suppress(buffer, ms)
 end
 
 return {

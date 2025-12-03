@@ -15,17 +15,6 @@ return {
     -- Helper functions defined in a table for better organization
     local helpers = {}
 
-    -- Wrap vgit stage operations to suppress VGitSync during staging
-    -- Prevents unnecessary refresh of all tracked buffers during staging,
-    -- dramatically reducing git command volume during staging operations
-    helpers.stage_with_suppressed_sync = function(stage_fn)
-      local git_buffer_store = require('vgit.git.git_buffer_store')
-      -- Use 200ms suppression window (matches DiffScreen's approach)
-      -- Filesystem watcher has 10ms debounce, this provides safety margin
-      git_buffer_store.suppress_sync_for(200)
-      stage_fn()
-    end
-
     -- Track the window and buffer we came from before opening vgit preview
     local prev_window = nil
     local prev_buffer = nil
@@ -639,18 +628,12 @@ return {
         --
         -- Workaround: Use 'gj' to manually jump after staging if desired
         ['n gs'] = function()
-          helpers.stage_with_suppressed_sync(function()
-            require('vgit').buffer_hunk_stage()
-          end)
-          -- Jump to next unstaged hunk after staging
-          -- pcall(helpers.jump_to_next_unstaged_hunk)  -- Disabled, see above
+          require('vgit').buffer_hunk_stage()
         end,
 
         -- (S)tage entire file
         ['n gS'] = function()
-          helpers.stage_with_suppressed_sync(function()
-            require('vgit').buffer_stage()
-          end)
+          require('vgit').buffer_stage()
         end,
 
         -- (g)it (d)iff - Open diff preview of current buffer
@@ -711,18 +694,11 @@ return {
 
         -- (s)tage current hunk
         ['n <LocalLeader>gs'] = function()
-          helpers.stage_with_suppressed_sync(function()
-            require('vgit').buffer_hunk_stage()
-          end)
-          -- Jump to next unstaged hunk after staging
-          -- Disabled; see above
-          -- pcall(helpers.jump_to_next_unstaged_hunk)
+          require('vgit').buffer_hunk_stage()
         end,
         -- (S)tage entire file
         ['n <LocalLeader>gS'] = function()
-          helpers.stage_with_suppressed_sync(function()
-            require('vgit').buffer_stage()
-          end)
+          require('vgit').buffer_stage()
         end,
 
         -- (u)nstage/reset current hunk
