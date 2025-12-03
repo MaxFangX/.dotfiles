@@ -432,6 +432,14 @@
     nnoremap " T
     xnoremap " T
     onoremap " T
+
+    " Override man.vim's buffer-local q mapping (which quits) so q still
+    " searches next in man pages
+    augroup man_dvorak_fix
+        autocmd!
+        autocmd FileType man nnoremap <buffer> q n
+        autocmd FileType man nnoremap <buffer> Q N
+    augroup END
 """ }
 
 """ { DVORAK - hn for Esc key
