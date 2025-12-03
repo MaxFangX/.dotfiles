@@ -364,6 +364,30 @@ end
 
 -- Show workspace symbols in a Telescope picker
 function M.workspace_symbols()
+  -- Check if CoC is ready
+  if vim.g.coc_service_initialized ~= 1 then
+    print("CoC is not ready yet")
+    return
+  end
+
+  -- Quick check: try to fetch symbols with short timeout
+  local result = nil
+  local completed = false
+  vim.fn.CocActionAsync('getWorkspaceSymbols', 'a', function(_, res)
+    result = res
+    completed = true
+  end)
+
+  -- Wait max 200ms - if server isn't ready, bail without long freeze
+  local ready = vim.wait(200, function() return completed end, 10)
+  if not ready
+     or not result
+     or type(result) ~= 'table'
+     or vim.tbl_isempty(result) then
+    print("Workspace symbols not available")
+    return
+  end
+
   local entry_display = require("telescope.pickers.entry_display")
   local utils = require("telescope.utils")
   local make_entry = require("telescope.make_entry")
