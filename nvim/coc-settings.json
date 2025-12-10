@@ -64,6 +64,7 @@
   ],
   "rust-analyzer.server.path": "${userHome}/.cargo/bin/rust-analyzer",
   "rust-analyzer.updates.checkOnStartup": false,
+  "rust-analyzer.workspace.symbol.search.kind": "all_symbols",
   "suggest.noselect": true,
   "sumneko-lua.enableNvimLuaDev": true
 }
