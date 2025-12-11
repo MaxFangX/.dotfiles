@@ -840,15 +840,19 @@ return {
 
         -- Project diff preview settings
         project_diff_preview = {
+          hunk_alignment = 'center',  -- 'top', 'center', or 'bottom'
           keymaps = {
-            buffer_stage = { key = 's', desc = 'Stage file' },
-            buffer_unstage = { key = 'u', desc = 'Unstage file' },
-            buffer_hunk_stage = { key = 'gs', desc = 'Stage hunk' },
-            buffer_hunk_unstage = { key = 'gu', desc = 'Unstage hunk' },
-            buffer_reset = { key = 'r', desc = 'Reset file' },
-            stage_all = { key = 'S', desc = 'Stage all' },
-            unstage_all = { key = 'U', desc = 'Unstage all' },
-            reset_all = { key = 'R', desc = 'Reset all' },
+            buffer_stage = { key = 'S', desc = 'Stage file' },
+            buffer_unstage = { key = 'U', desc = 'Unstage file' },
+            buffer_hunk_stage = { key = 's', desc = 'Stage hunk' },
+            buffer_hunk_unstage = { key = 'u', desc = 'Unstage hunk' },
+            buffer_hunk_reset = { key = 'r', desc = 'Reset hunk' },
+            buffer_reset = { key = 'R', desc = 'Reset file' },
+            next = { key = 'j', desc = 'Next' },
+            previous = { key = 'k', desc = 'Previous' },
+            stage_all = { key = 'AS', desc = 'Stage all' },
+            unstage_all = { key = 'AU', desc = 'Unstage all' },
+            reset_all = { key = 'AR', desc = 'Reset all' },
           },
         },
 
