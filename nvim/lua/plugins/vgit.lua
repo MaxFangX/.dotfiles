@@ -680,6 +680,10 @@ return {
         ['n gD'] = helpers.open_first_unstaged_diff,
         ['n <LocalLeader>gD'] = helpers.open_first_unstaged_diff,
         -- (p)roject diff preview
+        ['n gp'] = function()
+          helpers.save_window()
+          require('vgit').project_diff_preview()
+        end,
         ['n <LocalLeader>gp'] = function()
           helpers.save_window()
           require('vgit').project_diff_preview()
