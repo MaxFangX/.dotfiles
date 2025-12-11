@@ -813,38 +813,38 @@ return {
         },
 
         -- Diff preview settings
+        -- Note: keymaps must use { key, desc } format (changed in vgit v1.0.x)
         diff_preview = {
           keymaps = vim.tbl_extend('force', {
-            reset = 'R',
-            buffer_stage = 'S',
-            buffer_unstage = 'U',
-            buffer_hunk_stage = 's',
-            buffer_hunk_unstage = 'u',
+            reset = { key = 'R', desc = 'Reset' },
+            buffer_stage = { key = 'S', desc = 'Stage' },
+            buffer_unstage = { key = 'U', desc = 'Unstage' },
+            buffer_hunk_stage = { key = 's', desc = 'Stage hunk' },
+            buffer_hunk_unstage = { key = 'u', desc = 'Unstage hunk' },
+            buffer_hunk_reset = { key = 'r', desc = 'Reset hunk' },
             -- (v)iew: Changed from 't' to avoid DVORAK conflict
-            toggle_view = 'v',
+            toggle_view = { key = 'v', desc = 'Toggle view' },
             -- Navigate between hunks in diff preview
             -- Note: These don't work as scene-specific keymaps
             -- Use global <S-Up>/<S-Down> instead
             -- previous_hunk = '<Up>',
             -- next_hunk = '<Down>',
           },
-          -- TODO: Remove this macOS-specific override once hunk reset
-          -- patch is upstreamed to tanvirtin/vgit.nvim
-          is_macos and { buffer_hunk_reset = 'r' } or {}
+          {}
           ),
         },
 
         -- Project diff preview settings
         project_diff_preview = {
           keymaps = {
-            buffer_stage = 's',      -- (s)tage file
-            buffer_unstage = 'u',    -- (u)nstage file
-            buffer_hunk_stage = 'gs', -- (g)it hunk (s)tage
-            buffer_hunk_unstage = 'gu', -- (g)it hunk (u)nstage
-            buffer_reset = 'r',      -- (r)eset file
-            stage_all = 'S',         -- (S)tage all
-            unstage_all = 'U',       -- (U)nstage all
-            reset_all = 'R',         -- (R)eset all
+            buffer_stage = { key = 's', desc = 'Stage file' },
+            buffer_unstage = { key = 'u', desc = 'Unstage file' },
+            buffer_hunk_stage = { key = 'gs', desc = 'Stage hunk' },
+            buffer_hunk_unstage = { key = 'gu', desc = 'Unstage hunk' },
+            buffer_reset = { key = 'r', desc = 'Reset file' },
+            stage_all = { key = 'S', desc = 'Stage all' },
+            unstage_all = { key = 'U', desc = 'Unstage all' },
+            reset_all = { key = 'R', desc = 'Reset all' },
           },
         },
 
