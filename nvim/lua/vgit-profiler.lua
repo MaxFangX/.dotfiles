@@ -10,10 +10,12 @@ local suppression_stats = {
 }
 
 -- Wrap a function to record execution time and call count
+-- Note: Uses direct variable assignment instead of table constructor to allow
+-- coroutine yields (table constructor `{fn(...)}` creates a C-call boundary)
 local function time_wrapped(key, fn)
   return function(...)
     local start = vim.loop.hrtime()
-    local result = {fn(...)}
+    local a, b, c, d, e = fn(...)
     local elapsed = (vim.loop.hrtime() - start) / 1e6 -- Convert to ms
 
     if not stats[key] then
@@ -22,7 +24,7 @@ local function time_wrapped(key, fn)
     stats[key].total_ms = stats[key].total_ms + elapsed
     stats[key].count = stats[key].count + 1
 
-    return unpack(result)
+    return a, b, c, d, e
   end
 end
 
@@ -42,9 +44,17 @@ local function time_method(class_path, method_name)
 
   local key = class_path .. ":" .. method_name
   class[method_name] = function(self, ...)
-    return time_wrapped(key, function(...)
-      return original(self, ...)
-    end)(...)
+    local start = vim.loop.hrtime()
+    local a, b, c, d, e = original(self, ...)
+    local elapsed = (vim.loop.hrtime() - start) / 1e6
+
+    if not stats[key] then
+      stats[key] = { total_ms = 0, count = 0 }
+    end
+    stats[key].total_ms = stats[key].total_ms + elapsed
+    stats[key].count = stats[key].count + 1
+
+    return a, b, c, d, e
   end
 end
 
@@ -62,7 +72,18 @@ local original_run = gitcli.run
 gitcli.run = function(args)
   local cmd = table.concat(args, " ")
   local key = "gitcli.run: " .. cmd:sub(1, 50)
-  return time_wrapped(key, original_run)(args)
+
+  local start = vim.loop.hrtime()
+  local a, b, c, d, e = original_run(args)
+  local elapsed = (vim.loop.hrtime() - start) / 1e6
+
+  if not stats[key] then
+    stats[key] = { total_ms = 0, count = 0 }
+  end
+  stats[key].total_ms = stats[key].total_ms + elapsed
+  stats[key].count = stats[key].count + 1
+
+  return a, b, c, d, e
 end
 
 -- Track VGitSync suppression behavior
