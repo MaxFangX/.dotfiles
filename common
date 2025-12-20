@@ -172,6 +172,8 @@ fi
 # See https://github.com/sharkdp/bat#highlighting-theme for more info
 export BAT_THEME="gruvbox-dark"
 
+alias f=fzf
+
 ###########################
 # Init
 ###########################
