@@ -362,7 +362,8 @@ function grhhm() { git reset --hard origin/`main_branch` }
 alias grsm='git reset . && gchm'
 
 alias gcm="git commit -m"
-alias gca="git commit -v --amend"
+alias gca="git commit --verbose --amend"
+alias gcan="git commit --verbose --amend --no-edit"
 alias gcf="git commit -v --fixup"
 
 # OMZ has already set gf and gfo to "git fetch" and "git fetch origin"
