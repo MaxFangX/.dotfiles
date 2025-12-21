@@ -13,7 +13,8 @@ mkdir -p ~/.cargo
 ln -sfF ~/.dotfiles/cargo/config.toml ~/.cargo/config.toml
 # Claude
 mkdir -p ~/.claude
-ln -sfF ~/.dotfiles/GLOBAL_CLAUDE.md ~/.claude/CLAUDE.md
+ln -sfF ~/.dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
+ln -sfF ~/.dotfiles/claude/settings.json ~/.claude/settings.json
 # Karabiner
 mkdir -p ~/.config/karabiner/assets
 ln -sfn \
