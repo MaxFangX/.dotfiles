@@ -15,6 +15,14 @@ ln -sfF ~/.dotfiles/cargo/config.toml ~/.cargo/config.toml
 mkdir -p ~/.claude
 ln -sfF ~/.dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sfF ~/.dotfiles/claude/settings.json ~/.claude/settings.json
+# VSCode (macOS only)
+if [[ "$(uname)" == "Darwin" ]]; then
+    mkdir -p ~/Library/Application\ Support/Code/User
+    ln -sfF ~/.dotfiles/vscode/settings.json \
+        ~/Library/Application\ Support/Code/User/settings.json
+    ln -sfF ~/.dotfiles/vscode/keybindings.json \
+        ~/Library/Application\ Support/Code/User/keybindings.json
+fi
 # Karabiner
 mkdir -p ~/.config/karabiner/assets
 ln -sfn \

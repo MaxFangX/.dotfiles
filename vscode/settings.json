@@ -1,0 +1,330 @@
+{
+  // ======================= //
+  // General VSCode settings //
+  // ======================= //
+
+  // --- Appearance --- //
+
+  "workbench.colorTheme": "Gruvbox Dark Hard",
+  // Alpha channel (fe) silences "must be transparent" warning
+  "workbench.colorCustomizations": {
+    "diffEditor.insertedLineBackground": "#001a00fe",
+    "diffEditor.insertedTextBackground": "#003300fe",
+    "diffEditor.removedLineBackground": "#330011fe",
+    "diffEditor.removedTextBackground": "#80002afe"
+  },
+
+  // --- Editor --- //
+
+  // Inlay hints off by default (toggle with -ci)
+  "editor.inlayHints.enabled": "off",
+  "editor.rulers": [80],
+
+  // --- Git --- //
+
+  "git.ignoreRebaseWarning": true,
+  "git.confirmSync": false,
+
+  // --- Rust-analyzer (from `nvim/coc-settings.json`) --- //
+
+  "rust-analyzer.inlayHints.typeHints.enable": true,
+  "rust-analyzer.inlayHints.parameterHints.enable": true,
+  "rust-analyzer.inlayHints.chainingHints.enable": true,
+  "rust-analyzer.check.extraArgs": [
+    "--target-dir",
+    "/tmp/rust-analyzer-check"
+  ],
+  "rust-analyzer.cargo.extraEnv": {
+    "LEXE_SKIP_BUILDSCRIPT": "1",
+    "BITCOIND_SKIP_DOWNLOAD": "1",
+    "ELECTRSD_SKIP_DOWNLOAD": "1"
+  },
+  "rust-analyzer.diagnostics.disabled": [
+    "inactive-code",
+    "unlinked-file"
+  ],
+  "rust-analyzer.rustfmt.extraArgs": [
+    "+nightly-2025-10-16"
+  ],
+  "rust-analyzer.updates.checkOnStartup": false,
+  "rust-analyzer.workspace.symbol.search.kind": "all_symbols",
+
+  // --- Extensions --- //
+
+  // Run VSCodeVim on a dedicated thread to prevent input lag
+  "extensions.experimental.affinity": {
+    "vscodevim.vim": 1
+  },
+
+  // GitHub Pull Requests ("All Open" is added automatically)
+  "githubPullRequests.queries": [
+    { "label": "Waiting For My Review", "query": "is:open review-requested:${user}" },
+    { "label": "Pending - Assigned to Me", "query": "is:open assignee:${user} -review:approved" },
+    { "label": "Pending - Mine", "query": "is:open author:${user} -review:approved" },
+    { "label": "Approved - Assigned to Me", "query": "is:open review:approved assignee:${user}" },
+    { "label": "Approved - Mine", "query": "is:open review:approved author:${user}" }
+  ],
+
+  // ================================================= //
+  // VSCodeVim configuration (mirrors `nvim/core.vim`) //
+  // ================================================= //
+
+  // --- Leader Keys --- //
+
+  "vim.leader": "<space>",
+
+  // --- Configuration - Search --- //
+
+  "vim.hlsearch": true,
+  "vim.incsearch": true,
+  "vim.ignorecase": true,
+  "vim.smartcase": true,
+
+  // --- Configuration - Typing --- //
+
+  "vim.autoindent": true,
+  "vim.smartindent": true,
+
+  // --- Plugins --- //
+
+  "vim.surround": true,
+  "vim.highlightedyank.enable": true,
+  "vim.sneak": true,
+  "vim.sneakUseIgnorecaseAndSmartcase": true,
+
+  // --- OS Copy and Paste --- //
+
+  "vim.useSystemClipboard": true,
+
+  // --- Insert Mode Key Bindings --- //
+
+  "vim.insertModeKeyBindings": [
+    // DVORAK - hn for Esc key
+    { "before": ["h", "n"], "after": ["<Esc>"] },
+
+    // Emacs - Ctrl+k to delete to end of line
+    { "before": ["<C-k>"], "commands": ["deleteAllRight"] },
+    // Emacs - Ctrl+t to transpose letters
+    { "before": ["<C-t>"], "commands": ["editor.action.transposeLetters"] }
+  ],
+
+  // --- Normal Mode Key Bindings --- //
+
+  "vim.normalModeKeyBindingsNonRecursive": [
+    // --- DVORAK - Fixes --- //
+
+    // Movement: d h t n instead of h j k l
+    { "before": ["d"], "after": ["h"] },
+    { "before": ["h"], "after": ["j"] },
+    { "before": ["t"], "after": ["k"] },
+    { "before": ["n"], "after": ["l"] },
+
+    // k/K for delete (Think: "(k)ill")
+    { "before": ["k"], "after": ["d"] },
+    { "before": ["K"], "after": ["D"] },
+
+    // j/J for illuminate-style word navigation
+    { "before": ["j"], "commands": ["editor.action.wordHighlight.next"] },
+    { "before": ["J"], "commands": ["editor.action.wordHighlight.prev"] },
+
+    // q/Q for next and prev search match
+    { "before": ["q"], "after": ["n"] },
+    { "before": ["Q"], "after": ["N"] },
+
+    // L for Join lines (Think: "(L)ine")
+    { "before": ["L"], "after": ["J"] },
+
+    // ' and " to till forwards / backwards (Think: "tick (') to just before")
+    { "before": ["'"], "after": ["t"] },
+    { "before": ["\""], "after": ["T"] },
+
+    // --- QWERTY J/K to quickly move cursor up/down by 8 lines --- //
+
+    { "before": ["H"], "after": ["8", "j"] },
+    { "before": ["T"], "after": ["8", "k"] },
+
+    // --- QWERTY H/L to quickly move forward/back one word --- //
+
+    { "before": ["D"], "after": ["B"] },
+    { "before": ["N"], "after": ["W"] },
+
+    // --- Normal mode mods --- //
+
+    // Option+v (DVORAK) to enter visual block mode
+    { "before": ["≥"], "after": ["<C-v>"] },
+
+    // Option+f/b (QWERTY) for half page down/up
+    { "before": ["ƒ"], "after": ["<C-d>"] },
+    { "before": ["∫"], "after": ["<C-u>"] },
+
+    // Option+j/k (DVORAK) to scroll screen up/down by 6 lines
+    { "before": ["ç"], "after": ["6", "<C-e>"] },
+    { "before": ["√"], "after": ["6", "<C-y>"] },
+
+    // --- Search --- //
+
+    // # as * but stay on current match
+    { "before": ["#"], "after": ["*", "N"] },
+    // m to repeat last action then jump to next
+    { "before": ["m"], "after": [".", "n"] },
+    // M for mark (since m is remapped)
+    { "before": ["M"], "after": ["m"] },
+
+    // --- Emacs --- //
+
+    // Ctrl+a/e for beginning/end of line
+    { "before": ["<C-a>"], "after": ["^"] },
+    { "before": ["<C-e>"], "after": ["$"] },
+
+    // --- Redo --- //
+
+    // Option+r (DVORAK) to redo
+    { "before": ["ø"], "after": ["<C-r>"] },
+
+    // --- Move lines down --- //
+
+    { "before": ["\\"], "after": ["d", "d", "p"] },
+
+    // --- DVORAK - Splits --- //
+
+    // Option+d,h,t,n to switch splits
+    { "before": ["˙"], "commands": ["workbench.action.focusLeftGroup"] },
+    { "before": ["∆"], "commands": ["workbench.action.focusBelowGroup"] },
+    { "before": ["˚"], "commands": ["workbench.action.focusAboveGroup"] },
+    { "before": ["¬"], "commands": ["workbench.action.focusRightGroup"] },
+
+    // Ctrl+W then d,h,t,n to switch splits
+    { "before": ["<C-w>", "d"], "commands": ["workbench.action.focusLeftGroup"] },
+    { "before": ["<C-w>", "h"], "commands": ["workbench.action.focusBelowGroup"] },
+    { "before": ["<C-w>", "t"], "commands": ["workbench.action.focusAboveGroup"] },
+    { "before": ["<C-w>", "n"], "commands": ["workbench.action.focusRightGroup"] },
+
+    // Ctrl+W then D,H,T,N to move splits
+    { "before": ["<C-w>", "D"], "commands": ["workbench.action.moveEditorToLeftGroup"] },
+    { "before": ["<C-w>", "H"], "commands": ["workbench.action.moveEditorToBelowGroup"] },
+    { "before": ["<C-w>", "T"], "commands": ["workbench.action.moveEditorToAboveGroup"] },
+    { "before": ["<C-w>", "N"], "commands": ["workbench.action.moveEditorToRightGroup"] },
+
+    // --- Leader Mappings --- //
+
+    // <Leader>q to record macro (q is remapped to n)
+    { "before": ["<leader>", "q"], "after": ["q"] },
+
+    // <Leader>= to equalize splits
+    { "before": ["<leader>", "="], "commands": ["workbench.action.evenEditorWidths"] },
+
+    // <Leader>p/n/N for buffer navigation
+    { "before": ["<leader>", "p"], "commands": ["workbench.action.previousEditor"] },
+    { "before": ["<leader>", "n"], "commands": ["workbench.action.nextEditor"] },
+    { "before": ["<leader>", "N"], "commands": ["workbench.action.previousEditor"] },
+
+    // <Leader>y/Y to copy file path
+    { "before": ["<leader>", "y"], "commands": ["copyRelativeFilePath"] },
+    { "before": ["<leader>", "Y"], "commands": ["copyFilePath"] },
+
+    // <Leader>ve to edit settings
+    { "before": ["<leader>", "v", "e"], "commands": ["workbench.action.openSettingsJson"] },
+
+    // --- LSP Mappings (from `nvim/lua/coc.lua`) --- //
+
+    // <Leader>h - (h)over: show type/documentation
+    { "before": ["<leader>", "h"], "commands": ["editor.action.showHover"] },
+    // <Leader>d - go to (d)efinition
+    { "before": ["<leader>", "d"], "commands": ["editor.action.revealDefinition"] },
+    // <Leader>t - go to (t)ype definition
+    { "before": ["<leader>", "t"], "commands": ["editor.action.goToTypeDefinition"] },
+    // <Leader>r - go to (r)eferences
+    { "before": ["<leader>", "r"], "commands": ["editor.action.goToReferences"] },
+    // <Leader>i - go to (i)mplementation
+    { "before": ["<leader>", "i"], "commands": ["editor.action.goToImplementation"] },
+    // <Leader>c - (c)ode actions at cursor
+    { "before": ["<leader>", "c"], "commands": ["editor.action.quickFix"] },
+    // <Leader>x - quick fi(x) current line
+    { "before": ["<leader>", "x"], "commands": ["editor.action.quickFix"] },
+    // <Leader>e - show all (e)rrors/diagnostics
+    { "before": ["<leader>", "e"], "commands": ["workbench.actions.view.problems"] },
+
+    // <Leader>f - (f)ind files (fuzzy search)
+    { "before": ["<leader>", "f"], "commands": ["workbench.action.quickOpen"] },
+    // <Leader>s - document (s)ymbols (current file)
+    { "before": ["<leader>", "s"], "commands": ["workbench.action.gotoSymbol"] },
+    // <Leader>w - (w)orkspace symbols
+    { "before": ["<leader>", "w"], "commands": ["workbench.action.showAllSymbols"] },
+
+    // --- LocalLeader (-) Mappings (from `nvim/lua/coc.lua`) --- //
+
+    // -rn - (r)e(n)ame symbol
+    { "before": ["-", "r", "n"], "commands": ["editor.action.rename"] },
+    // -rf - (r)e(f)actor
+    { "before": ["-", "r", "f"], "commands": ["editor.action.refactor"] },
+    // -ci - toggle inlay hints
+    { "before": ["-", "c", "i"], "commands": ["editor.inlayHints.toggle"] }
+  ],
+
+  // --- Visual Mode Key Bindings --- //
+
+  "vim.visualModeKeyBindingsNonRecursive": [
+    // Restore 's' as substitute (sneak overrides it)
+    { "before": ["s"], "after": ["c"] },
+
+    // --- DVORAK - Fixes --- //
+
+    // Movement
+    { "before": ["d"], "after": ["h"] },
+    { "before": ["h"], "after": ["j"] },
+    { "before": ["t"], "after": ["k"] },
+    { "before": ["n"], "after": ["l"] },
+
+    // Delete
+    { "before": ["k"], "after": ["d"] },
+    { "before": ["K"], "after": ["D"] },
+
+    // Till
+    { "before": ["'"], "after": ["t"] },
+    { "before": ["\""], "after": ["T"] },
+
+    // --- QWERTY J/K to quickly move cursor up/down by 8 lines --- //
+
+    { "before": ["H"], "after": ["8", "j"] },
+    { "before": ["T"], "after": ["8", "k"] },
+
+    // --- QWERTY H/L to quickly move forward/back one word --- //
+
+    { "before": ["D"], "after": ["B"] },
+    { "before": ["N"], "after": ["W"] },
+
+    // --- Emacs --- //
+
+    { "before": ["<C-a>"], "after": ["^"] },
+    { "before": ["<C-e>"], "after": ["$"] },
+
+    // --- Vim paste --- //
+
+    // Paste without overwriting register
+    { "before": ["p"], "after": ["\"", "_", "d", "P"] },
+
+    // --- Move lines down --- //
+
+    { "before": ["\\"], "after": ["d", "p", "`", "[", "V", "`", "]"] },
+
+    // --- Search --- //
+
+    // // to search for visually selected text
+    { "before": ["/", "/"], "commands": ["editor.actions.findWithSelection"] }
+  ],
+
+  // --- Operator Pending Mode Key Bindings --- //
+
+  "vim.operatorPendingModeKeyBindingsNonRecursive": [
+    // DVORAK movement for operators (e.g., kh = delete down)
+    { "before": ["h"], "after": ["j"] },
+    { "before": ["t"], "after": ["k"] },
+
+    // k in operator pending = d (so kk = dd)
+    { "before": ["k"], "after": ["d"] },
+
+    // Till
+    { "before": ["'"], "after": ["t"] },
+    { "before": ["\""], "after": ["T"] }
+  ]
+}

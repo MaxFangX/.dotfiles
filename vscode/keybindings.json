@@ -1,0 +1,12 @@
+[
+  // Ctrl+Tab to go to next tab (no switcher UI)
+  {
+    "key": "ctrl+tab",
+    "command": "workbench.action.nextEditor"
+  },
+  // Ctrl+Shift+Tab to go to previous tab (no switcher UI)
+  {
+    "key": "ctrl+shift+tab",
+    "command": "workbench.action.previousEditor"
+  }
+]
