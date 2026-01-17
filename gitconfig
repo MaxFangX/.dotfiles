@@ -1,17 +1,18 @@
 [user]
 	name = Max Fang
 	email = protonmail.com@maxfa.ng
-signingkey = 98F08E41D2257775
+	signingkey = 98F08E41D2257775
 
 [credential]
-helper = cache --timeout=3600
+	helper = cache --timeout=3600
 
 [core]
-editor = nvim
-pager = delta
+	editor = nvim
+	pager = delta
 
 [push]
-autoSetupRemote = true
+	autoSetupRemote = true
+	default = upstream
 
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
