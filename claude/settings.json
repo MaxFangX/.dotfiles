@@ -1,8 +1,31 @@
 {
   "permissions": {
     "allow": [
-      "Bash(awk:*)",
-      "Bash(just --list:*)"
+      "Bash(chmod:*)",
+      "Bash(fastmod:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh run:*)",
+      "Bash(git add:*)",
+      "Bash(git branch:*)",
+      "Bash(git commit:*)",
+      "Bash(git mv:*)",
+      "Bash(git rebase:*)",
+      "Bash(git remote:*)",
+      "Bash(just cargo-test:*)",
+      "Bash(just migrate:*)",
+      "Bash(just psql:*)",
+      "Bash(just repotools:*)",
+      "Bash(just sea-orm-cli:*)",
+      "Bash(psql:*)",
+      "Bash(sed:*)",
+      "Bash(tmux kill-session:*)",
+      "WebFetch(domain:crates.io)",
+      "WebFetch(domain:datatracker.ietf.org)",
+      "WebFetch(domain:docs.rs)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:just.systems)",
+      "WebFetch(domain:www.rfc-editor.org)"
     ]
   },
   "enabledPlugins": {
