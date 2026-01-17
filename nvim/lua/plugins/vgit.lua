@@ -734,6 +734,20 @@ return {
         ['n <LocalLeader>gl'] = function()
           require('vgit').buffer_history_preview()
         end,
+        -- (L)og history of project (like git log --all)
+        ['n gL'] = function()
+          require('vgit').project_logs_preview()
+        end,
+        ['n <LocalLeader>gL'] = function()
+          require('vgit').project_logs_preview()
+        end,
+        -- (c)ommits preview of project
+        ['n gc'] = function()
+          require('vgit').project_commits_preview()
+        end,
+        ['n <LocalLeader>gc'] = function()
+          require('vgit').project_commits_preview()
+        end,
 
         -- e(x)change/toggle between split and unified diff view
         ['n <LocalLeader>gx'] = function()
