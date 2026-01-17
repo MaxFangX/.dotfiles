@@ -125,6 +125,13 @@ if [[ ! "$PATH" == *$WINDSURF_BIN* ]]; then
     export PATH="$PATH:$WINDSURF_BIN"
 fi
 
+# Omnara
+export OMNARA_INSTALL="$HOME/.omnara"
+OMNARA_BIN="$OMNARA_INSTALL/bin"
+if [[ ! "$PATH" == *$OMNARA_BIN* ]]; then
+    export PATH="$OMNARA_BIN:$PATH"
+fi
+
 # Aider config
 export AIDER_ARCHITECT=true
 export AIDER_AUTO_COMMITS=false
