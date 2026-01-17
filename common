@@ -377,6 +377,8 @@ alias gcf="git commit -v --fixup"
 alias gfu="git fetch upstream"
 
 alias gp="git push"
+# OMZ sets gpf to --force-with-lease
+alias gpff="git push --force"
 alias gpo="git push origin"
 alias gpom="git push origin master"
 # Push one commit to origin/<current-branch>
