@@ -1,6 +1,6 @@
 {
   "[json]": {
-    "coc.preferences.formatOnSave": true
+    "coc.preferences.formatOnSave": false
   },
   "[rust]": {
     "coc.preferences.formatOnSave": true
