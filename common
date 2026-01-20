@@ -416,11 +416,6 @@ alias glr="git pull --rebase"
 alias glror="git pull --rebase origin"
 function glrum() { git pull --rebase upstream `main_branch` }
 function glrorm() { git pull --rebase origin `main_branch` }
-unalias gup # OMZ git pull --rebase
-unalias gupa # OMZ git pull --rebase --autostash
-unalias gupav # OMZ git pull --rebase --autostash -v
-unalias gupv # OMZ git pull --rebase -v
-unalias ggpull # OMZ git pull origin "$(git_current_branch)"
 
 # gm is 'git merge'
 alias gmf="git merge --ff-only"
