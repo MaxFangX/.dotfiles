@@ -11,9 +11,13 @@ return {
         -- Respect 'ignorecase' and 'smartcase' settings
         vim.g["sneak#use_ic_scs"] = 1
     end,
+    config = function()
+        -- Remove sneak's 's' mapping in visual mode, restore default behavior
+        pcall(vim.keymap.del, "x", "s")
+    end,
     keys = {
-        -- 2-character Sneak
-        { "s", "<Plug>Sneak_s", mode = { "n", "x", "o" } },
+        -- 2-character Sneak (not in visual mode, where s is substitute)
+        { "s", "<Plug>Sneak_s", mode = { "n", "o" } },
         { "S", "<Plug>Sneak_S", mode = "n" },
 
         -- Replace f/F with 1-character Sneak (does not invoke label-mode)
