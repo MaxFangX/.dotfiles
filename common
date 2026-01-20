@@ -366,6 +366,7 @@ function gchm() { git checkout `main_branch` }
 alias grhsh='git reset --soft HEAD~1'
 alias grhhh='git reset --hard HEAD~1'
 function grhhm() { git reset --hard origin/`main_branch` }
+alias grhhu='git fetch && git reset --hard @{u}'
 alias grsm='git reset . && gchm'
 
 alias gcm="git commit -m"
