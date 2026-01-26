@@ -5,3 +5,10 @@
 Session.vim
 nvim/lazy-lock.json
 prompts.md
+
+# nix build result links
+/result
+/result-*
+
+# direnv cache
+/.direnv

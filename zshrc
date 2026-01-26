@@ -106,5 +106,10 @@ alias -g '$'=''
 # GENERAL SETTINGS
 ###########################
 
+# Load Home Manager session variables
+if [ -f ~/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
+    source ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+fi
+
 # Load settings common to both bash and zsh
 source ~/.common
