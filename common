@@ -9,10 +9,8 @@ else
   export EDITOR='vim'
 fi
 
-# Use vim as $MANPAGER
-# https://stackoverflow.com/a/16741577
-# https://muru.dev/2015/08/28/vim-for-man.html
-export MANPAGER='nvim -u "$HOME/.config/nvim/core.vim" -c "%! col -b" -c "set ft=man nomod | let &titlestring=$MAN_PN"'
+# Use nvim as $MANPAGER (uses built-in :Man plugin for proper formatting)
+export MANPAGER='nvim +Man!'
 
 # Increase soft per-process file descriptor limit to 1024
 ulimit -Sn 1024
