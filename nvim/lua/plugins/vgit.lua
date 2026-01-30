@@ -741,12 +741,24 @@ return {
         ['n <LocalLeader>gL'] = function()
           require('vgit').project_logs_preview()
         end,
-        -- (c)ommits preview of project
-        ['n gc'] = function()
-          require('vgit').project_commits_preview()
+        -- (C)ommits preview of project
+        ['n gC'] = function()
+          local input = vim.fn.input('Commit(s): ', 'HEAD')
+          if input ~= '' then
+            vim.cmd('VGit project_commits_preview ' .. input)
+          end
         end,
         ['n <LocalLeader>gc'] = function()
           require('vgit').project_commits_preview()
+        end,
+
+        -- (r)eview by (c)ommit
+        ['n grc'] = function()
+          require('vgit').project_review_by_commit()
+        end,
+        -- (r)eview by (f)ile
+        ['n grf'] = function()
+          require('vgit').project_review_by_file()
         end,
 
         -- e(x)change/toggle between split and unified diff view
@@ -867,6 +879,45 @@ return {
             stage_all = { key = 'AS', desc = 'Stage all' },
             unstage_all = { key = 'AU', desc = 'Unstage all' },
             reset_all = { key = 'AR', desc = 'Reset all' },
+          },
+        },
+
+        -- Project commits preview settings
+        project_commits_preview = {
+          keymaps = {
+            next = { key = 'j', desc = 'Next' },
+            previous = { key = 'k', desc = 'Previous' },
+          },
+        },
+
+        -- Project review by file settings
+        project_review_by_file = {
+          hunk_alignment = 'center',
+          keymaps = {
+            toggle_focus = { key = '<Tab>', desc = 'Switch focus between file list and diff preview' },
+            previous = { key = 'k', desc = 'Previous' },
+            next = { key = 'j', desc = 'Next' },
+            mark_hunk = { key = 's', desc = 'Mark hunk seen' },
+            mark_file = { key = 'S', desc = 'Mark file seen' },
+            unmark_hunk = { key = 'u', desc = 'Unmark hunk' },
+            unmark_file = { key = 'U', desc = 'Unmark file' },
+            reset = { key = 'R', desc = 'Reset all marks' },
+          },
+        },
+
+        -- Project review by commit settings
+        project_review_by_commit = {
+          list_position = 'left',
+          hunk_alignment = 'center',
+          keymaps = {
+            toggle_focus = { key = '<Tab>', desc = 'Switch focus between file list and diff preview' },
+            previous = { key = 'k', desc = 'Previous' },
+            next = { key = 'j', desc = 'Next' },
+            mark_hunk = { key = 's', desc = 'Mark hunk seen' },
+            mark_file = { key = 'S', desc = 'Mark file seen' },
+            unmark_hunk = { key = 'u', desc = 'Unmark hunk' },
+            unmark_file = { key = 'U', desc = 'Unmark file' },
+            reset = { key = 'R', desc = 'Reset all marks' },
           },
         },
 
