@@ -29,6 +29,15 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 Please DON'T include this. While I value your work, this adds needless noise.
 
+## Creating Pull Requests
+
+When creating pull requests using the `gh` CLI tool,
+always target `MaxFangX/.dotfiles` using the `--repo` flag:
+
+```bash
+gh pr create --repo MaxFangX/.dotfiles --title "..." --body "..."
+```
+
 ## Neovim repo clones
 
 I have most of my neovim plugins cloned to `~/dev/nvim` run `ls ~/dev/nvim`
