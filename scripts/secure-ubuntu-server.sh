@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Idempotent Ubuntu server setup script.
+# Idempotent Ubuntu server security hardening script.
 # Configures: fail2ban, unattended-upgrades, SSH hardening,
 # and a weekly reboot timer.
 #
-# Usage: sudo ./setup-ubuntu-server.sh
+# Usage: sudo ./secure-ubuntu-server.sh
 
 if [[ $EUID -ne 0 ]]; then
   echo "Error: must be run as root (use sudo)" >&2
