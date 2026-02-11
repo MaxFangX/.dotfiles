@@ -1,25 +1,18 @@
 {
   pkgs,
+  lib,
   sources,
   ...
 }:
 {
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
   home.username = "fang";
   home.homeDirectory = "/Users/fang";
 
-  # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
   home.stateVersion = "25.05";
 
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
   home.packages = [
     pkgs.htop
     pkgs.ripgrep
@@ -27,13 +20,24 @@
     pkgs.jq
   ];
 
-  # Home Manager can manage your dotfiles. The primary way to manage plain files
-  # is through 'home.file'.
   home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc'
-    # # a symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
+    ".zshrc".source = ../zshrc;
+    ".common".source = ../common;
+    ".bashrc".source = ../bashrc;
+    ".gitconfig".source = ../gitconfig;
+    ".tmux.conf".source = ../tmux.conf;
+    ".config/nvim".source = ../nvim;
+    ".ideavimrc".source = ../nvim/init.lua;
+    ".cargo/config.toml".source = ../cargo/config.toml;
+    ".claude/CLAUDE.md".source = ../claude/CLAUDE.md;
+    ".claude/settings.json".source = ../claude/settings.json;
+    ".config/karabiner/assets/complex_modifications".source =
+      ../karabiner/assets/complex_modifications;
+  } // lib.optionalAttrs pkgs.stdenv.isDarwin {
+    "Library/Application Support/Code/User/settings.json".source =
+      ../vscode/settings.json;
+    "Library/Application Support/Code/User/keybindings.json".source =
+      ../vscode/keybindings.json;
   };
 
   # Add dotfiles bin to PATH
