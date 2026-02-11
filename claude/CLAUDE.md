@@ -55,16 +55,6 @@ add a prefix like this: `/usr/bin/env RUST_LOG=debug just cargo-test ...`
 Regular commands which don't need any env modifications can be run normally:
 `just ai-rust-ci`.
 
-## Committing changes
-
-Whenever I ask you to "commit your changes", I always mean that you should
-commit to your current branch rather than to the parent branch or `master`.
-- Do not commit your work unless you are explicitly asked to.
-- Do not call `git add`, as that is the mechanism that I use to 'approve' your
-  changes for committing. Instead, inspect the git state using `git status`,
-  `git diff`, or similar. If I have made an error by asking you to commit
-  changes without `git add`ing them first, please stop and let me know.
-
 ## Git commands in other directories
 
 When running git commands in directories other than the current working
