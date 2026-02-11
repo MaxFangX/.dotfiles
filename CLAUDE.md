@@ -1,5 +1,17 @@
 # AI instructions
 
+## Repo overview
+
+Nix + Home Manager dotfiles. Machine configs and shared
+modules live in `home/`. Entry point: `default.nix`
+imports npins and builds `homeConfigs`. Apply with `hms`.
+
+Other top-level dirs:
+- `nvim/` — Neovim config
+- `bin/`, `scripts/` — Helper scripts
+- `npins/` — Pinned nix deps
+- `pkgs/` — Custom nix packages
+
 ## Style
 
 All files should maintain a maximum line width of 80 characters.
