@@ -24,7 +24,4 @@
     "Library/Application Support/Code/User/keybindings.json"
       .source = ../vscode/keybindings.json;
   };
-
-  home.sessionVariables = {
-  };
 }
