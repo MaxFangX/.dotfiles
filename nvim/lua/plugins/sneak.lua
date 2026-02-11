@@ -1,14 +1,14 @@
 -- vim-sneak: Jump to any location with two characters
 
--- Smart visual s/S: sneak if char/blockwise with no movement, else substitute
-local function smart_visual_s(forward)
-    if vim.fn.mode() == "V" then return "c" end  -- linewise always substitutes
+-- Smart visual s/S: sneak if char/blockwise with no movement, else fallback
+local function smart_visual_s(sneak_plug, fallback)
+    if vim.fn.mode() == "V" then return fallback end
     local start_pos = vim.fn.getpos("v")
     local cur_pos = vim.fn.getpos(".")
     if start_pos[2] == cur_pos[2] and start_pos[3] == cur_pos[3] then
-        return forward and "<Plug>Sneak_s" or "<Plug>Sneak_S"
+        return sneak_plug
     end
-    return "c"
+    return fallback
 end
 
 return {
@@ -28,9 +28,11 @@ return {
         { "s", "<Plug>Sneak_s", mode = { "n", "o" } },
         { "S", "<Plug>Sneak_S", mode = { "n", "o" } },
 
-        -- Visual: sneak if no selection yet, substitute otherwise
-        { "s", function() return smart_visual_s(true) end, mode = "x", expr = true },
-        { "S", function() return smart_visual_s(false) end, mode = "x", expr = true },
+        -- Visual: sneak if no selection yet, else substitute/surround
+        { "s", function() return smart_visual_s("<Plug>Sneak_s", "c") end,
+            mode = "x", expr = true },
+        { "S", function() return smart_visual_s("<Plug>Sneak_S", "<Plug>VSurround") end,
+            mode = "x", expr = true },
 
         -- Replace f/F with 1-character Sneak (does not invoke label-mode)
         { "f", "<Plug>Sneak_f", mode = { "n", "x", "o" } },
