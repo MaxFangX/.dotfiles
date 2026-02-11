@@ -2,8 +2,6 @@
 # GENERAL
 ###########################
 
-# EDITOR and MANPAGER are set via Home Manager (core.nix)
-
 # Increase soft per-process file descriptor limit to 1024
 ulimit -Sn 1024
 
@@ -18,18 +16,11 @@ chmod u+x ~/env/local.sh ~/env/sensitive.sh
 source ~/env/local.sh
 source ~/env/sensitive.sh
 
-# MANPATH, ~/.cargo/bin, ~/.local/bin are set via
-# Home Manager (core.nix)
-
 # macOS-specific environment (brew, NVM, chruby, etc.)
 if [[ "$(uname)" == "Darwin" ]]; then
     source ~/.dotfiles/common-macos
 fi
 
-# Omnara PATH is managed via Home Manager (omnara.nix)
-# Aider config is managed via Home Manager (dev.nix)
-
-# fzf is configured via Home Manager (core.nix)
 alias f=fzf
 
 ###########################
@@ -367,10 +358,6 @@ alias sv="grunt server"
 svp() { grunt server --partner=$1; }
 alias latexmk='latexmk -pdf -pvc'
 alias fucking='sudo'
-if [[ "$(uname)" == "Darwin" ]]; then
-    alias damnshortcuts="rm ~/Library/Preferences/com.apple.symbolichotkeys.plist"
-    alias cputemp="~/github/osx-cpu-temp/osx-cpu-temp"
-fi
 alias eutykhia="cargo run" # just for fun
 alias tyche="cargo run --release" # just for fun
 alias lc="lncli" # lncli is awkward to type in DVORAK
