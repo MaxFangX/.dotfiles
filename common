@@ -59,43 +59,7 @@ export AIDER_EDITOR_MODEL=openrouter/anthropic/claude-3.5-sonnet
 export AIDER_MODEL=openai/o1
 export AIDER_SHOW_MODEL_WARNINGS=false
 
-# --- fzf --- #
-
-# Setup
-FZF_BIN_PATH="$(brew --prefix)/opt/fzf/bin"
-if [[ ! "$PATH" == *$FZF_BIN_PATH* ]]; then
-  export PATH="$PATH:$FZF_BIN_PATH"
-fi
-
-# Auto-completion
-if [[ "bash" == $0 ]]; then
-    [[ $- == *i* ]] && source "$(brew --prefix)/opt/fzf/shell/completion.bash" 2> /dev/null
-elif [[ "zsh" == $0 ]]; then
-    [[ $- == *i* ]] && source "$(brew --prefix)/opt/fzf/shell/completion.zsh" 2> /dev/null
-fi
-
-# Key bindings
-if [[ "bash" == $0 ]]; then
-    source "$(brew --prefix)/opt/fzf/shell/key-bindings.bash"
-elif [[ "zsh" == $0 ]]; then
-    source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
-fi
-
-# --bind in :Man fzf (in vim) for details
-# FIXME: Doesn't work
-export FZF_DEFAULT_OPTS='--bind alt-a:select-all'
-
-# Use ripgrep for fzf filename searching
-if [ -x "$(command -v rg)" ]; then
-    export FZF_DEFAULT_COMMAND='rg --files --fixed-strings --ignore-case '\
-'--no-ignore --hidden --follow '\
-'--glob "!*.git/*" --glob "!*target/*" '
-fi
-
-# Use gruvbox-dark theme for bat which is used by fzf in vim
-# See https://github.com/sharkdp/bat#highlighting-theme for more info
-export BAT_THEME="gruvbox-dark"
-
+# fzf is configured via Home Manager (core.nix)
 alias f=fzf
 
 ###########################

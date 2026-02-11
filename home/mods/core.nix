@@ -12,6 +12,21 @@
   home.sessionVariables = {
     EDITOR = "nvim";
     MANPAGER = "nvim +Man!";
+    BAT_THEME = "gruvbox-dark";
+  };
+
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    enableBashIntegration = true;
+    defaultCommand = builtins.concatStringsSep " " [
+      "rg --files --fixed-strings --ignore-case"
+      "--no-ignore --hidden --follow"
+      "--glob '!*.git/*' --glob '!*target/*'"
+    ];
+    defaultOptions = [
+      "--bind" "alt-a:select-all"
+    ];
   };
 
   home.sessionPath = [
