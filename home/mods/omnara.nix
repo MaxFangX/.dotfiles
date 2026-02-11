@@ -35,6 +35,8 @@ in
     Service = {
       Type = "simple";
       ExecStart = builtins.concatStringsSep " " execStart;
+      # Nix manages the version; prevent self-update restart loops
+      Environment = "OMNARA_NO_UPDATE=1";
       Restart = "on-failure";
       RestartSec = 5;
       WorkingDirectory = homeDir;
@@ -48,6 +50,8 @@ in
       ProcessType = "Background";
       ProgramArguments = execStart;
       WorkingDirectory = homeDir;
+      # Nix manages the version; prevent self-update restart loops
+      EnvironmentVariables.OMNARA_NO_UPDATE = "1";
       RunAtLoad = true;
       KeepAlive = {
         SuccessfulExit = false;

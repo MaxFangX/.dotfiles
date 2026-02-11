@@ -1,9 +1,9 @@
 {
   "x86_64-linux": {
-    "version": "0.17.4",
+    "version": "0.17.5",
     "target": "linux-x64",
-    "url": "https://releases.omnara.com/0.17.4/omnara-linux-x64",
-    "hash": "sha256-x6z903e7u+17TGBohB8rVuhpnefKL5+w1401hlgSsmg="
+    "url": "https://releases.omnara.com/0.17.5/omnara-linux-x64",
+    "hash": "sha256-ee4ILnFFLKJbe8XVbt0z/dCcKudjkXwLbZmHNApzWiU="
   },
   "aarch64-darwin": {
     "version": "0.14.0",
