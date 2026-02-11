@@ -6,9 +6,13 @@
     pkgs.ripgrep
     pkgs.fd
     pkgs.jq
+    pkgs.rustup
   ];
 
-  home.sessionPath = [ "$HOME/.dotfiles/bin" ];
+  home.sessionPath = [
+    "$HOME/.dotfiles/bin"
+    "$HOME/.cargo/bin"
+  ];
 
   home.file = {
     ".zshrc".source = ../../zshrc;
