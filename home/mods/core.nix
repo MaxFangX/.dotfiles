@@ -9,6 +9,11 @@
     pkgs.rustup
   ];
 
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    MANPAGER = "nvim +Man!";
+  };
+
   home.sessionPath = [
     "$HOME/.dotfiles/bin"
     "$HOME/.cargo/bin"

@@ -2,15 +2,7 @@
 # GENERAL
 ###########################
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nvim'
-else
-  export EDITOR='vim'
-fi
-
-# Use nvim as $MANPAGER (uses built-in :Man plugin for proper formatting)
-export MANPAGER='nvim +Man!'
+# EDITOR and MANPAGER are set via Home Manager (core.nix)
 
 # Increase soft per-process file descriptor limit to 1024
 ulimit -Sn 1024
