@@ -1,5 +1,10 @@
 #!/usr/bin/env just --justfile
 
+# Fetch and display PR review comments
+# Filter: unresolved (default), resolved, all, or pr
+pr-comments *args:
+    ./just/pr-comments.sh {{ args }}
+
 # Remove trailing spaces from all files
 remove-trailing-spaces *ARGS:
     #!/usr/bin/env bash

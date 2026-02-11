@@ -38,6 +38,24 @@ always target `MaxFangX/.dotfiles` using the `--repo` flag:
 gh pr create --repo MaxFangX/.dotfiles --title "..." --body "..."
 ```
 
+## Fetching PR comments
+
+Use `just pr-comments` to fetch and display PR review
+comments with full context. The command auto-detects the
+PR number from your current branch.
+
+```bash
+just pr-comments              # unresolved only (default)
+just pr-comments resolved     # resolved only
+just pr-comments pr           # main PR thread comments
+just pr-comments all          # all threads + main thread
+just pr-comments all 123      # override PR number
+```
+
+This provides diff context, threaded replies, and
+resolution status. Significantly more reliable than
+using `gh api` directly.
+
 ## Neovim repo clones
 
 I have most of my neovim plugins cloned to `~/dev/nvim` run `ls ~/dev/nvim`
