@@ -7,6 +7,7 @@
 {
   imports = [
     ./mods/core.nix
+    ./mods/dev.nix
   ];
 
   home.username = "fang";
