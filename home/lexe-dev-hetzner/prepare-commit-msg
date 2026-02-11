@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Appends co-author trailer to commit messages
+# if not already present.
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+
+COAUTHOR="Co-authored-by: Max Fang <hello@maxfa.ng>"
+
+if grep -qi \
+    "^Co-authored-by:.*hello@maxfa.ng" \
+    "$COMMIT_MSG_FILE"; then
+    exit 0
+fi
+
+git interpret-trailers \
+    --in-place \
+    --trailer "$COAUTHOR" \
+    "$COMMIT_MSG_FILE"
