@@ -1,3 +1,4 @@
+# max2022 — macOS dev machine
 {
   pkgs,
   lib,

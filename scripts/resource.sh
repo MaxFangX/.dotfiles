@@ -2,7 +2,6 @@
 ln -sfF ~/.dotfiles/zshrc ~/.zshrc
 ln -sfF ~/.dotfiles/common ~/.common
 ln -sfF ~/.dotfiles/bashrc ~/.bashrc
-ln -sfF ~/.dotfiles/gitconfig ~/.gitconfig
 ln -sfF ~/.dotfiles/tmux.conf ~/.tmux.conf
 # Neovim
 mkdir -p ~/.config

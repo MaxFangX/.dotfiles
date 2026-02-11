@@ -1,7 +1,12 @@
 # Shared config across all machines.
 { pkgs, ... }:
 {
+  imports = [
+    ./git.nix
+  ];
+
   home.packages = [
+    pkgs.delta
     pkgs.htop
     pkgs.ripgrep
     pkgs.fd
@@ -44,7 +49,6 @@
     ".zshrc".source = ../../zshrc;
     ".common".source = ../../common;
     ".bashrc".source = ../../bashrc;
-    ".gitconfig".source = ../../gitconfig;
     ".tmux.conf".source = ../../tmux.conf;
     ".config/nvim".source = ../../nvim;
     ".cargo/config.toml".source = ../../cargo/config.toml;
