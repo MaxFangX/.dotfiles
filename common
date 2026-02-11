@@ -148,11 +148,6 @@ strip-ansi() {
   fi
 }
 
-# Hack for YCM to work
-# Removed because it causes LibreSSL to not work when downloading
-# packages from crates.io
-# export DYLD_FORCE_FLAT_NAMESPACE=1
-
 # Vim
 alias v=nvim
 alias vi=nvim
@@ -402,8 +397,10 @@ alias sv="grunt server"
 svp() { grunt server --partner=$1; }
 alias latexmk='latexmk -pdf -pvc'
 alias fucking='sudo'
-alias damnshortcuts="rm ~/Library/Preferences/com.apple.symbolichotkeys.plist"
-alias cputemp="~/github/osx-cpu-temp/osx-cpu-temp"
+if [[ "$(uname)" == "Darwin" ]]; then
+    alias damnshortcuts="rm ~/Library/Preferences/com.apple.symbolichotkeys.plist"
+    alias cputemp="~/github/osx-cpu-temp/osx-cpu-temp"
+fi
 alias eutykhia="cargo run" # just for fun
 alias tyche="cargo run --release" # just for fun
 alias lc="lncli" # lncli is awkward to type in DVORAK
