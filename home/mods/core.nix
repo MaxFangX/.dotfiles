@@ -5,6 +5,7 @@
     pkgs.htop
     pkgs.ripgrep
     pkgs.fd
+    pkgs.just
     pkgs.jq
     pkgs.neovim
     pkgs.rustup
