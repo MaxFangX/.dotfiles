@@ -29,86 +29,17 @@ if [[ ! "$MANPATH" == *$USER_MANPATH* ]]; then
     export MANPATH="$USER_MANPATH:$MANPATH"
 fi
 
-# User binaries requiring root access
-ROOT_BIN_PATH="$(brew --prefix)/sbin"
-if [[ ! "$PATH" == *$ROOT_BIN_PATH* ]]; then
-  export PATH="$PATH:$ROOT_BIN_PATH"
-fi
-
 # ~/.cargo/bin is added via Home Manager (core.nix)
 
-# Javascript - Node Version Manager (NVM)
-export NVM_DIR="$HOME/.nvm"
-if [ -d "$NVM_DIR" ]; then
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # Load nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Load completion
-fi
-
-# Go
-export GOPATH=~/gocode
-GO_BIN_PATH="$GOPATH/bin"
-if [[ ! "$PATH" == *$GOPATH* ]]; then
-  export PATH="$PATH:$GOPATH"
-fi
-
-# Ruby - chruby
-if [ -f $(brew --prefix)/opt/chruby/share/chruby/chruby.sh ]; then
-    source $(brew --prefix)/opt/chruby/share/chruby/chruby.sh
-fi
-# Enable auto-switching of Rubies specified by .ruby-version files
-if [ -f $(brew --prefix)/opt/chruby/share/chruby/auto.sh ]; then
-    source $(brew --prefix)/opt/chruby/share/chruby/auto.sh
-fi
-# Use 2.7.2 by default
-if [ -x "$(command -v chruby)" ]; then
-    chruby ruby-2.7.2
-fi
-
-# Ruby - Gem
-export GEM_HOME=$HOME/.local/gem
-GEM_BIN=$GEM_HOME/bin
-if [[ ! "$PATH" == *$GEM_BIN* ]]; then
-    export PATH="$PATH:$GEM_BIN"
-fi
-
-# Java - SDKMAN
-export SDKMAN_DIR="$HOME/.local/sdkman" # Default is ~/.local
-if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
-    source "$SDKMAN_DIR/bin/sdkman-init.sh"
-fi
-
-# Android `cmdline-tools
-export ANDROID_HOME=$HOME/.local/android
-ANDROID_SDK_VERSION=33.0.1
-ANDROID_PATH=$ANDROID_HOME/cmdline-tools/latest/bin
-ANDROID_PATH=$ANDROID_PATH:$ANDROID_HOME/build-tools/$ANDROID_SDK_VERSION
-ANDROID_PATH=$ANDROID_PATH:$ANDROID_HOME/platform-tools
-if [[ ! "$PATH" == *$ANDROID_PATH* ]]; then
-    export PATH="$PATH:$ANDROID_PATH"
-fi
-
-# Flutter
-export FLUTTER_HOME=$HOME/.local/flutter/bin
-if [[ ! "$PATH" == *$FLUTTER_HOME* ]]; then
-    export PATH="$PATH:$FLUTTER_HOME"
+# macOS-specific environment (brew, NVM, chruby, etc.)
+if [[ "$(uname)" == "Darwin" ]]; then
+    source ~/.dotfiles/common-macos
 fi
 
 # ~/.local/bin (used by pipx)
 export LOCAL_BIN=$HOME/.local/bin
 if [[ ! "$PATH" == *$LOCAL_BIN* ]]; then
     export PATH="$PATH:$LOCAL_BIN"
-fi
-
-# LM Studio
-export LM_STUDIO_BIN="$HOME/.lmstudio/bin"
-if [[ ! "$PATH" == *$LM_STUDIO_BIN* ]]; then
-    export PATH="$PATH:$LM_STUDIO_BIN"
-fi
-
-# Windsurf
-export WINDSURF_BIN="$HOME/.codeium/windsurf/bin"
-if [[ ! "$PATH" == *$WINDSURF_BIN* ]]; then
-    export PATH="$PATH:$WINDSURF_BIN"
 fi
 
 # Omnara
