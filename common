@@ -35,11 +35,7 @@ if [[ ! "$PATH" == *$ROOT_BIN_PATH* ]]; then
   export PATH="$PATH:$ROOT_BIN_PATH"
 fi
 
-# Rust (cargo) binaries
-CARGO_BIN_PATH="$HOME/.cargo/bin"
-if [[ ! "$PATH" == *$CARGO_BIN_PATH* ]]; then
-  export PATH="$CARGO_BIN_PATH:$PATH"
-fi
+# ~/.cargo/bin is added via Home Manager (core.nix)
 
 # Javascript - Node Version Manager (NVM)
 export NVM_DIR="$HOME/.nvm"
