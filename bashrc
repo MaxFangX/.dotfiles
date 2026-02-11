@@ -6,6 +6,13 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# Home Manager session variables (PATH, env vars, etc.)
+# Sourced before the interactive check so that login shells
+# (via .profile -> .bashrc) always get the right PATH.
+if [ -f ~/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
+    source ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+fi
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -114,4 +121,3 @@ fi
 
 # Load common settings
 source ~/.common
-. "$HOME/.cargo/env"
