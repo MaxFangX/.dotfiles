@@ -6,6 +6,7 @@
 {
   imports = [
     ./mods/core.nix
+    ./mods/dev.nix
     ./mods/omnara.nix
   ];
 
