@@ -18,46 +18,16 @@ chmod u+x ~/env/local.sh ~/env/sensitive.sh
 source ~/env/local.sh
 source ~/env/sensitive.sh
 
-# Add more paths to $MANPATH; confirm with man --path
-SYSTEM_MANPATH="/usr/share/man"
-if [[ ! "$MANPATH" == *$SYSTEM_MANPATH* ]]; then
-    export MANPATH="$SYSTEM_MANPATH:$MANPATH"
-fi
-USER_MANPATH="$HOME/.local/share/man"
-mkdir -p $USER_MANPATH
-if [[ ! "$MANPATH" == *$USER_MANPATH* ]]; then
-    export MANPATH="$USER_MANPATH:$MANPATH"
-fi
-
-# ~/.cargo/bin is added via Home Manager (core.nix)
+# MANPATH, ~/.cargo/bin, ~/.local/bin are set via
+# Home Manager (core.nix)
 
 # macOS-specific environment (brew, NVM, chruby, etc.)
 if [[ "$(uname)" == "Darwin" ]]; then
     source ~/.dotfiles/common-macos
 fi
 
-# ~/.local/bin (used by pipx)
-export LOCAL_BIN=$HOME/.local/bin
-if [[ ! "$PATH" == *$LOCAL_BIN* ]]; then
-    export PATH="$PATH:$LOCAL_BIN"
-fi
-
-# Omnara
-export OMNARA_INSTALL="$HOME/.omnara"
-OMNARA_BIN="$OMNARA_INSTALL/bin"
-if [[ ! "$PATH" == *$OMNARA_BIN* ]]; then
-    export PATH="$OMNARA_BIN:$PATH"
-fi
-
-# Aider config
-export AIDER_ARCHITECT=true
-export AIDER_AUTO_COMMITS=false
-export AIDER_DARK_MODE=true
-export AIDER_EDITOR_MODEL=openrouter/anthropic/claude-3.5-sonnet
-# export AIDER_MODEL=openrouter/anthropic/claude-3.5-sonnet
-# export AIDER_MODEL=openrouter/deepseek/deepseek-r1
-export AIDER_MODEL=openai/o1
-export AIDER_SHOW_MODEL_WARNINGS=false
+# Omnara PATH is managed via Home Manager (omnara.nix)
+# Aider config is managed via Home Manager (dev.nix)
 
 # fzf is configured via Home Manager (core.nix)
 alias f=fzf

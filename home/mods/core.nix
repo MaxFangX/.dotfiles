@@ -33,7 +33,11 @@
   home.sessionPath = [
     "$HOME/.dotfiles/bin"
     "$HOME/.cargo/bin"
+    "$HOME/.local/bin"
   ];
+
+  home.sessionVariables.MANPATH =
+    "/usr/share/man:$HOME/.local/share/man:$MANPATH";
 
   home.file = {
     ".zshrc".source = ../../zshrc;
