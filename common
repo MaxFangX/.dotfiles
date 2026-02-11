@@ -351,6 +351,9 @@ alias ct="cargo test"
 alias cw="cargo watch"
 alias cww="cargo watch --why"
 
+# Claude Code
+alias claude-foom="claude --dangerously-skip-permissions"
+
 # Misc
 alias sw="sass --watch"
 alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
@@ -358,6 +361,4 @@ alias sv="grunt server"
 svp() { grunt server --partner=$1; }
 alias latexmk='latexmk -pdf -pvc'
 alias fucking='sudo'
-alias eutykhia="cargo run" # just for fun
-alias tyche="cargo run --release" # just for fun
 alias lc="lncli" # lncli is awkward to type in DVORAK
