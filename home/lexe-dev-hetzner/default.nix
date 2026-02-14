@@ -6,8 +6,8 @@
 }:
 {
   imports = [
-    ./mods/dev-lexe.nix
-    ./mods/omnara.nix
+    ../mods/dev-lexe
+    ../mods/omnara.nix
   ];
 
   home.username = "dev";
@@ -21,6 +21,6 @@
     # Auto-append co-author trailer so Max Fang shows
     # as a contributor on commits from this machine.
     hooks.prepare-commit-msg =
-      ./lexe-dev-hetzner/prepare-commit-msg;
+      ./prepare-commit-msg;
   };
 }

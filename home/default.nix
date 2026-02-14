@@ -16,7 +16,7 @@
 
   lexe-dev-hetzner = hm.lib.homeManagerConfiguration {
     pkgs = pkgs;
-    modules = [ ./lexe-dev-hetzner.nix ];
+    modules = [ ./lexe-dev-hetzner ];
     extraSpecialArgs = {
       inherit pkgs sources claude-code omnara;
     };
