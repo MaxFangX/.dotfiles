@@ -17,15 +17,13 @@ let
   homeDir = config.home.homeDirectory;
 
   # Prefer self-updated binary; fall back to nix-managed.
-  # Login shell for normal PATH (daemon spawns subprocesses).
-  execStart = let
-    selfUpdated = "${homeDir}/.omnara/bin/omnara";
-    fallback = "${omnara}/bin/omnara";
-  in [
-    "${pkgs.bashInteractive}/bin/bash"
-    "-lc"
-    "'BIN=${selfUpdated}; [ -x $BIN ] || BIN=${fallback}; exec $BIN daemon run-service'"
-  ];
+  selfUpdated = "${homeDir}/.omnara/bin/omnara";
+  fallback = "${omnara}/bin/omnara";
+  startScript = pkgs.writeShellScript "omnara-start" ''
+    BIN=${selfUpdated}
+    [ -x "$BIN" ] || BIN=${fallback}
+    exec "$BIN" daemon run-service
+  '';
 in
 {
   home.packages = [ omnara ];
@@ -53,7 +51,7 @@ in
 
     Service = {
       Type = "simple";
-      ExecStart = builtins.concatStringsSep " " execStart;
+      ExecStart = toString startScript;
       Restart = "on-failure";
       RestartSec = 5;
       WorkingDirectory = homeDir;
@@ -65,7 +63,7 @@ in
     enable = true;
     config = {
       ProcessType = "Background";
-      ProgramArguments = execStart;
+      ProgramArguments = [ (toString startScript) ];
       WorkingDirectory = homeDir;
       RunAtLoad = true;
       KeepAlive = {
