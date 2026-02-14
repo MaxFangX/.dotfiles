@@ -36,6 +36,10 @@ stdenvNoCC.mkDerivation {
 
     install -Dm 755 $src $out/bin/omnara
 
+    # Suppress interactive update prompts (nix manages
+    # the CLI version). The daemon ignores this env var,
+    # so daemon updates are handled separately in the
+    # systemd/launchd service (see home/mods/omnara.nix).
     wrapProgram $out/bin/omnara \
       --set OMNARA_NO_UPDATE 1
 

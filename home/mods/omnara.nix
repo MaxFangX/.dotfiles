@@ -1,4 +1,8 @@
 # Run Omnara as a background daemon service.
+#
+# The daemon self-updates to ~/.omnara/bin/omnara. We prefer
+# that binary and fall back to the nix-managed one on first
+# boot or after `hms`.
 {
   config,
   lib,
@@ -12,16 +16,29 @@ let
 
   homeDir = config.home.homeDirectory;
 
-  # Run as a login shell so we get normal PATH + aliases
-  execStart = [
+  # Prefer self-updated binary; fall back to nix-managed.
+  # Login shell for normal PATH (daemon spawns subprocesses).
+  execStart = let
+    selfUpdated = "${homeDir}/.omnara/bin/omnara";
+    fallback = "${omnara}/bin/omnara";
+  in [
     "${pkgs.bashInteractive}/bin/bash"
     "-lc"
-    "'exec ${omnara}/bin/omnara daemon run-service'"
+    "'BIN=${selfUpdated}; [ -x $BIN ] || BIN=${fallback}; exec $BIN daemon run-service'"
   ];
 in
 {
   # Add Omnara to PATH
   home.packages = [ omnara ];
+
+  # Enable "linger" so the systemd user instance (and thus
+  # this service) starts at boot, not just on login.
+  home.activation.enableLinger = lib.mkIf isLinux (
+    lib.hm.dag.entryAfter [ "reloadSystemd" ] ''
+      ${pkgs.systemd}/bin/loginctl enable-linger "$USER" \
+        2>/dev/null || true
+    ''
+  );
 
   # Linux - systemd user service
   systemd.user.services.omnara = lib.mkIf isLinux {
@@ -35,8 +52,6 @@ in
     Service = {
       Type = "simple";
       ExecStart = builtins.concatStringsSep " " execStart;
-      # Nix manages the version; prevent self-update restart loops
-      Environment = "OMNARA_NO_UPDATE=1";
       Restart = "on-failure";
       RestartSec = 5;
       WorkingDirectory = homeDir;
@@ -50,8 +65,6 @@ in
       ProcessType = "Background";
       ProgramArguments = execStart;
       WorkingDirectory = homeDir;
-      # Nix manages the version; prevent self-update restart loops
-      EnvironmentVariables.OMNARA_NO_UPDATE = "1";
       RunAtLoad = true;
       KeepAlive = {
         SuccessfulExit = false;
