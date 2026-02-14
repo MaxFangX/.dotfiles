@@ -2,6 +2,7 @@
   hm,
   pkgs,
   sources,
+  claude-code,
   omnara,
 }:
 {
@@ -9,7 +10,7 @@
     pkgs = pkgs;
     modules = [ ./max2022.nix ];
     extraSpecialArgs = {
-      inherit pkgs sources omnara;
+      inherit pkgs sources claude-code omnara;
     };
   };
 
@@ -17,7 +18,7 @@
     pkgs = pkgs;
     modules = [ ./lexe-dev-hetzner.nix ];
     extraSpecialArgs = {
-      inherit pkgs sources omnara;
+      inherit pkgs sources claude-code omnara;
     };
   };
 }
