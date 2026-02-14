@@ -43,8 +43,11 @@ Please DON'T include this. While I value your work, this adds needless noise.
 
 ## Creating Pull Requests
 
-When creating pull requests using the `gh` CLI tool,
-always target `MaxFangX/.dotfiles` using the `--repo` flag:
+When creating pull requests using the `gh` CLI tool:
+
+1. **Always target `MaxFangX/.dotfiles`** using the `--repo` flag
+2. **Keep the body minimal** — just a brief summary; no
+   "test plan" or similar sections
 
 ```bash
 gh pr create --repo MaxFangX/.dotfiles --title "..." --body "..."
