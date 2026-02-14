@@ -56,6 +56,8 @@ cat > "$SSHD_DROP" << 'EOF'
 PasswordAuthentication no
 ChallengeResponseAuthentication no
 PermitRootLogin prohibit-password
+ClientAliveInterval 60
+ClientAliveCountMax 3
 EOF
 
 # Ubuntu 24.04 uses 'ssh', older versions use 'sshd'
