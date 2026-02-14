@@ -1,8 +1,13 @@
-# Dev tooling — heavier dependencies for development machines.
+# General dev tooling — LSP, formatters, direnv.
 # Not suitable for security-critical machines.
-{ pkgs, ... }:
+{ pkgs, claude-code, ... }:
 {
+  imports = [
+    ./core.nix
+  ];
+
   home.packages = [
+    claude-code
     pkgs.nodejs # Required by coc.nvim
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter

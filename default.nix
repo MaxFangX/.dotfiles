@@ -11,7 +11,10 @@
   # Package set
   pkgs ? import nixpkgs {
     inherit system;
-    config = { allowUnfree = true; };
+    config = {
+      allowUnfree = true;
+      android_sdk.accept_license = true;
+    };
     overlays = [];
   },
   hm ? import home-manager { inherit pkgs; },
@@ -20,10 +23,11 @@ rec {
   inherit hm pkgs sources;
 
   # Personal packages
+  claude-code = pkgs.callPackage ./pkgs/claude-code {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources omnara;
+    inherit hm pkgs sources claude-code omnara;
   };
 }
