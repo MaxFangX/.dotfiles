@@ -34,8 +34,12 @@ return {
         { "S", function() return smart_visual_s("<Plug>Sneak_S", "<Plug>VSurround") end,
             mode = "x", expr = true },
 
-        -- Replace f/F with 1-character Sneak (does not invoke label-mode)
-        { "f", "<Plug>Sneak_f", mode = { "n", "x", "o" } },
-        { "F", "<Plug>Sneak_F", mode = { "n", "x", "o" } },
+        -- 1-character Sneak with label-mode for f/F
+        { "f", "<Cmd>call sneak#wrap('', 1, 0, 1, 1)<CR>", mode = "n" },
+        { "F", "<Cmd>call sneak#wrap('', 1, 1, 1, 1)<CR>", mode = "n" },
+        { "f", "<Cmd>call sneak#wrap(visualmode(), 1, 0, 1, 1)<CR>", mode = "x" },
+        { "F", "<Cmd>call sneak#wrap(visualmode(), 1, 1, 1, 1)<CR>", mode = "x" },
+        { "f", "<Cmd>call sneak#wrap(v:operator, 1, 0, 1, 1)<CR>", mode = "o" },
+        { "F", "<Cmd>call sneak#wrap(v:operator, 1, 1, 1, 1)<CR>", mode = "o" },
     },
 }
