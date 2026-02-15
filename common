@@ -353,6 +353,7 @@ alias cww="cargo watch --why"
 
 # Claude Code
 alias claude-foom="claude --dangerously-skip-permissions"
+alias claude-go-foom="claude --dangerously-skip-permissions"
 
 # Misc
 alias sw="sass --watch"
