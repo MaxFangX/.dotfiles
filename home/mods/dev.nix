@@ -11,6 +11,7 @@
     pkgs.nodejs # Required by coc.nvim
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
+    pkgs.uv # Python package manager
   ];
 
   home.sessionVariables = {
