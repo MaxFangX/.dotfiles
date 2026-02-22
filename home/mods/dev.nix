@@ -8,6 +8,7 @@
 
   home.packages = [
     claude-code
+    pkgs.codex # OpenAI Codex CLI
     pkgs.nodejs # Required by coc.nvim
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
