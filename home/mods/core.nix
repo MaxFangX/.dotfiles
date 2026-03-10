@@ -14,6 +14,11 @@
     pkgs.jq
     pkgs.neovim
     pkgs.rustup
+
+    # Installed as a package so it's always in PATH,
+    # even when hm-session-vars.sh is skipped.
+    (pkgs.writeShellScriptBin "hms"
+      (builtins.readFile ../../bin/hms))
   ];
 
   home.sessionVariables = {
