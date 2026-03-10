@@ -37,8 +37,8 @@ in
   # this service) starts at boot, not just on login.
   home.activation.enableLinger = lib.mkIf isLinux (
     lib.hm.dag.entryAfter [ "reloadSystemd" ] ''
-      ${pkgs.systemd}/bin/loginctl enable-linger "$USER" \
-        2>/dev/null || true
+      ${pkgs.systemd}/bin/loginctl enable-linger \
+        --no-ask-password "$USER" 2>/dev/null || true
     ''
   );
 
