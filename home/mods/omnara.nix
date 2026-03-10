@@ -19,7 +19,9 @@ let
   # Prefer self-updated binary; fall back to nix-managed.
   selfUpdated = "${homeDir}/.omnara/bin/omnara";
   fallback = "${omnara}/bin/omnara";
+  envFile = "${homeDir}/env/sensitive.sh";
   startScript = pkgs.writeShellScript "omnara-start" ''
+    [ -f ${envFile} ] && . ${envFile}
     BIN=${selfUpdated}
     [ -x "$BIN" ] || BIN=${fallback}
     exec "$BIN" daemon run-service
