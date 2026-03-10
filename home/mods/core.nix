@@ -22,6 +22,15 @@
     BAT_THEME = "gruvbox-dark";
   };
 
+  programs.bash = {
+    enable = true;
+    historyControl = [ "ignoreboth" ];
+    historySize = 1000;
+    historyFileSize = 2000;
+    enableCompletion = true;
+    initExtra = builtins.readFile ../../bashrc-interactive;
+  };
+
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
@@ -48,7 +57,6 @@
   home.file = {
     ".zshrc".source = ../../zshrc;
     ".common".source = ../../common;
-    ".bashrc".source = ../../bashrc;
     ".tmux.conf".source = ../../tmux.conf;
     ".config/nvim".source = ../../nvim;
     ".cargo/config.toml".source = ../../cargo/config.toml;
