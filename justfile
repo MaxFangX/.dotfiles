@@ -4,6 +4,10 @@
 pr-comments *args:
     ./just/pr-comments.sh {{ args }}
 
+# Update all custom packages (or one: just update codex)
+update package="":
+    nix-shell pkgs/update.nix {{ if package != "" { "--argstr package " + package } else { "" } }}
+
 # Format this justfile
 just-fmt:
     just --fmt --unstable
