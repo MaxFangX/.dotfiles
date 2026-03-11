@@ -14,6 +14,10 @@
   home.homeDirectory = "/Users/fang";
   home.stateVersion = "25.05";
 
+  home.sessionPath = [
+    "$HOME/.lmstudio/bin"
+  ];
+
   home.file = {
     ".ideavimrc".source = ../nvim/init.lua;
     ".config/karabiner/assets/complex_modifications"
