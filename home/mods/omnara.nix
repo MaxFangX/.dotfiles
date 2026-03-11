@@ -30,9 +30,6 @@ in
 {
   home.packages = [ omnara ];
 
-  # Prefer the self-updated binary over the nix-managed one.
-  home.sessionPath = [ "$HOME/.omnara/bin" ];
-
   # Enable "linger" so the systemd user instance (and thus
   # this service) starts at boot, not just on login.
   home.activation.enableLinger = lib.mkIf isLinux (
