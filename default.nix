@@ -24,10 +24,11 @@ rec {
 
   # Personal packages
   claude-code = pkgs.callPackage ./pkgs/claude-code {};
+  codex = pkgs.callPackage ./pkgs/codex {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources claude-code omnara;
+    inherit hm pkgs sources claude-code codex omnara;
   };
 }
