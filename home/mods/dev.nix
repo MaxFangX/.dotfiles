@@ -1,6 +1,6 @@
 # General dev tooling — LSP, formatters, direnv.
 # Not suitable for security-critical machines.
-{ pkgs, claude-code, ... }:
+{ pkgs, claude-code, codex, ... }:
 {
   imports = [
     ./core.nix
@@ -8,7 +8,7 @@
 
   home.packages = [
     claude-code
-    pkgs.codex # OpenAI Codex CLI
+    codex
     pkgs.nodejs # Required by coc.nvim
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
