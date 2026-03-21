@@ -892,7 +892,6 @@ return {
 
         -- Project review by file settings
         project_review_by_file = {
-          hunk_alignment = 'center',
           keymaps = {
             toggle_focus = { key = '<Tab>', desc = 'Switch focus between file list and diff preview' },
             previous = { key = 'k', desc = 'Previous' },
@@ -908,7 +907,6 @@ return {
         -- Project review by commit settings
         project_review_by_commit = {
           list_position = 'left',
-          hunk_alignment = 'center',
           keymaps = {
             toggle_focus = { key = '<Tab>', desc = 'Switch focus between file list and diff preview' },
             previous = { key = 'k', desc = 'Previous' },
