@@ -22,6 +22,7 @@
       "openrouter/anthropic/claude-3.5-sonnet";
     AIDER_MODEL = "openai/o1";
     AIDER_SHOW_MODEL_WARNINGS = "false";
+    DOTFILES_NVIM_ENABLE_COC = "1";
   };
 
   programs.direnv = {

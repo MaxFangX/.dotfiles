@@ -4,6 +4,7 @@
 return {
   "neoclide/coc.nvim",
   branch = "release",
+  enabled = vim.env.DOTFILES_NVIM_ENABLE_COC == "1",
   config = function()
     -- CoC extensions
     vim.g.coc_global_extensions = {

@@ -1,19 +1,26 @@
 -- Plugin Options - telescope.nvim
 
+local enable_coc = vim.env.DOTFILES_NVIM_ENABLE_COC == "1"
+
+local dependencies = {
+  "nvim-lua/plenary.nvim",
+  -- fzf-native provides fzf's sorting algorithm for better performance
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "make"
+  },
+}
+
+if enable_coc then
+  -- telescope-coc provides coc.nvim integration
+  table.insert(dependencies, "fannheyward/telescope-coc.nvim")
+end
+
 return {
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      -- fzf-native provides fzf's sorting algorithm for better performance
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make"
-      },
-      -- telescope-coc provides coc.nvim integration
-      "fannheyward/telescope-coc.nvim",
-    },
+    dependencies = dependencies,
     config = function()
       local telescope = require("telescope")
       local actions = require("telescope.actions")
@@ -50,28 +57,29 @@ return {
       -- Load fzf extension
       telescope.load_extension("fzf")
 
-      -- Load coc extension
-      local coc = telescope.load_extension("coc")
+      if enable_coc then
+        telescope.load_extension("coc")
 
-      -- CoC symbol pickers
-      local coc_telescope = require("coc_telescope")
+        -- CoC symbol pickers
+        local coc_telescope = require("coc_telescope")
 
-      vim.keymap.set("n", "<Leader>s", coc_telescope.document_symbols,
-        { noremap = true, silent = true, desc = "document symbols" })
+        vim.keymap.set("n", "<Leader>s", coc_telescope.document_symbols,
+          { noremap = true, silent = true, desc = "document symbols" })
 
-      -- Verbose view: Show all symbols (variables, fields, enum variants,
-      -- trait method implementations)
-      vim.keymap.set("n", "<Leader>S", function()
-        coc_telescope.document_symbols({
-          show_variables = true,
-          show_fields = true,
-          show_enum_members = true,
-          filter_trait_method_impls = false,
-        })
-      end, { noremap = true, silent = true, desc = "document symbols (verbose)" })
+        -- Verbose view: Show all symbols (variables, fields, enum variants,
+        -- trait method implementations)
+        vim.keymap.set("n", "<Leader>S", function()
+          coc_telescope.document_symbols({
+            show_variables = true,
+            show_fields = true,
+            show_enum_members = true,
+            filter_trait_method_impls = false,
+          })
+        end, { noremap = true, silent = true, desc = "document symbols (verbose)" })
 
-      vim.keymap.set("n", "<Leader>w", coc_telescope.workspace_symbols,
-        { noremap = true, silent = true, desc = "workspace symbols" })
+        vim.keymap.set("n", "<Leader>w", coc_telescope.workspace_symbols,
+          { noremap = true, silent = true, desc = "workspace symbols" })
+      end
 
       -- Git picker helper function
       local function git_picker(files_only)
