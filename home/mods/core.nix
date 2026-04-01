@@ -1,5 +1,5 @@
 # Shared config across all machines.
-{ pkgs, ... }:
+{ pkgs, codex, ... }:
 {
   imports = [
     ./git.nix
@@ -14,6 +14,7 @@
     pkgs.jq
     pkgs.neovim
     pkgs.rustup
+    codex
 
     # Installed as a package so it's always in PATH,
     # even when hm-session-vars.sh is skipped.

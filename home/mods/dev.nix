@@ -8,7 +8,6 @@
 
   home.packages = [
     claude-code
-    codex
     pkgs.nodejs # Required by coc.nvim
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
