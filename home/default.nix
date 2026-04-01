@@ -15,6 +15,14 @@
     };
   };
 
+  max-nitropad-2024 = hm.lib.homeManagerConfiguration {
+    pkgs = pkgs;
+    modules = [ ./max-nitropad-2024.nix ];
+    extraSpecialArgs = {
+      inherit pkgs sources claude-code codex omnara;
+    };
+  };
+
   lexe-dev-hetzner = hm.lib.homeManagerConfiguration {
     pkgs = pkgs;
     modules = [ ./lexe-dev-hetzner ];
