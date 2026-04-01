@@ -20,6 +20,9 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local lazy_state_dir = vim.fn.stdpath("state") .. "/lazy"
+vim.fn.mkdir(lazy_state_dir, "p")
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
@@ -39,4 +42,5 @@ require("lazy").setup({
     enabled = true,  -- keep automatic reload enabled
     notify = false,  -- disable the notification
   },
+  lockfile = lazy_state_dir .. "/lazy-lock.json",
 })
