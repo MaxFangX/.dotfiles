@@ -55,17 +55,54 @@ ZSH_THEME=""
 # See also: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-# plugins=(git) # Default
-plugins=(git rust python fzf)
+# Plugins are now vendored in zsh/plugins/
+plugins=()
 
 # Init Oh My Zsh
 if [ -f $ZSH/oh-my-zsh.sh ]; then
     source $ZSH/oh-my-zsh.sh
     fpath=($(brew --prefix)/share/zsh-completions $fpath)
+else
+    # Non-OMZ: set up completion and options manually
+    autoload -Uz compinit && compinit
+    zstyle ':completion:*' matcher-list \
+        'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|=*' 'l:|=* r:|=*'
+    setopt auto_cd
+    setopt interactivecomments
+    setopt share_history
+    setopt hist_ignore_dups
+    setopt hist_expire_dups_first
+    setopt extended_history
+    setopt hist_verify
+
+    # Up/down arrow prefix search
+    autoload -U up-line-or-beginning-search down-line-or-beginning-search
+    zle -N up-line-or-beginning-search
+    zle -N down-line-or-beginning-search
+    bindkey "^[[A" up-line-or-beginning-search
+    bindkey "^[[B" down-line-or-beginning-search
+
+    # Ctrl+Left/Right - move by word
+    bindkey "^[[1;5C" forward-word
+    bindkey "^[[1;5D" backward-word
+
+    # Home/End
+    bindkey "^[[H" beginning-of-line
+    bindkey "^[[F" end-of-line
+
+    # Shift+Tab - reverse completion menu
+    bindkey "^[[Z" reverse-menu-complete
+
+    # Ctrl+x Ctrl+e - edit command in $EDITOR
+    autoload -U edit-command-line
+    zle -N edit-command-line
+    bindkey "^X^E" edit-command-line
 fi
 
-# Load theme
+# Load theme and vendored plugins
 source ~/.dotfiles/zsh/maxfangx.zsh-theme
+source ~/.dotfiles/zsh/plugins/rust.zsh
+source ~/.dotfiles/zsh/plugins/fzf.zsh
 
 # Theme switching functions
 _reset_theme() {
@@ -112,3 +149,6 @@ fi
 
 # Load settings common to both bash and zsh
 source ~/.dotfiles/shell/common.sh
+
+# Load zsh-specific git enhancements (after common.sh loads git-aliases.sh)
+source ~/.dotfiles/zsh/plugins/git.zsh
