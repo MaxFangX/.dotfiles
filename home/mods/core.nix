@@ -34,7 +34,7 @@
     historySize = 1000;
     historyFileSize = 2000;
     enableCompletion = true;
-    initExtra = builtins.readFile ../../bashrc-interactive;
+    initExtra = builtins.readFile ../../shell/bashrc-interactive.sh;
   };
 
   programs.fzf = {
