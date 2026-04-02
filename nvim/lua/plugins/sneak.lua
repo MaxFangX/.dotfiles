@@ -1,16 +1,5 @@
 -- vim-sneak: Jump to any location with two characters
 
--- Smart visual s/S: sneak if char/blockwise with no movement, else fallback
-local function smart_visual_s(sneak_plug, fallback)
-    if vim.fn.mode() == "V" then return fallback end
-    local start_pos = vim.fn.getpos("v")
-    local cur_pos = vim.fn.getpos(".")
-    if start_pos[2] == cur_pos[2] and start_pos[3] == cur_pos[3] then
-        return sneak_plug
-    end
-    return fallback
-end
-
 return {
     "justinmk/vim-sneak",
     init = function()
@@ -24,15 +13,9 @@ return {
         vim.g["sneak#use_ic_scs"] = 1
     end,
     keys = {
-        -- 2-character Sneak
-        { "s", "<Plug>Sneak_s", mode = { "n", "o" } },
-        { "S", "<Plug>Sneak_S", mode = { "n", "o" } },
-
-        -- Visual: sneak if no selection yet, else substitute/surround
-        { "s", function() return smart_visual_s("<Plug>Sneak_s", "c") end,
-            mode = "x", expr = true },
-        { "S", function() return smart_visual_s("<Plug>Sneak_S", "<Plug>VSurround") end,
-            mode = "x", expr = true },
+        -- 2-character Sneak (visual surround is R, see tpope.lua)
+        { "s", "<Plug>Sneak_s", mode = { "n", "o", "x" } },
+        { "S", "<Plug>Sneak_S", mode = { "n", "o", "x" } },
 
         -- 1-character Sneak with label-mode for f/F
         -- Use :<c-u> instead of <Cmd> to properly clear state between invocations
