@@ -14,6 +14,7 @@
     pkgs.jq
     pkgs.neovim
     pkgs.rustup
+    pkgs.zsh
     codex
 
     # Installed as a package so it's always in PATH,
