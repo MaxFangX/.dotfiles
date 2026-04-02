@@ -10,20 +10,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 
-# If the current computer is running macOS
-if [[ $OSTYPE == 'darwin'* ]]; then
-    # It's probably my personal computer, use a theme without user@host
-    ZSH_THEME="mh"
-else
-    # It's a remote instance; use a theme *with* user@host
-    ZSH_THEME="alanpeabody"
-fi
-# Other themes:
-# ZSH_THEME="robbyrussell" # zsh default
-# ZSH_THEME="af-magic" # Theme with two lines, a little tired of it
-# ZSH_THEME="random" # Random theme
-# More themes at https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-
+# Disable oh-my-zsh theming - we use our own
+ZSH_THEME=""
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -75,6 +63,17 @@ if [ -f $ZSH/oh-my-zsh.sh ]; then
     source $ZSH/oh-my-zsh.sh
     fpath=($(brew --prefix)/share/zsh-completions $fpath)
 fi
+
+# Load theme
+source ~/.dotfiles/zsh/maxfangx.zsh-theme
+
+# Theme switching functions
+_reset_theme() {
+  PROMPT='' RPROMPT='' PS2=''
+  unset ${(k)parameters[(I)ZSH_THEME_*]} 2>/dev/null
+}
+theme-maxfangx() { _reset_theme && source ~/.dotfiles/zsh/maxfangx.zsh-theme; }
+theme-bitcoin() { _reset_theme && source ~/.dotfiles/zsh/bitcoin.zsh-theme; }
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
