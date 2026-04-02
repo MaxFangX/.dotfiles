@@ -268,7 +268,7 @@ function glrorm() { git pull --rebase origin `main_branch` }
 
 # gm is 'git merge'
 alias gmf="git merge --ff-only"
-alias gmm="git merge $(git_main_branch)"
+function gmm() { git merge "$(git_main_branch)"; }
 
 alias gst="git stash --include-untracked"
 alias gsta="git stash apply"
