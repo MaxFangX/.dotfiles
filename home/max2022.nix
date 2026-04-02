@@ -28,5 +28,7 @@
       .source = ../vscode/settings.json;
     "Library/Application Support/Code/User/keybindings.json"
       .source = ../vscode/keybindings.json;
+    "Library/Application Support/iTerm2/DynamicProfiles/maxfangx.json"
+      .source = ../iterm2-profile-maxfangx.json;
   };
 }
