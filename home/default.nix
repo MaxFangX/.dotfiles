@@ -6,28 +6,31 @@
   codex,
   omnara,
 }:
+let
+  lib = pkgs.lib;
+
+  # Convention: if ~/<hostname>/home.nix exists, import it as an
+  # extra home-manager module. This allows machine-specific repos
+  # (which may be private) to extend the public dotfiles config.
+  machineModule = name:
+    let path = /home/dev + "/${name}/home.nix";
+    in lib.optional (builtins.pathExists path) path;
+
+  mkHome = name: modules: hm.lib.homeManagerConfiguration {
+    inherit pkgs;
+    modules = modules ++ machineModule name;
+    extraSpecialArgs = {
+      inherit pkgs sources claude-code codex omnara;
+    };
+  };
+in
 {
-  max2022 = hm.lib.homeManagerConfiguration {
-    pkgs = pkgs;
-    modules = [ ./max2022.nix ];
-    extraSpecialArgs = {
-      inherit pkgs sources claude-code codex omnara;
-    };
-  };
+  max2022 = mkHome "max2022" [ ./max2022.nix ];
 
-  max-nitropad-2024 = hm.lib.homeManagerConfiguration {
-    pkgs = pkgs;
-    modules = [ ./max-nitropad-2024.nix ];
-    extraSpecialArgs = {
-      inherit pkgs sources claude-code codex omnara;
-    };
-  };
+  max-nitropad-2024 =
+    mkHome "max-nitropad-2024" [ ./max-nitropad-2024.nix ];
 
-  lexe-dev-hetzner = hm.lib.homeManagerConfiguration {
-    pkgs = pkgs;
-    modules = [ ./lexe-dev-hetzner ];
-    extraSpecialArgs = {
-      inherit pkgs sources claude-code codex omnara;
-    };
-  };
+  lexe-dev-hetzner = mkHome "lexe-dev-hetzner" [
+    ./lexe-dev-hetzner
+  ];
 }
