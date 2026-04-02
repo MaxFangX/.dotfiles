@@ -6,9 +6,9 @@
 #   2. Custom aliases (user-defined)
 #   3. OMZ-derived aliases (adapted from oh-my-zsh plugins/git, MIT license)
 
-###########################
-# Core functions
-###########################
+##################
+# Core functions #
+##################
 
 # Outputs `main` or `master` to stdout
 function main_branch() {
@@ -38,9 +38,9 @@ function git_develop_branch() {
     return 1
 }
 
-###########################
-# Custom aliases
-###########################
+##################
+# Custom aliases #
+##################
 
 # Prints the message of the most recent commit attempt, useful for retrying a
 # commit if the commit failed due to e.g. GPG sign.
@@ -66,23 +66,23 @@ function gpfc() {
 # Run any git command with a split diff, e.g. `DD gsh`. Think 'delta-double'
 alias DD="DELTA_FEATURES=+side-by-side"
 
-# --- Status ---
+# --- Status --- #
 
 alias g="git status"
 
-# --- Show ---
+# --- Show --- #
 
 alias gsu="git show"  # (g)it (s)how (u)nified
 alias gs="DELTA_FEATURES=+side-by-side git show"
 alias gss="DELTA_FEATURES=+side-by-side git show --show-signature"
 
-# --- Add ---
+# --- Add --- #
 
 alias ga="git add"
 alias ga.="git add ."
 alias gap="git add --patch"
 
-# --- Diff ---
+# --- Diff --- #
 
 alias gd="DELTA_FEATURES=+side-by-side git diff"
 alias gds="DELTA_FEATURES=+side-by-side git diff --staged"
@@ -94,12 +94,12 @@ bds() { git diff --staged | bat --paging=always --style=changes,header,grid,snip
 
 function gas { git add "$@"; git diff --staged "$@"; }
 
-# --- Checkout ---
+# --- Checkout --- #
 
 alias gch="git checkout"
 function gchm() { git checkout $(main_branch); }
 
-# --- Reset ---
+# --- Reset --- #
 
 alias grhsh='git reset --soft HEAD~1'
 alias grhhh='git reset --hard HEAD~1'
@@ -107,20 +107,20 @@ function grhhm() { git reset --hard origin/$(main_branch); }
 alias grhhu='git fetch && git reset --hard @{u}'
 alias grsm='git reset . && gchm'
 
-# --- Commit ---
+# --- Commit --- #
 
 alias gcm="git commit -m"
 alias gca="git commit --verbose --amend"
 alias gcan="git commit --verbose --amend --no-edit"
 alias gcf="git commit -v --fixup"
 
-# --- Fetch ---
+# --- Fetch --- #
 
 alias gf="git fetch"
 alias gfo="git fetch origin"
 alias gfu="git fetch upstream"
 
-# --- Push ---
+# --- Push --- #
 
 alias gp="git push"
 alias gpf='git push --force-with-lease --force-if-includes'
@@ -130,7 +130,7 @@ alias gpom="git push origin master"
 function gpone { git push origin "$@":"$(git symbolic-ref --short HEAD)"; }
 function gpfone { git push --force-with-lease --force-if-includes origin "$@":"$(git symbolic-ref --short HEAD)"; }
 
-# --- Pull ---
+# --- Pull --- #
 
 alias gl="git pull"
 alias glor="git pull origin"
@@ -142,7 +142,7 @@ alias glror="git pull --rebase origin"
 function glrum() { git pull --rebase upstream $(main_branch); }
 function glrorm() { git pull --rebase origin $(main_branch); }
 
-# --- Fast-forward (update branches without switching) ---
+# --- Fast-forward (update branches without switching) --- #
 
 function gffom() { git fetch origin $(main_branch):$(main_branch); }
 function gffum() { git fetch upstream $(main_branch):$(main_branch); }
@@ -160,13 +160,13 @@ function gff() {
     git fetch "$remote" "$remote_branch:$current_branch"
 }
 
-# --- Merge ---
+# --- Merge --- #
 
 alias gm="git merge"
 alias gmf="git merge --ff-only"
 function gmm() { git merge "$(git_main_branch)"; }
 
-# --- Stash ---
+# --- Stash --- #
 
 alias gst="git stash --include-untracked"
 alias gsta="git stash apply"
@@ -175,12 +175,12 @@ alias gstl="git stash list"
 alias gstp="git stash pop"
 alias gsts="git stash show --text"
 
-# --- Branch ---
+# --- Branch --- #
 
 alias gb="git branch"
 alias gbr="git branch -r"
 
-# --- Rebase ---
+# --- Rebase --- #
 
 alias grb="git rebase"
 alias grbi="git rebase -i"
@@ -192,7 +192,7 @@ function grbim() { git rebase -i $(main_branch); }
 function grbiam() { git rebase -i --autosquash $(main_branch); }
 function glrbm() { git fetch origin $(main_branch):$(main_branch) && git rebase $(main_branch); }
 
-# --- Misc ---
+# --- Misc --- #
 
 alias grm="git rm"
 alias gbl="git blame"
@@ -208,39 +208,39 @@ grsr() {
 alias gsur="git submodule update --recursive"
 alias gsuri="git submodule update --recursive --init"
 
-###########################
-# OMZ-derived aliases
-###########################
+#######################
+# OMZ-derived aliases #
+#######################
 # Adapted from oh-my-zsh plugins/git (MIT license)
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
 #
 # Aliases below are included for completeness but may not be actively used.
 # TODO(max): Remove unused ones.
 
-# --- Add ---
+# --- Add --- #
 alias gaa='git add --all'
 alias gau='git add --update'
 alias gav='git add --verbose'
 
-# --- Branch ---
+# --- Branch --- #
 alias gba='git branch --all'
 alias gbd='git branch --delete'
 alias gbD='git branch --delete --force'
 alias gbm='git branch --move'
 alias gbnm='git branch --no-merged'
 
-# --- Checkout ---
+# --- Checkout --- #
 alias gco='git checkout'
 alias gcb='git checkout -b'
 function gcd() { git checkout $(git_develop_branch); }
 function gcM() { git checkout $(git_main_branch); }
 
-# --- Cherry-pick ---
+# --- Cherry-pick --- #
 alias gcp='git cherry-pick'
 alias gcpa='git cherry-pick --abort'
 alias gcpc='git cherry-pick --continue'
 
-# --- Commit ---
+# --- Commit --- #
 alias gc='git commit --verbose'
 alias gcmsg='git commit --message'
 alias gcsm='git commit --signoff --message'
@@ -248,12 +248,12 @@ alias gc!='git commit --verbose --amend'
 alias gcn!='git commit --verbose --no-edit --amend'
 alias gcam='git commit --all --message'
 
-# --- Diff ---
+# --- Diff --- #
 alias gdca='git diff --cached'
 alias gdcw='git diff --cached --word-diff'
 alias gdw='git diff --word-diff'
 
-# --- Log ---
+# --- Log --- #
 alias glo='git log --oneline --decorate'
 alias glog='git log --oneline --decorate --graph'
 alias gloga='git log --oneline --decorate --graph --all'
@@ -263,14 +263,14 @@ alias glols='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgr
 alias glg='git log --stat'
 alias glgp='git log --stat --patch'
 
-# --- Merge ---
+# --- Merge --- #
 alias gma='git merge --abort'
 alias gmc='git merge --continue'
 alias gms='git merge --squash'
 function gmom() { git merge origin/$(git_main_branch); }
 function gmum() { git merge upstream/$(git_main_branch); }
 
-# --- Pull ---
+# --- Pull --- #
 alias gpr='git pull --rebase'
 alias gprv='git pull --rebase -v'
 alias gpra='git pull --rebase --autostash'
@@ -279,7 +279,7 @@ function gprom() { git pull --rebase origin $(git_main_branch); }
 function gprum() { git pull --rebase upstream $(git_main_branch); }
 function gluc() { git pull upstream $(git_current_branch); }
 
-# --- Push ---
+# --- Push --- #
 alias gpd='git push --dry-run'
 alias gpv='git push --verbose'
 alias gpu='git push upstream'
@@ -287,14 +287,14 @@ alias gpod='git push origin --delete'
 function gpsup() { git push --set-upstream origin $(git_current_branch); }
 function gpoat() { git push origin --all && git push origin --tags; }
 
-# --- Rebase ---
+# --- Rebase --- #
 alias grba='git rebase --abort'
 alias grbo='git rebase --onto'
 function grbd() { git rebase $(git_develop_branch); }
 function grbom() { git rebase origin/$(git_main_branch); }
 function grbum() { git rebase upstream/$(git_main_branch); }
 
-# --- Remote ---
+# --- Remote --- #
 alias gr='git remote'
 alias grv='git remote --verbose'
 alias gra='git remote add'
@@ -303,52 +303,52 @@ alias grmv='git remote rename'
 alias grset='git remote set-url'
 alias grup='git remote update'
 
-# --- Reset ---
+# --- Reset --- #
 alias grh='git reset'
 alias grhh='git reset --hard'
 alias grhs='git reset --soft'
 function groh() { git reset origin/$(git_current_branch) --hard; }
 
-# --- Restore ---
+# --- Restore --- #
 alias grst='git restore --staged'
 
-# --- Revert ---
+# --- Revert --- #
 alias grev='git revert'
 alias greva='git revert --abort'
 alias grevc='git revert --continue'
 
-# --- Show ---
+# --- Show --- #
 alias gsh='git show'
 alias gsps='git show --pretty=short --show-signature'
 
-# --- Stash ---
+# --- Stash --- #
 alias gstc='git stash clear'
 alias gstaa='git stash apply'
 alias gstall='git stash --all'
 
-# --- Status ---
+# --- Status --- #
 alias gss='git status --short'
 alias gsb='git status --short --branch'
 
-# --- Switch ---
+# --- Switch --- #
 alias gsw='git switch'
 alias gswc='git switch --create'
 function gswd() { git switch $(git_develop_branch); }
 function gswm() { git switch $(git_main_branch); }
 
-# --- Tag ---
+# --- Tag --- #
 alias gta='git tag --annotate'
 alias gts='git tag --sign'
 alias gtv='git tag | sort -V'
 
-# --- Worktree ---
+# --- Worktree --- #
 alias gwt='git worktree'
 alias gwta='git worktree add'
 alias gwtls='git worktree list'
 alias gwtmv='git worktree move'
 alias gwtrm='git worktree remove'
 
-# --- Other ---
+# --- Other --- #
 alias grt='cd "$(git rev-parse --show-toplevel || echo .)"'
 alias gcount='git shortlog --summary --numbered'
 alias gfg='git ls-files | grep'

@@ -1,34 +1,34 @@
 # shell/aliases.sh - General aliases and functions (non-git)
 # Sourced by shell/common.sh
 
-###########################
-# Navigation
-###########################
+##############
+# Navigation #
+##############
 
 cdls() { cd "$@" && ls; }
 cdl() { cd "$@" && l; }
 
-###########################
-# File listing
-###########################
+################
+# File listing #
+################
 
 alias ll='ls -alF'
 alias la='ls -a'
 alias l='ls -CF'
 alias ls='ls -GFh'
 
-###########################
-# Editor
-###########################
+##########
+# Editor #
+##########
 
 alias v=nvim
 alias vi=nvim
 alias vim=nvim
 alias vs="nvim -S"
 
-###########################
-# Search
-###########################
+##########
+# Search #
+##########
 
 alias f=fzf
 
@@ -47,9 +47,9 @@ function rggn { rg --files --no-ignore | rg "$@" }
 # - ag -U -g CURR
 # - ag -Ug CURR
 
-###########################
-# Python / Django / Pip
-###########################
+#########################
+# Python / Django / Pip #
+#########################
 
 alias py=python3
 alias python=python3
@@ -72,9 +72,9 @@ alias pmc="python manage.py check -v 2"
 alias pirr="pip3 install -r requirements.txt"
 alias pfr="pip3 freeze > requirements.txt"
 
-###########################
-# Rust / Cargo
-###########################
+################
+# Rust / Cargo #
+################
 
 alias c="cargo"
 alias cc="cargo check"
@@ -89,22 +89,22 @@ alias ct="cargo test"
 alias cw="cargo watch"
 alias cww="cargo watch --why"
 
-###########################
-# Java
-###########################
+########
+# Java #
+########
 
 alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
 
-###########################
-# Build tools
-###########################
+###############
+# Build tools #
+###############
 
 alias j="just"
 
-###########################
-# Shell config
-###########################
+################
+# Shell config #
+################
 
 alias resource='exec "$SHELL" -l'
 alias to-dotfiles="source ~/.dotfiles/scripts/to-dotfiles.sh"
@@ -113,9 +113,9 @@ alias from-dotfiles="source ~/.dotfiles/scripts/from-dotfiles.sh"
 # Quickly switch between different environments with $ work <project>
 work() { resource && . ~/.dotfiles/scripts/"$@".sh; }
 
-###########################
-# Utilities
-###########################
+#############
+# Utilities #
+#############
 
 # thefuck alias
 if [ -x "$(command -v thefuck)" ]; then
@@ -159,16 +159,16 @@ strip-ansi() {
   fi
 }
 
-###########################
-# Claude Code
-###########################
+###############
+# Claude Code #
+###############
 
 alias claude-foom="claude --dangerously-skip-permissions"
 alias claude-go-foom="claude --dangerously-skip-permissions"
 
-###########################
-# Misc
-###########################
+########
+# Misc #
+########
 
 alias sw="sass --watch"
 alias ngrok="~/ngrok http 8000 -subdomain=maxfangx"
