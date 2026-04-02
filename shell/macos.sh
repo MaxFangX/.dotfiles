@@ -1,5 +1,5 @@
 # macOS-specific environment setup.
-# Sourced by `common` on Darwin only.
+# Sourced by shell/common.sh on Darwin only.
 
 # User binaries requiring root access
 ROOT_BIN_PATH="$(brew --prefix)/sbin"

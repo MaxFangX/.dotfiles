@@ -18,7 +18,7 @@ source ~/env/sensitive.sh
 
 # macOS-specific environment (brew, NVM, chruby, etc.)
 if [[ "$(uname)" == "Darwin" ]]; then
-    source ~/.dotfiles/common-macos
+    source ~/.dotfiles/shell/macos.sh
 fi
 
 alias f=fzf
