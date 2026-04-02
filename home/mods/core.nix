@@ -62,7 +62,6 @@
 
   home.file = {
     ".zshrc".source = ../../zshrc;
-    ".common".source = ../../common;
     ".tmux.conf".source = ../../tmux.conf;
     ".config/nvim".source = ../../nvim;
     ".cargo/config.toml".source = ../../cargo/config.toml;

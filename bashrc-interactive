@@ -52,4 +52,4 @@ if [ -x "$(command -v gh)" ] \
 fi
 
 # Load common settings (shared with zsh)
-source ~/.common
+source ~/.dotfiles/shell/common.sh

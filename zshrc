@@ -111,4 +111,4 @@ if [ -f ~/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
 fi
 
 # Load settings common to both bash and zsh
-source ~/.common
+source ~/.dotfiles/shell/common.sh
