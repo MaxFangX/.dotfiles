@@ -64,6 +64,7 @@ if [ -f $ZSH/oh-my-zsh.sh ]; then
     fpath=($(brew --prefix)/share/zsh-completions $fpath)
 else
     # Non-OMZ: set up completion and options manually
+    bindkey -e  # Use emacs keybindings (zsh defaults to vi when EDITOR=*vi*)
     autoload -Uz compinit && compinit
     zstyle ':completion:*' matcher-list \
         'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|=*' 'l:|=* r:|=*'
