@@ -14,6 +14,12 @@
   home.homeDirectory = "/home/dev";
   home.stateVersion = "25.05";
 
+  # Server packages managed via Nix instead of apt.
+  home.packages = [
+    pkgs.certbot
+    pkgs.nginx
+  ];
+
   # This machine uses the lexe-agent GitHub account.
   programs.git = {
     userName = "Lexe Agent";
