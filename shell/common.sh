@@ -16,6 +16,10 @@ chmod u+x ~/env/local.sh ~/env/sensitive.sh
 source ~/env/local.sh
 source ~/env/sensitive.sh
 
+# Pager config (less with color passthrough)
+export PAGER='less'
+export LESS='-R'
+
 # macOS-specific environment (brew, NVM, chruby, etc.)
 if [[ "$(uname)" == "Darwin" ]]; then
     source ~/.dotfiles/shell/macos.sh
