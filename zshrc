@@ -97,6 +97,9 @@ else
     autoload -U edit-command-line
     zle -N edit-command-line
     bindkey "^X^E" edit-command-line
+
+    # Directory navigation (vendored from OMZ)
+    source ~/.dotfiles/zsh/lib/directories.zsh
 fi
 
 # Load theme and vendored plugins
