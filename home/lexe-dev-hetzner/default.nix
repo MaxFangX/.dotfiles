@@ -16,7 +16,7 @@
 
   # Server packages managed via Nix instead of apt.
   home.packages = [
-    pkgs.certbot
+    pkgs.lego
     pkgs.nginx
   ];
 
