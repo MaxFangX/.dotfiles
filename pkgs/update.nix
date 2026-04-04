@@ -5,7 +5,8 @@
 }:
 let
   dotfiles = import ../. { };
-  inherit (dotfiles) lib pkgs;
+  inherit (dotfiles) pkgs;
+  inherit (pkgs) lib;
 
   # All custom packages with an updateScript.
   updatable = lib.filterAttrs (
