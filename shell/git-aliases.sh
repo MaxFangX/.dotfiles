@@ -89,8 +89,8 @@ alias gds="DELTA_FEATURES=+side-by-side git diff --staged"
 alias gdu="git diff"  # unified view
 alias gdsu="git diff --staged"  # unified view
 
-bd() { git diff --name-only --diff-filter=d | xargs bat --paging=always --diff }
-bds() { git diff --staged | bat --paging=always --style=changes,header,grid,snip }
+bd() { git diff --name-only --diff-filter=d | xargs bat --paging=always --diff; }
+bds() { git diff --staged | bat --paging=always --style=changes,header,grid,snip; }
 
 function gas { git add "$@"; git diff --staged "$@"; }
 

@@ -38,8 +38,8 @@ alias rgn="rg --no-ignore"
 alias rgfn="rg --files --no-ignore"
 alias rgnf="rg --files --no-ignore"
 # Emulate Silver Searcher's -g filename search somewhat
-function rgg { rg --files | rg "$@" }
-function rggn { rg --files --no-ignore | rg "$@" }
+function rgg { rg --files | rg "$@"; }
+function rggn { rg --files --no-ignore | rg "$@"; }
 # To get log/tyche_rCURRENT.log (where log/* is in .gitignore);
 # - rggn CURR
 # - rgfn | rg CURR
