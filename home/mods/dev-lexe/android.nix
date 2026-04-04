@@ -1,6 +1,4 @@
-# Lexe-specific dev environment.
-# Adds Flutter, Android SDK, protobuf, PostgreSQL, and related
-# tooling on top of the general dev module.
+# Android SDK + emulator for Lexe app development.
 { pkgs, ... }:
 let
   # Android SDK — versions synced with public/nix/pkgs/default.nix
@@ -24,12 +22,10 @@ let
       systemImageTypes = [ "google_apis" ];
     }).androidsdk;
 
-  androidHome =
-    "${androidSdk}/libexec/android-sdk";
+  androidHome = "${androidSdk}/libexec/android-sdk";
 
   avdName = "lexe-screenshots";
-  systemImage =
-    "system-images;android-35;google_apis;x86_64";
+  systemImage = "system-images;android-35;google_apis;x86_64";
 
   # Headless Android emulator launcher.
   # Creates the AVD on first run, then starts the emulator
@@ -82,25 +78,12 @@ let
   };
 in
 {
-  imports = [
-    ../dev.nix
-    ./postgresql.nix
-  ];
-
   home.packages = [
-    pkgs.protobuf # aesm-client build script
-    pkgs.flutter # App tests + screenshot generation
-    pkgs.jdk17_headless # Android builds
-    pkgs.oxipng # PNG optimization (screenshots)
     androidSdk
     android-emulator
   ];
 
   home.sessionVariables = {
-    # Expose JDK without polluting PATH
-    JAVA_HOME = "${pkgs.jdk17_headless.home}";
-
-    # Android SDK
     ANDROID_HOME = androidHome;
     ANDROID_SDK_ROOT = androidHome;
   };

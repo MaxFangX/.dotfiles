@@ -7,7 +7,7 @@
 }:
 {
   imports = [
-    ./mods/dev-lexe
+    ./mods/dev-lexe.nix
   ];
 
   home.username = "fang";

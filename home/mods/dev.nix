@@ -13,9 +13,7 @@
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
     pkgs.nodejs # Required by coc.nvim
-    pkgs.protobuf # Protocol buffers compiler
     pkgs.rsync
-    pkgs.shellcheck # Shell script linter
     pkgs.tmux
     pkgs.tree
     pkgs.uv # Python package manager
@@ -27,8 +25,7 @@
     AIDER_ARCHITECT = "true";
     AIDER_AUTO_COMMITS = "false";
     AIDER_DARK_MODE = "true";
-    AIDER_EDITOR_MODEL =
-      "openrouter/anthropic/claude-3.5-sonnet";
+    AIDER_EDITOR_MODEL = "openrouter/anthropic/claude-3.5-sonnet";
     AIDER_MODEL = "openai/o1";
     AIDER_SHOW_MODEL_WARNINGS = "false";
     DOTFILES_NVIM_ENABLE_COC = "1";
