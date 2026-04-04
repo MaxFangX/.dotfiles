@@ -6,13 +6,15 @@
   ];
 
   home.packages = [
+    pkgs.coreutils # GNU coreutils (shadows BSD versions on macOS)
     pkgs.delta
-    pkgs.htop
-    pkgs.ripgrep
     pkgs.fd
-    pkgs.just
+    pkgs.gnused # GNU sed (shadows BSD sed)
+    pkgs.htop
     pkgs.jq
+    pkgs.just
     pkgs.neovim
+    pkgs.ripgrep
     pkgs.rustup
     pkgs.zsh
     codex

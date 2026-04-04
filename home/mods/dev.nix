@@ -8,10 +8,19 @@
 
   home.packages = [
     claude-code
-    pkgs.nodejs # Required by coc.nvim
+    # pkgs.bat # Cat with syntax highlighting
+    pkgs.gh # GitHub CLI
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
+    pkgs.nodejs # Required by coc.nvim
+    pkgs.protobuf # Protocol buffers compiler
+    pkgs.rsync
+    pkgs.shellcheck # Shell script linter
+    pkgs.tmux
+    pkgs.tree
     pkgs.uv # Python package manager
+    pkgs.wget
+    pkgs.yubikey-manager # ykman CLI
   ];
 
   home.sessionVariables = {
