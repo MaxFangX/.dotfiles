@@ -20,9 +20,10 @@ source ~/env/sensitive.sh
 export PAGER='less'
 export LESS='-R'
 
-# macOS-specific environment (brew, NVM, chruby, etc.)
-if [[ "$(uname)" == "Darwin" ]]; then
-    source ~/.dotfiles/shell/macos.sh
+# If brew is installed, add its sbin to PATH
+if command -v brew >/dev/null 2>&1; then
+    ROOT_BIN_PATH="$(brew --prefix)/sbin"
+    [[ ":$PATH:" != *":$ROOT_BIN_PATH:"* ]] && export PATH="$PATH:$ROOT_BIN_PATH"
 fi
 
 ########

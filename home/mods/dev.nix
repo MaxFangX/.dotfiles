@@ -24,6 +24,7 @@
   ];
 
   home.sessionVariables = {
+    GOPATH = "$HOME/gocode";
     AIDER_ARCHITECT = "true";
     AIDER_AUTO_COMMITS = "false";
     AIDER_DARK_MODE = "true";
@@ -32,6 +33,10 @@
     AIDER_SHOW_MODEL_WARNINGS = "false";
     DOTFILES_NVIM_ENABLE_COC = "1";
   };
+
+  home.sessionPath = [
+    "$HOME/gocode/bin"
+  ];
 
   programs.direnv = {
     enable = true;

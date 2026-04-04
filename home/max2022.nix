@@ -28,6 +28,7 @@
   home.stateVersion = "25.05";
 
   home.sessionPath = [
+    "$HOME/.codeium/windsurf/bin"
     "$HOME/.lmstudio/bin"
   ];
 
