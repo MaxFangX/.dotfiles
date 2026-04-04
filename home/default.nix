@@ -5,6 +5,7 @@
   claude-code,
   codex,
   omnara,
+  rsync,
 }:
 let
   lib = pkgs.lib;
@@ -20,7 +21,7 @@ let
     inherit pkgs;
     modules = modules ++ machineModule name;
     extraSpecialArgs = {
-      inherit pkgs sources claude-code codex omnara;
+      inherit pkgs sources claude-code codex omnara rsync;
     };
   };
 in

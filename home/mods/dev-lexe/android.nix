@@ -2,27 +2,29 @@
 { pkgs, ... }:
 let
   # Android SDK — versions synced with public/nix/pkgs/default.nix
-  androidSdk =
-    (pkgs.androidenv.composeAndroidPackages {
-      abiVersions = [
-        "armeabi-v7a"
-        "arm64-v8a"
-        "x86_64" # emulator on x86_64 hosts
-      ];
-      platformVersions = [
-        "35" # lexe
-        "34" # app_links, camera_android_camerax
-      ];
-      buildToolsVersions = [ "34.0.0" ];
-      includeNDK = true;
-      ndkVersion = "27.0.12077973";
-      cmakeVersions = [ "3.22.1" ];
-      includeEmulator = true;
-      includeSystemImages = true;
-      systemImageTypes = [ "google_apis" ];
-    }).androidsdk;
+  androidSdkComposition = pkgs.androidenv.composeAndroidPackages rec {
+    abiVersions = [
+      "armeabi-v7a"
+      "arm64-v8a"
+      "x86_64" # emulator on x86_64/arm64 hosts
+    ];
+    platformVersions = [
+      "35" # lexe, flutter_zxing -> camera_android_camerax
+      "34" # app_links
+    ];
+    buildToolsVersions = [ "35.0.0" ];
+    includeNDK = true;
+    ndkVersion = "28.2.13676358";
+    ndkVersions = [ ndkVersion ];
+    cmakeVersions = [ "3.22.1" ]; # flutter_zxing
+    includeEmulator = true;
+    includeSystemImages = true;
+    systemImageTypes = [ "google_apis" ];
+  };
 
+  androidSdk = androidSdkComposition.androidsdk;
   androidHome = "${androidSdk}/libexec/android-sdk";
+  androidNdkRoot = "${androidHome}/ndk/${androidSdkComposition.ndk-bundle.version}";
 
   avdName = "lexe-screenshots";
   systemImage = "system-images;android-35;google_apis;x86_64";
@@ -81,10 +83,14 @@ in
   home.packages = [
     androidSdk
     android-emulator
+    pkgs.bundletool
+    pkgs.cargo-ndk
+    # fastlane, cocoapods, libimobiledevice, rsync wrapper are in ios.nix
   ];
 
   home.sessionVariables = {
     ANDROID_HOME = androidHome;
+    ANDROID_NDK_ROOT = androidNdkRoot;
     ANDROID_SDK_ROOT = androidHome;
   };
 

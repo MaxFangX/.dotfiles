@@ -6,6 +6,7 @@
   imports = [
     ./dev.nix
     ./dev-lexe/android.nix
+    ./dev-lexe/ios.nix
     ./dev-lexe/postgres.nix
   ];
 
@@ -24,7 +25,7 @@
 
   home.packages = [
     pkgs.cmake # flutter_zxing NDK build
-    pkgs.flutter # App tests + screenshot generation
+    pkgs.flutter332 # Pinned to match lexe repo (Dart 3.8.1)
     pkgs.jdk17_headless # Android builds
     pkgs.oxipng # PNG optimization (screenshots)
     pkgs.protobuf # aesm-client build script

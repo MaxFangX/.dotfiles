@@ -1,6 +1,6 @@
 # General dev tooling — LSP, formatters, direnv.
 # Not suitable for security-critical machines.
-{ pkgs, claude-code, codex, ... }:
+{ pkgs, claude-code, rsync, ... }:
 {
   imports = [
     ./core.nix
@@ -8,6 +8,7 @@
 
   home.packages = [
     claude-code
+    rsync # Platform-aware wrapper (see pkgs/rsync.nix)
     # pkgs.bat # Cat with syntax highlighting
     pkgs.gh # GitHub CLI
     pkgs.go
@@ -15,7 +16,6 @@
     pkgs.nixfmt-rfc-style # Nix formatter
     pkgs.nodejs # Required by coc.nvim
     pkgs.python3
-    pkgs.rsync
     pkgs.tmux
     pkgs.tree
     pkgs.uv # Python package manager

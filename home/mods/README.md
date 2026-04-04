@@ -14,6 +14,7 @@ core.nix                Base layer. Shell, editor, CLI tools.
         │
         dev-lexe/       Submodules:
         ├── android.nix   Android SDK + emulator
+        ├── ios.nix       iOS/macOS tooling (Darwin only)
         └── postgres.nix  PostgreSQL (launchd/systemd)
 ```
 

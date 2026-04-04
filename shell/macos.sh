@@ -34,27 +34,7 @@ if [[ ! "$PATH" == *$GEM_BIN* ]]; then
     export PATH="$PATH:$GEM_BIN"
 fi
 
-# Java - SDKMAN
-export SDKMAN_DIR="$HOME/.local/sdkman"
-if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
-    source "$SDKMAN_DIR/bin/sdkman-init.sh"
-fi
-
-# Android cmdline-tools
-export ANDROID_HOME=$HOME/.local/android
-ANDROID_SDK_VERSION=33.0.1
-ANDROID_PATH=$ANDROID_HOME/cmdline-tools/latest/bin
-ANDROID_PATH=$ANDROID_PATH:$ANDROID_HOME/build-tools/$ANDROID_SDK_VERSION
-ANDROID_PATH=$ANDROID_PATH:$ANDROID_HOME/platform-tools
-if [[ ! "$PATH" == *$ANDROID_PATH* ]]; then
-    export PATH="$PATH:$ANDROID_PATH"
-fi
-
-# Flutter
-export FLUTTER_HOME=$HOME/.local/flutter/bin
-if [[ ! "$PATH" == *$FLUTTER_HOME* ]]; then
-    export PATH="$PATH:$FLUTTER_HOME"
-fi
+# Java, Android, and Flutter are now managed by Nix (home/mods/dev-lexe/)
 
 # LM Studio
 export LM_STUDIO_BIN="$HOME/.lmstudio/bin"

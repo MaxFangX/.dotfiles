@@ -26,9 +26,10 @@ rec {
   claude-code = pkgs.callPackage ./pkgs/claude-code {};
   codex = pkgs.callPackage ./pkgs/codex {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
+  rsync = pkgs.callPackage ./pkgs/rsync.nix {};
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources claude-code codex omnara;
+    inherit hm pkgs sources claude-code codex omnara rsync;
   };
 }
