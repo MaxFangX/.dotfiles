@@ -8,6 +8,18 @@ pr-comments *args:
 update package="":
     nix-shell pkgs/update.nix {{ if package != "" { "--argstr package " + package } else { "" } }}
 
+# Run npins commands (e.g. just npins show)
+npins *args:
+    nix-shell -p npins --run "npins {{ args }}"
+
+# Update all npins (nixpkgs, home-manager)
+npins-update:
+    nix-shell -p npins --run "npins update"
+
+# Update only nixpkgs pin
+npins-update-nixpkgs:
+    nix-shell -p npins --run "npins update nixpkgs"
+
 # Format this justfile
 just-fmt:
     just --fmt --unstable
@@ -18,7 +30,7 @@ remove-trailing-spaces *ARGS:
     set -euo pipefail
 
     check_mode=false
-    if [[ "{{ARGS}}" == *"--check"* ]]; then
+    if [[ "{{ ARGS }}" == *"--check"* ]]; then
         check_mode=true
     fi
 
