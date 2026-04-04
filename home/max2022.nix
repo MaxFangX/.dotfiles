@@ -13,6 +13,7 @@
 
   homebrew.casks = [
     "halloy"
+    "orbstack"
     "qlcolorcode"
     "qlimagesize"
     "qlmarkdown"
