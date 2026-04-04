@@ -86,8 +86,8 @@ alias gap="git add --patch"
 
 alias gd="DELTA_FEATURES=+side-by-side git diff"
 alias gds="DELTA_FEATURES=+side-by-side git diff --staged"
-alias gdd="git diff"  # unified view
-alias gdds="git diff --staged"  # unified view
+alias gdu="git diff"  # unified view
+alias gdsu="git diff --staged"  # unified view
 
 bd() { git diff --name-only --diff-filter=d | xargs bat --paging=always --diff }
 bds() { git diff --staged | bat --paging=always --style=changes,header,grid,snip }
