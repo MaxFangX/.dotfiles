@@ -35,4 +35,8 @@
   home.sessionVariables = {
     JAVA_HOME = "${pkgs.jdk17_headless.home}";
   };
+
+  homebrew.casks = [
+    "orbstack"
+  ];
 }

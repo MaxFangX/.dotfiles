@@ -8,6 +8,19 @@
 {
   imports = [
     ./mods/dev-lexe.nix
+    ./mods/homebrew.nix
+  ];
+
+  homebrew.casks = [
+    "halloy"
+    "qlcolorcode"
+    "qlimagesize"
+    "qlmarkdown"
+    "qlstephen"
+    "quicklook-video"
+    "quicklook-json"
+    "quicklookase"
+    "rar"
   ];
 
   home.username = "fang";

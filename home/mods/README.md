@@ -16,6 +16,9 @@ core.nix                Base layer. Shell, editor, CLI tools.
         ├── android.nix   Android SDK + emulator
         ├── ios.nix       iOS/macOS tooling (Darwin only)
         └── postgres.nix  PostgreSQL (launchd/systemd)
+
+homebrew.nix            Declarative Homebrew cask management.
+                        Darwin only. Merged via homebrew.casks.
 ```
 
 ## Host configs
