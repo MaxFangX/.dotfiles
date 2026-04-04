@@ -4,11 +4,12 @@
   programs.git = {
     enable = true;
 
-    userName = lib.mkDefault "Max Fang";
-    userEmail = lib.mkDefault "hello@maxfa.ng";
-
-    extraConfig = {
-      user.signingkey = "98F08E41D2257775";
+    settings = {
+      user = {
+        name = lib.mkDefault "Max Fang";
+        email = lib.mkDefault "hello@maxfa.ng";
+        signingkey = "98F08E41D2257775";
+      };
 
       credential.helper = "cache --timeout=3600";
 
