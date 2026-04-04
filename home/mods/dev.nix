@@ -10,9 +10,11 @@
     claude-code
     # pkgs.bat # Cat with syntax highlighting
     pkgs.gh # GitHub CLI
+    pkgs.go
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
     pkgs.nodejs # Required by coc.nvim
+    pkgs.python3
     pkgs.rsync
     pkgs.tmux
     pkgs.tree

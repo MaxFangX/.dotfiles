@@ -23,6 +23,7 @@
   };
 
   home.packages = [
+    pkgs.cmake # flutter_zxing NDK build
     pkgs.flutter # App tests + screenshot generation
     pkgs.jdk17_headless # Android builds
     pkgs.oxipng # PNG optimization (screenshots)
