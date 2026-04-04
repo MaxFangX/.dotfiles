@@ -160,6 +160,22 @@ function gff() {
     git fetch "$remote" "$remote_branch:$current_branch"
 }
 
+# --- Sync (ff from upstream, push to origin) --- #
+
+function gsync() {
+    git pull --ff-only upstream $(git_current_branch) && \
+    git push origin $(git_current_branch)
+}
+# Updates master; works whether on master or not
+function gsyncm() {
+    local main=$(main_branch)
+    if [[ $(git_current_branch) == "$main" ]]; then
+        git pull --ff-only upstream "$main" && git push origin "$main"
+    else
+        gffum && git push origin "$main"
+    fi
+}
+
 # --- Merge --- #
 
 alias gm="git merge"
