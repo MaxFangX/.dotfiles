@@ -100,6 +100,9 @@ else
 
     # Directory navigation (vendored from OMZ)
     source ~/.dotfiles/zsh/lib/directories.zsh
+
+    # Terminal colors (LS_COLORS for fd, ls, etc.)
+    source ~/.dotfiles/zsh/lib/colors.zsh
 fi
 
 # Use emacs keybindings (zsh defaults to vi when EDITOR=*vi*)
