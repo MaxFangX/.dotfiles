@@ -20,6 +20,10 @@ npins-update:
 npins-update-nixpkgs:
     nix-shell -p npins --run "npins update nixpkgs"
 
+# Upgrade Nix itself using Determinate Nix
+nix-upgrade:
+    sudo determinate-nixd upgrade
+
 # Format this justfile
 just-fmt:
     just --fmt --unstable

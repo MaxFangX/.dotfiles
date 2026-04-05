@@ -2,6 +2,29 @@
 
 ## Installation
 
+### Nix + Home Manager
+
+1. Install [Determinate Nix](https://docs.determinate.systems/determinate-nix/):
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
+  sh -s -- install
+```
+
+2. Clone dotfiles:
+
+```bash
+git clone git@github.com:MaxFangX/.dotfiles.git ~/.dotfiles
+```
+
+3. Apply home-manager config (uses `hostname -s` to select config):
+
+```bash
+~/.dotfiles/bin/hms
+```
+
+After first run, `hms` is in PATH. To upgrade Nix later: `just nix-upgrade`
+
 ### Font
 
 lazy.nvim recommends installing a Nerdfont: https://www.nerdfonts.com/
