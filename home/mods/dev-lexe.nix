@@ -24,6 +24,7 @@
   };
 
   home.packages = [
+    pkgs.azure-cli # Azure resource management
     pkgs.cmake # flutter_zxing NDK build
     pkgs.flutter332 # Pinned to match lexe repo (Dart 3.8.1)
     pkgs.jdk17_headless # Android builds
