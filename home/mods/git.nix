@@ -16,6 +16,8 @@
       core.editor = "nvim";
       core.pager = "delta";
 
+      clean.requireForce = false;
+
       init.defaultBranch = "master";
 
       push.autoSetupRemote = true;
