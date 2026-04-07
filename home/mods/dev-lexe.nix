@@ -10,6 +10,14 @@
     ./dev-lexe/postgres.nix
   ];
 
+  # SGX cross-compilation toolchain for macOS
+  homebrew.taps = [
+    "MaterializeInc/homebrew-crosstools"
+  ];
+  homebrew.brews = [
+    "materializeinc/crosstools/x86_64-unknown-linux-gnu"
+  ];
+
   # PostgreSQL 17 for Lexe local development
   services.postgres = {
     enable = true;

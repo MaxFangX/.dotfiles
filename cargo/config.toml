@@ -5,9 +5,10 @@
 # Include links to definitions when viewing source in generated docs
 # rustdocflags = ["-Z", "unstable-options", "--generate-link-to-definition"]
 
+# SGX cross-compilation (requires materializeinc/crosstools)
 [target.x86_64-fortanix-unknown-sgx]
 linker = "x86_64-unknown-linux-gnu-ld"
-runner = "ftxsgx-runner-cargo"
+# runner = "ftxsgx-runner-cargo"
 
 [env]
 CC_x86_64-fortanix-unknown-sgx = "x86_64-unknown-linux-gnu-gcc"
