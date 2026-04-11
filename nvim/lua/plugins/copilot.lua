@@ -2,6 +2,7 @@
 return {
     {
         "github/copilot.vim",
+        enabled = false,
         lazy = false,
         init = function()
             -- Disable tab mapping before plugin loads
