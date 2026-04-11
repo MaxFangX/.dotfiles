@@ -65,8 +65,10 @@ if [ -f $ZSH/oh-my-zsh.sh ]; then
 else
     # Non-OMZ: set up completion and options manually
     autoload -Uz compinit && compinit
-    zstyle ':completion:*' matcher-list \
-        'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|=*' 'l:|=* r:|=*'
+
+    # Completion configuration (vendored from OMZ)
+    source ~/.dotfiles/zsh/lib/completion.zsh
+
     setopt auto_cd
     setopt interactivecomments
     setopt share_history

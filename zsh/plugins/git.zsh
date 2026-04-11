@@ -43,6 +43,7 @@ compdef _git gcd=git-checkout 2>/dev/null
 compdef _git gcM=git-checkout 2>/dev/null
 compdef _git gco=git-checkout 2>/dev/null
 compdef _git gcb=git-checkout 2>/dev/null
+compdef _git gcf=git-commit 2>/dev/null
 compdef _git gpsup=git-push 2>/dev/null
 compdef _git gpf=git-push 2>/dev/null
 compdef _git gpfc=git-push 2>/dev/null
