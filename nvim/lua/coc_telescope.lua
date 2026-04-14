@@ -362,32 +362,8 @@ function M.document_symbols(opts)
   }):find()
 end
 
--- Show workspace symbols in a Telescope picker
-function M.workspace_symbols()
-  -- Check if CoC is ready
-  if vim.g.coc_service_initialized ~= 1 then
-    print("CoC is not ready yet")
-    return
-  end
-
-  -- Quick check: try to fetch symbols with short timeout
-  local result = nil
-  local completed = false
-  vim.fn.CocActionAsync('getWorkspaceSymbols', 'a', function(_, res)
-    result = res
-    completed = true
-  end)
-
-  -- Wait max 200ms - if server isn't ready, bail without long freeze
-  local ready = vim.wait(200, function() return completed end, 10)
-  if not ready
-     or not result
-     or type(result) ~= 'table'
-     or vim.tbl_isempty(result) then
-    print("Workspace symbols not available")
-    return
-  end
-
+-- Show workspace symbols in a Telescope picker (async with retry)
+local function open_workspace_symbols_picker()
   local entry_display = require("telescope.pickers.entry_display")
   local utils = require("telescope.utils")
   local make_entry = require("telescope.make_entry")
@@ -430,6 +406,38 @@ function M.workspace_symbols()
       }, {})
     end
   })
+end
+
+function M.workspace_symbols()
+  local timeout_ms = 5000
+  local poll_interval = 100
+  local start_time = vim.loop.now()
+  local done = false
+
+  local timer = vim.loop.new_timer()
+  timer:start(0, poll_interval, vim.schedule_wrap(function()
+    if done then return end
+
+    if vim.loop.now() - start_time > timeout_ms then
+      done = true
+      timer:stop()
+      timer:close()
+      print("Workspace symbols not available (timed out)")
+      return
+    end
+
+    if vim.g.coc_service_initialized ~= 1 then return end
+
+    vim.fn.CocActionAsync('getWorkspaceSymbols', 'a', function(_, result)
+      if done then return end
+      if result and type(result) == 'table' and not vim.tbl_isempty(result) then
+        done = true
+        timer:stop()
+        timer:close()
+        open_workspace_symbols_picker()
+      end
+    end)
+  end))
 end
 
 -- Show all CoC diagnostics in a Telescope picker
