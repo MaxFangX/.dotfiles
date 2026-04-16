@@ -58,6 +58,17 @@ ZSH_THEME=""
 # Plugins are now vendored in zsh/plugins/
 plugins=()
 
+# Persist history explicitly even when Oh My Zsh is present.
+HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
+HISTSIZE=100000
+SAVEHIST=100000
+
+setopt share_history
+setopt hist_ignore_dups
+setopt hist_expire_dups_first
+setopt extended_history
+setopt hist_verify
+
 # Init Oh My Zsh
 if [ -f $ZSH/oh-my-zsh.sh ]; then
     source $ZSH/oh-my-zsh.sh
@@ -71,11 +82,6 @@ else
 
     setopt auto_cd
     setopt interactivecomments
-    setopt share_history
-    setopt hist_ignore_dups
-    setopt hist_expire_dups_first
-    setopt extended_history
-    setopt hist_verify
 
     # Up/down arrow prefix search
     autoload -U up-line-or-beginning-search down-line-or-beginning-search
