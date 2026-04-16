@@ -211,6 +211,8 @@ function M.document_symbols(opts)
   end
 
   -- Custom sorter: fuzzy filters but preserves document order
+  -- Smart case: case-insensitive if prompt is all lowercase,
+  -- case-sensitive if prompt contains any uppercase.
   local document_order_sorter = sorters.Sorter:new({
     discard = true,
     scoring_function = function(_, prompt, line)
@@ -218,10 +220,16 @@ function M.document_symbols(opts)
         return 1
       end
 
-      local lower_prompt = prompt:lower()
-      local lower_line = line:lower()
+      local match_prompt, match_line
+      if prompt == prompt:lower() then
+        match_prompt = prompt
+        match_line = line:lower()
+      else
+        match_prompt = prompt
+        match_line = line
+      end
 
-      if fuzzy_match(lower_prompt, lower_line) then
+      if fuzzy_match(match_prompt, match_line) then
         return 1  -- All matches get same score (preserves order)
       else
         return -1  -- Filtered out
