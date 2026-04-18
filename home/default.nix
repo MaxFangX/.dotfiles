@@ -36,7 +36,7 @@ in
   ];
 
   lexe-dev = mkHome "lexe-dev" [
-    ./mods/dev-lexe.nix
+    ./mods/dev.nix
     {
       home.username = "maxfangx";
       home.homeDirectory = "/home/maxfangx";
