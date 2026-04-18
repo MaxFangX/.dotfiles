@@ -86,8 +86,11 @@
       '')
     ];
     ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
-    ".claude/settings.json".source =
-      ../../claude/settings.json;
+    # TODO(max): Let Claude Code manage settings.json itself for now, since
+    # the home-manager symlink into /nix/store is read-only, which breaks
+    # `/effort` and other commands that write to settings.json.
+    # ".claude/settings.json".source =
+    #   ../../claude/settings.json;
   };
 
   programs.home-manager.enable = true;
