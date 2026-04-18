@@ -8,7 +8,6 @@
 {
   imports = [
     ./mods/dev-lexe.nix
-    ./mods/homebrew.nix
   ];
 
   homebrew.casks = [

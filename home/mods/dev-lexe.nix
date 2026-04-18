@@ -8,18 +8,9 @@
     ./dev-lexe/android.nix
     ./dev-lexe/ios.nix
     ./dev-lexe/postgres.nix
+  ] ++ lib.optionals pkgs.stdenv.isDarwin [
+    ./dev-lexe/homebrew.nix
   ];
-
-  # macOS-only: Homebrew packages
-  homebrew = lib.mkIf pkgs.stdenv.isDarwin {
-    taps = [
-      "MaterializeInc/homebrew-crosstools" # SGX cross-compilation
-    ];
-    brews = [
-      "libfido2" # YubiKey FIDO2 support for SSH
-      "materializeinc/crosstools/x86_64-unknown-linux-gnu"
-    ];
-  };
 
   # PostgreSQL 17 for Lexe local development
   services.postgres = {
@@ -45,6 +36,8 @@
   ];
 
   home.sessionVariables = {
+    FLUTTER_ROOT = "${pkgs.flutter332}";
+    GRADLE_USER_HOME = "$HOME/.gradle";
     JAVA_HOME = "${pkgs.jdk17_headless.home}";
   };
 }
