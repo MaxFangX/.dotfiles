@@ -34,4 +34,13 @@ in
   lexe-dev-hetzner = mkHome "lexe-dev-hetzner" [
     ./lexe-dev-hetzner
   ];
+
+  lexe-dev = mkHome "lexe-dev" [
+    ./mods/dev-lexe.nix
+    {
+      home.username = "maxfangx";
+      home.homeDirectory = "/home/maxfangx";
+      home.stateVersion = "25.05";
+    }
+  ];
 }
