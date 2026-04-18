@@ -1,7 +1,7 @@
 # Lexe-specific dev environment.
 # Adds Flutter, Android SDK, PostgreSQL, and related tooling
 # on top of the general dev module.
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   imports = [
     ./dev.nix
@@ -10,13 +10,16 @@
     ./dev-lexe/postgres.nix
   ];
 
-  # SGX cross-compilation toolchain for macOS
-  homebrew.taps = [
-    "MaterializeInc/homebrew-crosstools"
-  ];
-  homebrew.brews = [
-    "materializeinc/crosstools/x86_64-unknown-linux-gnu"
-  ];
+  # macOS-only: Homebrew packages
+  homebrew = lib.mkIf pkgs.stdenv.isDarwin {
+    taps = [
+      "MaterializeInc/homebrew-crosstools" # SGX cross-compilation
+    ];
+    brews = [
+      "libfido2" # YubiKey FIDO2 support for SSH
+      "materializeinc/crosstools/x86_64-unknown-linux-gnu"
+    ];
+  };
 
   # PostgreSQL 17 for Lexe local development
   services.postgres = {
