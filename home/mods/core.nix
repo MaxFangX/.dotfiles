@@ -1,5 +1,5 @@
 # Shared config across all machines.
-{ pkgs, codex, ... }:
+{ lib, pkgs, codex, ... }:
 {
   imports = [
     ./git.nix
@@ -67,7 +67,23 @@
     ".zshrc".source = ../../zshrc;
     ".tmux.conf".source = ../../tmux.conf;
     ".config/nvim".source = ../../nvim;
-    ".cargo/config.toml".source = ../../cargo/config.toml;
+    ".cargo/config.toml".text = lib.concatStrings [
+      ''
+        # Include links to definitions when viewing source in generated docs
+        # rustdocflags = ["-Z", "unstable-options", "--generate-link-to-definition"]
+      ''
+      (lib.optionalString pkgs.stdenv.isDarwin ''
+
+        # SGX cross-compilation (requires materializeinc/crosstools)
+        [target.x86_64-fortanix-unknown-sgx]
+        linker = "x86_64-unknown-linux-gnu-ld"
+        # runner = "ftxsgx-runner-cargo"
+
+        [env]
+        CC_x86_64-fortanix-unknown-sgx = "x86_64-unknown-linux-gnu-gcc"
+        AR_x86_64-fortanix-unknown-sgx = "x86_64-unknown-linux-gnu-ar"
+      '')
+    ];
     ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
     ".claude/settings.json".source =
       ../../claude/settings.json;
