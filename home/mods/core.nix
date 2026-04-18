@@ -9,6 +9,7 @@
     pkgs.coreutils # GNU coreutils (shadows BSD versions on macOS)
     pkgs.delta
     pkgs.fd
+    pkgs.gnumake # Required by telescope-fzf-native.nvim
     pkgs.gnused # GNU sed (shadows BSD sed)
     pkgs.htop
     pkgs.jq
