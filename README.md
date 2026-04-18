@@ -25,6 +25,14 @@ git clone git@github.com:MaxFangX/.dotfiles.git ~/.dotfiles
 
 After first run, `hms` is in PATH. To upgrade Nix later: `just nix-upgrade`
 
+4. Set zsh as the default shell (installed by `hms`):
+
+```bash
+chsh -s $(which zsh)
+```
+
+Log out and back in for the change to take effect.
+
 ### Font
 
 lazy.nvim recommends installing a Nerdfont: https://www.nerdfonts.com/
