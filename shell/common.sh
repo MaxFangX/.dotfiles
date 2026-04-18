@@ -37,6 +37,11 @@ if ! command -v nix >/dev/null 2>&1; then
   fi
 fi
 
+# Xcode validation (installed by Home Manager dev-lexe/ios.nix)
+if [ -f ~/.local/lib/xcode-validation.sh ]; then
+  source ~/.local/lib/xcode-validation.sh
+fi
+
 ###########
 # ALIASES #
 ###########
