@@ -241,7 +241,11 @@ alias gav='git add --verbose'
 # --- Branch --- #
 alias gba='git branch --all'
 alias gbd='git branch --delete'
-alias gbD='git branch --delete --force'
+function gbD() {
+    local upstream=$(git rev-parse --abbrev-ref "$1@{upstream}" 2>/dev/null)
+    git branch --delete --force "$1"
+    [[ -n "$upstream" ]] && git branch -d -r "$upstream" 2>/dev/null
+}
 alias gbm='git branch --move'
 alias gbnm='git branch --no-merged'
 
