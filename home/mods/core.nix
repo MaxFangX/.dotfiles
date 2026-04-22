@@ -1,5 +1,5 @@
 # Shared config across all machines.
-{ lib, pkgs, codex, ... }:
+{ lib, pkgs, sources, codex, ... }:
 {
   imports = [
     ./git.nix
@@ -68,6 +68,7 @@
     ".zshrc".source = ../../zshrc;
     ".tmux.conf".source = ../../tmux.conf;
     ".config/nvim".source = ../../nvim;
+    ".dotfiles/zsh/plugins/fzf-tab".source = sources.fzf-tab;
     ".cargo/config.toml".text = lib.concatStrings [
       ''
         # Include links to definitions when viewing source in generated docs
