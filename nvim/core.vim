@@ -340,6 +340,10 @@
     " Option + j/k (DVORAK) to move screen up/down by 6 lines
     nnoremap ç 6<C-e>
     nnoremap √ 6<C-y>
+
+    " zt/zb with padding: keep 2 lines visible above/below
+    nnoremap zt zt2<C-y>
+    nnoremap zb zb2<C-e>
 """ }
 
 """ { QWERTY J/K to quickly move cursor up/down by 8 lines
