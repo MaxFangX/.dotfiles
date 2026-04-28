@@ -30,6 +30,7 @@
     EDITOR = "nvim";
     MANPAGER = "nvim +Man!";
     BAT_THEME = "gruvbox-dark";
+    HOMEBREW_AUTO_UPDATE_SECS = "604800"; # 1 week
   };
 
   programs.bash = {
