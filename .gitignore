@@ -6,6 +6,9 @@ Session.vim
 nvim/lazy-lock.json
 prompts.md
 
+# nix-managed symlinks (change on every hms rebuild)
+zsh/plugins/fzf-tab
+
 # nix build result links
 /result
 /result-*
