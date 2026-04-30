@@ -2,6 +2,9 @@
 # Standard emacs bindings (ctrl+a/e/b/f/d/k/u/w, alt+b/f/d) come from
 # `bindkey -e` in zshrc. This file adds useful extras.
 
+# [Ctrl-D] - delete char forward (explicit binding to avoid EOF behavior)
+bindkey '^D' delete-char
+
 # [Esc-w] - Kill from cursor to mark
 bindkey '\ew' kill-region
 
