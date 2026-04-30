@@ -246,7 +246,7 @@ function gbD() {
     git branch --delete --force "$1"
     [[ -n "$upstream" ]] && git branch -d -r "$upstream" 2>/dev/null
 }
-compdef _git gbD=git-branch
+[[ -n "$ZSH_VERSION" ]] && compdef _git gbD=git-branch
 alias gbm='git branch --move'
 alias gbnm='git branch --no-merged'
 
