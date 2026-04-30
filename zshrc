@@ -125,6 +125,7 @@ source ~/.dotfiles/zsh/plugins/rust.zsh
 source ~/.dotfiles/zsh/plugins/fzf.zsh
 source ~/.dotfiles/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
 source ~/.dotfiles/zsh/plugins/fzf-tab-config.zsh
+source ~/.dotfiles/zsh/plugins/just.zsh
 
 # Theme switching functions
 _reset_theme() {
