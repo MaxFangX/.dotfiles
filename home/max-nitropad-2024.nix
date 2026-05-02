@@ -1,5 +1,8 @@
 # max-nitropad-2024 — Linux personal machine
 { pkgs, ... }:
+let
+  formFeed = builtins.fromJSON ''"\u000c"'';
+in
 {
   imports = [
     ./mods/core.nix
@@ -19,6 +22,18 @@
           mods = "Control|Shift";
           action = "CreateNewWindow";
         }
+        {
+          key = "K";
+          mods = "Control|Shift";
+          mode = "~Vi|~Search";
+          chars = formFeed;
+        }
+        {
+          key = "K";
+          mods = "Control|Shift";
+          mode = "~Vi|~Search";
+          action = "ClearHistory";
+        }
       ];
     };
   };
@@ -28,6 +43,9 @@
   home.stateVersion = "25.05";
 
   home.packages = [
+    pkgs.fastmod
+    pkgs.gh
     pkgs.signal-desktop
+    pkgs.toml-cli
   ];
 }
