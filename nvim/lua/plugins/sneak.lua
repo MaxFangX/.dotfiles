@@ -6,6 +6,11 @@ return {
         -- Label mode: show jump labels like EasyMotion
         vim.g["sneak#label"] = 1
 
+        -- Default labels except:
+        -- - 'n': DVORAK equivalent of 'l' (right)
+        -- - 't': DVORAK equivalent of 'k' (up)
+        vim.g["sneak#target_labels"] = ";sfuq/SFGHLTUNRMQZ?0"
+
         -- Clever-s disabled (set to 1 to press s/S again for next/prev match)
         vim.g["sneak#s_next"] = 0
 
