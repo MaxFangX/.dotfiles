@@ -8,9 +8,9 @@ let
   isDarwin = pkgs.stdenv.isDarwin;
 
   # Expected Xcode/SDK versions - keep synced with Lexe's devshell
-  xcodeVersion = "26.4.1";
-  macOsSdkVersion = "26.4";
-  iOsSdkVersion = "26.4";
+  xcodeVersion = "26.5";
+  macOsSdkVersion = "26.5";
+  iOsSdkVersion = "26.5";
 
   # Xcode validation script - warns if versions don't match Lexe's expected
   xcodeValidation = pkgs.writeShellScript "xcode-validation" ''
