@@ -34,8 +34,8 @@ return {
         -- if we configure sneak's labels to exclude 'R'.
         { "f", ":<c-u>silent call sneak#wrap('', 1, 0, 1, 1)<CR>", mode = "n" },
         { "F", ":<c-u>silent call sneak#wrap('', 1, 1, 1, 1)<CR>", mode = "n" },
-        -- { "f", ":<c-u>silent call sneak#wrap(visualmode(), 1, 0, 1, 1)<CR>", mode = "x" },
-        -- { "F", ":<c-u>silent call sneak#wrap(visualmode(), 1, 1, 1, 1)<CR>", mode = "x" },
+        { "f", ":<c-u>silent call sneak#wrap(visualmode(), 1, 0, 1, 1)<CR>", mode = "x" },
+        { "F", ":<c-u>silent call sneak#wrap(visualmode(), 1, 1, 1, 1)<CR>", mode = "x" },
         { "f", ":<c-u>silent call sneak#wrap(v:operator, 1, 0, 1, 1)<CR>", mode = "o" },
         { "F", ":<c-u>silent call sneak#wrap(v:operator, 1, 1, 1, 1)<CR>", mode = "o" },
     },
