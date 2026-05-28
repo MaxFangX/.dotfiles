@@ -22,7 +22,7 @@ prefetch_hash() {
   nix store prefetch-file "$url" --json | jq -r '.hash'
 }
 
-X86_64_HASH=$(prefetch_hash "x86_64-unknown-linux-gnu")
+X86_64_HASH=$(prefetch_hash "x86_64-unknown-linux-musl")
 DARWIN_HASH=$(prefetch_hash "aarch64-apple-darwin")
 
 jq -n \
@@ -32,8 +32,8 @@ jq -n \
   '{
     version: $version,
     "x86_64-linux": {
-      target: "x86_64-unknown-linux-gnu",
-      url: "https://github.com/openai/codex/releases/download/rust-v\($version)/codex-x86_64-unknown-linux-gnu.tar.gz",
+      target: "x86_64-unknown-linux-musl",
+      url: "https://github.com/openai/codex/releases/download/rust-v\($version)/codex-x86_64-unknown-linux-musl.tar.gz",
       hash: $x86_64_hash
     },
     "aarch64-darwin": {

@@ -1,12 +1,10 @@
 {
-  autoPatchelfHook,
+  bubblewrap,
   fetchurl,
   lib,
-  libcap,
-  openssl,
+  makeBinaryWrapper,
   stdenv,
   versionCheckHook,
-  zlib,
 }:
 let
   hostPlatform = stdenv.hostPlatform;
@@ -24,26 +22,22 @@ stdenv.mkDerivation {
   sourceRoot = ".";
 
   dontBuild = true;
-  dontStrip = true;
 
+  # The Linux build is a statically linked musl binary, so it needs no
+  # patchelf. Wrap it with bubblewrap on PATH for codex's sandbox.
   strictDeps = true;
-  nativeBuildInputs =
-    lib.optionals hostPlatform.isLinux [
-      autoPatchelfHook
-    ];
-
-  buildInputs = lib.optionals hostPlatform.isLinux [
-    libcap
-    openssl
-    stdenv.cc.cc.lib # libgcc_s
-    zlib
-  ];
+  nativeBuildInputs = [ makeBinaryWrapper ];
 
   installPhase = ''
     runHook preInstall
     install -Dm 755 codex-${source.target} \
-      $out/bin/codex
+      $out/bin/${if hostPlatform.isLinux then "codex-unwrapped" else "codex"}
     runHook postInstall
+  '';
+
+  postInstall = lib.optionalString hostPlatform.isLinux ''
+    makeBinaryWrapper $out/bin/codex-unwrapped $out/bin/codex \
+      --prefix PATH : ${lib.makeBinPath [ bubblewrap ]}
   '';
 
   nativeInstallCheckInputs = [ versionCheckHook ];
