@@ -23,11 +23,13 @@ prefetch_hash() {
 }
 
 X86_64_HASH=$(prefetch_hash "x86_64-unknown-linux-musl")
+AARCH64_LINUX_HASH=$(prefetch_hash "aarch64-unknown-linux-musl")
 DARWIN_HASH=$(prefetch_hash "aarch64-apple-darwin")
 
 jq -n \
   --arg version "$VERSION" \
   --arg x86_64_hash "$X86_64_HASH" \
+  --arg aarch64_linux_hash "$AARCH64_LINUX_HASH" \
   --arg darwin_hash "$DARWIN_HASH" \
   '{
     version: $version,
@@ -35,6 +37,11 @@ jq -n \
       target: "x86_64-unknown-linux-musl",
       url: "https://github.com/openai/codex/releases/download/rust-v\($version)/codex-x86_64-unknown-linux-musl.tar.gz",
       hash: $x86_64_hash
+    },
+    "aarch64-linux": {
+      target: "aarch64-unknown-linux-musl",
+      url: "https://github.com/openai/codex/releases/download/rust-v\($version)/codex-aarch64-unknown-linux-musl.tar.gz",
+      hash: $aarch64_linux_hash
     },
     "aarch64-darwin": {
       target: "aarch64-apple-darwin",
