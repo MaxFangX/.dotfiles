@@ -19,6 +19,7 @@ let
   platformKey =
     {
       "aarch64-darwin" = "darwin-arm64";
+      "aarch64-linux" = "linux-arm64";
       "x86_64-linux" = "linux-x64";
     }
     .${stdenv.hostPlatform.system};
@@ -91,6 +92,7 @@ stdenv.mkDerivation (finalAttrs: {
     mainProgram = "claude";
     platforms = [
       "x86_64-linux"
+      "aarch64-linux"
       "aarch64-darwin"
     ];
   };
