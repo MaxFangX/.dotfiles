@@ -15,3 +15,6 @@ zsh/plugins/fzf-tab
 
 # direnv cache
 /.direnv
+
+# Misc
+.claude/scheduled_tasks.lock
