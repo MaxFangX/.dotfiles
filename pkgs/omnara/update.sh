@@ -1,75 +1,76 @@
 #!/usr/bin/env nix
-#!nix shell nixpkgs#bash nixpkgs#curl nixpkgs#jq nixpkgs#nix nixpkgs#ripgrep --command bash
+#!nix shell nixpkgs#bash nixpkgs#curl nixpkgs#jq nixpkgs#nix nixpkgs#unzip --command bash
 # shellcheck shell=bash
 
 set -euo pipefail
 
+BASE_URL="https://releases.omnara.com"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCES_FILE="$SCRIPT_DIR/sources.json"
 
-TMPDIR="$(mktemp -d)"
-trap 'rm -rf "$TMPDIR"' EXIT
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
 
-# Extract version from binary using strings
-extract_version() {
-  local binary=$1
-  strings "$binary" \
-    | rg -om1 \
-      '"([0-9]+\.[0-9]+\.[0-9]+)",.*"Command-line interface for Omnara."' \
-      -r '$1'
+# Release artifact for a target: macOS ships a zip'd .app
+# bundle, Linux a bare binary.
+artifact() {
+  case "$1" in
+    darwin-*) echo "omnara-$1.zip" ;;
+    *) echo "omnara-$1" ;;
+  esac
 }
 
-# Fetch latest binary, extract version, prefetch versioned URL
-update_platform() {
-  local nix_system=$1
-  local target=$2
+# Resolve the latest version by running the host-native binary.
+# The release server exposes no version manifest, and the
+# bundled JS embeds many dependency versions, so scraping the
+# binary with `strings` can't be trusted.
+detect_version() {
+  case "$(uname -sm)" in
+    "Darwin arm64")
+      curl -fsSL "$BASE_URL/latest/$(artifact darwin-arm64)" \
+        -o "$TMP/o.zip"
+      unzip -q "$TMP/o.zip" -d "$TMP"
+      OMNARA_NO_UPDATE=1 "$TMP"/*.app/Contents/MacOS/omnara --version
+      ;;
+    "Linux x86_64")
+      curl -fsSL "$BASE_URL/latest/$(artifact linux-x64)" \
+        -o "$TMP/omnara"
+      chmod +x "$TMP/omnara"
+      OMNARA_NO_UPDATE=1 "$TMP/omnara" --version
+      ;;
+    *)
+      echo "unsupported host for update: $(uname -sm)" >&2
+      exit 1
+      ;;
+  esac
+}
 
-  echo "Updating $nix_system ($target)..." >&2
+VERSION="$(detect_version | tr -d '[:space:]')"
+echo "latest omnara: $VERSION" >&2
 
-  # Fetch latest binary
-  local latest_url
-  latest_url="https://releases.omnara.com/latest/omnara-${target}"
-  curl -sL "$latest_url" -o "$TMPDIR/omnara-${target}"
-
-  # Extract version from binary
-  local version
-  version=$(extract_version "$TMPDIR/omnara-${target}") || true
-  if [[ -z "$version" ]]; then
-    echo "  error: failed to extract version from binary" >&2
-    return 1
-  fi
-  echo "  version: $version" >&2
-
-  # Prefetch versioned URL to get hash
-  local versioned_url
-  versioned_url="https://releases.omnara.com/${version}/omnara-${target}"
+# Pin one platform at $VERSION, emitting its sources.json entry.
+# prefetch doubles as an existence check: a 404 (e.g. a platform
+# not yet published at this version) aborts the whole update
+# rather than writing a broken pin.
+pin() {
+  local nix_system="$1" target="$2"
+  local url="$BASE_URL/$VERSION/$(artifact "$target")"
+  echo "  $nix_system: $url" >&2
   local hash
-  hash=$(nix store prefetch-file "$versioned_url" --json | jq -r '.hash')
-  echo "  hash: $hash" >&2
-
-  # Output JSON fragment
+  hash="$(nix store prefetch-file "$url" --json | jq -r .hash)"
   jq -n \
-    --arg version "$version" \
+    --arg version "$VERSION" \
     --arg target "$target" \
-    --arg url "$versioned_url" \
+    --arg url "$url" \
     --arg hash "$hash" \
-    '{
-      version: $version,
-      target: $target,
-      url: $url,
-      hash: $hash
-    }'
+    '{ version: $version, target: $target, url: $url, hash: $hash }'
 }
 
-LINUX_X64=$(update_platform "x86_64-linux" "linux-x64")
-DARWIN_ARM64=$(update_platform "aarch64-darwin" "darwin-arm64")
+LINUX="$(pin x86_64-linux linux-x64)"
+DARWIN="$(pin aarch64-darwin darwin-arm64)"
 
-jq -n \
-  --argjson linux_x64 "$LINUX_X64" \
-  --argjson darwin_arm64 "$DARWIN_ARM64" \
-  '{
-    "x86_64-linux": $linux_x64,
-    "aarch64-darwin": $darwin_arm64
-  }' > "$SOURCES_FILE"
+jq -n --argjson linux "$LINUX" --argjson darwin "$DARWIN" \
+  '{ "x86_64-linux": $linux, "aarch64-darwin": $darwin }' \
+  > "$SOURCES_FILE"
 
-echo "Updated $SOURCES_FILE"
+echo "Updated $SOURCES_FILE" >&2
