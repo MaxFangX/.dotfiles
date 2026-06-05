@@ -1,5 +1,5 @@
 # Shared config across all machines.
-{ lib, pkgs, sources, codex, ... }:
+{ lib, pkgs, sources, codex, git-hunk, ... }:
 {
   imports = [
     ./git.nix
@@ -19,6 +19,7 @@
     pkgs.rustup
     pkgs.zsh
     codex
+    git-hunk
 
     # Installed as a package so it's always in PATH,
     # even when hm-session-vars.sh is skipped.
@@ -88,6 +89,10 @@
       '')
     ];
     ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
+    ".claude/skills/git-hunk/SKILL.md".source =
+      "${git-hunk}/share/git-hunk/SKILL.md";
+    ".codex/skills/git-hunk/SKILL.md".source =
+      "${git-hunk}/share/git-hunk/SKILL.md";
     # TODO(max): Let Claude Code manage settings.json itself for now, since
     # the home-manager symlink into /nix/store is read-only, which breaks
     # `/effort` and other commands that write to settings.json.

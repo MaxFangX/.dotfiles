@@ -4,6 +4,7 @@
   sources,
   claude-code,
   codex,
+  git-hunk,
   omnara,
   rsync,
 }:
@@ -36,7 +37,7 @@ let
     inherit pkgs;
     modules = modules ++ machineModule name;
     extraSpecialArgs = {
-      inherit pkgs sources rsync;
+      inherit pkgs sources git-hunk rsync;
       claude-code = stubUnsupported claude-code;
       codex = stubUnsupported codex;
       omnara = stubUnsupported omnara;
