@@ -1,5 +1,17 @@
 # Shared config across all machines.
-{ lib, pkgs, sources, codex, git-hunk, ... }:
+{ config, lib, pkgs, sources, codex, git-hunk, ... }:
+let
+  # The lexe repo always lives at one of these paths. Resolve the
+  # first that exists so we can symlink in skills it owns (e.g.
+  # tighten). Null on machines without the repo, in which case those
+  # symlinks are omitted.
+  homeDir = config.home.homeDirectory;
+  lexeRepo = lib.findFirst builtins.pathExists null [
+    "${homeDir}/lexe/org/lexe"
+    "${homeDir}/dev/lexe"
+    "${homeDir}/lexe"
+  ];
+in
 {
   imports = [
     ./git.nix
@@ -89,6 +101,12 @@
       '')
     ];
     ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
+    # tighten lives in the lexe repo; symlink to the live working
+    # tree so edits there take effect without a rebuild.
+    ".claude/commands/tighten.md" = lib.mkIf (lexeRepo != null) {
+      source = config.lib.file.mkOutOfStoreSymlink
+        "${lexeRepo}/.claude/commands/tighten.md";
+    };
     ".claude/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
     ".codex/skills/git-hunk/SKILL.md".source =
