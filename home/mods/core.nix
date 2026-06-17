@@ -15,6 +15,9 @@ in
 {
   imports = [
     ./git.nix
+    # Shared lexe.agent identity option, available on all machines
+    # (consumed by the hetzner host default and omnara routing).
+    ./lexe-agent.nix
   ];
 
   home.packages = [

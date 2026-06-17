@@ -1,5 +1,6 @@
 # lexe-dev-hetzner — Linux dev server (Hetzner)
 {
+  config,
   pkgs,
   sources,
   ...
@@ -23,8 +24,7 @@
   # This machine uses the lexe-agent GitHub account.
   programs.git = {
     settings.user = {
-      name = "Lexe Agent";
-      email = "noreply@lexe.app";
+      inherit (config.lexe.agent) name email;
     };
     # Auto-append co-author trailer so Max Fang shows
     # as a contributor on commits from this machine.
