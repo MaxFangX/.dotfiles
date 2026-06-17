@@ -11,6 +11,10 @@
     ./mods/omnara.nix
   ];
 
+  # The host default is Max's personal identity, so route
+  # omnara-driven work through the lexe-agent instead.
+  lexe.omnara.useAgentIdentity = true;
+
   homebrew.casks = [
     "halloy"
     "orbstack"
