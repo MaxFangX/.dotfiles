@@ -101,4 +101,9 @@
   };
 
   programs.home-manager.enable = true;
+
+  # Skip building the `man home-configuration.nix` page. We never
+  # use it, and its generation emits a noisy "options.json without
+  # proper context" warning on every activation.
+  manual.manpages.enable = false;
 }
