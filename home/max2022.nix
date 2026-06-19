@@ -8,6 +8,7 @@
 {
   imports = [
     ./mods/dev-lexe.nix
+    ./mods/paseo.nix
   ];
 
   homebrew.casks = [
