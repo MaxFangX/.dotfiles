@@ -14,7 +14,7 @@ let
     lib.isDerivation pkg
     && pkg ? updateScript
   ) {
-    inherit (dotfiles) claude-code codex git-hunk omnara;
+    inherit (dotfiles) claude-code codex git-hunk omnara paseo;
   };
 
   packages =

@@ -6,6 +6,7 @@
   codex,
   git-hunk,
   omnara,
+  paseo,
   rsync,
 }:
 let
@@ -41,6 +42,7 @@ let
       claude-code = stubUnsupported claude-code;
       codex = stubUnsupported codex;
       omnara = stubUnsupported omnara;
+      paseo = stubUnsupported paseo;
     };
   };
 

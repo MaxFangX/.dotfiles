@@ -9,11 +9,15 @@
   imports = [
     ../mods/dev-lexe.nix
     ../mods/omnara.nix
+    ../mods/paseo.nix
   ];
 
   home.username = "dev";
   home.homeDirectory = "/home/dev";
   home.stateVersion = "25.05";
+
+  # Run an always-on Paseo daemon (relay on → reachable from the app).
+  lexe.paseo.enableService = true;
 
   # Server packages managed via Nix instead of apt.
   home.packages = [
