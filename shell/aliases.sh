@@ -166,6 +166,9 @@ strip-ansi() {
 alias claude-foom="claude --dangerously-skip-permissions"
 alias claude-go-foom="claude --dangerously-skip-permissions"
 
+# Start an interactive session with Opus fast mode (~2.5x faster, higher cost)
+alias claude-fast="claude --settings '{\"fastMode\": true}'"
+
 # Start a paseo session in a new repo
 alias paseo-run="paseo run hi --provider claude/opus --thinking high --mode bypassPermissions --detach"
 
