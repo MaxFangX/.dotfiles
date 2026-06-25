@@ -6,6 +6,11 @@ return {
         init = function()
             -- Disable tab mapping before plugin loads
             vim.g.copilot_no_tab_map = true
+
+            -- Disable Copilot for Markdown (all *.md files)
+            vim.g.copilot_filetypes = {
+                markdown = false,
+            }
         end,
         config = function()
             -- Use <Ctrl-r> to accept a Copilot suggestion
