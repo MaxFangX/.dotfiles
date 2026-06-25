@@ -2,15 +2,32 @@
 { config, lib, pkgs, sources, codex, git-hunk, ... }:
 let
   # The lexe repo always lives at one of these paths. Resolve the
-  # first that exists so we can symlink in skills it owns (e.g.
-  # tighten). Null on machines without the repo, in which case those
-  # symlinks are omitted.
+  # first that exists so we can symlink in slash commands it owns.
+  # Null on machines without the repo, in which case those symlinks
+  # are omitted.
   homeDir = config.home.homeDirectory;
   lexeRepo = lib.findFirst builtins.pathExists null [
     "${homeDir}/lexe/org/lexe"
     "${homeDir}/dev/lexe"
     "${homeDir}/lexe"
+    "${homeDir}/lexe-agent/lexe"
   ];
+
+  # Claude slash commands owned by the lexe repo. Symlinked to its
+  # live working tree so edits there take effect without a rebuild.
+  lexeCommands = [
+    "tighten"
+    "tighten-code"
+    "tighten-comments"
+    "codex-review"
+  ];
+  lexeCommandFiles = lib.optionalAttrs (lexeRepo != null) (
+    lib.listToAttrs (map (name: {
+      name = ".claude/commands/${name}.md";
+      value.source = config.lib.file.mkOutOfStoreSymlink
+        "${lexeRepo}/.claude/commands/${name}.md";
+    }) lexeCommands)
+  );
 in
 {
   imports = [
@@ -104,12 +121,6 @@ in
       '')
     ];
     ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
-    # tighten lives in the lexe repo; symlink to the live working
-    # tree so edits there take effect without a rebuild.
-    ".claude/commands/tighten.md" = lib.mkIf (lexeRepo != null) {
-      source = config.lib.file.mkOutOfStoreSymlink
-        "${lexeRepo}/.claude/commands/tighten.md";
-    };
     ".claude/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
     ".codex/skills/git-hunk/SKILL.md".source =
@@ -119,7 +130,7 @@ in
     # `/effort` and other commands that write to settings.json.
     # ".claude/settings.json".source =
     #   ../../claude/settings.json;
-  };
+  } // lexeCommandFiles;
 
   programs.home-manager.enable = true;
 
