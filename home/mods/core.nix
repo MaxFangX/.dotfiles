@@ -121,6 +121,10 @@ in
       '')
     ];
     ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
+    # Slash commands owned by this repo (vs. lexeCommandFiles below,
+    # which symlink to the lexe repo's working tree).
+    ".claude/commands/queue-mode.md".source =
+      ../../claude/commands/queue-mode.md;
     ".claude/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
     ".codex/skills/git-hunk/SKILL.md".source =
