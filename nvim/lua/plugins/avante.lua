@@ -9,6 +9,7 @@ return {
     --- { Main plugin
         {
             "yetone/avante.nvim",
+            enabled = false,
             branch = "main",
             build = "make",
             dependencies = {
