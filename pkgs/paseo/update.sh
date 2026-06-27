@@ -3,9 +3,14 @@
 # shellcheck shell=bash
 #
 # Bump @getpaseo/cli to the latest npm release and refresh the
-# fixed-output hash. Because the hash captures the whole resolved
-# dependency tree, we can't precompute it — we pin the version with a
-# fake hash, let `nix build` report the real one, then write it back.
+# fixed-output hash for the *current* platform. The hash captures the
+# whole resolved dependency tree, including platform-specific native
+# binaries (sherpa-onnx-node), so each system needs its own entry.
+#
+# Same-version run: refresh only this platform's hash.
+# Version bump:     drop all stored hashes (they're stale) and record
+#                   this platform's new hash. Other hosts will repopulate
+#                   their own entries via update.sh on their next bump.
 
 set -euo pipefail
 
@@ -14,14 +19,22 @@ DOTFILES_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 MANIFEST="$SCRIPT_DIR/manifest.json"
 
 FAKE_HASH="sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+SYSTEM="$(nix eval --impure --raw --expr 'builtins.currentSystem')"
 
 VERSION="$(curl -fsSL https://registry.npmjs.org/@getpaseo/cli/latest | jq -r .version)"
-echo "Latest @getpaseo/cli: v$VERSION"
+CURRENT_VERSION="$(jq -r .version "$MANIFEST")"
+echo "Latest @getpaseo/cli: v$VERSION (current: v$CURRENT_VERSION, system: $SYSTEM)"
 
-# Pin the version with a placeholder hash so the build is forced to
-# re-fetch and report the real one.
-jq --arg v "$VERSION" --arg h "$FAKE_HASH" \
-  '.version = $v | .hash = $h' "$MANIFEST" > "$MANIFEST.tmp"
+# Pin with a placeholder hash so the build is forced to re-fetch and
+# report the real one. On a version bump, drop any stored per-platform
+# hashes — they're for the previous version.
+if [ "$VERSION" != "$CURRENT_VERSION" ]; then
+  jq --arg v "$VERSION" --arg s "$SYSTEM" --arg h "$FAKE_HASH" \
+    '.version = $v | .hashes = {($s): $h}' "$MANIFEST" > "$MANIFEST.tmp"
+else
+  jq --arg s "$SYSTEM" --arg h "$FAKE_HASH" \
+    '.hashes[$s] = $h' "$MANIFEST" > "$MANIFEST.tmp"
+fi
 mv "$MANIFEST.tmp" "$MANIFEST"
 
 echo "Computing fixed-output hash (this downloads the package)..."
@@ -41,7 +54,8 @@ if [ -z "$REAL_HASH" ]; then
   exit 1
 fi
 
-jq --arg h "$REAL_HASH" '.hash = $h' "$MANIFEST" > "$MANIFEST.tmp"
+jq --arg s "$SYSTEM" --arg h "$REAL_HASH" \
+  '.hashes[$s] = $h' "$MANIFEST" > "$MANIFEST.tmp"
 mv "$MANIFEST.tmp" "$MANIFEST"
 
-echo "Updated manifest.json to v$VERSION ($REAL_HASH)"
+echo "Updated manifest.json: v$VERSION for $SYSTEM ($REAL_HASH)"

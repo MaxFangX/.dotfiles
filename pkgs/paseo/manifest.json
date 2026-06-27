@@ -1,4 +1,7 @@
 {
   "version": "0.1.99",
-  "hash": "sha256-MBWP3gicBF0+T8NU1chTPQc0SHpj8k2suvLhFUmkAc8="
+  "hashes": {
+    "x86_64-linux": "sha256-MBWP3gicBF0+T8NU1chTPQc0SHpj8k2suvLhFUmkAc8=",
+    "aarch64-linux": "sha256-jQbGMnlrRrho4HPGNvv3OKm5fxQlDfkAijIudsonl6o="
+  }
 }

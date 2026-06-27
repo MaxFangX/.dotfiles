@@ -5,11 +5,14 @@
 # Paseo is a pure-Node ESM app published to npm with no lockfile in its
 # registry tarball, so buildNpmPackage (which needs a package-lock.json)
 # doesn't fit. Instead we fetch it with a fixed-output derivation: `npm
-# install` reaches the network during the build, and `manifest.hash`
-# pins the resulting store path. The tradeoff is that the hash captures
-# the whole resolved dependency tree, so it must be refreshed whenever
-# the version (or any transitive dep) changes — that's what update.sh
-# does.
+# install` reaches the network during the build, and `manifest.hashes`
+# pins the resulting store path per-platform.
+#
+# Per-platform hashes are required because a transitive dep
+# (sherpa-onnx-node) uses npm `optionalDependencies` to ship native
+# binaries keyed by OS+CPU, so the resolved tree (and FOD hash) differs
+# across platforms. update.sh refreshes just the current host's entry;
+# bumping `version` clears the rest, since other platforms must rebuild.
 #
 # A FOD must not reference other store paths, so the npm install and the
 # node wrapper live in two derivations: `deps` is the pure FOD (just the
@@ -24,6 +27,11 @@
 }:
 let
   manifest = lib.importJSON ./manifest.json;
+  system = stdenvNoCC.hostPlatform.system;
+  hash = manifest.hashes.${system} or (throw ''
+    paseo: no FOD hash recorded for ${system}.
+    Run ./pkgs/paseo/update.sh on a ${system} host to populate it.
+  '');
 
   deps = stdenvNoCC.mkDerivation {
     pname = "paseo-deps";
@@ -37,7 +45,7 @@ let
 
     outputHashMode = "recursive";
     outputHashAlgo = "sha256";
-    outputHash = manifest.hash;
+    outputHash = hash;
 
     buildPhase = ''
       runHook preBuild
