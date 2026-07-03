@@ -184,6 +184,34 @@
     cmap w!! w !sudo tee > /dev/null %
 """ }
 
+""" { Binary files: hex dump view
+    " Opens binary files as an xxd hex dump rather than garbled text.
+    " Needs only `xxd` and `file`, standard on macOS and Linux.
+
+    function! s:IsBinaryFile(file) abort
+        if a:file ==# '' || !filereadable(a:file)
+            return 0
+        endif
+        let l:mime = system('file --mime-encoding --brief ' . shellescape(a:file))
+        return l:mime =~# 'binary'
+    endfunction
+
+    " Renders an xxd hex dump in-buffer, read-only (not a hex editor).
+    " 'binary' must be set before the read or line endings get mangled.
+    function! s:HexView() abort
+        silent %!xxd
+        setlocal filetype=xxd
+        setlocal nomodifiable readonly buftype=nowrite noswapfile
+    endfunction
+
+    augroup binary_hex_view
+        autocmd!
+        " Set 'binary' pre-read to preserve raw bytes; convert on post-read.
+        autocmd BufReadPre  * if s:IsBinaryFile(expand('<afile>:p')) | setlocal binary | endif
+        autocmd BufReadPost * if &binary | call s:HexView() | endif
+    augroup END
+""" }
+
 """ { Configuration - Typing
 
     " When a bracket is inserted, briefly jump to the matching
