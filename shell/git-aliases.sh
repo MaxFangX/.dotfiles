@@ -113,6 +113,8 @@ alias gcm="git commit -m"
 alias gca="git commit --verbose --amend"
 alias gcan="git commit --verbose --amend --no-edit"
 alias gcf="git commit -v --fixup"
+# Recommit after a soft reset, reusing the peeled-off commit's message.
+alias gcoh="git commit --reuse-message=ORIG_HEAD"
 
 # --- Fetch --- #
 
