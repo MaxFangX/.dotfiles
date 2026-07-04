@@ -1,5 +1,5 @@
 # Shared config across all machines.
-{ config, lib, pkgs, sources, codex, git-hunk, ... }:
+{ config, lib, pkgs, sources, codex, git-hunk, jj, ... }:
 let
   # The lexe repo always lives at one of these paths. Resolve the
   # first that exists so we can symlink in slash commands it owns.
@@ -52,6 +52,7 @@ in
     pkgs.zsh
     codex
     git-hunk
+    jj
 
     # Installed as a package so it's always in PATH,
     # even when hm-session-vars.sh is skipped.

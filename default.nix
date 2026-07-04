@@ -26,12 +26,13 @@ rec {
   claude-code = pkgs.callPackage ./pkgs/claude-code {};
   codex = pkgs.callPackage ./pkgs/codex {};
   git-hunk = pkgs.callPackage ./pkgs/git-hunk {};
+  jj = pkgs.callPackage ./pkgs/jj {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
   paseo = pkgs.callPackage ./pkgs/paseo {};
   rsync = pkgs.callPackage ./pkgs/rsync.nix {};
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources claude-code codex git-hunk omnara paseo rsync;
+    inherit hm pkgs sources claude-code codex git-hunk jj omnara paseo rsync;
   };
 }
