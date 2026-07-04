@@ -126,6 +126,8 @@ in
     # which symlink to the lexe repo's working tree).
     ".claude/commands/queue-mode.md".source =
       ../../claude/commands/queue-mode.md;
+    ".claude/commands/rebase-review.md".source =
+      ../../claude/commands/rebase-review.md;
     ".claude/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
     ".codex/skills/git-hunk/SKILL.md".source =
