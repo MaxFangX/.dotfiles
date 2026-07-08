@@ -1,8 +1,8 @@
 {
   "name": "paseo",
-  "version": "0.1.103",
+  "version": "0.1.104",
   "private": true,
   "dependencies": {
-    "@getpaseo/cli": "0.1.103"
+    "@getpaseo/cli": "0.1.104"
   }
 }
