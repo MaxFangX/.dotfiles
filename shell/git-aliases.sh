@@ -63,6 +63,28 @@ function gpfc() {
     git push --force-with-lease --force-if-includes origin +$commit:$branch
 }
 
+# (g)it (b)ranch (b)ackup — force-create backup/<branch> from the current branch's
+# state, overwriting any existing one.
+function gbb() {
+    local branch=$(git symbolic-ref --quiet --short HEAD)
+    if [[ -z "$branch" ]]; then
+        echo "gbb: no checked-out branch (detached HEAD?)" >&2
+        return 1
+    fi
+    git branch --force "backup/$branch" "$branch" &&
+        echo "backup: backup/$branch @ $(git rev-parse --short "$branch")"
+}
+
+# (g)it (b)ranch (b)ackup (d)elete — delete backup/<branch> for the current branch.
+function gbbd() {
+    local branch=$(git symbolic-ref --quiet --short HEAD)
+    if [[ -z "$branch" ]]; then
+        echo "gbbd: no checked-out branch (detached HEAD?)" >&2
+        return 1
+    fi
+    git branch -D "backup/$branch"
+}
+
 # Run any git command with a split diff, e.g. `DD gsh`. Think 'delta-double'
 alias DD="DELTA_FEATURES=+side-by-side"
 
