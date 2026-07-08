@@ -130,6 +130,8 @@ in
       ../../claude/commands/queue-mode.md;
     ".claude/commands/rebase-review.md".source =
       ../../claude/commands/rebase-review.md;
+    ".claude/commands/temp-worktree.md".source =
+      ../../claude/commands/temp-worktree.md;
     ".claude/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
     ".codex/skills/git-hunk/SKILL.md".source =
