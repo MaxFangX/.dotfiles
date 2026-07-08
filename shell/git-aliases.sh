@@ -343,9 +343,17 @@ function grbum() { git rebase upstream/$(git_main_branch); }
 alias gr='git remote'
 alias grv='git remote --verbose'
 alias gra='git remote add'
+alias gradd='git remote add'
 alias grrm='git remote remove'
 alias grmv='git remote rename'
-alias grset='git remote set-url'
+# Upsert a remote's URL: update it if the remote exists, else add it.
+grset() {
+  if git remote get-url "$1" >/dev/null 2>&1; then
+    git remote set-url "$1" "$2"
+  else
+    git remote add "$1" "$2"
+  fi
+}
 alias grup='git remote update'
 
 # --- Reset --- #
