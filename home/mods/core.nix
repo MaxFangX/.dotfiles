@@ -103,6 +103,8 @@ in
     ".zshrc".source = ../../zshrc;
     ".tmux.conf".source = ../../tmux.conf;
     ".config/nvim".source = ../../nvim;
+    # Global justfile: machine-wide recipes via `just -g <recipe>`.
+    ".config/just/justfile".source = ../../just/global.justfile;
     ".dotfiles/zsh/plugins/fzf-tab".source = sources.fzf-tab;
     ".cargo/config.toml".text = lib.concatStrings [
       ''
