@@ -127,6 +127,7 @@ source ~/.dotfiles/zsh/plugins/fzf.zsh
 source ~/.dotfiles/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
 source ~/.dotfiles/zsh/plugins/fzf-tab-config.zsh
 source ~/.dotfiles/zsh/plugins/just.zsh
+source ~/.dotfiles/zsh/plugins/jj.zsh
 
 # Theme switching functions
 _reset_theme() {

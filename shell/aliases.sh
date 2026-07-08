@@ -96,11 +96,17 @@ alias cww="cargo watch --why"
 alias javat="java org.junit.runner.JUnitCore"
 alias javatest="java org.junit.runner.JUnitCore"
 
-###############
-# Build tools #
-###############
+################
+# Jujutsu (jj) #
+################
 
-alias j="just"
+alias j="jj status"
+alias jl="jj log"
+alias js="jj status"
+alias jjsi="jj status --ignore-working-copy"  # peek without snapshotting @
+alias jol="jj op log"
+alias jbl="jj bookmark list"
+alias jlr="jj log --revisions"
 
 ################
 # Shell config #

@@ -32,6 +32,7 @@ in
 {
   imports = [
     ./git.nix
+    ./jj.nix
     # Shared lexe.agent identity option, available on all machines
     # (consumed by the hetzner host default and omnara routing).
     ./lexe-agent.nix
@@ -52,7 +53,6 @@ in
     pkgs.zsh
     codex
     git-hunk
-    jj
 
     # Installed as a package so it's always in PATH,
     # even when hm-session-vars.sh is skipped.
