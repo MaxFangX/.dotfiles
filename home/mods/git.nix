@@ -4,6 +4,12 @@
   programs.git = {
     enable = true;
 
+    # Global ignore (~/.config/git/ignore). Applies to Git and jj.
+    ignores = [
+      ".DS_Store" # macOS Finder metadata
+      "**/.claude/settings.local.json"
+    ];
+
     settings = {
       user = {
         name = lib.mkDefault "Max Fang";
