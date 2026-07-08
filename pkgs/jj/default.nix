@@ -1,4 +1,7 @@
 # Update with `nix-shell pkgs/update.nix --argstr package jj`
+#
+# Temporarily pinned to the head of jj-vcs/jj#8667 (compatibility with git
+# worktrees) rather than a release tag. See update.sh for details.
 {
   lib,
   stdenv,
@@ -20,8 +23,7 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "jj-vcs";
     repo = "jj";
-    rev = "v${source.version}";
-    inherit (source) hash;
+    inherit (source) rev hash;
   };
 
   # Vendor deps from the lockfile so updates don't need a
