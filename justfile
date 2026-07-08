@@ -4,6 +4,10 @@
 pr-comments *args:
     ./just/pr-comments.sh {{ args }}
 
+# Test the global worktree-set-primary recipe (suites: git|jj|stress; default all)
+worktree-set-primary-test *args:
+    ./just/worktree-set-primary-test.sh {{ args }}
+
 # Update all custom packages (or one: just update codex)
 update package="":
     nix-shell pkgs/update.nix {{ if package != "" { "--argstr package " + package } else { "" } }}
