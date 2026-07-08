@@ -1,5 +1,5 @@
 # Shared config across all machines.
-{ config, lib, pkgs, sources, codex, git-hunk, jj, ... }:
+{ config, lib, pkgs, sources, codex, git-hunk, jj, jj-hunk-tool, ... }:
 let
   # The lexe repo always lives at one of these paths. Resolve the
   # first that exists so we can symlink in slash commands it owns.
@@ -28,6 +28,17 @@ let
         "${lexeRepo}/.claude/commands/${name}.md";
     }) lexeCommands)
   );
+
+  # Agent skills shipped by jj-hunk-tool, each a directory with reference
+  # docs. Symlink every skill into both Claude's and Codex's skill dirs,
+  # pinned to the same build as the binary.
+  jjHunkSkills = [ "jj-surgeon" "jj-subagent-workspaces" ];
+  jjHunkSkillFiles = lib.listToAttrs (lib.concatMap (skill:
+    map (agentDir: {
+      name = "${agentDir}/skills/${skill}";
+      value.source = "${jj-hunk-tool}/share/jj-hunk-tool/skills/${skill}";
+    }) [ ".claude" ".codex" ]
+  ) jjHunkSkills);
 in
 {
   imports = [
@@ -53,6 +64,7 @@ in
     pkgs.zsh
     codex
     git-hunk
+    jj-hunk-tool
 
     # Installed as a package so it's always in PATH,
     # even when hm-session-vars.sh is skipped.
@@ -141,7 +153,7 @@ in
     # `/effort` and other commands that write to settings.json.
     # ".claude/settings.json".source =
     #   ../../claude/settings.json;
-  } // lexeCommandFiles;
+  } // lexeCommandFiles // jjHunkSkillFiles;
 
   programs.home-manager.enable = true;
 
