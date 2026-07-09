@@ -24,7 +24,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # PR branch: latest commit, with version from its Cargo.toml
 # (e.g. "0.41.0" -- the version the branch was last rebased onto).
-BRANCH="colocated-workspaces"
+BRANCH="workspace-cli"
 rev="$(curl -fsSL \
   "https://api.github.com/repos/$OWNER/$REPO/commits/$BRANCH" \
   | jq -r '.sha')"
