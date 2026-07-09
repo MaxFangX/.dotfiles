@@ -1,5 +1,5 @@
 ---
-description: Make jj changes in the shared working copy while I review the stack concurrently. Keep @ where it is; route every edit to its home commit with jj-hunk-tool. NEVER run `jj edit`.
+description: Make jj changes in the shared working copy while I review and edit the stack concurrently. Keep @ where it is; route every edit to its home commit with jj-hunk-tool. NEVER run `jj edit`.
 ---
 
 # jj Co-edit Mode
@@ -29,7 +29,9 @@ I'll often reply, but don't always expect me to.
 from under me mid-review. **Do not run any command that repoints, replaces, or
 abandons `@`:**
 
-- `jj edit <rev>` — the cardinal sin here. Never.
+- `jj edit <rev>` — the cardinal sin here. Forbidden unless I've explicitly
+  handed you an exclusive working-copy lock to resolve conflicts (see
+  [Conflicts](#conflicts)).
 - `jj new`, `jj checkout`, `jj co`
 - `jj abandon @`, `jj squash` with no `--from` (defaults to squashing `@` away)
 - `jj undo`, `jj op restore`, `jj op undo` — these can also revert *my* live
@@ -108,6 +110,19 @@ Routing a hunk into an ancestor rebases its descendants (including `@`), and jj
 records any conflict in the tree instead of stopping. So after a move, check
 `jj log` for conflict markers, and resolve by editing the files — not by
 undoing. If a conflict is ambiguous or you're stuck, leave it and tell me.
+
+Some conflicts can't be resolved from `@` at all: when several stacked commits
+touch one file, a higher commit's version **masks** the lower ones', so `@`
+never shows what each ancestor actually needs, and routing a partial fix down
+just nests the conflict or bakes literal marker text into a commit.
+Resolving these conflicts needs a bottom-up `jj edit` pass, which moves `@`.
+In this case, you should stop and ask me for an exclusive working-copy lock
+(I'll stop my work and park any other agent's work). Once I've confirmed that
+you have ownership over the working copy, you are free to `jj edit` each commit
+directly to fix the conflicts. Work bottom-up and fully resolve each commit
+before moving to the next one up — no markers left, `jj resolve --list` clean,
+and it builds; leaving a conflict behind just cascades new ones into its
+descendants. `jj new` back to the tip when done.
 
 ## Carry things forward
 
