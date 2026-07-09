@@ -4,7 +4,7 @@
 pr-comments *args:
     ./just/pr-comments.sh {{ args }}
 
-# Test the global worktree-set-primary recipe (suites: git|jj|stress; default all)
+# Test the global worktree set-primary recipe (suites: git|jj|stress; default all)
 worktree-set-primary-test *args:
     ./just/worktree-set-primary-test.sh {{ args }}
 

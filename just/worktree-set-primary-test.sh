@@ -8,9 +8,9 @@ usage() {
   cat << EOF
 USAGE: just worktree-set-primary-test [git|jj|stress]...
 
-Integration tests for the \`worktree-set-primary\` recipe in
-just/global.justfile (the SOURCE recipe, not the deployed ~/.config copy —
-so you can iterate on the recipe and test before running hms).
+Integration tests for the \`worktree set-primary\` recipe in
+just/worktree/ (the SOURCE recipe, not the deployed ~/.config copy — so you
+can iterate on the recipe and test before running hms).
 
 Builds throwaway colocated git+jj repos in a temp dir, then swaps the primary
 worktree while git and jj operations are in every state that holds mutable
@@ -39,9 +39,10 @@ for dep in git jj just perl; do
   fi
 done
 
-# Test the source recipe next to this script.
+# Test the source recipe via the root global.justfile, which loads the
+# worktree module (`worktree set-primary`).
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-GJF="$script_dir/global.justfile"
+GJF="$script_dir/../global.justfile"
 
 # Hermetic environment: no user git/jj config, no interactive editors.
 export EDITOR=true GIT_EDITOR=true JJ_EDITOR=true
@@ -115,7 +116,7 @@ fi
 # Asserts success and that <dir> really is primary afterwards.
 SP() {
   local dir="$1"
-  if ! ( cd "$dir" && just -f "$GJF" -d . worktree-set-primary ) > "$WORK/sp.log" 2>&1; then
+  if ! ( cd "$dir" && just -f "$GJF" worktree set-primary ) > "$WORK/sp.log" 2>&1; then
     bad "set-primary $dir failed"
     sed 's/^/    | /' "$WORK/sp.log"
     return 1
@@ -225,12 +226,12 @@ suite_git() {
   chk "T1: A unstaged edit still pending" "git -C '$W/A' status --porcelain | grep -q ' M f1.txt'"
   # subdir invocation
   mkdir -p "$W/C/sub/deep"
-  ( cd "$W/C/sub/deep" && just -f "$GJF" -d . worktree-set-primary ) > /dev/null 2>&1
+  ( cd "$W/C/sub/deep" && just -f "$GJF" worktree set-primary ) > /dev/null 2>&1
   chk "T1: no-arg from subdir resolves worktree root" \
       "[ \"\$(git -C '$W/C' rev-parse --path-format=absolute --git-common-dir)\" = \"\$(git -C '$W/C' rev-parse --path-format=absolute --git-dir)\" ]"
   # no-op when already primary
   local out
-  out="$(cd "$W/C" && just -f "$GJF" -d . worktree-set-primary 2>&1)"
+  out="$(cd "$W/C" && just -f "$GJF" worktree set-primary 2>&1)"
   chk "T1: already-primary is a no-op" "echo \"\$out\" | grep -q 'already the primary'"
   integrity "$W/C"
 

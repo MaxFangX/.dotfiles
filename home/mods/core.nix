@@ -115,8 +115,11 @@ in
     ".zshrc".source = ../../zshrc;
     ".tmux.conf".source = ../../tmux.conf;
     ".config/nvim".source = ../../nvim;
-    # Global justfile: machine-wide recipes via `just -g <recipe>`.
-    ".config/just/justfile".source = ../../just/global.justfile;
+    # Global justfile: machine-wide recipes via `just -g <recipe>`. just resolves
+    # `mod` paths relative to the deployed justfile, so link the just/ tree next
+    # to it so the worktree/workspace modules (and their scripts) resolve.
+    ".config/just/justfile".source = ../../global.justfile;
+    ".config/just/just".source = ../../just;
     ".dotfiles/zsh/plugins/fzf-tab".source = sources.fzf-tab;
     ".cargo/config.toml".text = lib.concatStrings [
       ''
