@@ -145,8 +145,8 @@ in
       ../../claude/commands/queue-mode.md;
     ".claude/commands/rebase-review.md".source =
       ../../claude/commands/rebase-review.md;
-    ".claude/commands/jj-review.md".source =
-      ../../claude/commands/jj-review.md;
+    ".claude/commands/jj-coedit.md".source =
+      ../../claude/commands/jj-coedit.md;
     ".claude/commands/temp-worktree.md".source =
       ../../claude/commands/temp-worktree.md;
     ".claude/skills/git-hunk/SKILL.md".source =

@@ -2,7 +2,7 @@
 description: Make jj changes in the shared working copy while I review the stack concurrently. Keep @ where it is; route every edit to its home commit with jj-hunk-tool. NEVER run `jj edit`.
 ---
 
-# jj Review Mode
+# jj Co-edit Mode
 
 We're both working the same jj stack at once. I'm reading and editing commits;
 you're making changes I've asked for. You edit the **shared working copy** I'm
