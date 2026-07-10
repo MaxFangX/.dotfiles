@@ -28,17 +28,6 @@ let
         "${lexeRepo}/.claude/commands/${name}.md";
     }) lexeCommands)
   );
-
-  # Agent skills shipped by jj-hunk-tool, each a directory with reference
-  # docs. Symlink every skill into both Claude's and Codex's skill dirs,
-  # pinned to the same build as the binary.
-  jjHunkSkills = [ "jj-surgeon" "jj-subagent-workspaces" ];
-  jjHunkSkillFiles = lib.listToAttrs (lib.concatMap (skill:
-    map (agentDir: {
-      name = "${agentDir}/skills/${skill}";
-      value.source = "${jj-hunk-tool}/share/jj-hunk-tool/skills/${skill}";
-    }) [ ".claude" ".codex" ]
-  ) jjHunkSkills);
 in
 {
   imports = [
@@ -158,7 +147,7 @@ in
     # `/effort` and other commands that write to settings.json.
     # ".claude/settings.json".source =
     #   ../../claude/settings.json;
-  } // lexeCommandFiles // jjHunkSkillFiles;
+  } // lexeCommandFiles;
 
   programs.home-manager.enable = true;
 

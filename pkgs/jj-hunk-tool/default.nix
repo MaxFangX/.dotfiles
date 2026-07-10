@@ -28,13 +28,6 @@ rustPlatform.buildRustPackage {
   # The CLI integration tests shell out to `jj`.
   nativeCheckInputs = [ jujutsu ];
 
-  # Expose the agent skills so home-manager can symlink them, pinned to
-  # the same version as the binary.
-  postInstall = ''
-    mkdir -p "$out/share/jj-hunk-tool"
-    cp -r skills "$out/share/jj-hunk-tool/skills"
-  '';
-
   passthru.updateScript = ./update.sh;
 
   meta = {
