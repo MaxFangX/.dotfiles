@@ -94,15 +94,16 @@ occasional collision (see below).
 
 ## We're editing the same files at once
 
-Expect the occasional failed or clobbered edit — I may be editing the same file
-you are, at the same moment. That's fine; don't let it stop you.
+Expect the occasional failed or clobbered edit — I or another AI may be editing
+the same file you are, at the same moment. That's fine; don't let it stop you.
 
 - If your edit didn't apply, or got overwritten alongside other changes to the
   file, just redo it.
-- If code you wrote was changed but not reverted, keep my version — usually a
-  cleanup or style fix to respect.
-- If your work was cleanly reverted with no other change to the file, I likely
-  rejected that approach; raise it in chat if you think that's a mistake.
+- If code you wrote was changed but not reverted, keep my (or the AI
+  co-editor's) version — usually a cleanup or style fix to respect.
+- If your work was cleanly reverted with no other change to the file, I (or an
+  AI co-editor) likely rejected that change; raise it in chat if you think
+  that's a mistake.
 
 ## Conflicts
 
@@ -116,7 +117,9 @@ touch one file, a higher commit's version **masks** the lower ones', so `@`
 never shows what each ancestor actually needs, and routing a partial fix down
 just nests the conflict or bakes literal marker text into a commit.
 Resolving these conflicts needs a bottom-up `jj edit` pass, which moves `@`.
-In this case, you should stop and ask me for an exclusive working-copy lock
+Often you can avoid disturbing anyone: create your own side workspace and do
+the bottom-up pass there (see the jj-surgery skill) — the shared `@` never
+moves. If that's impractical, stop and ask me for an exclusive working-copy lock
 (I'll stop my work and park any other agent's work). Once I've confirmed that
 you have ownership over the working copy, you are free to `jj edit` each commit
 directly to fix the conflicts. Work bottom-up and fully resolve each commit

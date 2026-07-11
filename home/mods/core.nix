@@ -140,6 +140,8 @@ in
       ../../claude/commands/temp-worktree.md;
     ".claude/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
+    ".claude/skills/jj-surgery/SKILL.md".source =
+      ../../claude/skills/jj-surgery/SKILL.md;
     ".codex/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
     # TODO(max): Let Claude Code manage settings.json itself for now, since
