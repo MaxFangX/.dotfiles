@@ -36,7 +36,16 @@ Who owns the main checkout determines how you work (see jj-coedit):
   from a fresh `jj log` before each batch of work.
 - No interactive anything: bare `jj split`, bare `jj diffedit`, any `-i` flag
   opens an editor and hangs forever. Use `jj split <paths> -m` or
-  `jj-hunk-tool`. Pass `-m` to every command that sets a description.
+  `jj-hunk-tool`. Pass `-m` to every command that sets a description — and
+  watch for commands that set one *implicitly*: a path-limited `jj squash`
+  that happens to empty its source merges the two descriptions in an editor.
+  Pass `--use-destination-message` (or `-m`) to any squash that might empty
+  the source.
+- A jj command that silently never returns is almost always a hidden editor.
+  Confirm with a stack sample of the hung pid (macOS: `sample <pid>`; look
+  for `TextEditor::edit_str`). Later jj writes queue behind it; killing the
+  hung processes is safe — an op either lands atomically or not at all, so
+  check `jj op log` afterward to see what (if anything) applied.
 - View diffs with `--git --no-pager`.
 - The working copy snapshots **only when a jj command runs in that workspace**.
   After editing files with non-jj tools, run `jj status` to snapshot — until
@@ -141,6 +150,11 @@ Structural edits:
   at that commit, and re-generate at every descendant that itself regenerates,
   bottom-up. Text-merged codegen output can pass today and break the next
   regen.
+- **Scripted resolutions and renames rarely land on the formatter's fixed
+  point** — splicing a side or changing identifier lengths reflows nothing, so
+  import lists and wrapped lines drift and tip CI fails format-check even
+  though everything compiles. Run the formatter at each commit you edited
+  (snapshot after), and include a tip format-check in verification.
 
 ## Concurrency with co-editors
 
