@@ -18,11 +18,15 @@ if [[ " $args " == *" --force "* || " $args " == *" -f "* ]]; then
 fi
 
 # Workspace name follows the `workspace add` convention: the path basename.
+# Capture the list once and match a here-string: piping into `grep -q` would
+# let grep close the pipe on match, SIGPIPE-killing jj mid-write, which under
+# `pipefail` reads as a non-match for any workspace that isn't listed last.
 name="$(basename "$dir")"
-if ! jj workspace list | grep -q "^$name:"; then
+workspaces="$(jj workspace list)"
+if ! grep -q "^$name:" <<<"$workspaces"; then
     echo "workspace remove: no jj workspace named '$name'." >&2
     echo "Known workspaces:" >&2
-    jj workspace list >&2
+    echo "$workspaces" >&2
     exit 1
 fi
 
