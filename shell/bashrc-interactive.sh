@@ -44,12 +44,5 @@ if [ -x /usr/bin/dircolors ]; then
   alias egrep='egrep --color=auto'
 fi
 
-# gh copilot aliases
-if [ -x "$(command -v gh)" ] \
-    && gh extension list 2>/dev/null \
-      | grep -q copilot; then
-  eval "$(gh copilot alias -- bash)"
-fi
-
 # Load common settings (shared with zsh)
 source ~/.dotfiles/shell/common.sh

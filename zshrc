@@ -155,13 +155,6 @@ theme-bitcoin() { _reset_theme && source ~/.dotfiles/zsh/bitcoin.zsh-theme; }
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# gh copilot aliases
-if [ -x "$(command -v gh)" ] \
-    && gh extension list 2>/dev/null \
-      | grep -q copilot; then
-  eval "$(gh copilot alias -- zsh)"
-fi
-
 # Turn '$' into a no-op to allow easily copy-pasting commands
 alias -g '$'=''
 
