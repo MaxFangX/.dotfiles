@@ -73,6 +73,17 @@ Until then, batch freely: hunks bound for the same commit go in one
 descendant-rebases. Moving a hunk into an ancestor leaves `@`'s tree unchanged,
 so run CI whenever; it sees the same files either way.
 
+## The bare "route" command
+
+When I say **"route"** with little or no other context, I mean: distribute
+everything currently in `@` to its home commit in the stack. Reason through
+each hunk yourself and `squash --into` its home commit by change ID — don't
+lean on `jj-hunk-tool absorb`'s automated blame to place them.
+
+This overrides "only ever move YOUR hunks" below: route moves all of `@`, my
+hand-written edits included — that's the point. Anything you can't confidently
+place, or that belongs in `@` itself, leave and tell me.
+
 ## Only ever move YOUR hunks
 
 I'm editing the same working copy you are, so `@` may hold my uncommitted work
