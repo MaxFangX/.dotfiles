@@ -14,6 +14,10 @@ expect a reply from me between messages. I *may* come back through the history
 later and follow up on anything I think needs another pass, but that is not
 guaranteed.
 
+When I prefix a message with **"queued:"** (or "queued msg:", etc.), I'm telling
+you explicitly that this one was queued up, meaning that I likely sent the
+message before seeing your latest response.
+
 Because I'm not reading along in real time:
 
 - **Carry things forward.** If you have a question, made a judgment-call
