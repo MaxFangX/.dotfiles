@@ -70,8 +70,24 @@ fi
 # Capture the workspace's un-integrated, non-empty commits before forgetting.
 # jj keeps them as anonymous heads afterward (work is never lost); we report
 # them, or abandon them with --force. Their change IDs survive the forget.
-leftover="$(jj log --no-pager --no-graph -r "${base}..${name}@ ~ empty()" \
-    -T 'change_id.short() ++ "\n"' 2>/dev/null | grep -v '^$' || true)"
+# Ancestry alone overcounts after a rebase-merge (GitHub rewrites the SHAs and
+# git carries no change-id metadata), so split off commits whose patch already
+# exists on the base per `git cherry`; those are integrated, just renamed.
+pairs="$(jj log --no-pager --no-graph -r "${base}..${name}@ ~ empty()" \
+    -T 'change_id.short() ++ " " ++ commit_id ++ "\n"' 2>/dev/null \
+    | grep -v '^$' || true)"
+integrated=""
+leftover=""
+if [[ -n "$pairs" ]]; then
+    head_commit="$(jj log --no-pager --no-graph -r "${name}@" -T 'commit_id')"
+    base_commit="$(jj log --no-pager --no-graph -r "$base" -T 'commit_id')"
+    merged="$(git -C "$(jj root)" cherry "$base_commit" "$head_commit" \
+        | awk '$1 == "-" { print $2 }')"
+    integrated="$(awk 'NR == FNR { m[$1]; next } $2 in m { print $2 }' \
+        <(printf '%s\n' "$merged") - <<<"$pairs")"
+    leftover="$(awk 'NR == FNR { m[$1]; next } !($2 in m) { print $1 }' \
+        <(printf '%s\n' "$merged") - <<<"$pairs")"
+fi
 count=0
 [[ -n "$leftover" ]] && count="$(printf '%s\n' "$leftover" | wc -l | tr -d ' ')"
 
@@ -82,6 +98,16 @@ if [[ "$force" == true ]]; then
     jj workspace forget "$name" --cleanup --force
 else
     jj workspace forget "$name" --cleanup
+fi
+
+# Abandon preserved commits that are content-identical to commits already on
+# the base — rebase-merge leftovers, not real work. Descendant un-integrated
+# commits get rebased in place; their change IDs (reported below) survive.
+if [[ -n "$integrated" ]]; then
+    # shellcheck disable=SC2086
+    jj abandon $integrated
+    n="$(printf '%s\n' "$integrated" | wc -l | tr -d ' ')"
+    echo "Abandoned $n integrated commit(s) whose patches are already on $base"
 fi
 
 # Resolve the workspace's bookmark (created by workspace add). It follows the
