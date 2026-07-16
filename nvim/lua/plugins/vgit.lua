@@ -752,12 +752,22 @@ return {
           require('vgit').project_commits_preview()
         end,
 
-        -- (r)eview by (c)ommit
+        -- (r)eview by (c)ommit - indexed (approved-snapshot based; supports
+        -- line-level marking via visual select + s/u)
         ['n grc'] = function()
+          require('vgit').indexed_commit_review()
+        end,
+        -- (r)eview by (f)ile - indexed
+        ['n grf'] = function()
+          require('vgit').indexed_file_review()
+        end,
+
+        -- (g)it (c)ommit (r)eview - classic hunk-mark based review
+        ['n gcr'] = function()
           require('vgit').project_review_by_commit()
         end,
-        -- (r)eview by (f)ile
-        ['n grf'] = function()
+        -- (g)it (f)ile (r)eview - classic
+        ['n gfr'] = function()
           require('vgit').project_review_by_file()
         end,
 
@@ -911,6 +921,54 @@ return {
             mark_hunk = { key = 's', desc = 'Mark hunk seen' },
             mark_file = { key = 'S', desc = 'Mark file seen' },
             unmark_hunk = { key = 'u', desc = 'Unmark hunk' },
+            unmark_file = { key = 'U', desc = 'Unmark file' },
+            reset = { key = 'R', desc = 'Reset all marks' },
+          },
+        },
+
+        -- Indexed file review settings (approved-snapshot based review;
+        -- s/u also work on visual selections for line-level marking)
+        indexed_file_review = {
+          keymaps = {
+            toggle_focus = {
+              key = '<Tab>',
+              desc = 'Switch focus between file list and diff preview',
+            },
+            previous = { key = 'k', desc = 'Previous' },
+            next = { key = 'j', desc = 'Next' },
+            mark_hunk = {
+              key = 's',
+              desc = 'Mark hunk seen (visual: mark selected lines)',
+            },
+            mark_file = { key = 'S', desc = 'Mark file seen' },
+            unmark_hunk = {
+              key = 'u',
+              desc = 'Unmark hunk (visual: unmark selected lines)',
+            },
+            unmark_file = { key = 'U', desc = 'Unmark file' },
+            reset = { key = 'R', desc = 'Reset all marks' },
+          },
+        },
+
+        -- Indexed commit review settings
+        indexed_commit_review = {
+          list_position = 'left',
+          keymaps = {
+            toggle_focus = {
+              key = '<Tab>',
+              desc = 'Switch focus between file list and diff preview',
+            },
+            previous = { key = 'k', desc = 'Previous' },
+            next = { key = 'j', desc = 'Next' },
+            mark_hunk = {
+              key = 's',
+              desc = 'Mark hunk seen (visual: mark selected lines)',
+            },
+            mark_file = { key = 'S', desc = 'Mark file seen' },
+            unmark_hunk = {
+              key = 'u',
+              desc = 'Unmark hunk (visual: unmark selected lines)',
+            },
             unmark_file = { key = 'U', desc = 'Unmark file' },
             reset = { key = 'R', desc = 'Reset all marks' },
           },
