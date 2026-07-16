@@ -1,0 +1,4 @@
+interface:
+  display_name: "Queue Mode"
+  short_description: "Handle asynchronously queued prompts safely"
+  default_prompt: "Use $queue-mode while processing these queued requests."

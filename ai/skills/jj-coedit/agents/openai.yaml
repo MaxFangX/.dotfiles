@@ -1,0 +1,4 @@
+interface:
+  display_name: "jj Co-edit"
+  short_description: "Co-edit a shared jj working copy safely"
+  default_prompt: "Use $jj-coedit and keep the shared checkout parked."

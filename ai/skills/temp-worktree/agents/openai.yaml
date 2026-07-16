@@ -1,0 +1,4 @@
+interface:
+  display_name: "Temp Worktree"
+  short_description: "Rewrite history in an isolated Git worktree"
+  default_prompt: "Use $temp-worktree to rewrite this history in isolation."

@@ -28,6 +28,24 @@ let
         "${lexeRepo}/.claude/commands/${name}.md";
     }) lexeCommands)
   );
+
+  sharedSkillNames = [
+    "jj-coedit"
+    "jj-surgery"
+    "queue-mode"
+    "rebase-review"
+    "temp-worktree"
+  ];
+  sharedSkillFiles = lib.listToAttrs (lib.concatMap (name: [
+    {
+      name = ".claude/skills/${name}";
+      value.source = ../../ai/skills + "/${name}";
+    }
+    {
+      name = ".codex/skills/${name}";
+      value.source = ../../ai/skills + "/${name}";
+    }
+  ]) sharedSkillNames);
 in
 {
   imports = [
@@ -128,20 +146,8 @@ in
       '')
     ];
     ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
-    # Slash commands owned by this repo (vs. lexeCommandFiles below,
-    # which symlink to the lexe repo's working tree).
-    ".claude/commands/queue-mode.md".source =
-      ../../claude/commands/queue-mode.md;
-    ".claude/commands/rebase-review.md".source =
-      ../../claude/commands/rebase-review.md;
-    ".claude/commands/jj-coedit.md".source =
-      ../../claude/commands/jj-coedit.md;
-    ".claude/commands/temp-worktree.md".source =
-      ../../claude/commands/temp-worktree.md;
     ".claude/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
-    ".claude/skills/jj-surgery/SKILL.md".source =
-      ../../claude/skills/jj-surgery/SKILL.md;
     ".codex/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
     # TODO(max): Let Claude Code manage settings.json itself for now, since
@@ -149,7 +155,7 @@ in
     # `/effort` and other commands that write to settings.json.
     # ".claude/settings.json".source =
     #   ../../claude/settings.json;
-  } // lexeCommandFiles;
+  } // sharedSkillFiles // lexeCommandFiles;
 
   programs.home-manager.enable = true;
 

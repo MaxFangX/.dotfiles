@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rebase Review"
+  short_description: "Edit safely during a human-driven rebase"
+  default_prompt: "Use $rebase-review while I drive the interactive rebase."
