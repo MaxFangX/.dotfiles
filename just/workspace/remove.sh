@@ -67,13 +67,32 @@ if [[ -z "$(nonempty 'trunk() ~ root()')" ]]; then
     done
 fi
 
+# Resolve the workspace's bookmark (created by workspace add). It follows the
+# same path derivation as workspace add — namespaced under worktrees/ or
+# workspaces/, not the basename workspace name — and is empty if no such
+# bookmark exists.
+if [[ "$dir" == *"worktrees/"* ]]; then
+    bookmark="${dir#*worktrees/}"
+elif [[ "$dir" == *"workspaces/"* ]]; then
+    bookmark="${dir#*workspaces/}"
+else
+    bookmark="$(basename "$dir")"
+fi
+[[ -n "$(nonempty "present($bookmark)")" ]] || bookmark=""
+
 # Capture the workspace's un-integrated, non-empty commits before forgetting.
 # jj keeps them as anonymous heads afterward (work is never lost); we report
 # them, or abandon them with --force. Their change IDs survive the forget.
+# Only count commits exclusive to this workspace: commits also reachable from
+# another workspace's working copy or another bookmark (e.g. the repo's
+# unpushed local stack, which the workspace was based on) aren't orphaned by
+# the forget, so they aren't this workspace's work to report.
 # Ancestry alone overcounts after a rebase-merge (GitHub rewrites the SHAs and
 # git carries no change-id metadata), so split off commits whose patch already
 # exists on the base per `git cherry`; those are integrated, just renamed.
-pairs="$(jj log --no-pager --no-graph -r "${base}..${name}@ ~ empty()" \
+shared="(working_copies() ~ ${name}@) | (bookmarks() ~ bookmarks(exact:\"${bookmark}\"))"
+pairs="$(jj log --no-pager --no-graph \
+    -r "(${base}..${name}@) ~ empty() ~ ::(${shared})" \
     -T 'change_id.short() ++ " " ++ commit_id ++ "\n"' 2>/dev/null \
     | grep -v '^$' || true)"
 integrated=""
@@ -117,19 +136,6 @@ if [[ -n "$integrated" ]]; then
     n="$(printf '%s\n' "$integrated" | wc -l | tr -d ' ')"
     echo "Abandoned $n integrated commit(s) whose patches are already on $base"
 fi
-
-# Resolve the workspace's bookmark (created by workspace add). It follows the
-# same path derivation as workspace add — namespaced under worktrees/ or
-# workspaces/, not the basename workspace name — and is empty if no such
-# bookmark exists.
-if [[ "$dir" == *"worktrees/"* ]]; then
-    bookmark="${dir#*worktrees/}"
-elif [[ "$dir" == *"workspaces/"* ]]; then
-    bookmark="${dir#*workspaces/}"
-else
-    bookmark="$(basename "$dir")"
-fi
-[[ -n "$(nonempty "present($bookmark)")" ]] || bookmark=""
 
 # Handle the bookmark and preserved commits, mirroring worktree remove's
 # branch handling. Delete the bookmark and drop the commits when the work is
