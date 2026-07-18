@@ -6,8 +6,12 @@ set -euo pipefail
 # and preserves any un-integrated commits — jj never drops committed work, so
 # they survive as anonymous heads (`jj log`) unless you pass --force.
 # Usage: just -g workspace remove <dir> [--force]
+# A relative <dir> that lands inside the repo is reinterpreted as a path under
+# the repo's workspaces dir (see resolve-dir.sh).
 
-dir="$1"
+source "$(dirname "${BASH_SOURCE[0]}")/resolve-dir.sh"
+
+dir="$(resolve_workspace_dir "$1")"
 shift
 args="$*"
 

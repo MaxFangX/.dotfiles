@@ -5,8 +5,12 @@ set -euo pipefail
 # repo. The jj analog of `worktree add`: all workspaces share one commit graph
 # and op log, and each gets a real `.git` so git tooling still works inside.
 # Usage: just -g workspace add <dir> [--no-paseo]
+# A relative <dir> that lands inside the repo is reinterpreted as a path under
+# the repo's workspaces dir (see resolve-dir.sh).
 
-dir="$1"
+source "$(dirname "${BASH_SOURCE[0]}")/resolve-dir.sh"
+
+dir="$(resolve_workspace_dir "$1")"
 shift
 
 # By default, after creating the workspace, start a detached paseo agent
