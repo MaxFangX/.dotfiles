@@ -111,10 +111,13 @@ if [[ -n "$integrated" ]]; then
 fi
 
 # Resolve the workspace's bookmark (created by workspace add). It follows the
-# same path derivation as workspace add — namespaced under worktrees/, not
-# the basename workspace name — and is empty if no such bookmark exists.
+# same path derivation as workspace add — namespaced under worktrees/ or
+# workspaces/, not the basename workspace name — and is empty if no such
+# bookmark exists.
 if [[ "$dir" == *"worktrees/"* ]]; then
     bookmark="${dir#*worktrees/}"
+elif [[ "$dir" == *"workspaces/"* ]]; then
+    bookmark="${dir#*workspaces/}"
 else
     bookmark="$(basename "$dir")"
 fi

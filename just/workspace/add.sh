@@ -22,12 +22,15 @@ if [[ ! -e "$root/.git" ]]; then
 fi
 
 # Derive the branch name from the path, mirroring `worktree add`: everything
-# after "worktrees/" (supports developer-namespaced branches), else the
-# basename. jj workspace names can't contain '/', so the workspace is keyed
-# by the basename while this namespaced name is the bookmark.
+# after "worktrees/" or "workspaces/" (supports developer-namespaced
+# branches), else the basename. jj workspace names can't contain '/', so the
+# workspace is keyed by the basename while this namespaced name is the
+# bookmark.
 # e.g. ~/lexe/worktrees/max/07-01-foo -> bookmark max/07-01-foo, ws 07-01-foo
 if [[ "$dir" == *"worktrees/"* ]]; then
     branch="${dir#*worktrees/}"
+elif [[ "$dir" == *"workspaces/"* ]]; then
+    branch="${dir#*workspaces/}"
 else
     branch="$(basename "$dir")"
 fi
