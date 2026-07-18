@@ -60,12 +60,20 @@ Who owns the main checkout determines how you work (see jj-coedit):
 
 ## Op log: shared, and how to undo
 
-One op log spans all workspaces of a repo. Consequences:
+One op log spans all workspaces of a repo, so undo-family commands mutate
+state shared with every workspace — even when each editor stays in their own.
+Check `jj workspace list` first: if this is the repo's only workspace,
+`jj undo` is probably fine; if there are several, assume concurrent editors
+and touch only ops that are provably yours.
 
 - **NEVER `jj op restore` to undo your own work** — it rewinds *every*
   workspace, clobbering the human's and every peer agent's concurrent work.
-  Use `jj undo` (last op only) or `jj op revert <op-id>` (inverts one
-  targeted op).
+- **`jj undo` is a trap under concurrency**: it inverts the *latest* op in
+  the shared log, which is likely a peer's op that landed after yours — and a
+  second `jj undo` doesn't cancel the first, it walks one op further back,
+  peeling off peers' ops one by one. To undo your own work, find your op in
+  `jj op log` and `jj op revert <op-id>` that specific op. If you did undo a
+  peer's op, re-apply it by `jj op revert`ing the undo op itself.
 - `jj op log` is the forensics tool. When state looks wrong, read the last
   ~10 ops *before* concluding breakage — often the human or a peer agent
   squashed or renamed under you, in which case keep their change and adapt
@@ -73,6 +81,9 @@ One op log spans all workspaces of a repo. Consequences:
 - Recover files from the past without touching the op timeline:
   `jj --at-op=<op> file show`, or `jj restore --from <old-commit-id>` —
   hidden commits stay addressable by commit ID for diff and restore.
+- That is also how to keep a pre-surgery backup: record the tip's commit ID.
+  Do **not** pin a backup bookmark to the old commit — a bookmark keeps the
+  whole old lineage visible, turning every rewritten change divergent.
 
 ## Side workspace: edit any commit without moving anyone's `@`
 
@@ -171,7 +182,9 @@ agent's workspace. Expect and handle:
   duplicate tips' trees match (`jj diff --from A --to B` → 0 files changed),
   then `jj abandon <dead-lineage-root-commit-id>::`. If working copies ended
   up split *across* lineages, don't pick a winner unilaterally — stop and
-  coordinate.
+  coordinate. Divergence may also predate you: compare against
+  `jj --at-op=<your-first-op>- log -r 'all()'` templated on `divergent` to
+  prove which duplicates you actually created before cleaning any up.
 - **Bookmark conflicts** come from the same races; resolve with
   `jj bookmark set <name> -r <survivor>` (usually right where it was, on the
   surviving lineage).
@@ -193,6 +206,13 @@ agent's workspace. Expect and handle:
   Commits you didn't touch that also grep clean are low-risk.
 - Final sweep before handing back: `jj log -r 'conflicts()'` empty, no
   divergent-change warnings, and every workspace's `@` where its owner left it.
+- **Re-export peers' git HEAD** (colocated): after surgery from a side
+  workspace, peer workspaces' git HEADs still name the pre-rewrite stack —
+  git tools there (vgit, `git status`) silently read old commits. Bookmarks
+  export fine; HEAD lags, and for linked-worktree workspaces jj may not
+  manage HEAD at all (`jj st` / `jj git export` won't fix it). In each
+  affected workspace, verify `git rev-parse HEAD` matches `@-`'s commit; if
+  not, `git reset <commit-of-@->` (mixed: moves HEAD + index, leaves files).
 
 ## jj-hunk-tool quick reference
 

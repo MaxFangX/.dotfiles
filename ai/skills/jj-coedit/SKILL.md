@@ -39,8 +39,11 @@ or abandons `@`:**
   [Conflicts](#conflicts)).
 - `jj new`, `jj checkout`, `jj co`
 - `jj abandon @`, `jj squash` with no `--from` (defaults to squashing `@` away)
-- `jj undo`, `jj op restore`, `jj op undo` — these can also revert the user's
-  live work, not just yours. Do not use them unless explicitly asked.
+- `jj undo`, `jj op restore`, `jj op undo` — the op log is shared across all
+  workspaces, and `jj undo` inverts the *latest* op, likely someone else's —
+  these can revert the user's live work, not just yours. Do not use them
+  unless explicitly asked; to undo your own work, `jj op revert <op-id>` your
+  specific op.
 
 Read-only jj commands are always fine (`jj log`, `jj diff`, `jj show`,
 `jj file show -r <rev>`, `jj-hunk-tool hunks -r <rev>`) — read any commit
@@ -136,7 +139,10 @@ just nests the conflict or bakes literal marker text into a commit.
 Resolving these conflicts needs a bottom-up `jj edit` pass, which moves `@`.
 Often you can avoid disturbing anyone: create your own side workspace and do
 the bottom-up pass there (use the `jj-surgery` skill) — the shared `@` never
-moves. If that is impractical, stop and ask for an exclusive working-copy lock.
+moves. Afterward re-sync the shared workspace's git view: check that
+`git rev-parse HEAD` there matches `@-`'s commit, and `git reset <that
+commit>` if not — jj doesn't always re-export a peer workspace's git HEAD,
+and git tools (vgit) otherwise keep reading the pre-rewrite commits. If that is impractical, stop and ask for an exclusive working-copy lock.
 Once the user confirms that their work and any other agents are parked, you may
 `jj edit` each commit directly to fix the conflicts. Work bottom-up and fully
 resolve each commit before moving to the next one up — no markers left,
