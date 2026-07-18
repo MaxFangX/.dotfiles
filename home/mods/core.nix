@@ -31,6 +31,7 @@ let
 
   sharedSkillNames = [
     "jj-coedit"
+    "jj-rebase"
     "jj-surgery"
     "queue-mode"
     "rebase-review"
