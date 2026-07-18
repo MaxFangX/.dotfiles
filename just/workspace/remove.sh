@@ -100,6 +100,14 @@ else
     jj workspace forget "$name" --cleanup
 fi
 
+# Immediately archive the workspace's record in the paseo app, if any. The
+# daemon only notices the missing directory on a workspace-list refetch, so
+# without this poke the stale record lingers in the UI. Best-effort no-op
+# when node or the daemon is unavailable.
+if [[ -n "$tgt" ]] && command -v node >/dev/null; then
+    "$(dirname "${BASH_SOURCE[0]}")/paseo-archive.mjs" "$tgt" || true
+fi
+
 # Abandon preserved commits that are content-identical to commits already on
 # the base — rebase-merge leftovers, not real work. Descendant un-integrated
 # commits get rebased in place; their change IDs (reported below) survive.
