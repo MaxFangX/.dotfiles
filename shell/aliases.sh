@@ -175,8 +175,9 @@ alias claude-go-foom="claude --dangerously-skip-permissions"
 # Start an interactive session with Opus fast mode (~2.5x faster, higher cost)
 alias claude-fast="claude --settings '{\"fastMode\": true}'"
 
-# Start a paseo session in a new repo
-alias paseo-run="paseo run hi --provider claude/opus --thinking high --mode bypassPermissions --detach"
+# Start a paseo session in a new repo. Unset PASEO_WORKSPACE_ID (exported by
+# paseo terminals, preferred over cwd) so the run keys off the current dir.
+alias paseo-run="env -u PASEO_WORKSPACE_ID paseo run hi --provider claude/opus --thinking high --mode bypassPermissions --detach"
 
 ########
 # Misc #

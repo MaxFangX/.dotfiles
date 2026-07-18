@@ -8,8 +8,8 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 
 # Create a colocated jj workspace (+ git worktree). Best run from the repo.
 [no-cd]
-add dir:
-    @{{ source_directory() }}/add.sh {{ quote(dir) }}
+add dir *args:
+    @{{ source_directory() }}/add.sh {{ quote(dir) }} {{ args }}
 
 # Remove a jj workspace and its colocated git worktree, safely.
 [no-cd]

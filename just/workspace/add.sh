@@ -4,9 +4,24 @@ set -euo pipefail
 # Create a colocated jj workspace (+ git worktree) at <dir>. Best run from the
 # repo. The jj analog of `worktree add`: all workspaces share one commit graph
 # and op log, and each gets a real `.git` so git tooling still works inside.
-# Usage: just -g workspace add <dir>
+# Usage: just -g workspace add <dir> [--no-paseo]
 
 dir="$1"
+shift
+
+# By default, after creating the workspace, start a detached paseo agent
+# inside it, which also registers the directory as a paseo workspace.
+# --no-paseo opts out.
+paseo_run=true
+for arg in "$@"; do
+    case "$arg" in
+        --no-paseo) paseo_run=false ;;
+        *)
+            echo "workspace add: unknown argument '$arg'" >&2
+            exit 1
+            ;;
+    esac
+done
 
 # `jj workspace add` creates the git worktree itself and auto-colocates (a
 # real `.git` alongside `.jj`) when the current workspace is colocated. Bail
@@ -71,3 +86,18 @@ if [[ -d .vim ]]; then
 fi
 
 echo "Created colocated jj workspace at $dir on branch $branch"
+
+# Make the new workspace show up in the Paseo UI by starting a detached paseo
+# agent in it (sends "hi" to Opus).
+#
+# Terminals inside Paseo export PASEO_WORKSPACE_ID, which `paseo run` prefers
+# over the cwd, causing the agent to be pinned to the old workspace rather than
+# the new one. We unset it here (for the child process only) so the agent
+# starts in the new workspace.
+if [[ "$paseo_run" == true ]] && command -v paseo >/dev/null; then
+    (
+        cd "$dir"
+        env -u PASEO_WORKSPACE_ID paseo run hi --provider claude/opus \
+            --thinking high --mode bypassPermissions --detach
+    )
+fi
