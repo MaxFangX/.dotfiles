@@ -141,14 +141,22 @@ if [[ -n "$integrated" ]]; then
     echo "Abandoned $n integrated commit(s) whose patches are already on $base"
 fi
 
+# Delete the workspace's bookmark, unless the `jj abandon` above already did:
+# jj deletes bookmarks pointing at abandoned commits.
+delete_bookmark() {
+    if [[ -n "$bookmark" && -n "$(nonempty "present($bookmark)")" ]]; then
+        jj bookmark delete "$bookmark"
+    fi
+}
+
 # Handle the bookmark and preserved commits, mirroring worktree remove's
 # branch handling. Delete the bookmark and drop the commits when the work is
 # integrated (count 0) or forced; otherwise keep both and report.
 if [[ "$count" -eq 0 ]]; then
-    [[ -n "$bookmark" ]] && jj bookmark delete "$bookmark"
+    delete_bookmark
     echo "Removed workspace '$name' at $dir${bookmark:+ and deleted bookmark '$bookmark'}"
 elif [[ "$force" == true ]]; then
-    [[ -n "$bookmark" ]] && jj bookmark delete "$bookmark"
+    delete_bookmark
     # shellcheck disable=SC2086
     jj abandon $leftover
     echo "Removed workspace '$name' at $dir and abandoned $count un-integrated commit(s)${bookmark:+, deleted bookmark '$bookmark'}"
