@@ -1,0 +1,4 @@
+interface:
+  display_name: "jj"
+  short_description: "Work skillfully in jj repos; 'coedit' shares @"
+  default_prompt: "Use $jj to manage version control in this jj repo."

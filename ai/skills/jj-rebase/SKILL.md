@@ -6,7 +6,7 @@ description: >-
   onto master.
 ---
 
-First, read the /jj-surgery skill.
+First, read the /jj skill.
 
 Then, identify the branch associated with this workspace (usually it matches
 the workspace name) and use jj to rebase this branch onto master. You may stop

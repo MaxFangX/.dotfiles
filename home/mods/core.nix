@@ -30,9 +30,8 @@ let
   );
 
   sharedSkillNames = [
-    "jj-coedit"
+    "jj"
     "jj-rebase"
-    "jj-surgery"
     "queue-mode"
     "rebase-review"
     "temp-worktree"
