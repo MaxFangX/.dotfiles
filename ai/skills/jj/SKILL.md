@@ -98,6 +98,27 @@ Who owns the main checkout determines how you work:
   non-disruptive mechanisms (routing, side workspaces) when in doubt about
   who else is in the repo.
 
+## Land your work in the stack
+
+In every mode, land changes as you go rather than letting them accumulate in
+`@`: give each logical change a described commit in the stack — or route it
+into the existing commit it amends — and advance the branch bookmark
+(`jj bookmark set <branch> -r <rev>`) so the bookmark tracks the finished
+work. Leave changes sitting uncommitted in `@` only when the user explicitly
+asks for that. (In co-edit mode the same principle applies via routing: `@`
+belongs to the user and must stay clean of your edits.)
+
+When working directly on master/main, the "stack" is all unpushed commits
+(`<remote-master>..@`). Unpushed commits are generally mutable — route
+fixups into whichever one they amend — while pushed commits should be
+treated as immutable.
+
+End your turn with git HEAD attached to the branch, not jj's detached HEAD:
+once the bookmark points at `@-`, run `jj git export && git switch <branch>`.
+This moves no files and leaves `@` in place — it only re-attaches HEAD — but
+it lets git-based tools reliably detect the branch name, remote PR status,
+etc. (jj detaches HEAD again on the next commit; just re-attach when done.)
+
 ## The bare "route" command
 
 When the user says **"route"** with little or no other context, distribute
