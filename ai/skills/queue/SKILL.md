@@ -1,5 +1,5 @@
 ---
-name: queue-mode
+name: queue
 description: >-
   Process a series of asynchronously queued prompts without expecting the user
   to read or reply between messages. Use when the user says prompts or messages
