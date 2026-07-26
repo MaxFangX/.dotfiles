@@ -146,7 +146,7 @@ Because you can always route afterward, order and who-touches-what don't
 matter — no need to ask how to split or sequence the work; just make the edit
 and route it home.
 
-Combine this mode with the `/queue` skill when the user queues fixes. Make
+Combine this mode with the `/q` skill when the user queues fixes. Make
 and route those fixes while the user edits the same tree; do not rely on
 receiving replies.
 

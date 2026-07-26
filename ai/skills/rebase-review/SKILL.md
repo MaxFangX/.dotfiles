@@ -14,7 +14,7 @@ Perform a deep, interactive review and fixup of an existing **stack of
 commits**. The user drives an **interactive rebase** so each commit can be
 refined in place instead of absorbing every fix downward from the stack tip.
 
-Combine this skill with the `/queue` skill when the user queues feedback.
+Combine this skill with the `/q` skill when the user queues feedback.
 Expect the user to make small edits in the same tree and do not rely on
 receiving replies.
 

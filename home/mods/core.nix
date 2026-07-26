@@ -32,7 +32,7 @@ let
   sharedSkillNames = [
     "jj"
     "jj-rebase"
-    "queue"
+    "q"
     "rebase-review"
     "temp-worktree"
   ];
