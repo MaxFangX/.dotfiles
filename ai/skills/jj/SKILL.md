@@ -85,8 +85,8 @@ Who owns the main checkout determines how you work:
   historical commits directly, spin up your own side workspace for it.
 - **Exclusive**: the main checkout is yours, either because you're the only
   writer or because the human parked everyone and handed you the lock. You may
-  do surgery in place — `jj edit` freely; the side-workspace machinery below is
-  optional. A lock is worth requesting for bottom-up-heavy surgery: the main
+  do surgery in place — `jj edit` freely; the side-workspace machinery below
+  is optional. A lock is worth requesting for bottom-up-heavy surgery: the main
   checkout has the warm build cache and env setup a fresh workspace lacks.
   Exclusive means the *checkout* is yours, not the repo: parked co-editors
   still share the op log (undo rules above still apply), and before handing
@@ -113,11 +113,24 @@ When working directly on master/main, the "stack" is all unpushed commits
 fixups into whichever one they amend — while pushed commits should be
 treated as immutable.
 
-End your turn with git HEAD attached to the branch, not jj's detached HEAD:
-once the bookmark points at `@-`, run `jj git export && git switch <branch>`.
-This moves no files and leaves `@` in place — it only re-attaches HEAD — but
-it lets git-based tools reliably detect the branch name, remote PR status,
-etc. (jj detaches HEAD again on the next commit; just re-attach when done.)
+End your turn with git HEAD attached to the branch, not jj's detached HEAD,
+so git-based tools can reliably detect the branch name, remote PR status,
+etc.: run `jj git export && git switch <branch>` — but only when it is
+provably a no-op for the files, meaning one check holds: `git rev-parse
+HEAD` already equals the bookmark's commit. A same-commit switch merely
+re-attaches HEAD to the branch ref — git updates no files, so any
+uncommitted changes at `@` ride along untouched. This applies even in
+co-edit mode.
+
+If the commits differ, skip the re-attach and say so — never reach for
+`-f`. A plain different-commit switch makes colocated jj reset `@` onto the
+new HEAD: dirty files usually ride along in git's tree, but the old `@` is
+stranded as an anonymous head and our position in the stack is lost. `-f`
+is worse — it wipes the dirty files themselves: changes jj has snapshotted
+survive only in that stranded commit (recover with `jj restore --from
+<commit>`), while edits made since the last jj command were never
+snapshotted and are gone for good. (jj detaches HEAD again on the next
+commit; just re-attach when done.)
 
 ## The bare "route" command
 
@@ -165,6 +178,12 @@ replaces, or abandons `@`:**
 - `jj undo`, `jj op restore`, `jj op undo` — see
   [Op log](#op-log-shared-and-how-to-undo); these can revert the user's live
   work, not just yours.
+- `git switch`, `git checkout`, `git reset --hard` — any git command that
+  moves git HEAD or the git worktree. Colocated jj imports the new git HEAD
+  on its next command and resets `@` to match, reverting the user's
+  uncommitted work. Sole exception: the end-of-turn git HEAD re-attach,
+  when its check proves it touches no files (see
+  [Land your work](#land-your-work-in-the-stack)).
 
 Read-only jj commands are always fine (`jj log`, `jj diff`, `jj show`,
 `jj file show -r <rev>`, `jj-hunk-tool hunks -r <rev>`) — read any commit
