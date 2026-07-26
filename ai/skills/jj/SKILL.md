@@ -56,7 +56,7 @@ Check `jj workspace list` first: if this is the repo's only workspace,
 and touch only ops that are provably yours.
 
 - **NEVER `jj op restore` to undo your own work** — it rewinds *every*
-  workspace, clobbering the human's and every peer agent's concurrent work.
+  workspace, clobbering my work and every peer agent's.
 - **`jj undo` is a trap under concurrency**: it inverts the *latest* op in
   the shared log, which is likely a peer's op that landed after yours — and a
   second `jj undo` doesn't cancel the first, it walks one op further back,
@@ -64,9 +64,8 @@ and touch only ops that are provably yours.
   `jj op log` and `jj op revert <op-id>` that specific op. If you did undo a
   peer's op, re-apply it by `jj op revert`ing the undo op itself.
 - `jj op log` is the forensics tool. When state looks wrong, read the last
-  ~10 ops *before* concluding breakage — often the human or a peer agent
-  squashed or renamed under you, in which case keep their change and adapt
-  yours.
+  ~10 ops *before* concluding breakage — often I or a peer agent squashed
+  or renamed under you, in which case keep that change and adapt yours.
 - Recover files from the past without touching the op timeline:
   `jj --at-op=<op> file show`, or `jj restore --from <old-commit-id>` —
   hidden commits stay addressable by commit ID for diff and restore.
@@ -78,19 +77,19 @@ and touch only ops that are provably yours.
 
 Who owns the main checkout determines how you work:
 
-- **Co-edit** — activated when the user says "coedit": the human owns `@`,
-  and everyone — human and agents alike — edits the same working copy.
+- **Co-edit** — activated when I say "coedit": I own `@`, and everyone —
+  me and agents alike — edits the same working copy.
   Follow the full contract in
   [Co-edit mode](#co-edit-mode). Never move `@`; when surgery needs to edit
   historical commits directly, spin up your own side workspace for it.
 - **Exclusive**: the main checkout is yours, either because you're the only
-  writer or because the human parked everyone and handed you the lock. You may
+  writer or because I parked everyone and handed you the lock. You may
   do surgery in place — `jj edit` freely; the side-workspace machinery below
   is optional. A lock is worth requesting for bottom-up-heavy surgery: the main
   checkout has the warm build cache and env setup a fresh workspace lacks.
   Exclusive means the *checkout* is yours, not the repo: parked co-editors
   still share the op log (undo rules above still apply), and before handing
-  the lock back, `jj new <tip>` so the human gets `@` parked at the tip, not
+  the lock back, `jj new <tip>` so I get `@` parked at the tip, not
   mid-stack where your last `jj edit` left it.
 - **Neither declared**: use your session context to judge how to manage the
   checkout — there is no fixed rule. Be cautious by default: the op-log
@@ -104,9 +103,9 @@ In every mode, land changes as you go rather than letting them accumulate in
 `@`: give each logical change a described commit in the stack — or route it
 into the existing commit it amends — and advance the branch bookmark
 (`jj bookmark set <branch> -r <rev>`) so the bookmark tracks the finished
-work. Leave changes sitting uncommitted in `@` only when the user explicitly
-asks for that. (In co-edit mode the same principle applies via routing: `@`
-belongs to the user and must stay clean of your edits.)
+work. Leave changes sitting uncommitted in `@` only when I explicitly ask
+for that. (In co-edit mode the same principle applies via routing: `@`
+belongs to me and must stay clean of your edits.)
 
 When working directly on master/main, the "stack" is all unpushed commits
 (`<remote-master>..@`). Unpushed commits are generally mutable — route
@@ -134,53 +133,52 @@ commit; just re-attach when done.)
 
 ## The bare "route" command
 
-When the user says **"route"** with little or no other context, distribute
+When I say **"route"** with little or no other context, distribute
 everything currently in `@` to its home commit in the stack. Reason through
 each hunk yourself and `squash --into` its home commit by change ID — don't
 lean on `jj-hunk-tool absorb`'s automated blame to place them.
 
 In co-edit mode this overrides "only ever move YOUR hunks": route moves all
-of `@`, including the user's hand-written edits. Anything you cannot
-confidently place, or that belongs in `@` itself, leave and tell the user.
+of `@`, including my hand-written edits. Anything you cannot confidently
+place, or that belongs in `@` itself, leave and tell me.
 
 ## Co-edit mode
 
-Work in the same jj stack and **shared working copy** as the user. The user is
-reading and editing commits while parked at a specific change (`@`). Do not
-move them off it.
+Work in the same jj stack and **shared working copy** as me. I am reading
+and editing commits while parked at a specific change (`@`). Do not move me
+off it.
 
 Edit files directly even though each raw edit lands in `@`, often the
 **wrong commit**. Route it afterward to its home commit with
 `jj-hunk-tool`, which moves hunks between commits without checking anything
-out. Leave `@` clean of your changes before handing back so the user can keep
+out. Leave `@` clean of your changes before handing back so I can keep
 reviewing and editing undisturbed.
 
 Because you can always route afterward, order and who-touches-what don't
 matter — no need to ask how to split or sequence the work; just make the edit
 and route it home.
 
-Combine this mode with the `/q` skill when the user queues fixes. Make
-and route those fixes while the user edits the same tree; do not rely on
-receiving replies.
+Combine this mode with the `/q` skill when I queue fixes. Make and route
+those fixes while I edit the same tree; do not rely on receiving replies.
 
 ### #1 RULE: NEVER MOVE THE CHECKOUT
 
-`@` is where the user is reading and making fixups. Moving it changes files
-underneath them during review. **Do not run any command that repoints,
+`@` is where I am reading and making fixups. Moving it changes files
+underneath me during review. **Do not run any command that repoints,
 replaces, or abandons `@`:**
 
-- `jj edit <rev>` — forbidden unless the user explicitly hands you an
+- `jj edit <rev>` — forbidden unless I explicitly hand you an
   exclusive working-copy lock to resolve conflicts (see
   [Co-edit conflicts](#co-edit-conflicts)).
 - `jj new`, `jj checkout`, `jj co`
 - `jj abandon @`, `jj squash` with no `--from` (defaults to squashing `@`
   away)
 - `jj undo`, `jj op restore`, `jj op undo` — see
-  [Op log](#op-log-shared-and-how-to-undo); these can revert the user's live
+  [Op log](#op-log-shared-and-how-to-undo); these can revert my live
   work, not just yours.
 - `git switch`, `git checkout`, `git reset --hard` — any git command that
   moves git HEAD or the git worktree. Colocated jj imports the new git HEAD
-  on its next command and resets `@` to match, reverting the user's
+  on its next command and resets `@` to match, reverting my
   uncommitted work. Sole exception: the end-of-turn git HEAD re-attach,
   when its check proves it touches no files (see
   [Land your work](#land-your-work-in-the-stack)).
@@ -199,7 +197,7 @@ For each requested change:
    the edit you just made — nothing else (see below).
 3. **Pick the home commit** by change ID (`jj log`, blame, or
    `jj-hunk-tool absorb --dry-run` to see routing). Change IDs are stable
-   across rewrites — target by change ID, never commit hash, since the user
+   across rewrites — target by change ID, never commit hash, since I
    may rewrite commits concurrently.
 4. **Move just those hunks** into the home commit:
 
@@ -212,10 +210,10 @@ For each requested change:
    ```
 
 5. **Confirm `@` is stable:** `jj log` shows `@` at the same change; `jj diff`
-   shows `@` free of your edit (only the user's in-progress work may remain).
+   shows `@` free of your edit (only my in-progress work may remain).
 
 Route your changes before you hand control back — never go idle with them
-sitting in `@`, where they commingle with the user's fixups.
+sitting in `@`, where they commingle with my fixups.
 Until then, batch freely: hunks bound for the same commit go in one
 `squash --into`, a mixed batch in one `absorb <ids>` — fewer calls, fewer
 descendant-rebases. Moving a hunk into an ancestor leaves `@`'s tree
@@ -223,34 +221,34 @@ unchanged, so run CI whenever; it sees the same files either way.
 
 ### Only ever move YOUR hunks
 
-The user is editing the same working copy, so `@` may hold their uncommitted
-work alongside yours. **Never sweep their hunks into another commit.**
+I am editing the same working copy, so `@` may hold my uncommitted work
+alongside yours. **Never sweep my hunks into another commit.**
 
 - Never run a bare `jj-hunk-tool absorb` or `jj-hunk-tool squash --from @`
-  with no hunk IDs — that moves *everything*, including the user's work.
+  with no hunk IDs — that moves *everything*, including my work.
 - Always select the specific hunk IDs you just wrote. You know what you
   changed; if `jj-hunk-tool hunks` shows changes you do not recognize, they
-  belong to the user. Leave them in `@`, untouched.
-- If you genuinely cannot distinguish your hunk from the user's, **stop and
-  ask.** Do not guess and risk moving the user's work.
+  belong to me. Leave them in `@`, untouched.
+- If you genuinely cannot distinguish your hunk from mine, **stop and
+  ask.** Do not guess and risk moving my work.
 
 ### When the change belongs in `@`
 
-If a change genuinely belongs in `@` itself (where the user is parked), leave
-it there and tell the user. Since you may both be in that file, expect the
-occasional collision.
+If a change genuinely belongs in `@` itself (where I am parked), leave it
+there and tell me. Since we may both be in that file, expect the occasional
+collision.
 
 ### We're editing the same files at once
 
-Expect the occasional failed or clobbered edit — the user or another AI may be
+Expect the occasional failed or clobbered edit — I or another AI may be
 editing the same file at the same moment. Do not let it stop you.
 
 - If your edit didn't apply, or got overwritten alongside other changes to the
   file, just redo it.
-- If code you wrote was changed but not reverted, keep the user's or AI
-  co-editor's version — usually a cleanup or style fix to respect.
-- If your work was cleanly reverted with no other change to the file, the user
-  or an AI co-editor likely rejected that change; raise it if you think
+- If code you wrote was changed but not reverted, keep my version or the AI
+  co-editor's — usually a cleanup or style fix to respect.
+- If your work was cleanly reverted with no other change to the file, I or
+  an AI co-editor likely rejected that change; raise it if you think
   that's a mistake.
 
 ### Co-edit conflicts
@@ -259,7 +257,7 @@ Routing a hunk into an ancestor rebases its descendants (including `@`), and
 jj records any conflict in the tree instead of stopping. So after a move,
 check `jj log` for conflict markers, and resolve by editing the files — not
 by undoing. If a conflict is ambiguous or you are stuck, leave it and tell
-the user.
+me.
 
 Some conflicts can't be resolved from `@` at all: when several stacked
 commits touch one file, a higher commit's version **masks** the lower ones',
@@ -271,7 +269,7 @@ You can do this without disturbing anyone: create your own
 and do the bottom-up pass there — the shared `@` never moves. Afterward
 re-sync the shared workspace's git view (see the re-export bullet under
 [Verification](#verification)). If that is impractical, stop and ask for an
-exclusive working-copy lock. Once the user confirms that their work and any
+exclusive working-copy lock. Once I confirm that my work and any
 other agents are parked, you may `jj edit` each commit directly to fix the
 conflicts. Work bottom-up and fully resolve each commit before moving to the
 next one up — no markers left, `jj resolve --list` clean, and it builds;
@@ -280,9 +278,9 @@ leaving a conflict behind just cascades new ones into its descendants.
 
 ### Carry things forward
 
-Do not bury questions, judgment calls, or important notes in a reply the user
+Do not bury questions, judgment calls, or important notes in a reply I
 may never see. Retain them and surface the accumulated notes once it is clear
-that the user has returned to the chat.
+that I have returned to the chat.
 
 ## Side workspace: edit any commit without moving anyone's `@`
 
@@ -368,7 +366,7 @@ Structural edits:
 
 ## Concurrency with co-editors
 
-Ops from any workspace race yours — the human's main checkout and every peer
+Ops from any workspace race yours — my main checkout and every peer
 agent's workspace. Expect and handle:
 
 - **Stale working copies**: any other workspace's op leaves yours stale; run

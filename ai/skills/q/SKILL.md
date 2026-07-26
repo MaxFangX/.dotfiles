@@ -10,8 +10,8 @@ description: >-
 
 # Queue
 
-A queued prompt was sent before the user read your previous response. Treat
-it as such: the user has likely not seen your latest messages, and may not
+A queued prompt is one I sent before reading your previous response. Treat
+it as such: I have likely not seen your latest messages, and may not
 reply between messages. Work normally and respond to every prompt, but do
 not wait for acknowledgment.
 
@@ -21,6 +21,6 @@ not wait for acknowledgment.
   prompts for a while.
 
 **Carry things forward.** Retain questions, judgment calls, and important
-notes that the user might miss. Once it is clear that the user has returned to
-the chat (typically indicated by a follow-up on something you said), surface the
+notes that I might miss. Once it is clear that I have returned to the chat
+(typically indicated by a follow-up on something you said), surface the
 accumulated notes.
