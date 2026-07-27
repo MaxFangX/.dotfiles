@@ -99,9 +99,22 @@ echo "Created colocated jj workspace at $dir on branch $branch"
 # the new one. We unset it here (for the child process only) so the agent
 # starts in the new workspace.
 if [[ "$paseo_run" == true ]] && command -v paseo >/dev/null; then
+    # Register the workspace under the repo's existing paseo project first.
+    # Left to itself, paseo files a worktree it first sees by path as its own
+    # project, cutting it off from the repo's other workspaces; the daemon
+    # takes an explicit project, but `paseo run` has no flag for it. Falls back
+    # to a plain run (its own project) if the daemon isn't up.
+    ws_id=""
+    if command -v node >/dev/null; then
+        main_root="$(dirname "$(git -C "$dir" rev-parse \
+            --path-format=absolute --git-common-dir)")"
+        ws_id="$("$(dirname "${BASH_SOURCE[0]}")/paseo-register.mjs" \
+            "$dir" "$main_root" || true)"
+    fi
     (
         cd "$dir"
         env -u PASEO_WORKSPACE_ID paseo run hi --provider claude/opus \
-            --thinking high --mode bypassPermissions --detach
+            --thinking high --mode bypassPermissions --detach \
+            ${ws_id:+--workspace "$ws_id"}
     )
 fi
