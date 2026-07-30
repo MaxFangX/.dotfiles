@@ -8,6 +8,14 @@ pr-comments *args:
 worktree-set-primary-test *args:
     ./just/worktree-set-primary-test.sh {{ args }}
 
+# Diff shared agent skills against the lexe repo
+lexe-diff *args:
+    ./just/lexe-skills.sh diff {{ args }}
+
+# Sync shared agent skills (direction: from-lexe|to-lexe)
+lexe-sync direction *args:
+    ./just/lexe-skills.sh sync {{ direction }} {{ args }}
+
 # Update all custom packages (or one: just update codex)
 update package="":
     nix-shell pkgs/update.nix {{ if package != "" { "--argstr package " + package } else { "" } }}
