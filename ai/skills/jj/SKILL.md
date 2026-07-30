@@ -428,3 +428,10 @@ IDs are content-derived and go stale after any change — re-run `hunks`. Line
 ranges: `id:2-6,30-41`. Absorb routes modified/deleted lines by blame; pure
 insertions fall back to the last mutable ancestor touching the file;
 ambiguous hunks stay in `@` with candidates printed.
+
+All rewriting commands take a global `--ignore-immutable` (passed to jj) —
+the fix when an untracked remote bookmark makes your own in-flight stack
+immutable. For `absorb` it also widens routing candidates from mutable
+ancestors to everything back to `trunk()`. It skips a real safety check:
+only use it on commits that are provably yours, and expect the rewrite to
+require a force-push.
