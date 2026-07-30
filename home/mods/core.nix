@@ -1,40 +1,19 @@
 # Shared config across all machines.
 { config, lib, pkgs, sources, codex, git-hunk, jj, jj-hunk-tool, ... }:
 let
-  # The lexe repo always lives at one of these paths. Resolve the
-  # first that exists so we can symlink in slash commands it owns.
-  # Null on machines without the repo, in which case those symlinks
-  # are omitted.
-  homeDir = config.home.homeDirectory;
-  lexeRepo = lib.findFirst builtins.pathExists null [
-    "${homeDir}/lexe/org/lexe"
-    "${homeDir}/dev/lexe"
-    "${homeDir}/lexe"
-    "${homeDir}/lexe-agent/lexe"
-  ];
-
-  # Claude slash commands owned by the lexe repo. Symlinked to its
-  # live working tree so edits there take effect without a rebuild.
-  lexeCommands = [
-    "tighten"
-    "tighten-code"
-    "tighten-comments"
-    "codex-review"
-  ];
-  lexeCommandFiles = lib.optionalAttrs (lexeRepo != null) (
-    lib.listToAttrs (map (name: {
-      name = ".claude/commands/${name}.md";
-      value.source = config.lib.file.mkOutOfStoreSymlink
-        "${lexeRepo}/.claude/commands/${name}.md";
-    }) lexeCommands)
-  );
-
+  # Agent skills in ai/skills/. Some are vendored copies of skills written by me
+  # but managed in the lexe repo; keep them in sync with
+  # `just lexe-diff` / `just lexe-sync` (see just/lexe-skills.sh).
   sharedSkillNames = [
+    "codex-review"
     "jj"
     "jj-rebase"
     "q"
     "rebase-review"
     "temp-worktree"
+    "tighten"
+    "tighten-code"
+    "tighten-comments"
   ];
   sharedSkillFiles = lib.listToAttrs (lib.concatMap (name: [
     {
@@ -155,7 +134,7 @@ in
     # `/effort` and other commands that write to settings.json.
     # ".claude/settings.json".source =
     #   ../../claude/settings.json;
-  } // sharedSkillFiles // lexeCommandFiles;
+  } // sharedSkillFiles;
 
   programs.home-manager.enable = true;
 
