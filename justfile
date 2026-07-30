@@ -69,10 +69,24 @@ nix-setup:
             | sudo tee -a /etc/nix/nix.custom.conf
     fi
 
-    # Restart the daemon to pick up both configs
-    sudo launchctl kickstart -k system/systems.determinate.nix-daemon
-    echo "done. verify after next 2h GC tick with:"
-    echo '    grep "strategy=disabled" /var/log/determinate-nix-daemon.log'
+    # Restart the daemon to pick up both configs. Determinate Nix uses
+    # launchd on macOS and systemd on Linux.
+    case "$(uname -s)" in
+        Darwin)
+            sudo launchctl kickstart -k system/systems.determinate.nix-daemon
+            echo "done. verify after next 2h GC tick with:"
+            echo '    grep "strategy=disabled" /var/log/determinate-nix-daemon.log'
+            ;;
+        Linux)
+            sudo systemctl restart nix-daemon.service
+            echo "done. verify after next 2h GC tick with:"
+            echo '    journalctl -u nix-daemon.service | grep "strategy=disabled"'
+            ;;
+        *)
+            echo >&2 "error: unsupported operating system: $(uname -s)"
+            exit 1
+            ;;
+    esac
 
 # Remove trailing spaces from all files
 remove-trailing-spaces *ARGS:
