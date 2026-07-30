@@ -25,7 +25,14 @@ git clone git@github.com:MaxFangX/.dotfiles.git ~/.dotfiles
 
 After first run, `hms` is in PATH. To upgrade Nix later: `just nix-upgrade`
 
-4. Set zsh as the default shell (installed by `hms`):
+4. Configure Determinate Nix (disables auto-GC, which otherwise deletes open
+   `nix develop` shell envs every 2 hours; GC manually with `just clean`):
+
+```bash
+cd ~/.dotfiles && just nix-setup
+```
+
+5. Set zsh as the default shell (installed by `hms`):
 
 ```bash
 chsh -s $(which zsh)

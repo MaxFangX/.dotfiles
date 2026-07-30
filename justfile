@@ -28,9 +28,51 @@ npins-update-nixpkgs:
 nix-upgrade:
     sudo determinate-nixd upgrade
 
+# Manually GC the Nix store: expire generations older than `days`, then collect
+clean days="30":
+    home-manager expire-generations "-{{ days }} days"
+    nix profile wipe-history --older-than {{ days }}d
+    nix store gc
+
 # Format this justfile
 just-fmt:
     just --fmt --unstable
+
+# Configure Determinate Nix: disable auto-GC, protect dev shells from GC
+nix-setup:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    # Disable determinate-nixd's automatic GC, which deletes all unrooted store
+    # paths every 2 hours when disk usage is high - including the closures of
+    # open `nix develop` shells (e.g. mid-release). GC is manual: `just clean`.
+    if grep -qs '"strategy": "disabled"' /etc/determinate/config.json; then
+        echo "auto-GC already disabled"
+    elif [[ -e /etc/determinate/config.json ]]; then
+        echo >&2 "error: /etc/determinate/config.json exists with other settings;"
+        echo >&2 "add '\"garbageCollector\": {\"strategy\": \"disabled\"}' manually:"
+        cat >&2 /etc/determinate/config.json
+        exit 1
+    else
+        sudo mkdir -p /etc/determinate
+        echo '{"garbageCollector": {"strategy": "disabled"}}' \
+            | sudo tee /etc/determinate/config.json
+    fi
+
+    # Keep build-time deps of GC roots alive, protecting `nix develop` shell
+    # envs from manual GC (https://github.com/nix-community/nix-direnv#via-home-manager).
+    # Goes in nix.custom.conf; nix.conf is owned by determinate-nixd.
+    if grep -qs '^keep-outputs' /etc/nix/nix.custom.conf; then
+        echo "keep-derivations/keep-outputs already set"
+    else
+        printf 'keep-derivations = true\nkeep-outputs = true\n' \
+            | sudo tee -a /etc/nix/nix.custom.conf
+    fi
+
+    # Restart the daemon to pick up both configs
+    sudo launchctl kickstart -k system/systems.determinate.nix-daemon
+    echo "done. verify after next 2h GC tick with:"
+    echo '    grep "strategy=disabled" /var/log/determinate-nix-daemon.log'
 
 # Remove trailing spaces from all files
 remove-trailing-spaces *ARGS:
