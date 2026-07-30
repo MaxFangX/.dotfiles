@@ -1,6 +1,8 @@
-# Paseo — two independent pieces:
+# Paseo. Imported by mods/dev.nix, so every dev machine gets:
 #
-#  1. A `cross-env` shim for local Paseo *development* (always on when a
+#  1. The nix-packaged @getpaseo/cli, i.e. `paseo` in PATH.
+#
+#  2. A `cross-env` shim for local Paseo *development* (only when a
 #     checkout exists). Paseo's paseo.json setup/service commands invoke
 #     a bare `cross-env`, which normally resolves from the repo's
 #     node_modules/.bin. Our nix-managed PATH doesn't include that dir,
@@ -8,7 +10,9 @@
 #     a fork that continually rebases onto upstream, so we fix this in the
 #     environment rather than editing the upstream-tracked paseo.json.
 #
-#  2. An opt-in always-on Paseo *daemon* (`lexe.paseo.enableService`).
+# Plus one opt-in piece:
+#
+#  3. An always-on Paseo *daemon* (`lexe.paseo.enableService`).
 #     Runs `paseo daemon start --foreground` from the nix-packaged
 #     @getpaseo/cli as a systemd user service (Linux) or launchd agent
 #     (macOS), modeled on home/mods/omnara.nix. Relay stays on by default
@@ -65,15 +69,14 @@ in
     using the nix-packaged @getpaseo/cli'';
 
   config = lib.mkMerge [
-    # (1) Dev shim — only when a Paseo checkout is present.
+    # (1) The CLI, plus (2) the dev shim when a checkout is present.
     {
-      home.packages = lib.optional (builtins.pathExists paseoRepo) crossEnv;
+      home.packages = [ paseo ]
+        ++ lib.optional (builtins.pathExists paseoRepo) crossEnv;
     }
 
-    # (2) Always-on daemon — opt-in per host.
+    # (3) Always-on daemon — opt-in per host.
     (lib.mkIf cfg.enableService {
-      home.packages = [ paseo ];
-
       # Enable "linger" so the systemd user instance (and thus this
       # service) starts at boot, not just on login.
       home.activation.enablePaseoLinger = lib.mkIf isLinux (

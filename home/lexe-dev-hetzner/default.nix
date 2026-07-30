@@ -9,7 +9,6 @@
   imports = [
     ../mods/dev-lexe.nix
     ../mods/omnara.nix
-    ../mods/paseo.nix
   ];
 
   home.username = "dev";

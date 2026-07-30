@@ -6,20 +6,13 @@
 # and `maxfangx` as a superuser, so this config deliberately skips
 # mods/dev-lexe.nix — its user-level postgres would fight the system
 # one over port 5432.
-{ paseo, ... }:
+{ ... }:
 {
   imports = [
     ./mods/dev.nix
-    ./mods/paseo.nix
   ];
 
   home.username = "maxfangx";
   home.homeDirectory = "/home/maxfangx";
   home.stateVersion = "25.05";
-
-  home.packages = [
-    # CLI only. The always-on daemon (lexe.paseo.enableService) lives on
-    # the hetzner box; this VM just needs `paseo` in PATH.
-    paseo
-  ];
 }

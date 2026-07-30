@@ -9,6 +9,8 @@ core.nix                Base layer. Shell, editor, CLI tools.
 │
 └── dev.nix             General dev tooling (LSP, formatters,
     │                   direnv). Not for secure machines.
+    │                   Pulls in paseo.nix (Paseo CLI; the
+    │                   always-on daemon stays opt-in).
     │
     └── dev-lexe.nix    Lexe-specific dev environment.
         │
@@ -25,8 +27,8 @@ homebrew.nix            Declarative Homebrew cask management.
 
 ```
 max-nitropad-2024   Linux (secure) ->  core only
-lexe-dev.nix        Linux SGX VM   ->  dev + paseo
-lexe-dev-hetzner/   Linux server   ->  dev-lexe + omnara + paseo
+lexe-dev.nix        Linux SGX VM   ->  dev
+lexe-dev-hetzner/   Linux server   ->  dev-lexe + omnara
 max2022.nix         macOS laptop   ->  dev-lexe
 ```
 
