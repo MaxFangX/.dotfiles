@@ -25,6 +25,12 @@ homebrew.nix            Declarative Homebrew cask management.
 
 ```
 max-nitropad-2024   Linux (secure) ->  core only
-lexe-dev-hetzner/   Linux server   ->  dev-lexe + omnara
+lexe-dev.nix        Linux SGX VM   ->  dev + paseo
+lexe-dev-hetzner/   Linux server   ->  dev-lexe + omnara + paseo
 max2022.nix         macOS laptop   ->  dev-lexe
 ```
+
+`lexe-dev` stops at `dev.nix` rather than `dev-lexe.nix`: its
+NixOS config (lexe repo, `nix/nixosConfigs/lexe-dev.nix`) already
+runs a system-wide postgres, which `dev-lexe/postgres.nix` would
+collide with on port 5432.

@@ -75,14 +75,7 @@ let
       ./lexe-dev-hetzner
     ];
 
-    lexe-dev = mkHome "lexe-dev" [
-      ./mods/dev.nix
-      {
-        home.username = "maxfangx";
-        home.homeDirectory = "/home/maxfangx";
-        home.stateVersion = "25.05";
-      }
-    ];
+    lexe-dev = mkHome "lexe-dev" [ ./lexe-dev.nix ];
   };
 in
 discovered // explicit
