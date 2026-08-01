@@ -1,10 +1,11 @@
 -- Visual Git Plugin configuration
-local is_macos = vim.loop.os_uname().sysname == 'Darwin'
+local local_vgit = vim.fn.expand('~/dev/nvim/vgit.nvim')
+local has_local_vgit = vim.fn.isdirectory(local_vgit) == 1
 
 return {
-  -- Use local fork with timer leak fix on macOS, upstream otherwise
-  is_macos and '~/dev/nvim/vgit.nvim' or 'tanvirtin/vgit.nvim',
-  dir = is_macos and '~/dev/nvim/vgit.nvim' or nil,
+  -- Indexed reviews are fork-only. Prefer a local checkout when available.
+  has_local_vgit and local_vgit or 'maxfangx/vgit.nvim',
+  dir = has_local_vgit and local_vgit or nil,
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons'
