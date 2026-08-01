@@ -6,7 +6,10 @@ in
 {
   imports = [
     ./mods/core.nix
+    ./mods/dev-lexe/postgres.nix
   ];
+
+  services.postgres.enable = true;
 
   programs.alacritty = {
     enable = true;
