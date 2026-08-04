@@ -384,7 +384,13 @@ agent's workspace. Expect and handle:
   prove which duplicates you actually created before cleaning any up.
 - **Bookmark conflicts** come from the same races; resolve with
   `jj bookmark set <name> -r <survivor>` (usually right where it was, on the
-  surviving lineage).
+  surviving lineage). A conflicted bookmark is silently skipped by
+  `jj git export`, so its git ref lags jj indefinitely — a stale conflict
+  from a past session masquerades as git/jj drift. When asked to "realign
+  git and jj", check `jj bookmark list --conflicted` early. If the conflict
+  predates you, prefer the variant that is an ancestor of a live stack
+  (`--allow-backwards` may be needed); abandoning the losing bare head is
+  what clears the paired divergent change.
 - If a co-editor's edits changed code you wrote, keep their version. If your
   work was cleanly reverted, they rejected the approach — ask if you think it
   was a mistake, don't redo.
