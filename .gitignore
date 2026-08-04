@@ -18,3 +18,4 @@ zsh/plugins/fzf-tab
 
 # Misc
 .claude/scheduled_tasks.lock
+/tmp/
