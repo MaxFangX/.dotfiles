@@ -1,6 +1,6 @@
 # General dev tooling — LSP, formatters, direnv.
 # Not suitable for security-critical machines.
-{ pkgs, claude-code, rsync, ... }:
+{ pkgs, claude-agent-acp, claude-code, codex-acp, kimi-code, rsync, ... }:
 {
   imports = [
     ./core.nix
@@ -8,7 +8,10 @@
   ];
 
   home.packages = [
+    claude-agent-acp # ACP adapter for claude (see pkgs/claude-agent-acp)
     claude-code
+    codex-acp # ACP adapter for codex (see pkgs/codex-acp)
+    kimi-code # Moonshot AI's `kimi` CLI (see pkgs/kimi-code)
     rsync # Platform-aware wrapper (see pkgs/rsync.nix)
     pkgs.bat # Cat with syntax highlighting
     pkgs.gh # GitHub CLI

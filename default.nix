@@ -23,17 +23,21 @@ rec {
   inherit hm pkgs sources;
 
   # Personal packages
+  claude-agent-acp = pkgs.callPackage ./pkgs/claude-agent-acp {};
   claude-code = pkgs.callPackage ./pkgs/claude-code {};
   codex = pkgs.callPackage ./pkgs/codex {};
+  codex-acp = pkgs.callPackage ./pkgs/codex-acp { inherit codex; };
   git-hunk = pkgs.callPackage ./pkgs/git-hunk {};
   jj = pkgs.callPackage ./pkgs/jj {};
   jj-hunk-tool = pkgs.callPackage ./pkgs/jj-hunk-tool {};
+  kimi-code = pkgs.callPackage ./pkgs/kimi-code {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
   paseo = pkgs.callPackage ./pkgs/paseo {};
   rsync = pkgs.callPackage ./pkgs/rsync.nix {};
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources claude-code codex git-hunk jj jj-hunk-tool omnara paseo rsync;
+    inherit hm pkgs sources claude-agent-acp claude-code codex codex-acp
+      git-hunk jj jj-hunk-tool kimi-code omnara paseo rsync;
   };
 }

@@ -1,0 +1,8 @@
+{
+  "name": "claude-agent-acp",
+  "version": "0.23.1",
+  "private": true,
+  "dependencies": {
+    "@zed-industries/claude-agent-acp": "0.23.1"
+  }
+}

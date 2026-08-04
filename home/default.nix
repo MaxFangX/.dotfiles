@@ -2,11 +2,14 @@
   hm,
   pkgs,
   sources,
+  claude-agent-acp,
   claude-code,
   codex,
+  codex-acp,
   git-hunk,
   jj,
   jj-hunk-tool,
+  kimi-code,
   omnara,
   paseo,
   rsync,
@@ -40,9 +43,11 @@ let
     inherit pkgs;
     modules = modules ++ machineModule name;
     extraSpecialArgs = {
-      inherit pkgs sources git-hunk jj jj-hunk-tool rsync;
+      inherit pkgs sources claude-agent-acp git-hunk jj jj-hunk-tool rsync;
       claude-code = stubUnsupported claude-code;
       codex = stubUnsupported codex;
+      codex-acp = stubUnsupported codex-acp;
+      kimi-code = stubUnsupported kimi-code;
       omnara = stubUnsupported omnara;
       paseo = stubUnsupported paseo;
     };
