@@ -16,6 +16,7 @@
     pkgs.bat # Cat with syntax highlighting
     pkgs.gh # GitHub CLI
     pkgs.go
+    pkgs.goose-cli # Block's goose AI agent
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
     pkgs.nodejs # Required by coc.nvim
