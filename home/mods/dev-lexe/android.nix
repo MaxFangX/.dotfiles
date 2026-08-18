@@ -9,7 +9,7 @@ let
       "x86_64" # emulator on x86_64/arm64 hosts
     ];
     platformVersions = [
-      "35" # lexe, flutter_zxing -> camera_android_camerax
+      "36" # lexe
       "34" # app_links
     ];
     buildToolsVersions = [ "35.0.0" ];
@@ -27,7 +27,7 @@ let
   androidNdkRoot = "${androidHome}/ndk/${androidSdkComposition.ndk-bundle.version}";
 
   avdName = "lexe-screenshots";
-  systemImage = "system-images;android-35;google_apis;x86_64";
+  systemImage = "system-images;android-36;google_apis;x86_64";
 
   # Headless Android emulator launcher.
   # Creates the AVD on first run, then starts the emulator

@@ -1,7 +1,16 @@
 # Lexe-specific dev environment.
 # Adds Flutter, Android SDK, PostgreSQL, and related tooling
 # on top of the general dev module.
-{ lib, pkgs, ... }:
+{ lib, pkgs, sources, ... }:
+let
+  # Flutter 3.41 isn't in nixos-25.11; pull it from the 26.05 channel,
+  # matching the lexe repo's nixpkgs pin.
+  pkgs2605 = import sources.nixpkgs-2605 {
+    inherit (pkgs) system;
+    config.allowUnfree = true;
+  };
+  flutter = pkgs2605.flutter341;
+in
 {
   imports = [
     ./dev.nix
@@ -28,7 +37,7 @@
   home.packages = [
     pkgs.azure-cli # Azure resource management
     pkgs.cmake # flutter_zxing NDK build
-    pkgs.flutter332 # Pinned to match lexe repo (Dart 3.8.1)
+    flutter # Pinned to match lexe repo (3.41.9, Dart 3.11.5)
     pkgs.jdk17_headless # Android builds
     pkgs.oxipng # PNG optimization (screenshots)
     pkgs.protobuf # aesm-client build script
@@ -36,7 +45,7 @@
   ];
 
   home.sessionVariables = {
-    FLUTTER_ROOT = "${pkgs.flutter332}";
+    FLUTTER_ROOT = "${flutter}";
     GRADLE_USER_HOME = "$HOME/.gradle";
     JAVA_HOME = "${pkgs.jdk17_headless.home}";
   };
