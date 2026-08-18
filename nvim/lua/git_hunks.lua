@@ -3,7 +3,7 @@
 local M = {}
 
 -- Get all unstaged hunks across all files
--- Returns: array of { file, lnum, text, is_untracked }
+-- Returns: array of { file, lnum, end_lnum, text, is_untracked }
 function M.get_all_hunks()
   local items = {}
 
@@ -17,13 +17,18 @@ function M.get_all_hunks()
 
     local hunk_num = 0
     for _, line in ipairs(diff_output) do
-      -- Parse unified diff header: @@ -l,s +l,s @@
-      local new_line = line:match('^@@.*%+(%d+)')
-      if new_line then
+      -- Parse unified diff header:
+      -- @@ -old_start,old_count +new_start,new_count @@
+      local new_start, new_count = line:match('^@@.*%+(%d+),?(%d*)')
+      if new_start then
         hunk_num = hunk_num + 1
+        local lnum = tonumber(new_start)
+        local count = tonumber(new_count) or 1
         table.insert(items, {
           file = file,
-          lnum = tonumber(new_line),
+          lnum = lnum,
+          -- For zero-line hunks (pure deletions), end_lnum equals lnum
+          end_lnum = lnum + math.max(0, count - 1),
           text = string.format('Hunk %d: Unstaged changes', hunk_num),
           is_untracked = false,
         })
@@ -35,6 +40,7 @@ function M.get_all_hunks()
       table.insert(items, {
         file = file,
         lnum = 1,
+        end_lnum = 1,
         text = 'Unstaged changes',
         is_untracked = false,
       })
@@ -49,6 +55,7 @@ function M.get_all_hunks()
     table.insert(items, {
       file = file,
       lnum = 1,
+      end_lnum = 1,
       text = 'Untracked file',
       is_untracked = true,
     })
@@ -87,16 +94,19 @@ function M.get_files_with_changes()
   return items
 end
 
--- Check if a file has unstaged hunks or is untracked
+-- Check if a file is untracked
 -- Returns: boolean
-function M.has_hunks(filepath)
-  -- Check if file is untracked
+function M.is_untracked(filepath)
   local relative = vim.fn.fnamemodify(filepath, ':.')
   local ls_files_cmd = 'git ls-files --others --exclude-standard '
                        .. vim.fn.shellescape(relative)
-  local is_untracked = vim.fn.system(ls_files_cmd):match('%S') ~= nil
+  return vim.fn.system(ls_files_cmd):match('%S') ~= nil
+end
 
-  if is_untracked then
+-- Check if a file has unstaged hunks or is untracked
+-- Returns: boolean
+function M.has_hunks(filepath)
+  if M.is_untracked(filepath) then
     return true
   end
 

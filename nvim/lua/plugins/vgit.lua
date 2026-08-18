@@ -21,10 +21,6 @@ return {
     local prev_buffer = nil
     local prev_cursor_pos = nil  -- Track cursor position {line, col}
 
-    -- Configuration flags
-    -- TODO(max): Remove this later if there are no gutter issues for a while
-    local enable_gutter_refresh = false  -- Toggle gutter refresh on exit
-
     -- Track timers for cleanup to prevent leaks
     local pending_timers = {}
     local cursor_restore_timer = nil
@@ -63,13 +59,6 @@ return {
           end
         end)
       end)
-    end
-
-    -- Check if file is untracked
-    helpers.is_untracked = function(filepath)
-      local relative = vim.fn.fnamemodify(filepath, ':.')
-      return vim.fn.system('git ls-files --others --exclude-standard ' ..
-        vim.fn.shellescape(relative)):match('%S') ~= nil
     end
 
     -- Helper to restore syntax highlighting if lost
@@ -170,20 +159,8 @@ return {
         -- Option 3: Smart behavior based on remaining hunks
         -- (currently active)
         local current_file = vim.fn.expand('%:p')
-        local is_untracked = helpers.is_untracked(current_file)
 
-        -- Check if file has unstaged hunks
-        local diff_output = vim.fn.systemlist(
-          'git diff -U0 ' .. vim.fn.shellescape(current_file))
-        local has_hunks = false
-        for _, line in ipairs(diff_output) do
-          if line:match('^@@') then
-            has_hunks = true
-            break
-          end
-        end
-
-        if has_hunks or is_untracked then
+        if require('git_hunks').has_hunks(current_file) then
           -- File still has hunks or is untracked - restore cursor position
           if prev_cursor_pos then
             pcall(vim.api.nvim_win_set_cursor, 0, prev_cursor_pos)
@@ -276,63 +253,23 @@ return {
         return
       end
 
-      -- Get all files with unstaged changes and untracked files
-      local unstaged_files = vim.fn.systemlist('git diff --name-only')
-      local untracked_files = vim.fn.systemlist(
-        'git ls-files --others --exclude-standard')
-
-      if #unstaged_files == 0 and #untracked_files == 0 then
-        print('No unstaged changes or untracked files found')
-        return
-      end
-
-      -- Build list of all hunks across all files
+      -- Build list of all hunks across all files, with absolute paths
+      -- stored for consistent comparison
       local all_hunks = {}
-
-      -- Add hunks from unstaged files
-      for _, file in ipairs(unstaged_files) do
-        local diff_output = vim.fn.systemlist(
-          'git diff -U0 ' .. vim.fn.shellescape(file)
-        )
-
-        for _, line in ipairs(diff_output) do
-          -- Parse unified diff header:
-          -- @@ -old_start,old_count +new_start,new_count @@
-          local new_start, new_count = line:match('^@@.*%+(%d+),?(%d*)')
-          if new_start then
-            local start_line = tonumber(new_start)
-            local count = tonumber(new_count) or 1
-            -- For zero-line hunks (pure deletions),
-            -- end_line should equal start_line
-            local end_line = start_line + math.max(0, count - 1)
-
-            table.insert(all_hunks, {
-              file = file,
-              -- Store absolute path for consistent comparison
-              absolute_file = vim.fn.fnamemodify(
-                git_root .. '/' .. file, ':p'
-              ),
-              start_line = start_line,
-              end_line = end_line,
-              is_untracked = false
-            })
-          end
-        end
-      end
-
-      -- Add untracked files (entire file is a "hunk")
-      for _, file in ipairs(untracked_files) do
+      for _, hunk in ipairs(require('git_hunks').get_all_hunks()) do
         table.insert(all_hunks, {
-          file = file,
-          absolute_file = vim.fn.fnamemodify(git_root .. '/' .. file, ':p'),
-          start_line = 1,
-          end_line = 1,
-          is_untracked = true
+          file = hunk.file,
+          absolute_file = vim.fn.fnamemodify(
+            git_root .. '/' .. hunk.file, ':p'
+          ),
+          start_line = hunk.lnum,
+          end_line = hunk.end_lnum,
+          is_untracked = hunk.is_untracked,
         })
       end
 
       if #all_hunks == 0 then
-        print('No hunks found')
+        print('No unstaged changes or untracked files found')
         return
       end
 
@@ -588,7 +525,7 @@ return {
       end
 
       -- Save window state and open diff preview
-      local is_untracked = helpers.is_untracked(vim.fn.expand('%:p'))
+      local is_untracked = git_hunks.is_untracked(vim.fn.expand('%:p'))
       local saved_pos = vim.api.nvim_win_get_cursor(0)
       helpers.save_window()
       require('vgit').buffer_diff_preview()
@@ -597,6 +534,33 @@ return {
       end
     end
 
+
+    -- Shared keymaps for the four review scenes
+    local review_keymaps = {
+      toggle_focus = {
+        key = '<Tab>',
+        desc = 'Switch focus between file list and diff preview',
+      },
+      previous = { key = 'k', desc = 'Previous' },
+      next = { key = 'j', desc = 'Next' },
+      mark_hunk = { key = 's', desc = 'Mark hunk seen' },
+      mark_file = { key = 'S', desc = 'Mark file seen' },
+      unmark_hunk = { key = 'u', desc = 'Unmark hunk' },
+      unmark_file = { key = 'U', desc = 'Unmark file' },
+      reset = { key = 'R', desc = 'Reset all marks' },
+    }
+
+    -- Indexed reviews also support line-level marking via visual select
+    local indexed_review_keymaps = vim.tbl_extend('force', review_keymaps, {
+      mark_hunk = {
+        key = 's',
+        desc = 'Mark hunk seen (visual: mark selected lines)',
+      },
+      unmark_hunk = {
+        key = 'u',
+        desc = 'Unmark hunk (visual: unmark selected lines)',
+      },
+    })
 
     local vgit = require('vgit')
     vgit.setup({
@@ -639,8 +603,11 @@ return {
 
         -- (g)it (d)iff - Open diff preview of current buffer
         -- If current file has no hunks, jump to next hunk first
+        -- NOTE: The g* mappings are the ones in active use; their
+        -- <LocalLeader>g* duplicates are kept commented out below in case
+        -- they're wanted again.
         ['n gd'] = helpers.open_diff_with_jump,
-        ['n <LocalLeader>gd'] = helpers.open_diff_with_jump,
+        -- ['n <LocalLeader>gd'] = helpers.open_diff_with_jump,
 
         -- (g)it (h)over hunk - Show hunk preview
         ['n gh'] = function()
@@ -653,58 +620,43 @@ return {
         -- - Jump to next unstaged hunk (possibly in a different file) if cursor
         --   is on a hunk.
         ['n gj'] = helpers.jump_to_next_unstaged_hunk,
-        ['n <LocalLeader>gj'] = helpers.jump_to_next_unstaged_hunk,
+        -- ['n <LocalLeader>gj'] = helpers.jump_to_next_unstaged_hunk,
 
         -- (g)it (J)ump backward:
         -- - Jump to last unstaged hunk if cursor is not over a hunk.
         -- - Jump to previous unstaged hunk (possibly in a different file) if
         --   cursor is on a hunk.
         ['n gJ'] = helpers.jump_to_prev_unstaged_hunk,
-        ['n <LocalLeader>gJ'] = helpers.jump_to_prev_unstaged_hunk,
+        -- ['n <LocalLeader>gJ'] = helpers.jump_to_prev_unstaged_hunk,
 
-        -- (H)unk preview
-        -- ['n <Leader>H'] = helpers.with_gutter_refresh(function()
-        --   require('vgit').buffer_hunk_preview()
-        -- end),
-        -- (D)iff preview of current buffer
-        -- ['n <Leader>D'] = helpers.with_gutter_refresh(function()
-        --   require('vgit').buffer_diff_preview()
-        -- end),
-        -- (P)roject diff preview
-        -- ['n <Leader>P'] = helpers.with_gutter_refresh(function()
-        --   require('vgit').project_diff_preview()
-        -- end),
-
-        -- === <LocalLeader> mappings === --
-        -- All are namespaced with <LocalLeader>g: (g)it
         -- (g)it (D)iff first - Open diff staging view for *first* unstaged file
         ['n gD'] = helpers.open_first_unstaged_diff,
-        ['n <LocalLeader>gD'] = helpers.open_first_unstaged_diff,
+        -- ['n <LocalLeader>gD'] = helpers.open_first_unstaged_diff,
         -- (p)roject diff preview
         ['n gp'] = function()
           helpers.save_window()
           require('vgit').project_diff_preview()
         end,
-        ['n <LocalLeader>gp'] = function()
-          helpers.save_window()
-          require('vgit').project_diff_preview()
-        end,
+        -- ['n <LocalLeader>gp'] = function()
+        --   helpers.save_window()
+        --   require('vgit').project_diff_preview()
+        -- end,
         -- (q)uickfix list of unstaged hunks
         ['n gq'] = function()
           require('git_hunks').populate_quickfix(true)
         end,
-        ['n <LocalLeader>gq'] = function()
-          require('git_hunks').populate_quickfix(true)
-        end,
+        -- ['n <LocalLeader>gq'] = function()
+        --   require('git_hunks').populate_quickfix(true)
+        -- end,
 
         -- (s)tage current hunk
-        ['n <LocalLeader>gs'] = function()
-          require('vgit').buffer_hunk_stage()
-        end,
+        -- ['n <LocalLeader>gs'] = function()
+        --   require('vgit').buffer_hunk_stage()
+        -- end,
         -- (S)tage entire file
-        ['n <LocalLeader>gS'] = function()
-          require('vgit').buffer_stage()
-        end,
+        -- ['n <LocalLeader>gS'] = function()
+        --   require('vgit').buffer_stage()
+        -- end,
 
         -- (u)nstage/reset current hunk
         ['n gu'] = function()
@@ -716,16 +668,16 @@ return {
         end,
 
         -- (r)eset current hunk to HEAD
-        ['n <LocalLeader>gr'] = function()
-          require('vgit').buffer_hunk_reset()
-        end,
+        -- ['n <LocalLeader>gr'] = function()
+        --   require('vgit').buffer_hunk_reset()
+        -- end,
         -- (R)eset entire file to HEAD
         ['n gR'] = function()
           require('vgit').buffer_reset()
         end,
-        ['n <LocalLeader>gR'] = function()
-          require('vgit').buffer_reset()
-        end,
+        -- ['n <LocalLeader>gR'] = function()
+        --   require('vgit').buffer_reset()
+        -- end,
 
         -- (b)lame preview for current line
         ['n <LocalLeader>gb'] = function()
@@ -739,9 +691,9 @@ return {
         ['n gL'] = function()
           require('vgit').project_logs_preview()
         end,
-        ['n <LocalLeader>gL'] = function()
-          require('vgit').project_logs_preview()
-        end,
+        -- ['n <LocalLeader>gL'] = function()
+        --   require('vgit').project_logs_preview()
+        -- end,
         -- (C)ommits preview of project
         ['n gC'] = function()
           local input = vim.fn.input('Commit(s): ', 'HEAD')
@@ -898,81 +850,22 @@ return {
           },
         },
 
-        -- Project review by file settings
+        -- Classic review scenes
         project_review_by_file = {
-          keymaps = {
-            toggle_focus = { key = '<Tab>', desc = 'Switch focus between file list and diff preview' },
-            previous = { key = 'k', desc = 'Previous' },
-            next = { key = 'j', desc = 'Next' },
-            mark_hunk = { key = 's', desc = 'Mark hunk seen' },
-            mark_file = { key = 'S', desc = 'Mark file seen' },
-            unmark_hunk = { key = 'u', desc = 'Unmark hunk' },
-            unmark_file = { key = 'U', desc = 'Unmark file' },
-            reset = { key = 'R', desc = 'Reset all marks' },
-          },
+          keymaps = review_keymaps,
         },
-
-        -- Project review by commit settings
         project_review_by_commit = {
           list_position = 'left',
-          keymaps = {
-            toggle_focus = { key = '<Tab>', desc = 'Switch focus between file list and diff preview' },
-            previous = { key = 'k', desc = 'Previous' },
-            next = { key = 'j', desc = 'Next' },
-            mark_hunk = { key = 's', desc = 'Mark hunk seen' },
-            mark_file = { key = 'S', desc = 'Mark file seen' },
-            unmark_hunk = { key = 'u', desc = 'Unmark hunk' },
-            unmark_file = { key = 'U', desc = 'Unmark file' },
-            reset = { key = 'R', desc = 'Reset all marks' },
-          },
+          keymaps = review_keymaps,
         },
 
-        -- Indexed file review settings (approved-snapshot based review;
-        -- s/u also work on visual selections for line-level marking)
+        -- Indexed review scenes (approved-snapshot based)
         indexed_file_review = {
-          keymaps = {
-            toggle_focus = {
-              key = '<Tab>',
-              desc = 'Switch focus between file list and diff preview',
-            },
-            previous = { key = 'k', desc = 'Previous' },
-            next = { key = 'j', desc = 'Next' },
-            mark_hunk = {
-              key = 's',
-              desc = 'Mark hunk seen (visual: mark selected lines)',
-            },
-            mark_file = { key = 'S', desc = 'Mark file seen' },
-            unmark_hunk = {
-              key = 'u',
-              desc = 'Unmark hunk (visual: unmark selected lines)',
-            },
-            unmark_file = { key = 'U', desc = 'Unmark file' },
-            reset = { key = 'R', desc = 'Reset all marks' },
-          },
+          keymaps = indexed_review_keymaps,
         },
-
-        -- Indexed commit review settings
         indexed_commit_review = {
           list_position = 'left',
-          keymaps = {
-            toggle_focus = {
-              key = '<Tab>',
-              desc = 'Switch focus between file list and diff preview',
-            },
-            previous = { key = 'k', desc = 'Previous' },
-            next = { key = 'j', desc = 'Next' },
-            mark_hunk = {
-              key = 's',
-              desc = 'Mark hunk seen (visual: mark selected lines)',
-            },
-            mark_file = { key = 'S', desc = 'Mark file seen' },
-            unmark_hunk = {
-              key = 'u',
-              desc = 'Unmark hunk (visual: unmark selected lines)',
-            },
-            unmark_file = { key = 'U', desc = 'Unmark file' },
-            reset = { key = 'R', desc = 'Reset all marks' },
-          },
+          keymaps = indexed_review_keymaps,
         },
 
         -- Visual settings inspired by delta configuration
@@ -1113,40 +1006,6 @@ return {
 
           -- Restore previous window position
           helpers.restore_window()
-
-          -- VGIT GUTTER REFRESH WORKAROUND
-          -- After staging changes in the diff preview, the gutter doesn't
-          -- update immediately due to timing issues with vgit's file watcher.
-          -- This workaround forces a refresh when returning from the diff
-          -- preview. Enable with `enable_gutter_refresh = true`.
-          if enable_gutter_refresh then
-            defer_fn_tracked(function()
-              local bufnr = vim.api.nvim_get_current_buf()
-              if not vim.api.nvim_buf_is_valid(bufnr) then
-                return
-              end
-
-              -- Clear existing signs to force refresh
-              vim.fn.sign_unplace('vgit_signs', { buffer = bufnr })
-
-              -- Toggle gutter to force vgit to re-detect changes
-              vim.schedule(function()
-                pcall(function()
-                  local vgit = require('vgit')
-                  vgit.toggle_live_gutter()
-
-                  -- Toggle back after a brief delay
-                  defer_fn_tracked(function()
-                    pcall(function()
-                      vgit.toggle_live_gutter()
-                      -- Restore syntax if it was lost during toggle
-                      helpers.restore_syntax_if_needed(bufnr)
-                    end)
-                  end, 100)
-                end)
-              end)
-            end, 100)
-          end
         end
       end
     })
@@ -1213,65 +1072,6 @@ return {
           colorcolumn_configured[winnr] = nil
         end
       end
-    })
-
-    -- TODO(max): Remove profiler scripts once performance issues fixed
-    -- Auto-load profilers
-    local ok_stage, stage_profiler = pcall(require, 'vgit-profiler')
-    local ok_view, view_profiler = pcall(require, 'vgit-enter-view-profiler')
-
-    if ok_stage then
-      _G.vgit_stage_profiler = stage_profiler
-      -- Reset profiler on Neovim restart to clear old data
-      stage_profiler.reset()
-    end
-
-    if ok_view then
-      _G.vgit_view_profiler = view_profiler
-      -- Reset profiler on Neovim restart to clear old data
-      view_profiler.reset()
-    end
-
-    -- Create command to show staging profiling results
-    vim.api.nvim_create_user_command('VGitStageHunkProfileResult', function()
-      if _G.vgit_stage_profiler then
-        _G.vgit_stage_profiler.show_times()
-      else
-        vim.notify('VGit stage profiler not loaded', vim.log.levels.ERROR)
-      end
-    end, {
-      desc = 'Show VGit staging profiling results'
-    })
-
-    -- Create command to show enter view profiling results
-    vim.api.nvim_create_user_command('VGitEnterViewProfileResult', function()
-      if _G.vgit_view_profiler then
-        _G.vgit_view_profiler.show_times()
-      else
-        vim.notify('VGit view profiler not loaded', vim.log.levels.ERROR)
-      end
-    end, {
-      desc = 'Show VGit enter view profiling results'
-    })
-
-    -- Create command to reset both profilers
-    vim.api.nvim_create_user_command('VGitProfileReset', function()
-      local reset_count = 0
-      if _G.vgit_stage_profiler then
-        _G.vgit_stage_profiler.reset()
-        reset_count = reset_count + 1
-      end
-      if _G.vgit_view_profiler then
-        _G.vgit_view_profiler.reset()
-        reset_count = reset_count + 1
-      end
-      if reset_count > 0 then
-        print(string.format('Reset %d profiler(s)', reset_count))
-      else
-        vim.notify('No VGit profilers loaded', vim.log.levels.ERROR)
-      end
-    end, {
-      desc = 'Reset all VGit profiling data'
     })
   end,
 }
