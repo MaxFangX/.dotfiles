@@ -2,6 +2,7 @@
   hm,
   pkgs,
   sources,
+  buzz,
   claude-code,
   codex,
   git-hunk,
@@ -42,6 +43,7 @@ let
     modules = modules ++ machineModule name;
     extraSpecialArgs = {
       inherit pkgs sources git-hunk jj jj-hunk-tool rsync;
+      buzz = stubUnsupported buzz;
       claude-code = stubUnsupported claude-code;
       codex = stubUnsupported codex;
       kimi-code = stubUnsupported kimi-code;

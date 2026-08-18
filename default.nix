@@ -23,6 +23,10 @@ rec {
   inherit hm pkgs sources;
 
   # Personal packages
+  # buzz needs pnpm_11 and pnpm fetcherVersion 4, which landed after the
+  # primary nixpkgs pin (nixos-25.11), so build it from the 26.05 pin.
+  buzz = (import sources.nixpkgs-2605 { inherit system; }).callPackage
+    ./pkgs/buzz { inherit claude-agent-acp codex-acp; };
   claude-agent-acp = pkgs.callPackage ./pkgs/claude-agent-acp {};
   claude-code = pkgs.callPackage ./pkgs/claude-code {};
   codex = pkgs.callPackage ./pkgs/codex {};
@@ -37,7 +41,7 @@ rec {
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources claude-code codex git-hunk jj jj-hunk-tool
+    inherit hm pkgs sources buzz claude-code codex git-hunk jj jj-hunk-tool
       kimi-code omnara paseo rsync;
   };
 }

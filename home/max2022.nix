@@ -3,12 +3,22 @@
   pkgs,
   lib,
   sources,
+  buzz,
   ...
 }:
 {
   imports = [
     ./mods/dev-lexe.nix
   ];
+
+  home.packages = [
+    buzz # Buzz.app + `buzz-desktop` (see pkgs/buzz)
+  ];
+
+  # Copy .app bundles into ~/Applications/Home Manager Apps instead of
+  # symlinking them; Spotlight doesn't index symlinked apps.
+  targets.darwin.copyApps.enable = true;
+  targets.darwin.linkApps.enable = false;
 
   homebrew.casks = [
     "halloy"

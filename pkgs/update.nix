@@ -14,7 +14,7 @@ let
     lib.isDerivation pkg
     && pkg ? updateScript
   ) {
-    inherit (dotfiles) claude-agent-acp claude-code codex codex-acp
+    inherit (dotfiles) buzz claude-agent-acp claude-code codex codex-acp
       git-hunk jj jj-hunk-tool kimi-code omnara paseo;
   };
 
