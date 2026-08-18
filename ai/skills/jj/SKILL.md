@@ -112,24 +112,24 @@ When working directly on master/main, the "stack" is all unpushed commits
 fixups into whichever one they amend — while pushed commits should be
 treated as immutable.
 
-End your turn with git HEAD attached to the branch, not jj's detached HEAD,
-so git-based tools can reliably detect the branch name, remote PR status,
-etc.: run `jj git export && git switch <branch>` — but only when it is
-provably a no-op for the files, meaning one check holds: `git rev-parse
-HEAD` already equals the bookmark's commit. A same-commit switch merely
-re-attaches HEAD to the branch ref — git updates no files, so any
+Always end your turn with git HEAD attached to the branch, so git-based tools
+can reliably detect the branch name, remote PR status, etc. jj detaches HEAD
+again on every rewrite, so make this the final step of each turn that ran a
+jj mutation, even a short one: run `jj git export && git switch <branch>`
+whenever it is provably a no-op for the files — meaning `git rev-parse HEAD`
+already equals the bookmark's commit. A same-commit switch
+merely re-attaches HEAD to the branch ref — git updates no files, so any
 uncommitted changes at `@` ride along untouched. This applies even in
 co-edit mode.
 
-If the commits differ, skip the re-attach and say so — never reach for
-`-f`. A plain different-commit switch makes colocated jj reset `@` onto the
-new HEAD: dirty files usually ride along in git's tree, but the old `@` is
-stranded as an anonymous head and our position in the stack is lost. `-f`
-is worse — it wipes the dirty files themselves: changes jj has snapshotted
-survive only in that stranded commit (recover with `jj restore --from
-<commit>`), while edits made since the last jj command were never
-snapshotted and are gone for good. (jj detaches HEAD again on the next
-commit; just re-attach when done.)
+The only reason to skip the re-attach is that the commits differ — then
+skip it and say so; never reach for `-f`. A plain different-commit switch
+makes colocated jj reset `@` onto the new HEAD: dirty files usually ride
+along in git's tree, but the old `@` is stranded as an anonymous head and
+our position in the stack is lost. `-f` is worse — it wipes the dirty
+files themselves: changes jj has snapshotted survive only in that stranded
+commit (recover with `jj restore --from <commit>`), while edits made since
+the last jj command were never snapshotted and are gone for good.
 
 ## The bare "route" command
 
