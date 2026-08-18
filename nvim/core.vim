@@ -189,7 +189,8 @@
     " Needs only `xxd` and `file`, standard on macOS and Linux.
 
     function! s:IsBinaryFile(file) abort
-        if a:file ==# '' || !filereadable(a:file)
+        " Empty files: `file` reports them as binary; treat as text.
+        if a:file ==# '' || !filereadable(a:file) || getfsize(a:file) <= 0
             return 0
         endif
         let l:mime = system('file --mime-encoding --brief ' . shellescape(a:file))
