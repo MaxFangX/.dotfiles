@@ -207,6 +207,66 @@ They should be grammatically correct, idiomatic, and free of typos.
 Comments are essential for maintaining a readable codebase; write them with
 care.
 
+### Spell out connectives
+
+A colon is fine as a label: case labels (`// Hot: ...`), arg-doc tables
+(`/// Default env: ...`), glossary definitions, and `Title: summary` module
+docs. But don't use a colon — or a semicolon — to splice together clauses
+whose real relationship is causal, consequential, or adversative: it hides
+the connective and often leaves a fragment. Rewrite with the connective
+spelled out:
+
+- Claim: reason → `, because ...` / `, since ...`
+- Claim: consequence → `, which ...` / `, guaranteeing ...`
+- Requirement: violation consequence → `, otherwise ...`
+- Fact; consequence or instruction → `, so ...`
+- Fact; contrast → `, but ...`
+- Subject: fragment predicate → a full sentence.
+
+Pick the connective that matches the true relationship. In particular, a
+requirement ("X must Y") is best justified by what goes wrong when it is
+violated ("otherwise ..."), not by a "because" clause contorted around the
+hypothetical. Semicolons joining genuinely coordinate statements are fine.
+
+Assessment labels ("Harmless: ...", "Can't happen: ...") get the same
+treatment ("Harmless, since ..."), except when the explanation alone
+already implies the verdict — then drop the label and state the case
+directly:
+
+**Old comment**
+```rust
+// Harmless: the lease expires within
+// `timeout::runner_lease::LIFETIME` and is then GC'd; a fresh
+// start just waits out the remainder.
+```
+**Suggested**
+```rust
+// In this case, the lease just expires within
+// `timeout::runner_lease::LIFETIME` and is then GC'd.
+```
+
+**Old comment**
+```rust
+// Report our initial capacity immediately: acquisition (re)seeded the
+// backend with an empty report.
+```
+**Suggested**
+```rust
+// Report our initial capacity immediately, since acquisition (re)seeded
+// the backend with an empty report.
+```
+
+**Old comment**
+```rust
+/// A renewal round: retried by the client within
+/// [`timeout::lease::RENEW_ROUND_BUDGET`], stopping early on rejection.
+```
+**Suggested**
+```rust
+/// Each renewal round is retried by the client within
+/// [`timeout::lease::RENEW_ROUND_BUDGET`], stopping early on rejection.
+```
+
 ### References
 
 Comments that reference existing structs, functions, traits, etc. should link
