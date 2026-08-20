@@ -218,6 +218,32 @@ citations.
 // this by keeping the expiry monotonic.
 ```
 
+**Prose is not the only chain.** In a sequence of steps, a case split, or
+a lifecycle, each item builds on the ones before it, so the list layout is
+itself the logic, and flattening it into prose buries the structure. Carry
+such content as a list, with prose supplying the premises and conclusions
+around the enumerated core:
+
+```rust
+/// Fetch updated payments and metadata, synchronizing both streams.
+///
+/// Both the payments and metadata tables can be updated independently.
+/// To allow the client to tail both consistently, we:
+///
+/// 1. Fetch both `get_updated_payments` and `get_updated_payment_metadata`
+///    with the same start_index.
+/// 2. Compute END = min(last_payment_index, last_metadata_index).
+/// 3. Filter both lists to items with index <= END.
+/// 4. For any payment in the filtered list, ensure we have its metadata.
+/// 5. For any metadata in the filtered list, ensure we have its payment.
+/// 6. Merge, dedupe by ID (taking latest versions), sort by pwm_updated_at:
+///    `pwm_updated_at = max(payment.updated_at, metadata.updated_at)`.
+///
+/// The client uses END as the next query's start_index, so any item past
+/// END in the "shorter" list is included in subsequent queries and no
+/// updates are missed.
+```
+
 **Mark every inferential step.** When a sentence is inferred from the one
 before it, mark the relationship explicitly with a connective ("so",
 "thus", "however", "instead", "otherwise") or a phrase that points back
