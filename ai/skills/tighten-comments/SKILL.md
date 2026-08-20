@@ -1,7 +1,6 @@
 ---
 name: tighten-comments
 description: Tighten code comments added or modified on the current branch for brevity, clarity, durable context, ownership, and project conventions. Use for a focused comment and documentation cleanup pass.
-model: sonnet
 ---
 
 # Tighten comments
@@ -13,7 +12,7 @@ concise.
 
 ## Guidelines
 
-### Contextual and Semantic
+### Contextual and semantic
 
 Ensure that the comment adds value, is coherent, and is consistent with the
 code.
@@ -23,26 +22,26 @@ obvious just from reading the code alone.
 Examples:
 
 ```rust
-    let router = Router::new()
-        .merge(user_backend_router(state.clone()))
-        .merge(user_gateway_router(state.clone()))
-        .merge(public_gateway_router(state.clone()))
-        // Axum provides no way to route a CONNECT request to a handler in the
-        // using a path and MethodRouter (the 'standard' way), since the 'path'
-        // is empty and MethodRouter doesn't support CONNECT. Instead, we set a
-        // custom fallback which intercepts CONNECT requests and routes them to
-        // the node_proxy handler, calling the default fallback otherwise.
-        .fallback_service(proxy_or_fallback.with_state(state));
+let router = Router::new()
+    .merge(user_backend_router(state.clone()))
+    .merge(user_gateway_router(state.clone()))
+    .merge(public_gateway_router(state.clone()))
+    // Axum normally routes a request to a handler using its path and a
+    // MethodRouter, but a CONNECT request has an empty path and
+    // MethodRouter doesn't support CONNECT. Instead, we set a custom
+    // fallback which intercepts CONNECT requests and routes them to the
+    // node_proxy handler, calling the default fallback otherwise.
+    .fallback_service(proxy_or_fallback.with_state(state));
 ```
 
 ```rust
-    const LIVENESS_CHECK_INTERVAL: Duration = Duration::from_secs(5);
-    let mut liveness_interval =
-        tokio::time::interval(LIVENESS_CHECK_INTERVAL);
+const LIVENESS_CHECK_INTERVAL: Duration = Duration::from_secs(5);
+let mut liveness_interval =
+    tokio::time::interval(LIVENESS_CHECK_INTERVAL);
 
-    // The last N liveness results. If all are Err, we shutdown the LSP.
-    const N: usize = 2;
-    let mut last_n_results = VecDeque::with_capacity(N);
+// The last N liveness results. If all are Err, we shut down the LSP.
+const N: usize = 2;
+let mut last_n_results = VecDeque::with_capacity(N);
 ```
 
 ### Summary comments
@@ -109,8 +108,8 @@ deletion unless the comment adds information that is hard to infer from names,
 types, and nearby code, or prevents a plausible wrong change.
 
 Assume a senior reader who knows the rest of the system but not this area.
-Tighten clause by clause, cutting rather than rewording: if A obviously implies
-B (from the code below or another clause), state A and cut B.
+Tighten clause by clause, cutting rather than rewording. If the code below or
+another clause makes it obvious that A implies B, state A and cut B.
 Keep only the minimum needed to convey what's local and non-obvious: an
 invariant, gotcha, or workaround (with the problem it solves).
 
@@ -124,17 +123,6 @@ Examples:
 **Suggested**:
 ```rust
 /// Mock settings DB with `hasSeenReceiveHint: true`.
-```
-
-**Old comment**
-```rust
-// NOTE: This function is only required being pessimistic about the user's
-// internet connection.
-```
-
-**Suggested**
-```rust
-// NOTE: Needed for slow connections where data may not be ready immediately.
 ```
 
 Deletion example: the function body's `match` already shows the no-op/skip
@@ -156,7 +144,7 @@ Comments and docs should be written with the assumption that the future reader
 lacks access to the context of our current chat session. For example, a bug
 fix which was a major achievement for us is completely irrelevant information
 for a future reader who lives in a world in which the bug no longer exists and
-does not pose any threat; the fixed bug is worth documenting only if it could
+does not pose any threat, but the fixed bug is worth documenting if it could
 plausibly be reintroduced without such a warning. Judge what's worth
 documenting based on the future reader's standards, not our own.
 
@@ -178,7 +166,7 @@ produced, refreshed, persisted, synchronized, or consumed. Put behavioral,
 lifecycle, and provenance docs at the semantic owner — the type, state machine,
 constructor, transition method, API endpoint, or usage site that defines the
 behavior. An item comment should describe the item's durable meaning or
-contract; if it mostly explains surrounding code's use of the item, move it
+contract, so if it mostly explains surrounding code's use of the item, move it
 there or delete it. Conversely, keep these docs when the item itself is the
 state, API contract, or transition being defined — there the behavior is the
 item's own contract.
@@ -204,68 +192,123 @@ of the item documented.
 
 Comments should maintain a high standard of written English.
 They should be grammatically correct, idiomatic, and free of typos.
-Comments are essential for maintaining a readable codebase; write them with
-care.
+Comments are essential for maintaining a readable codebase, so write them
+with care.
 
-### Spell out connectives
+### Write comments as forward chains of reasoning
 
-A colon is fine as a label: case labels (`// Hot: ...`), arg-doc tables
-(`/// Default env: ...`), glossary definitions, and `Title: summary` module
-docs. But don't use a colon — or a semicolon — to splice together clauses
-whose real relationship is causal, consequential, or adversative: it hides
-the connective and often leaves a fragment. Rewrite with the connective
-spelled out:
+A reader who meets a claim before its justification must hold it in
+suspense while parsing what follows, then re-read the comment backwards to
+check the logic. Thus, order the sentences so each is fully motivated by
+the ones before it. Set up the situation, walk through what can happen,
+and let the rule or mechanism land as the conclusion. A comment long
+enough to have structure should read as a derivation, not a verdict with
+citations.
 
-- Claim: reason → `, because ...` / `, since ...`
-- Claim: consequence → `, which ...` / `, guaranteeing ...`
-- Requirement: violation consequence → `, otherwise ...`
-- Fact; consequence or instruction → `, so ...`
-- Fact; contrast → `, but ...`
-- Subject: fragment predicate → a full sentence.
-
-Pick the connective that matches the true relationship. In particular, a
-requirement ("X must Y") is best justified by what goes wrong when it is
-violated ("otherwise ..."), not by a "because" clause contorted around the
-hypothetical. Semicolons joining genuinely coordinate statements are fine.
-
-Assessment labels ("Harmless: ...", "Can't happen: ...") get the same
-treatment ("Harmless, since ..."), except when the explanation alone
-already implies the verdict — then drop the label and state the case
-directly:
-
-**Old comment**
+**Old comment** (conclusion first, justification backfilled):
 ```rust
-// Harmless: the lease expires within
-// `timeout::runner_lease::LIFETIME` and is then GC'd; a fresh
-// start just waits out the remainder.
+// `GREATEST` keeps the expiry monotonic, since a renewal that stalled
+// server-side can commit after a faster retry and would otherwise
+// overwrite the newer expiry with an older one.
 ```
-**Suggested**
+**Suggested** (hazard first, mechanism lands as the conclusion):
 ```rust
-// In this case, the lease just expires within
-// `timeout::runner_lease::LIFETIME` and is then GC'd.
+// A renewal that stalled server-side can commit after a faster retry,
+// overwriting the newer expiry with an older one. `GREATEST` prevents
+// this by keeping the expiry monotonic.
 ```
 
-**Old comment**
+**Mark every inferential step.** When a sentence is inferred from the one
+before it, mark the relationship explicitly with a connective ("so",
+"thus", "however", "instead", "otherwise") or a phrase that points back
+("this", "in this case", "by then"). A bare sentence is reserved for two
+roles: introducing a new premise, which is not inferred, so marking it
+would fake a derivation; and landing a conclusion the chain has already
+forced, where a connective is useless.
+
+An example where every step is marked and both bare roles appear:
+```rust
+// Google and Lexe have valid but non-matching files. This could
+// happen if persistence partially failed, updating one copy but not
+// the other. GDrive offers rollback protection, so it is the
+// primary source of truth. We'll update Lexe with Google's version.
+```
+
+**Marks must point forward.** Pick the connective that matches the true
+relationship, preferring forms that continue the chain over forms that
+backfill it:
+
+- Consequence: ", so ..." / "Thus, ..." / ", which ..."
+- Contrast, or substitution after a rejected action: ", but ..." /
+  "however, ..." / "Instead, ..."
+- Requirement: justify with what goes wrong when violated (", otherwise
+  ...") rather than a "because" contorted around the hypothetical.
+- Reason (", since ..." / ", because ...") points backwards. Restructure
+  the sentence into a forward chain instead.
+
+**Old comment** (backwards "since" holds the rule in suspense):
+```rust
+// Skip the release if any meganode is still running (hung shutdown), since
+// releasing would let the backend grant our users to another runner
+// while the hung meganodes may still be running their usernodes.
+```
+**Suggested** (the hazard walked forward, the rule lands last):
+```rust
+// If a meganode hung during shutdown, its usernodes may still be
+// running, and releasing our lease would let the backend grant those
+// same users to another runner. So if any meganode is still running,
+// skip the release and let the lease expire on its own.
+```
+
+**Don't splice the chain with punctuation.** An em-dash, colon, semicolon,
+or parenthesis that joins two clauses leaves their true relationship
+unstated, so the reader must infer the connective the writer skipped.
+Heavy use of these splices is a sign of unoptimized writing. Rewrite
+nearly all of them with the connective spelled out, per the table above.
+Exceptions: a colon is fine when it attaches a label rather than joining
+two claims, as in `// Hot: ...` or `/// Default env: ...`. A semicolon
+is fine between parallel statements, like two cases described side by
+side. But if any connective would fit, the semicolon is hiding it, so
+spell the connective out.
+
+**Old comment** (a colon hiding a causal link):
 ```rust
 // Report our initial capacity immediately: acquisition (re)seeded the
 // backend with an empty report.
 ```
-**Suggested**
+**Suggested** (the cause first, the instruction follows):
 ```rust
-// Report our initial capacity immediately, since acquisition (re)seeded
-// the backend with an empty report.
+// Acquisition (re)seeded the backend with an empty report, so report
+// our initial capacity immediately.
 ```
 
-**Old comment**
+A parenthetical that carries a premise or the substance of a claim forces
+the reader to pop out of the chain, absorb an aside, and pop back in.
+Inline it into the flow as a full clause, or drop it.
+
+**Old comment** (the expectation's premise hidden in an aside):
 ```rust
-/// A renewal round: retried by the client within
-/// [`timeout::lease::RENEW_ROUND_BUDGET`], stopping early on rejection.
+// We expect exactly one HTLC per side; only trampoline forwards
+// (which we don't route) have more than one.
 ```
-**Suggested**
+**Suggested** (premise carried in the main line):
 ```rust
-/// Each renewal round is retried by the client within
-/// [`timeout::lease::RENEW_ROUND_BUDGET`], stopping early on rejection.
+// Only trampoline forwards have more than one HTLC per side, and we
+// don't route those, so we expect exactly one on each.
 ```
+
+**Use only standardized terminology, simpler terms preferred.** The point
+of technical writing is to explain without ambiguity. A term is
+standardized when everyone who reads it arrives at the same precise
+meaning, ideally even without context. We see common words in context all
+the time, so they are standardized by sheer use; rarer terms of art like
+"CSPRNG" are standardized by industry definition. A made-up term like
+"tick-granular" is neither, so each reader must guess its meaning from the
+surrounding context, and different readers may guess differently. Thus, use
+standardized terms. In practice these are usually the simplest words that
+say the thing: not "renewers" but the tasks that renew, not
+"tick-granular" but only checked once per tick, not "dispatch" but send,
+not "intervening" but in between.
 
 ### References
 
@@ -276,11 +319,11 @@ Example:
 
 ```rust
 /// Handles a [`MegaRunnerCommand::UserLeaseRenewalRequest`].
-    fn handle_user_lease_renewal_request(
-        &mut self,
-        req: MegaRunnerUserLeaseRenewalRequest,
-        now: TimestampMs,
-    ) {
+fn handle_user_lease_renewal_request(
+    &mut self,
+    req: MegaRunnerUserLeaseRenewalRequest,
+    now: TimestampMs,
+) {
 ```
 
 
