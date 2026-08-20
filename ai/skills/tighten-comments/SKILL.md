@@ -171,6 +171,50 @@ there or delete it. Conversely, keep these docs when the item itself is the
 state, API contract, or transition being defined — there the behavior is the
 item's own contract.
 
+### Scope comments to the code they explain
+
+A comment's position tells the reader its scope: a doc comment speaks for
+the whole item, a comment above a statement for that statement, a comment
+on one step of a chain for that step. So place a comment on the exact
+scope where it applies.
+
+```rust
+// BAD placement: a retry detail posing as the method's main description.
+/// Retries within [`ACQUIRE_TIMEOUT`]. Notably, a `LeaseRejected`
+/// response does *not* stop the retries, since a crash-restarted
+/// supervisor must outwait its previous incarnation's unexpired lease.
+async fn acquire_runner_lease(
+    &self,
+    data: AcquireRunnerLeaseRequest,
+) -> Result<AcquireRunnerLeaseResponse, BackendApiError> {
+    let req = self
+        .rest
+        .post(format!("{backend}/lexe/acquire_runner_lease"), &data)
+        .timeout(timeout::lease::REQUEST_TIMEOUT);
+    // GOOD placement: on the exact scope where it applies.
+    // A crash-restarted supervisor must outwait its previous incarnation's
+    // unexpired lease, so a `LeaseRejected` response does *not* stop the
+    // retries.
+    let retries = Retries::from_timeout(ACQUIRE_TIMEOUT);
+    self.rest.send_with_retries(req, &retries).await
+}
+```
+
+Another example of comments placed at exactly the scopes they apply to:
+
+```rust
+// Meganodes with at least one running usernode whose lease has expired.
+let mega_ids_to_evict = self
+    .user_leases
+    .values()
+    // Expired leases
+    .filter(|lease| lease.expires_at <= now)
+    // That aren't already evicting
+    .filter(|lease| !self.user_evicting.contains(&lease.user_pk))
+    .map(|lease| lease.mega_id)
+    .collect::<HashSet<_>>();
+```
+
 ### Keep rationale out of the code
 
 When you want to explain a change beyond what the code itself needs — the
