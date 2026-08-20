@@ -15,6 +15,5 @@ by running two focused passes in sequence:
    professionalism).
 
 Run code first: restructuring logic often rewrites or removes the very comments
-the second pass would otherwise polish. Each skill runs its review in its own
-subagent, so this orchestrator just chains them.
-Once both finish, relay a single combined summary.
+the second pass would otherwise polish.
+Once both passes finish, report a single combined summary.

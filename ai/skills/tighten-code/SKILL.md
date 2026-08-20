@@ -12,11 +12,7 @@ Make changes tight, focused, and minimal—but well-documented with concise,
 informative comments.
 Scrutinize how everything is structured, and architect things in the cleanest,
 highest leverage per LOC written way.
-Run this inside a single subagent to keep the token-heavy reading (the diff,
-surrounding code, and examples) out of the main context, then relay its
-summary.
-The subagent applies the improvements directly and does not spawn further
-subagents.
+Apply the improvements directly, then report a concise summary.
 
 ## Principles
 

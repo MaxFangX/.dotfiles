@@ -338,14 +338,9 @@ pub fee: Amount,
 
 ## Execution flow
 
-The main agent runs this review inside a single subagent, to keep the
-token-heavy reading (the diff, surrounding code, and comment examples) out of
-the main context, then relays its summary.
-
-The subagent reviews the comment changes in the current diff following the
-Guidelines above: for each added or modified comment it applies them, then
-changes, skips, or removes the comment. It reports a concise summary of what
-changed and why (and does not spawn further subagents).
+Review the comment changes in the current diff following the Guidelines
+above: for each added or modified comment, apply them, then change, skip,
+or remove the comment. Report a concise summary of what changed and why.
 
 If a removed comment holds reviewer-facing rationale worth keeping, don't move
 it to another comment — save it to the rationale outlet (see "Keep rationale out
