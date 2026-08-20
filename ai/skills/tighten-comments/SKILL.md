@@ -249,6 +249,12 @@ and let the rule or mechanism land as the conclusion. A comment long
 enough to have structure should read as a derivation, not a verdict with
 citations.
 
+These rules govern how to order a long comment, not whether to write one.
+Brevity still comes first, so if a competent future reader doesn't need
+the justification, cut it rather than chain it. If a forward-chain rewrite
+grows a comment noticeably, that's a sign to reconsider whether the
+justification is needed at all.
+
 **Old comment** (conclusion first, justification backfilled):
 ```rust
 // `GREATEST` keeps the expiry monotonic, since a renewal that stalled
