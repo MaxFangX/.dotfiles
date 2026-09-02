@@ -8,6 +8,7 @@ let
     "codex-review"
     "jj"
     "jj-rebase"
+    "knowledge-doc"
     "q"
     "rebase-review"
     "temp-worktree"
