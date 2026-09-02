@@ -37,7 +37,7 @@ rec {
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources claude-agent-acp claude-code codex codex-acp
-      git-hunk jj jj-hunk-tool kimi-code omnara paseo rsync;
+    inherit hm pkgs sources claude-code codex git-hunk jj jj-hunk-tool
+      kimi-code omnara paseo rsync;
   };
 }
