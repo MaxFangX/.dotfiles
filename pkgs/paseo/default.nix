@@ -11,6 +11,10 @@
 # Update with `just update paseo` (bumps the version and regenerates the
 # lockfile). node is wrapped in because systemd/launchd start the daemon
 # with no node on PATH.
+#
+# package.json overrides uuid to ^11.1.1 (CVE-2026-41907; upstream
+# @getpaseo/server wants ^9, but only uses `v4`, which is unchanged).
+# Drop the override once upstream requires uuid >= 11.1.1.
 {
   lib,
   stdenvNoCC,
