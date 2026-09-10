@@ -122,8 +122,14 @@ merely re-attaches HEAD to the branch ref — git updates no files, so any
 uncommitted changes at `@` ride along untouched. This applies even in
 co-edit mode.
 
-The only reason to skip the re-attach is that the commits differ — then
-skip it and say so; never reach for `-f`. A plain different-commit switch
+Also skip the re-attach while the bookmark's commit itself carries
+conflicts: git sees `.jjconflict-*` trees and the switch fails ("resolve
+your current index first") or misbehaves. A detached HEAD at the right
+commit is fine until the stack is conflict-free — don't fight it with
+`git reset` mid-surgery.
+
+The only other reason to skip the re-attach is that the commits differ —
+then skip it and say so; never reach for `-f`. A plain different-commit switch
 makes colocated jj reset `@` onto the new HEAD: dirty files usually ride
 along in git's tree, but the old `@` is stranded as an anonymous head and
 our position in the stack is lost. `-f` is worse — it wipes the dirty
@@ -434,6 +440,16 @@ IDs are content-derived and go stale after any change — re-run `hunks`. Line
 ranges: `id:2-6,30-41`. Absorb routes modified/deleted lines by blame; pure
 insertions fall back to the last mutable ancestor touching the file;
 ambiguous hunks stay in `@` with candidates printed.
+
+- **Conflicted `@` = no hunk-tool mutations.** If `jj status` shows any
+  conflicted file in `@`, don't run `squash`/`absorb`/`split` — even with
+  explicit hunk IDs in other files, materialized conflict text can be swept
+  into the destination as baked nested markers. Route with plain
+  path-limited `jj squash --from @ --into <rev> <paths>` instead (safe when
+  those paths contain only your hunks), or wait for the conflict to clear.
+- **Verify after every routing mutation:** `jj diff --stat -r <dest>` must
+  touch only the intended files. On contamination, `jj op revert <that-op>`
+  immediately, before more descendants pile up.
 
 All rewriting commands take a global `--ignore-immutable` (passed to jj) —
 the fix when an untracked remote bookmark makes your own in-flight stack
