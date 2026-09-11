@@ -164,9 +164,6 @@ Because you can always route afterward, order and who-touches-what don't
 matter — no need to ask how to split or sequence the work; just make the edit
 and route it home.
 
-Combine this mode with the `/q` skill when I queue fixes. Make and route
-those fixes while I edit the same tree; do not rely on receiving replies.
-
 ### #1 RULE: NEVER MOVE THE CHECKOUT
 
 `@` is where I am reading and making fixups. Moving it changes files
@@ -281,12 +278,6 @@ conflicts. Work bottom-up and fully resolve each commit before moving to the
 next one up — no markers left, `jj resolve --list` clean, and it builds;
 leaving a conflict behind just cascades new ones into its descendants.
 `jj new` back to the tip when done.
-
-### Carry things forward
-
-Do not bury questions, judgment calls, or important notes in a reply I
-may never see. Retain them and surface the accumulated notes once it is clear
-that I have returned to the chat.
 
 ## Side workspace: edit any commit without moving anyone's `@`
 
