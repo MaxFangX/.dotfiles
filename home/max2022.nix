@@ -20,6 +20,14 @@
   targets.darwin.copyApps.enable = true;
   targets.darwin.linkApps.enable = false;
 
+  # macOS rewrites a quick double-space as ". " (System Settings >
+  # Keyboard > Input Sources > Edit > "Add period with double-space").
+  # That injects a stray `.` into nvim's <Space><Space> leader chord,
+  # where normal-mode `.` silently repeats the last change. Disabled for
+  # iTerm2 only, so the substitution still works in prose apps.
+  targets.darwin.defaults."com.googlecode.iterm2"
+    .NSAutomaticPeriodSubstitutionEnabled = false;
+
   homebrew.casks = [
     "halloy"
     "orbstack"
