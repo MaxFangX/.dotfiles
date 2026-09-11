@@ -1,8 +1,8 @@
 {
   "name": "codex-acp",
-  "version": "1.1.7",
+  "version": "1.13.0",
   "private": true,
   "dependencies": {
-    "@agentclientprotocol/codex-acp": "1.1.7"
+    "@agentclientprotocol/codex-acp": "1.13.0"
   }
 }
