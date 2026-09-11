@@ -279,6 +279,26 @@ next one up — no markers left, `jj resolve --list` clean, and it builds;
 leaving a conflict behind just cascades new ones into its descendants.
 `jj new` back to the tip when done.
 
+### Rewrite windows with peer agents
+
+Shared history admits one rewriter at a time, and a squash or
+describe rewrites it just as full surgery does. So before any such
+op, post a claim on the repo's coordination channel naming the
+commits or files and your workspace. Post an all-clear when done; it
+promises a conflict-free, divergence-free stack (or an explicit
+handoff), so resolve your own cascade bottom-up first.
+
+Between another agent's claim and their all-clear:
+
+- Make no rewrites, and hold edits that would snapshot: any jj command
+  in a workspace with unsnapshotted changes takes a snapshot, itself a
+  racing op. Read with `--ignore-working-copy`.
+- Don't go idle: arm a waker, e.g. a background poll that exits on
+  their all-clear. Match their author header, not keywords.
+
+Racing a held window forks lineages; recover per
+[Concurrency with co-editors](#concurrency-with-co-editors).
+
 ## Side workspace: edit any commit without moving anyone's `@`
 
 The core tool for surgery in a shared repo. A workspace is a second checkout
