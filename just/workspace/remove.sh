@@ -5,7 +5,7 @@ set -euo pipefail
 # of `worktree remove`: forgets the workspace, deletes the worktree + directory,
 # and preserves any un-integrated commits — jj never drops committed work, so
 # they survive as anonymous heads (`jj log`) unless you pass --force.
-# Usage: just -g workspace remove <dir> [--force]
+# Usage: just -g workspace remove <dir> [--force] [--keep-branch]
 # A relative <dir> that lands inside the repo is reinterpreted as a path under
 # the repo's workspaces dir (see resolve-dir.sh).
 
@@ -19,6 +19,14 @@ args="$*"
 force=false
 if [[ " $args " == *" --force "* || " $args " == *" -f "* ]]; then
     force=true
+fi
+
+# --keep-branch: preserve the workspace's bookmark and every commit on it,
+# e.g. when the branch backs a pinned git dependency. Only the workspace
+# itself (and, with --force, commits above the bookmark) is removed.
+keep_branch=false
+if [[ " $args " == *" --keep-branch "* ]]; then
+    keep_branch=true
 fi
 
 # Workspace name follows the `workspace add` convention: the path basename.
@@ -95,6 +103,11 @@ fi
 # git carries no change-id metadata), so split off commits whose patch already
 # exists on the base per `git cherry`; those are integrated, just renamed.
 shared="(working_copies() ~ ${name}@) | (bookmarks() ~ bookmarks(exact:\"${bookmark}\"))"
+# With --keep-branch the bookmark survives the removal, so its commits
+# aren't orphaned and aren't candidates for report or abandon.
+if [[ "$keep_branch" == true ]]; then
+    shared="(working_copies() ~ ${name}@) | bookmarks()"
+fi
 pairs="$(jj log --no-pager --no-graph \
     -r "(${base}..${name}@) ~ empty() ~ ::(${shared})" \
     -T 'change_id.short() ++ " " ++ commit_id ++ "\n"' 2>/dev/null \
@@ -141,25 +154,29 @@ if [[ -n "$integrated" ]]; then
     echo "Abandoned $n integrated commit(s) whose patches are already on $base"
 fi
 
-# Delete the workspace's bookmark, unless the `jj abandon` above already did:
-# jj deletes bookmarks pointing at abandoned commits.
+# Delete the workspace's bookmark unless --keep-branch. jj deletes
+# bookmarks pointing at abandoned commits, so the `jj abandon` above may
+# have already deleted it.
 delete_bookmark() {
-    if [[ -n "$bookmark" && -n "$(nonempty "present($bookmark)")" ]]; then
+    if [[ "$keep_branch" != true && -n "$bookmark" \
+        && -n "$(nonempty "present($bookmark)")" ]]; then
         jj bookmark delete "$bookmark"
     fi
 }
+bm_fate="deleted bookmark"
+[[ "$keep_branch" == true ]] && bm_fate="kept bookmark"
 
 # Handle the bookmark and preserved commits, mirroring worktree remove's
 # branch handling. Delete the bookmark and drop the commits when the work is
 # integrated (count 0) or forced; otherwise keep both and report.
 if [[ "$count" -eq 0 ]]; then
     delete_bookmark
-    echo "Removed workspace '$name' at $dir${bookmark:+ and deleted bookmark '$bookmark'}"
+    echo "Removed workspace '$name' at $dir${bookmark:+ and $bm_fate '$bookmark'}"
 elif [[ "$force" == true ]]; then
     delete_bookmark
     # shellcheck disable=SC2086
     jj abandon $leftover
-    echo "Removed workspace '$name' at $dir and abandoned $count un-integrated commit(s)${bookmark:+, deleted bookmark '$bookmark'}"
+    echo "Removed workspace '$name' at $dir and abandoned $count un-integrated commit(s)${bookmark:+, $bm_fate '$bookmark'}"
 else
     ids="$(printf '%s ' $leftover)"
     echo "Removed workspace '$name' at $dir${bookmark:+ (kept bookmark '$bookmark')}"
