@@ -29,7 +29,7 @@ rustPlatform.buildRustPackage {
   pname = "buzz-sidecars";
   inherit src version;
 
-  cargoHash = "sha256-lrEfUy8cFSUl8x5AfOsNYDvryjWTtGVWtLT53NRP6pw=";
+  cargoHash = "sha256-D9w9DA6i+W9xOy9b/1/dNc50XkJCKyNNdV1sHpLXZvE=";
   cargoBuildFlags = sidecarPackageFlags;
   cargoTestFlags = sidecarPackageFlags;
 

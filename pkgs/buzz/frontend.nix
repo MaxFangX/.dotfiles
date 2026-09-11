@@ -21,7 +21,7 @@ stdenvNoCC.mkDerivation {
       version
       ;
     fetcherVersion = 4;
-    hash = "sha256-+YUfxmJOyPE5dB4vVVuArBcEliTb+sZSJoFjuPwUvx0=";
+    hash = "sha256-zBl+ro4pA1kfgl+qSaNgesXXRvBL4pbsf56Lv0R1liQ=";
   };
 
   nativeBuildInputs = [

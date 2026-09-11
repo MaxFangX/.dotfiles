@@ -85,7 +85,7 @@ rustPlatform.buildRustPackage {
 
   cargoRoot = "desktop/src-tauri";
   buildAndTestSubdir = "desktop/src-tauri";
-  cargoHash = "sha256-gaKBrIb6A/CZOA+tlhFFVJYQWRfV7XjTPjRwvP+OYro=";
+  cargoHash = "sha256-jGbbUqCGo686gEwEZ6YS2NryQUKx+x054TupomdAf0w=";
   cargoCheckType = "release";
 
   # Tauri's CLI enables this for production builds. Without it, the prebuilt

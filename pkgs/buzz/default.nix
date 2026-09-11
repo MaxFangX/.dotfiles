@@ -27,14 +27,14 @@
 }:
 
 let
-  version = "0.5.17-unstable-2026-08-24";
+  version = "0.5.20-unstable-2026-08-27";
   # Temporarily built from benthecarman's fork with bugfixes.
   # TODO(max): Switch back to block/buzz release tags once upstreamed.
   src = fetchFromGitHub {
     owner = "benthecarman";
     repo = "buzz";
-    rev = "d4de5fceeaf1e6009ee81260d19e128a83f2c3df";
-    hash = "sha256-yV8oIGeb9ret/JD2lGevPTd5B5Xxi3LdbM80UrgLopo=";
+    rev = "bb79de61d24569c86c87d70aa4db8155bc3ef398";
+    hash = "sha256-2Uu528ywMCK9w4LTADUfOh1noX0lUGBnx2HQYjWOzzE=";
   };
 
   pnpm = pnpm_11;
