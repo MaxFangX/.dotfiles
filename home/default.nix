@@ -11,6 +11,7 @@
   kimi-code,
   omnara,
   paseo,
+  paseo-app,
   rsync,
 }:
 let
@@ -49,6 +50,7 @@ let
       kimi-code = stubUnsupported kimi-code;
       omnara = stubUnsupported omnara;
       paseo = stubUnsupported paseo;
+      paseo-app = stubUnsupported paseo-app;
     };
   };
 

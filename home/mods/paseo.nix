@@ -10,9 +10,13 @@
 #     a fork that continually rebases onto upstream, so we fix this in the
 #     environment rather than editing the upstream-tracked paseo.json.
 #
+#  3. The Paseo desktop app from @maxfangx's fork releases
+#     (macOS only; a stub elsewhere). Lands in
+#     ~/Applications/Home Manager Apps via targets.darwin.copyApps.
+#
 # Plus one opt-in piece:
 #
-#  3. An always-on Paseo *daemon* (`lexe.paseo.enableService`).
+#  4. An always-on Paseo *daemon* (`lexe.paseo.enableService`).
 #     Runs `paseo daemon start --foreground` from the nix-packaged
 #     @getpaseo/cli as a systemd user service (Linux) or launchd agent
 #     (macOS), modeled on home/mods/omnara.nix. Relay stays on by default
@@ -24,6 +28,7 @@
   lib,
   pkgs,
   paseo,
+  paseo-app,
   ...
 }:
 let
@@ -69,13 +74,14 @@ in
     using the nix-packaged @getpaseo/cli'';
 
   config = lib.mkMerge [
-    # (1) The CLI, plus (2) the dev shim when a checkout is present.
+    # (1) The CLI, (2) the dev shim when a checkout is present, and
+    # (3) the desktop app.
     {
-      home.packages = [ paseo ]
+      home.packages = [ paseo paseo-app ]
         ++ lib.optional (builtins.pathExists paseoRepo) crossEnv;
     }
 
-    # (3) Always-on daemon — opt-in per host.
+    # (4) Always-on daemon — opt-in per host.
     (lib.mkIf cfg.enableService {
       # Enable "linger" so the systemd user instance (and thus this
       # service) starts at boot, not just on login.

@@ -37,11 +37,12 @@ rec {
   kimi-code = pkgs.callPackage ./pkgs/kimi-code {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
   paseo = pkgs.callPackage ./pkgs/paseo {};
+  paseo-app = pkgs.callPackage ./pkgs/paseo-app {};
   rsync = pkgs.callPackage ./pkgs/rsync.nix {};
 
   # home-manager configs
   homeConfigs = import ./home {
     inherit hm pkgs sources buzz claude-code codex git-hunk jj jj-hunk-tool
-      kimi-code omnara paseo rsync;
+      kimi-code omnara paseo paseo-app rsync;
   };
 }
