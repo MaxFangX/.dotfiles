@@ -440,6 +440,11 @@
     " kk to delete line: the second k is in command mode
     onoremap k d
 
+    " A stray pending operator (e.g. a lone k) takes <Space> as a motion,
+    " eating text instead of starting a leader chord. Cancel the operator
+    " and replay; recursive so the replayed <Space> acts as leader.
+    omap <Space> <Esc><Space>
+
     " j/J and q/Q for next and prev (Think: "down (j)")
     "
     " - j/J below will be overridden by vim-illuminate to navigate references
