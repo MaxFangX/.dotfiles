@@ -19,6 +19,8 @@ jq --arg v "$VERSION" \
   '.version = $v | .dependencies["@getpaseo/cli"] = $v' package.json > package.json.tmp
 mv package.json.tmp package.json
 
-npm install --package-lock-only --no-audit --no-fund
+# --prefer-online: skip npm's metadata cache, which can lag a
+# just-published version and fail resolution with ETARGET.
+npm install --package-lock-only --no-audit --no-fund --prefer-online
 
 echo "Updated paseo to v$VERSION (regenerated package-lock.json)"
