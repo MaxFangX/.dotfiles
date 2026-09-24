@@ -92,7 +92,7 @@ fi
 echo "Created colocated jj workspace at $dir on branch $branch"
 
 # Make the new workspace show up in the Paseo UI by starting a detached paseo
-# agent in it (sends "hi" to Opus).
+# agent in it (sends "/jj coedit" to Opus).
 #
 # Terminals inside Paseo export PASEO_WORKSPACE_ID, which `paseo run` prefers
 # over the cwd, causing the agent to be pinned to the old workspace rather than
@@ -113,7 +113,7 @@ if [[ "$paseo_run" == true ]] && command -v paseo >/dev/null; then
     fi
     (
         cd "$dir"
-        env -u PASEO_WORKSPACE_ID paseo run hi --provider claude/opus \
+        env -u PASEO_WORKSPACE_ID paseo run "/jj coedit" --provider claude/opus \
             --thinking high --mode bypassPermissions --detach \
             ${ws_id:+--workspace "$ws_id"}
     )
