@@ -64,6 +64,13 @@ if [[ "$force" != true && -n "$dirty" ]]; then
     exit 1
 fi
 
+# Measure the directory's size in the background, overlapping the jj queries
+# below, to report the space freed at the end.
+echo "Measuring disk usage of $dir..."
+du_out="$(mktemp)"
+du -sh "$dir" > "$du_out" 2>/dev/null &
+du_pid=$!
+
 # Resolve the integration baseline (jj's trunk() ~ git origin/HEAD). trunk()
 # degrades to root() without a remote, which would count shared commits as
 # un-integrated; fall back to the local default bookmark in that case.
@@ -130,6 +137,8 @@ count=0
 # Forget the workspace and remove its git worktree + directory. The tree is
 # clean here (guarded above) unless --force, which we pass through so a dirty
 # worktree is removed too.
+wait "$du_pid" || true
+echo "Deleting $dir..."
 if [[ "$force" == true ]]; then
     jj workspace forget "$name" --cleanup --force
 else
@@ -182,4 +191,11 @@ else
     echo "Removed workspace '$name' at $dir${bookmark:+ (kept bookmark '$bookmark')}"
     echo "Kept $count un-integrated commit(s) as anonymous heads: ${ids}"
     echo "Integrate: jj rebase -r <id> -d <dest>   Discard: jj abandon ${ids}"
+fi
+
+# Report the space freed.
+size="$(awk '{ print $1 }' "$du_out")"
+rm -f "$du_out"
+if [[ -n "$size" ]]; then
+    echo "Freed $size of disk space"
 fi
