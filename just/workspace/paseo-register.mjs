@@ -12,10 +12,12 @@
 // Speaks the daemon's websocket protocol directly (plain JSON frames; session
 // requests are wrapped as {type: "session", message}), like paseo-archive.mjs.
 // Best-effort: prints nothing and exits 0 when the daemon is unreachable or the
-// project can't be resolved, leaving the caller to fall back to a plain run.
+// project can't be resolved, leaving the caller to fall back to a plain run. A
+// daemon-side creation error is echoed to stderr so the fallback isn't silent.
 //
 // Usage: paseo-register.mjs <dir> <main-repo-root>
 
+import { randomUUID } from "node:crypto";
 import path from "node:path";
 import process from "node:process";
 
@@ -71,10 +73,15 @@ ws.onmessage = (ev) => {
     if (!source?.projectId) exit(0);
     send({
       type: "workspace.create.request",
-      requestId: "req_create",
+      // Since paseo 0.9.1 the daemon persists creation results by request id and
+      // rejects a reused id with a different payload (workspace_request_key_conflict),
+      // so the id must be fresh per invocation.
+      requestId: `req_create_${randomUUID()}`,
       source: { kind: "directory", path: target, projectId: source.projectId },
     });
   } else if (inner?.type === "workspace.create.response") {
-    exit(0, inner.payload?.workspace?.id);
+    const id = inner.payload?.workspace?.id;
+    if (!id) console.error(`paseo-register: ${inner.payload?.error ?? "workspace.create failed"}`);
+    exit(0, id);
   }
 };
