@@ -351,7 +351,10 @@ Three main ways to change a commit's content; pick per change, they compose:
 Structural edits:
 
 - Insert a prefactor: `jj new --no-edit -B <rev> -m "..."` — `--no-edit`
-  keeps `@` parked. Fill it via mechanism 1 or 2.
+  keeps `@` parked. Fill it via mechanism 1 or 2. Re-resolve the anchor
+  from a fresh `jj log -r 'master..@'` first: a peer's rebase may have
+  landed it on master, and inserting after a master commit creates a stray
+  sibling that routing then silently drains the stack into.
 - Fold an existing commit into another: `jj squash --from <x> --into <p>
   --use-destination-message` — the source is auto-abandoned when emptied.
 - Split a commit whose pieces all exist in its diff: `jj split <paths> -m`
