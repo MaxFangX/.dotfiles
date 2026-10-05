@@ -5,7 +5,8 @@ description: >-
   reply between messages. Use when the user prefixes a request with "/q" or
   "queued:", says a prompt was queued, or declares queue mode. "/q <prompt>"
   marks that single message as queued; "/q mode", or "queue mode" declared
-  in a prompt, extends this to the messages that follow.
+  in a prompt, extends this to the messages that follow. A reply of "Ack"
+  dismisses the notes carried forward so far.
 ---
 
 # Queue
@@ -24,3 +25,7 @@ not wait for acknowledgment.
 notes that I might miss. Once it is clear that I have returned to the chat
 (typically indicated by a follow-up on something you said), surface the
 accumulated notes.
+
+**"Ack"** acknowledges every carried-forward item so far: dismiss them all,
+and stop surfacing them. Notes that come up afterward are carried forward as
+usual.
