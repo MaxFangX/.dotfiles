@@ -91,30 +91,45 @@ fi
 
 echo "Created colocated jj workspace at $dir on branch $branch"
 
-# Make the new workspace show up in the Paseo UI by starting a detached paseo
-# agent in it (sends "/jj coedit" to Opus).
-#
-# Terminals inside Paseo export PASEO_WORKSPACE_ID, which `paseo run` prefers
-# over the cwd, causing the agent to be pinned to the old workspace rather than
-# the new one. We unset it here (for the child process only) so the agent
-# starts in the new workspace.
-if [[ "$paseo_run" == true ]] && command -v paseo >/dev/null; then
-    # Register the workspace under the repo's existing paseo project first.
-    # Left to itself, paseo files a worktree it first sees by path as its own
-    # project, cutting it off from the repo's other workspaces; the daemon
-    # takes an explicit project, but `paseo run` has no flag for it. Falls back
-    # to a plain run (its own project) if the daemon isn't up.
-    ws_id=""
-    if command -v node >/dev/null; then
+# Register the workspace in paseo under the repo's existing project, so it
+# shows up in the Paseo UI. Left to itself, paseo files a worktree it first
+# sees by path as its own project, cutting it off from the repo's other
+# workspaces; `paseo run` has no --project flag, so create the record first and
+# hand it the id. Needs the paseo CLI, jq, and a running daemon.
+ws_id=""
+if [[ "$paseo_run" == true ]]; then
+    if ! command -v paseo >/dev/null || ! command -v jq >/dev/null; then
+        echo "workspace add: paseo or jq not on PATH; skipping paseo." >&2
+    else
         main_root="$(dirname "$(git -C "$dir" rev-parse \
             --path-format=absolute --git-common-dir)")"
-        ws_id="$("$(dirname "${BASH_SOURCE[0]}")/paseo-register.mjs" \
-            "$dir" "$main_root" || true)"
+        project_id="$(paseo project ls --json 2>/dev/null \
+            | jq -r --arg p "$main_root" '.[] | select(.path == $p) | .projectId' \
+            | head -n1 || true)"
+        if [[ -n "$project_id" ]]; then
+            ws_id="$(paseo workspace create --isolation local --path "$dir" \
+                --project "$project_id" --json | jq -r '.workspaceId' || true)"
+        fi
+        if [[ -z "$ws_id" ]]; then
+            echo "workspace add: couldn't register $dir under the paseo project of" >&2
+            echo "$main_root (daemon down, or that dir isn't a paseo workspace)." >&2
+            echo "Skipping the paseo agent." >&2
+        fi
     fi
+fi
+
+# Start a detached paseo agent in the new workspace (sends "/jj coedit" to Opus).
+#
+# `paseo run` picks its workspace by precedence: --workspace, then the calling
+# agent's workspace (PASEO_AGENT_ID), then PASEO_WORKSPACE_ID, then a fresh
+# workspace *and project* for the cwd. Terminals inside Paseo export both env
+# vars, so unset them for the child and only ever run with an explicit
+# --workspace: the unregistered fallback is the stray project avoided above.
+if [[ -n "$ws_id" ]]; then
     (
         cd "$dir"
-        env -u PASEO_WORKSPACE_ID paseo run "/jj coedit" --provider claude/opus \
-            --thinking high --mode bypassPermissions --detach \
-            ${ws_id:+--workspace "$ws_id"}
+        env -u PASEO_WORKSPACE_ID -u PASEO_AGENT_ID paseo run "/jj coedit" \
+            --provider claude/opus --thinking high --mode bypassPermissions \
+            --detach --workspace "$ws_id"
     )
 fi

@@ -148,9 +148,15 @@ fi
 # Immediately archive the workspace's record in the paseo app, if any. The
 # daemon only notices the missing directory on a workspace-list refetch, so
 # without this poke the stale record lingers in the UI. Best-effort no-op
-# when node or the daemon is unavailable.
-if [[ -n "$tgt" ]] && command -v node >/dev/null; then
-    "$(dirname "${BASH_SOURCE[0]}")/paseo-archive.mjs" "$tgt" || true
+# when paseo, jq, or the daemon is unavailable.
+if [[ -n "$tgt" ]] && command -v paseo >/dev/null && command -v jq >/dev/null; then
+    ws_id="$(paseo workspace ls --json 2>/dev/null \
+        | jq -r --arg d "$tgt" '.[] | select(.cwd == $d) | .workspaceId' \
+        | head -n1 || true)"
+    if [[ -n "$ws_id" ]]; then
+        paseo workspace archive "$ws_id" >/dev/null \
+            && echo "Archived paseo workspace $ws_id for $tgt" || true
+    fi
 fi
 
 # Abandon preserved commits that are content-identical to commits already on
