@@ -189,6 +189,12 @@
     " Needs only `xxd` and `file`, standard on macOS and Linux.
 
     function! s:IsBinaryFile(file) abort
+        " Git may append verbose diffs to its editor file. Always leave that
+        " buffer editable, even when the appended diff contains binary data.
+        if fnamemodify(a:file, ':t') ==# 'COMMIT_EDITMSG'
+            return 0
+        endif
+
         " Empty files: `file` reports them as binary; treat as text.
         if a:file ==# '' || !filereadable(a:file) || getfsize(a:file) <= 0
             return 0
@@ -208,8 +214,8 @@
     augroup binary_hex_view
         autocmd!
         " Set 'binary' pre-read to preserve raw bytes; convert on post-read.
-        autocmd BufReadPre  * if s:IsBinaryFile(expand('<afile>:p')) | setlocal binary | endif
-        autocmd BufReadPost * if &binary | call s:HexView() | endif
+        autocmd BufReadPre  * let b:binary_hex_view = s:IsBinaryFile(expand('<afile>:p')) | if b:binary_hex_view | setlocal binary | endif
+        autocmd BufReadPost * if get(b:, 'binary_hex_view', 0) | call s:HexView() | endif | unlet! b:binary_hex_view
     augroup END
 """ }
 
