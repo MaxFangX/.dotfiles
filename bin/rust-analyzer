@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# rust-analyzer for the active rustup toolchain, installing the components it
+# needs on first use after a toolchain bump. Shadows rustup's proxy, which
+# falls back to the nix rustup proxy when the component is missing and recurses.
+set -euo pipefail
+
+# e.g. "1.96.1-aarch64-apple-darwin (overridden by '.../rust-toolchain.toml')"
+toolchain="$(rustup show active-toolchain | cut -d' ' -f1)"
+
+# Fast no-op when already installed. Keep stdout clean for the LSP channel.
+rustup component add --toolchain "$toolchain" rust-analyzer rust-src >&2
+
+exec "$(rustup which --toolchain "$toolchain" rust-analyzer)" "$@"
