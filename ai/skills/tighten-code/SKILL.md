@@ -1,10 +1,10 @@
 ---
 name: tighten-code
-description: Lexe's code standards: the review principles and the full rulebook, from formatting and idioms to structure, state, and invariants. Use to tighten the code on the current branch, check a scope for violations, or clean up subpar code.
+description: Code standards: the review principles and the full rulebook, from formatting and idioms to structure, state, and invariants. Use to tighten the code on the current branch, check a scope for violations, or clean up subpar code.
 argument-hint: [optional scope, e.g. a file, commit, or "the last 3 commits"]
 ---
 
-# Lexe Code Standards
+# Code Standards
 
 The review principles and the full rulebook for code readability,
 idioms, conventions, and structure.
@@ -529,7 +529,7 @@ pub struct OnchainSend {
 
 **Rationale**:
 
-Do not assume that other Lexe devs will be as familiar with these structs as you
+Do not assume that other devs will be as familiar with these structs as you
 are. Adding the amount suffix removes all uncertainty and makes the Bitcoin unit
 clear at a glance.
 
@@ -600,7 +600,7 @@ fn route_handler(
 
 ## Serialization
 
-Lexe generally uses `serde` for serialization to/from strings and bytes.
+Generally use `serde` for serialization to/from strings and bytes.
 
 ### Enum serialization
 
@@ -691,7 +691,7 @@ Example log with `()`:
 ### Minimize dependencies in foundational crates
 
 **Description**:
-- Foundational crates are crates that most Lexe targets depend on or low-level
+- Foundational crates are crates that most targets depend on or low-level
   crates on the critical `cargo build` path. Any crate used by a `build.rs`
   build script is a foundational crate.
 - Foundational crates must not depend on any heavy dependencies, like the
