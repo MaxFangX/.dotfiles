@@ -6,6 +6,7 @@
 # so there is no separate Nix hash. Update with `just update kimi-code`.
 {
   lib,
+  stdenv,
   stdenvNoCC,
   fetchurl,
   zstd,
@@ -18,7 +19,6 @@
   writableTmpDirAsHomeHook,
 }:
 let
-  stdenv = stdenvNoCC;
   manifest = lib.importJSON ./manifest.json;
   platformKey =
     {
@@ -26,7 +26,7 @@ let
       "aarch64-linux" = "linux-arm64";
       "x86_64-linux" = "linux-x64";
     }
-    .${stdenv.hostPlatform.system};
+    .${stdenvNoCC.hostPlatform.system};
   platform = manifest.platforms.${platformKey};
 
   # The release tag embeds a scoped npm name
@@ -34,7 +34,7 @@ let
   # percent-encoded to stay one path segment in the asset URL.
   tag = lib.replaceStrings [ "/" ] [ "%2F" ] manifest.tag;
 in
-stdenv.mkDerivation {
+stdenvNoCC.mkDerivation {
   pname = "kimi-code";
   inherit (manifest) version;
 
@@ -58,9 +58,15 @@ stdenv.mkDerivation {
       makeBinaryWrapper
       zstd
     ]
-    ++ lib.optionals stdenv.hostPlatform.isElf [
+    ++ lib.optionals stdenvNoCC.hostPlatform.isElf [
       autoPatchelfHook
     ];
+
+  # The bun runtime links against libstdc++/libgcc_s; autoPatchelfHook
+  # resolves them from here on ELF platforms.
+  buildInputs = lib.optionals stdenvNoCC.hostPlatform.isElf [
+    stdenv.cc.cc.lib
+  ];
 
   installPhase = ''
     runHook preInstall
