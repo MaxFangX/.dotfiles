@@ -9,6 +9,20 @@
       "Tags" : [
 
       ],
+      "Triggers" : [
+        {
+          "regex" : "Enter PIN for YubiKey",
+          "action" : "AlertTrigger",
+          "parameter" : "YubiKey PIN needed",
+          "partial" : true
+        },
+        {
+          "regex" : "Enter PIN for YubiKey",
+          "action" : "BounceTrigger",
+          "parameter" : 0,
+          "partial" : true
+        }
+      ],
       "Disable Printing" : true,
       "Ansi 12 Color" : {
         "Green Component" : 0.3333333432674408,
