@@ -175,9 +175,20 @@ alias claude-go-foom="claude --dangerously-skip-permissions"
 # Start an interactive session with Opus fast mode (~2.5x faster, higher cost)
 alias claude-fast="claude --settings '{\"fastMode\": true}'"
 
-# Start a paseo session in a new repo. Unset PASEO_WORKSPACE_ID (exported by
-# paseo terminals, preferred over cwd) so the run keys off the current dir.
-alias paseo-run="env -u PASEO_WORKSPACE_ID paseo run '/jj coedit' --provider claude/opus --thinking high --mode bypassPermissions --detach"
+# Start a paseo session as a new tab in the workspace containing the current
+# dir (deepest match), or in a new workspace if none exists. Unset
+# PASEO_WORKSPACE_ID (exported by paseo terminals, preferred over cwd) so the
+# run keys off the current dir, not the terminal's workspace.
+paseo-run() {
+  local ws ws_args=()
+  ws=$(paseo workspace ls --json | jq -r --arg pwd "$PWD" '
+    map(select(.cwd as $cwd | $pwd + "/" | startswith($cwd + "/")))
+    | max_by(.cwd | length) | .workspaceId // empty')
+  [ -n "$ws" ] && ws_args=(--workspace "$ws")
+  env -u PASEO_WORKSPACE_ID paseo run '/jj coedit' \
+    --provider claude/opus --thinking high --mode bypassPermissions \
+    --detach "${ws_args[@]}"
+}
 
 ########
 # Misc #
