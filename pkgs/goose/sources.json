@@ -1,0 +1,15 @@
+{
+  "version": "1.53.0",
+  "x86_64-linux": {
+    "url": "https://github.com/aaif-goose/goose/releases/download/v1.53.0/goose-x86_64-unknown-linux-gnu.tar.gz",
+    "hash": "sha256-3rIZGmt1rMCiAjL8XFJlXqL5zI+i9d/8hiLo03ipFdw="
+  },
+  "aarch64-linux": {
+    "url": "https://github.com/aaif-goose/goose/releases/download/v1.53.0/goose-aarch64-unknown-linux-gnu.tar.gz",
+    "hash": "sha256-AaDqEJ4ZhOelEf8/mdGinTLm+Q8IUrWjtBZJnI6q5Wc="
+  },
+  "aarch64-darwin": {
+    "url": "https://github.com/aaif-goose/goose/releases/download/v1.53.0/goose-aarch64-apple-darwin.tar.gz",
+    "hash": "sha256-E08zEhLTrEgGQdi3sOQVW9rFgfiBNwthKaOBA968aG8="
+  }
+}

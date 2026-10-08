@@ -32,6 +32,7 @@ rec {
   codex = pkgs.callPackage ./pkgs/codex {};
   codex-acp = pkgs.callPackage ./pkgs/codex-acp { inherit codex; };
   git-hunk = pkgs.callPackage ./pkgs/git-hunk {};
+  goose = pkgs.callPackage ./pkgs/goose {};
   jj = pkgs.callPackage ./pkgs/jj {};
   jj-hunk-tool = pkgs.callPackage ./pkgs/jj-hunk-tool {};
   kimi-code = pkgs.callPackage ./pkgs/kimi-code {};
@@ -42,7 +43,7 @@ rec {
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources buzz claude-code codex git-hunk jj jj-hunk-tool
-      kimi-code omnara paseo paseo-app rsync;
+    inherit hm pkgs sources buzz claude-code codex git-hunk goose jj
+      jj-hunk-tool kimi-code omnara paseo paseo-app rsync;
   };
 }

@@ -6,6 +6,7 @@
   claude-code,
   codex,
   git-hunk,
+  goose,
   jj,
   jj-hunk-tool,
   kimi-code,
@@ -47,6 +48,7 @@ let
       buzz = stubUnsupported buzz;
       claude-code = stubUnsupported claude-code;
       codex = stubUnsupported codex;
+      goose = stubUnsupported goose;
       kimi-code = stubUnsupported kimi-code;
       omnara = stubUnsupported omnara;
       paseo = stubUnsupported paseo;

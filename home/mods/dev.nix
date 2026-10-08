@@ -1,6 +1,6 @@
 # General dev tooling — LSP, formatters, direnv.
 # Not suitable for security-critical machines.
-{ pkgs, claude-code, kimi-code, rsync, ... }:
+{ pkgs, claude-code, goose, kimi-code, rsync, ... }:
 {
   imports = [
     ./core.nix
@@ -14,7 +14,7 @@
     pkgs.bat # Cat with syntax highlighting
     pkgs.gh # GitHub CLI
     pkgs.go
-    pkgs.goose-cli # Block's goose AI agent
+    goose # Block's goose AI agent (see pkgs/goose)
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
     pkgs.nodejs # Required by coc.nvim
