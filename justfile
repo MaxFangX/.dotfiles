@@ -36,11 +36,7 @@ npins-update-nixpkgs:
 nix-upgrade:
     sudo determinate-nixd upgrade
 
-# Manually GC the Nix store: expire generations older than `days`, then collect
-clean days="30":
-    home-manager expire-generations "-{{ days }} days"
-    nix profile wipe-history --older-than {{ days }}d
-    nix store gc
+mod clean 'just/clean/mod.just'
 
 # Format this justfile
 just-fmt:
