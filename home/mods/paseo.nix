@@ -17,7 +17,7 @@
 # Plus one opt-in piece:
 #
 #  4. An always-on Paseo *daemon* (`lexe.paseo.enableService`).
-#     Runs `paseo daemon start --foreground` from the nix-packaged
+#     Runs `paseo daemon run` from the nix-packaged
 #     @getpaseo/cli as a systemd user service (Linux) or launchd agent
 #     (macOS), modeled on home/mods/omnara.nix. Relay stays on by default
 #     so the daemon is reachable from the phone/desktop app; pair it with
@@ -65,7 +65,7 @@ let
     [ -f "$sessionVars" ] && . "$sessionVars"
     [ -f "${envFile}" ] && . "${envFile}"
     export PATH="${config.home.profileDirectory}/bin:$PATH"
-    exec ${paseo}/bin/paseo daemon start --foreground
+    exec ${paseo}/bin/paseo daemon run --home "${homeDir}/.paseo"
   '';
 in
 {
