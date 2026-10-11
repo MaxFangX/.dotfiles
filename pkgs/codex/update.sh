@@ -9,45 +9,55 @@ SOURCES_FILE="$SCRIPT_DIR/sources.json"
 
 # Fetch latest version from GitHub releases
 VERSION=$(
-  curl -s \
+  curl -fsSL \
     "https://api.github.com/repos/openai/codex/releases/latest" \
     | jq -r '.tag_name | ltrimstr("rust-v")'
 )
 echo "Latest version: $VERSION" >&2
 
+BASE_URL="https://github.com/openai/codex/releases/download/rust-v${VERSION}"
+
 prefetch_hash() {
-  local target=$1
-  local url="https://github.com/openai/codex/releases/download/rust-v${VERSION}/codex-${target}.tar.gz"
-  echo "Prefetching $target..." >&2
+  local url=$1
+  echo "Prefetching $url..." >&2
   nix store prefetch-file "$url" --json | jq -r '.hash'
 }
 
-X86_64_HASH=$(prefetch_hash "x86_64-unknown-linux-musl")
-AARCH64_LINUX_HASH=$(prefetch_hash "aarch64-unknown-linux-musl")
-DARWIN_HASH=$(prefetch_hash "aarch64-apple-darwin")
+# Print the sources.json entry for one rust target's release artifacts.
+platform_sources() {
+  local target=$1
+  local codex_url="$BASE_URL/codex-${target}.zst"
+  local code_mode_host_url="$BASE_URL/codex-code-mode-host-${target}.zst"
+  local codex_hash code_mode_host_hash
+  codex_hash=$(prefetch_hash "$codex_url")
+  code_mode_host_hash=$(prefetch_hash "$code_mode_host_url")
+  jq -n \
+    --arg target "$target" \
+    --arg codex_url "$codex_url" \
+    --arg codex_hash "$codex_hash" \
+    --arg code_mode_host_url "$code_mode_host_url" \
+    --arg code_mode_host_hash "$code_mode_host_hash" \
+    '{
+      target: $target,
+      codex: { url: $codex_url, hash: $codex_hash },
+      codeModeHost: { url: $code_mode_host_url, hash: $code_mode_host_hash }
+    }'
+}
+
+X86_64_LINUX=$(platform_sources "x86_64-unknown-linux-musl")
+AARCH64_LINUX=$(platform_sources "aarch64-unknown-linux-musl")
+AARCH64_DARWIN=$(platform_sources "aarch64-apple-darwin")
 
 jq -n \
   --arg version "$VERSION" \
-  --arg x86_64_hash "$X86_64_HASH" \
-  --arg aarch64_linux_hash "$AARCH64_LINUX_HASH" \
-  --arg darwin_hash "$DARWIN_HASH" \
+  --argjson x86_64_linux "$X86_64_LINUX" \
+  --argjson aarch64_linux "$AARCH64_LINUX" \
+  --argjson aarch64_darwin "$AARCH64_DARWIN" \
   '{
     version: $version,
-    "x86_64-linux": {
-      target: "x86_64-unknown-linux-musl",
-      url: "https://github.com/openai/codex/releases/download/rust-v\($version)/codex-x86_64-unknown-linux-musl.tar.gz",
-      hash: $x86_64_hash
-    },
-    "aarch64-linux": {
-      target: "aarch64-unknown-linux-musl",
-      url: "https://github.com/openai/codex/releases/download/rust-v\($version)/codex-aarch64-unknown-linux-musl.tar.gz",
-      hash: $aarch64_linux_hash
-    },
-    "aarch64-darwin": {
-      target: "aarch64-apple-darwin",
-      url: "https://github.com/openai/codex/releases/download/rust-v\($version)/codex-aarch64-apple-darwin.tar.gz",
-      hash: $darwin_hash
-    }
+    "x86_64-linux": $x86_64_linux,
+    "aarch64-linux": $aarch64_linux,
+    "aarch64-darwin": $aarch64_darwin
   }' > "$SOURCES_FILE"
 
 echo "Updated $SOURCES_FILE to version $VERSION"

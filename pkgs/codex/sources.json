@@ -1,18 +1,36 @@
 {
-  "version": "0.155.1",
+  "version": "0.162.1",
   "x86_64-linux": {
     "target": "x86_64-unknown-linux-musl",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-x86_64-unknown-linux-musl.tar.gz",
-    "hash": "sha256-oO+LLevDv3R+B7GgOTVN4xMArA3MInZJi6KBRwtdkRU="
+    "codex": {
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-x86_64-unknown-linux-musl.zst",
+      "hash": "sha256-tvLwHHv3DoUwb0c5C28XuP/a9QE11Ilgo13EVv+X4Fs="
+    },
+    "codeModeHost": {
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-code-mode-host-x86_64-unknown-linux-musl.zst",
+      "hash": "sha256-KwnRcZBTfc8HkZYPX9+awwpuJXP7K/tmFqTETECeLSY="
+    }
   },
   "aarch64-linux": {
     "target": "aarch64-unknown-linux-musl",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-aarch64-unknown-linux-musl.tar.gz",
-    "hash": "sha256-1sfmL71ojVLuBPOSnQYTcF0yqSCkLbehOeNm6vH0otc="
+    "codex": {
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-aarch64-unknown-linux-musl.zst",
+      "hash": "sha256-7Yk8ew6zN2IVkMQzqiypC3p/ZvGJUwuyOxxSgUwktnc="
+    },
+    "codeModeHost": {
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-code-mode-host-aarch64-unknown-linux-musl.zst",
+      "hash": "sha256-SsSXOMt254ZYrPP6MVqEjcoBHbtzhihUtcPvmH1pWiY="
+    }
   },
   "aarch64-darwin": {
     "target": "aarch64-apple-darwin",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-aarch64-apple-darwin.tar.gz",
-    "hash": "sha256-XlpRRw3OJCP52WvRkdC7xMwOKEimgz31F46vR6B6N2g="
+    "codex": {
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-aarch64-apple-darwin.zst",
+      "hash": "sha256-i5qe6Wx9dlrnIXcahFvDHbPc38k2kz5ioc/FrWe9+dc="
+    },
+    "codeModeHost": {
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-code-mode-host-aarch64-apple-darwin.zst",
+      "hash": "sha256-QQlXbka4y5BbAE2wq2U4m6VNsOvnvTHKSmnU3yJjArQ="
+    }
   }
 }
