@@ -175,6 +175,14 @@ alias claude-go-foom="claude --dangerously-skip-permissions"
 # Start an interactive session with Opus fast mode (~2.5x faster, higher cost)
 alias claude-fast="claude --settings '{\"fastMode\": true}'"
 
+########
+# Kimi #
+########
+
+# OpenCode driving Kimi K3 through the Tinfoil proxy (confidential; see
+# home/mods/kimi.nix).
+alias opencode-kimi="opencode -m tinfoil/kimi-k3"
+
 # Start a paseo session as a new tab in the workspace containing the current
 # dir (deepest match), or in a new workspace if none exists. Unset
 # PASEO_WORKSPACE_ID (exported by paseo terminals, preferred over cwd) so the

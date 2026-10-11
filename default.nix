@@ -37,13 +37,18 @@ rec {
   jj-hunk-tool = pkgs.callPackage ./pkgs/jj-hunk-tool {};
   kimi-code = pkgs.callPackage ./pkgs/kimi-code {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
+  opencode = pkgs.callPackage ./pkgs/opencode {};
   paseo = pkgs.callPackage ./pkgs/paseo {};
   paseo-app = pkgs.callPackage ./pkgs/paseo-app {};
   rsync = pkgs.callPackage ./pkgs/rsync.nix {};
+  # tinfoil-proxy's go.mod requires Go 1.26, newer than the primary pin's.
+  tinfoil-proxy = (import sources.nixpkgs-2605 { inherit system; })
+    .callPackage ./pkgs/tinfoil-proxy {};
 
   # home-manager configs
   homeConfigs = import ./home {
     inherit hm pkgs sources buzz claude-code codex git-hunk goose jj
-      jj-hunk-tool kimi-code omnara paseo paseo-app rsync;
+      jj-hunk-tool kimi-code omnara opencode paseo paseo-app rsync
+      tinfoil-proxy;
   };
 }

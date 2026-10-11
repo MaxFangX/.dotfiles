@@ -5,6 +5,7 @@
   imports = [
     ./core.nix
     ./paseo.nix
+    ./kimi.nix
   ];
 
   home.packages = [

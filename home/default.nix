@@ -11,9 +11,11 @@
   jj-hunk-tool,
   kimi-code,
   omnara,
+  opencode,
   paseo,
   paseo-app,
   rsync,
+  tinfoil-proxy,
 }:
 let
   lib = pkgs.lib;
@@ -51,8 +53,10 @@ let
       goose = stubUnsupported goose;
       kimi-code = stubUnsupported kimi-code;
       omnara = stubUnsupported omnara;
+      opencode = stubUnsupported opencode;
       paseo = stubUnsupported paseo;
       paseo-app = stubUnsupported paseo-app;
+      tinfoil-proxy = stubUnsupported tinfoil-proxy;
     };
   };
 

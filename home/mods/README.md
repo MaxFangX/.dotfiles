@@ -10,7 +10,9 @@ core.nix                Base layer. Shell, editor, CLI tools.
 └── dev.nix             General dev tooling (LSP, formatters,
     │                   direnv). Not for secure machines.
     │                   Pulls in paseo.nix (Paseo CLI; the
-    │                   always-on daemon stays opt-in).
+    │                   always-on daemon stays opt-in) and
+    │                   kimi.nix (Kimi K3 via the Tinfoil
+    │                   proxy in kimi/opencode/paseo).
     │
     └── dev-lexe.nix    Lexe-specific dev environment.
         │

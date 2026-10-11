@@ -15,7 +15,8 @@ let
     && pkg ? updateScript
   ) {
     inherit (dotfiles) buzz claude-agent-acp claude-code codex codex-acp
-      git-hunk goose jj jj-hunk-tool kimi-code omnara paseo paseo-app;
+      git-hunk goose jj jj-hunk-tool kimi-code omnara opencode paseo
+      paseo-app tinfoil-proxy;
   };
 
   packages =
