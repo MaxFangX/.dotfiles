@@ -37,6 +37,7 @@ rec {
   jj = pkgs.callPackage ./pkgs/jj {};
   jj-hunk-tool = pkgs.callPackage ./pkgs/jj-hunk-tool {};
   kimi-code = pkgs.callPackage ./pkgs/kimi-code {};
+  macctl = pkgs.callPackage ./pkgs/macctl {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
   opencode = pkgs.callPackage ./pkgs/opencode {};
   paseo = pkgs.callPackage ./pkgs/paseo {};
@@ -50,7 +51,7 @@ rec {
   # home-manager configs
   homeConfigs = import ./home {
     inherit hm pkgs sources agent-browser buzz claude-code codex git-hunk
-      goose jj jj-hunk-tool kimi-code omnara opencode paseo paseo-app rsync
-      tinfoil-proxy wdk-cli;
+      goose jj jj-hunk-tool kimi-code macctl omnara opencode paseo paseo-app
+      rsync tinfoil-proxy wdk-cli;
   };
 }

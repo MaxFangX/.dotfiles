@@ -1,5 +1,5 @@
 # Shared config across all machines.
-{ config, lib, pkgs, sources, codex, git-hunk, jj, jj-hunk-tool, ... }:
+{ config, lib, pkgs, sources, codex, git-hunk, jj, jj-hunk-tool, macctl, ... }:
 let
   # Agent skills in ai/skills/. Some are vendored copies: skills written by me
   # but managed in the lexe repo, and Paseo's own agent skills from the fork
@@ -11,6 +11,7 @@ let
     "jj-cleanup"
     "jj-rebase"
     "knowledge-doc"
+    "macctl"
     "orchestrate"
     "paseo"
     "paseo-handoff"
@@ -58,6 +59,7 @@ in
     codex
     git-hunk
     jj-hunk-tool
+    macctl
 
     # Installed as a package so it's always in PATH,
     # even when hm-session-vars.sh is skipped.

@@ -11,6 +11,7 @@
   jj,
   jj-hunk-tool,
   kimi-code,
+  macctl,
   omnara,
   opencode,
   paseo,
@@ -55,6 +56,7 @@ let
       codex = stubUnsupported codex;
       goose = stubUnsupported goose;
       kimi-code = stubUnsupported kimi-code;
+      macctl = stubUnsupported macctl;
       omnara = stubUnsupported omnara;
       opencode = stubUnsupported opencode;
       paseo = stubUnsupported paseo;
