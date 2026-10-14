@@ -8,6 +8,7 @@
 }:
 {
   imports = [
+    ./mods/claude-mcp.nix # MCP sync; servers live in ~/max2022
     ./mods/dev-lexe.nix
   ];
 
