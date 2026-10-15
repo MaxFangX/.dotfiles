@@ -11,6 +11,7 @@ let
     "jj-cleanup"
     "jj-rebase"
     "knowledge-doc"
+    "lexe-way"
     "macctl"
     "orchestrate"
     "paseo"
