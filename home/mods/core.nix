@@ -8,6 +8,7 @@ let
   sharedSkillNames = [
     "codex-review"
     "jj"
+    "jj-cleanup"
     "jj-rebase"
     "knowledge-doc"
     "orchestrate"

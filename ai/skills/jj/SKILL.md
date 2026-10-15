@@ -128,14 +128,19 @@ your current index first") or misbehaves. A detached HEAD at the right
 commit is fine until the stack is conflict-free — don't fight it with
 `git reset` mid-surgery.
 
-The only other reason to skip the re-attach is that the commits differ —
-then skip it and say so; never reach for `-f`. A plain different-commit switch
-makes colocated jj reset `@` onto the new HEAD: dirty files usually ride
-along in git's tree, but the old `@` is stranded as an anonymous head and
-our position in the stack is lost. `-f` is worse — it wipes the dirty
-files themselves: changes jj has snapshotted survive only in that stranded
-commit (recover with `jj restore --from <commit>`), while edits made since
-the last jj command were never snapshotted and are gone for good.
+If HEAD is at `@-` and the bookmark is a strict ancestor of it, with every
+commit in `<branch>..@-` described, the bookmark merely lags. So land first,
+`jj bookmark set <branch> -r @-`, then re-attach as above. If HEAD is not at
+`@-` at all, as after surgery from another workspace, a mixed
+`git reset <commit-of-@->` moves HEAD and index without touching files (see
+[Verification](#verification)); then re-attach. Any other mismatch is the one
+remaining reason to skip the re-attach; say so, and never reach for `-f`. A
+plain different-commit switch makes colocated jj reset `@` onto the new HEAD:
+dirty files usually ride along in git's tree, but the old `@` is stranded as
+an anonymous head and our position in the stack is lost. `-f` is worse — it
+wipes the dirty files themselves: changes jj has snapshotted survive only in
+that stranded commit (recover with `jj restore --from <commit>`), while edits
+made since the last jj command were never snapshotted and are gone for good.
 
 ## The bare "route" command
 
@@ -326,7 +331,8 @@ Some lessons previous AIs have learned the hard way:
 - Before cleanup, audit each commit you edited for contamination — lockfiles,
   `.env`, formatter churn: `jj diff --stat -r <rev>`.
 - Cleanup: park the workspace `@` off the stack (`jj new <tip>`), then
-  `jj workspace forget <name>` and `rm -rf` the directory.
+  `jj workspace forget --cleanup <name>`, which also removes the directory
+  and git's worktree entry.
 
 ## Choosing the mechanism
 
