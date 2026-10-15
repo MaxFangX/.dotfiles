@@ -31,15 +31,13 @@ in
       lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         brew=/opt/homebrew/bin/brew
 
-        # Trust declared third-party taps so brew stops warning that
-        # it can't check them for updates.
-        ${lib.concatMapStringsSep "\n"
-          (t: ''$brew trust --tap "${t}" >/dev/null'') cfg.taps}
-
+        # Declared taps are trusted via the Brewfile, since cleanup resets
+        # brew's trust store to it. Untrusted formulae can't load, so
+        # cleanup would remove their deps.
         BREWFILE=$(mktemp)
         printf '%s\n' \
           ${lib.escapeShellArgs (
-            (map (t: ''tap "${t}"'') cfg.taps) ++
+            (map (t: ''tap "${t}", trusted: true'') cfg.taps) ++
             (map (b: ''brew "${b}"'') cfg.brews) ++
             (map (c: ''cask "${c}"'') cfg.casks)
           )} \
