@@ -1,9 +1,10 @@
 # Shared config across all machines.
 { config, lib, pkgs, sources, codex, git-hunk, jj, jj-hunk-tool, ... }:
 let
-  # Agent skills in ai/skills/. Some are vendored copies of skills written by me
-  # but managed in the lexe repo; keep them in sync with
-  # `just lexe-diff` / `just lexe-sync` (see just/lexe-skills.sh).
+  # Agent skills in ai/skills/. Some are vendored copies: skills written by me
+  # but managed in the lexe repo, and Paseo's own agent skills from the fork
+  # checkout. Keep them in sync with `just skills-diff <peer>` /
+  # `just skills-sync <peer> from|to` (see just/skill-sync.sh).
   sharedSkillNames = [
     "codex-review"
     "jj"

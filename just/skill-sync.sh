@@ -1,55 +1,73 @@
 #!/usr/bin/env bash
-# Diff and sync the shared agent skills between this dotfiles repo
-# (ai/skills/) and the lexe monorepo (.agents/skills/).
+# Diff and sync agent skills between this dotfiles repo (ai/skills/) and a
+# peer repo that also carries them. Peers:
+#
+#   lexe   .agents/skills in the lexe monorepo. Skills written by me, kept in
+#          lockstep both ways.
+#   paseo  skills/ in the Paseo fork checkout. Upstream content, vendored
+#          one way only: the fork rebases onto upstream, so a dotfiles-side
+#          edit synced back would conflict on every release. Put additions
+#          in a separate dotfiles skill instead.
 #
 # Usage:
-#   lexe-skills.sh diff [skill...]
-#   lexe-skills.sh sync (from-lexe|to-lexe) [skill...]
+#   skill-sync.sh <peer> diff [skill...]
+#   skill-sync.sh <peer> sync (from|to) [skill...]
 #
 # Sync direction is explicit and unidirectional per invocation. A
 # skill is skipped (with a warning) if its destination copy has
 # uncommitted changes, so a sync can never clobber unreviewed work.
 # Nothing is committed; review with git afterwards. Exits 0 with a
-# note when no lexe checkout exists on this machine.
+# note when no peer checkout exists on this machine.
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "$0")/.." && pwd)"
 DOT_SKILLS="$DOTFILES/ai/skills"
 
-# Skills kept in lockstep between the two repos.
-SHARED=(
-  jj
-  jj-rebase
-  q
-  tighten
-  tighten-code
-  tighten-comments
-  codex-review
-)
-
-find_lexe() {
-  local p
-  for p in "$HOME/lexe/org/lexe" "$HOME/dev/lexe" "$HOME/lexe" \
-    "$HOME/lexe-agent/lexe"; do
-    [ -d "$p/.agents/skills" ] && { echo "$p"; return 0; }
-  done
-  return 1
-}
-
 usage() {
   cat >&2 << 'EOF'
 Usage:
-  lexe-skills.sh diff [skill...]
-  lexe-skills.sh sync (from-lexe|to-lexe) [skill...]
+  skill-sync.sh <peer> diff [skill...]
+  skill-sync.sh <peer> sync (from|to) [skill...]
+Peers: lexe, paseo
 EOF
   exit 1
 }
 
-if ! LEXE="$(find_lexe)"; then
-  echo "lexe-skills: no lexe checkout found; nothing to do"
+PEER="${1:-}"
+shift || true
+
+# Per-peer config: candidate checkout roots, the skills dir inside the
+# checkout, the skills kept in sync, and whether `sync to` is allowed.
+case "$PEER" in
+  lexe)
+    ROOTS=("$HOME/lexe/org/lexe" "$HOME/dev/lexe" "$HOME/lexe" \
+      "$HOME/lexe-agent/lexe")
+    SKILLS_SUBDIR=.agents/skills
+    SHARED=(jj jj-rebase q tighten tighten-code tighten-comments codex-review)
+    ALLOW_TO=true
+    ;;
+  paseo)
+    ROOTS=("$HOME/dev/paseo")
+    SKILLS_SUBDIR=skills
+    SHARED=(paseo paseo-handoff)
+    ALLOW_TO=false
+    ;;
+  *) usage ;;
+esac
+
+find_peer() {
+  local p
+  for p in "${ROOTS[@]}"; do
+    [ -d "$p/$SKILLS_SUBDIR" ] && { echo "$p"; return 0; }
+  done
+  return 1
+}
+
+if ! PEER_ROOT="$(find_peer)"; then
+  echo "skill-sync: no $PEER checkout found; nothing to do"
   exit 0
 fi
-LEXE_SKILLS="$LEXE/.agents/skills"
+PEER_SKILLS="$PEER_ROOT/$SKILLS_SUBDIR"
 
 cmd="${1:-}"
 shift || true
@@ -69,16 +87,16 @@ cmd_diff() {
   select_skills "$@"
   local name
   for name in "${SKILLS[@]}"; do
-    local dot="$DOT_SKILLS/$name" lex="$LEXE_SKILLS/$name"
-    if [ ! -d "$dot" ] && [ ! -d "$lex" ]; then
+    local dot="$DOT_SKILLS/$name" peer="$PEER_SKILLS/$name"
+    if [ ! -d "$dot" ] && [ ! -d "$peer" ]; then
       echo "!! $name: missing from BOTH repos"
     elif [ ! -d "$dot" ]; then
-      echo "<< $name: only in lexe (sync from-lexe to vendor)"
-    elif [ ! -d "$lex" ]; then
-      echo ">> $name: only in dotfiles (sync to-lexe to upstream)"
-    elif ! diff -r "$dot" "$lex" > /dev/null 2>&1; then
+      echo "<< $name: only in $PEER (sync from to vendor)"
+    elif [ ! -d "$peer" ]; then
+      echo ">> $name: only in dotfiles (sync to to upstream)"
+    elif ! diff -r "$dot" "$peer" > /dev/null 2>&1; then
       echo "== $name: DIFFERS"
-      git diff --no-index --stat -- "$dot" "$lex" | sed 's/^/   /' \
+      git diff --no-index --stat -- "$dot" "$peer" | sed 's/^/   /' \
         || true
     else
       echo "ok $name"
@@ -86,13 +104,13 @@ cmd_diff() {
   done
 
   # Skills present on one side but not in the shared list, in case
-  # something new should be adopted (lexe-specific ones excluded by
+  # something new should be adopted (peer-specific ones excluded by
   # the shared list on purpose).
   local d
-  for d in "$LEXE_SKILLS"/*/; do
+  for d in "$PEER_SKILLS"/*/; do
     name="$(basename "$d")"
     case " ${SHARED[*]} " in *" $name "*) continue ;; esac
-    echo "-- $name: in lexe only, not shared"
+    echo "-- $name: in $PEER only, not shared"
   done
   for d in "$DOT_SKILLS"/*/; do
     name="$(basename "$d")"
@@ -108,19 +126,26 @@ dest_dirty() {
   [ -n "$(git -C "$repo" status --porcelain -- "$path")" ]
 }
 
-# sync (from-lexe|to-lexe) [skill...]
+# sync (from|to) [skill...]
 cmd_sync() {
   local direction="${1:-}"
   shift || true
   local src_root dst_root dst_repo
   case "$direction" in
-    from-lexe)
-      src_root="$LEXE_SKILLS" dst_root="$DOT_SKILLS"
+    from | "from-$PEER")
+      direction=from
+      src_root="$PEER_SKILLS" dst_root="$DOT_SKILLS"
       dst_repo="$DOTFILES"
       ;;
-    to-lexe)
-      src_root="$DOT_SKILLS" dst_root="$LEXE_SKILLS"
-      dst_repo="$LEXE"
+    to | "to-$PEER")
+      direction=to
+      if [ "$ALLOW_TO" != true ]; then
+        echo "skill-sync: $PEER skills are vendored one way; edit them" \
+          "upstream or add a separate dotfiles skill" >&2
+        exit 1
+      fi
+      src_root="$DOT_SKILLS" dst_root="$PEER_SKILLS"
+      dst_repo="$PEER_ROOT"
       ;;
     *) usage ;;
   esac
@@ -148,9 +173,9 @@ cmd_sync() {
 
     # New skills upstreamed to lexe also need the .claude/skills
     # symlink that exposes them to Claude Code in that repo.
-    if [ "$direction" = to-lexe ] \
-      && [ ! -e "$LEXE/.claude/skills/$name" ]; then
-      ln -s "../../.agents/skills/$name" "$LEXE/.claude/skills/$name"
+    if [ "$direction" = to ] && [ "$PEER" = lexe ] \
+      && [ ! -e "$PEER_ROOT/.claude/skills/$name" ]; then
+      ln -s "../../.agents/skills/$name" "$PEER_ROOT/.claude/skills/$name"
       echo "link $name: created .claude/skills symlink in lexe"
     fi
   done
@@ -159,9 +184,9 @@ cmd_sync() {
     echo
     echo "Review and commit in $dst_repo:"
     local paths=("$dst_root")
-    [ "$direction" = to-lexe ] && paths+=("$LEXE/.claude/skills")
+    [ "$direction" = to ] && paths+=("$PEER_ROOT/.claude/skills")
     git -C "$dst_repo" status --short -- "${paths[@]}"
-    if [ "$direction" = from-lexe ]; then
+    if [ "$direction" = from ]; then
       echo "(run hms to apply the vendored changes)"
     fi
   fi

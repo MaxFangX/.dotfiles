@@ -8,13 +8,13 @@ pr-comments *args:
 worktree-set-primary-test *args:
     ./just/worktree-set-primary-test.sh {{ args }}
 
-# Diff shared agent skills against the lexe repo
-lexe-diff *args:
-    ./just/lexe-skills.sh diff {{ args }}
+# Diff shared agent skills against a peer repo (peer: lexe|paseo)
+skills-diff peer *args:
+    ./just/skill-sync.sh {{ peer }} diff {{ args }}
 
-# Sync shared agent skills (direction: from-lexe|to-lexe)
-lexe-sync direction *args:
-    ./just/lexe-skills.sh sync {{ direction }} {{ args }}
+# Sync shared agent skills with a peer repo (direction: from|to)
+skills-sync peer direction *args:
+    ./just/skill-sync.sh {{ peer }} sync {{ direction }} {{ args }}
 
 # Update all custom packages (or one: just update codex)
 update package="":
