@@ -55,6 +55,12 @@ add a prefix like this: `/usr/bin/env RUST_LOG=debug just cargo-test ...`
 Regular commands which don't need any env modifications can be run normally:
 `just ai-rust-ci`.
 
+## GNU tools on macOS
+
+GNU sed (and other GNU coreutils) shadow the BSD versions on PATH.
+Use GNU syntax: `sed -i 's/a/b/' file`, never `sed -i '' ...`.
+A stray `''` errors out but still edits the remaining files.
+
 ## Git commands in other directories
 
 When running git commands in directories other than the current working
