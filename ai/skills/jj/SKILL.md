@@ -330,19 +330,27 @@ Some lessons previous AIs have learned the hard way:
   into everything above it.
 - Before cleanup, audit each commit you edited for contamination — lockfiles,
   `.env`, formatter churn: `jj diff --stat -r <rev>`.
+- If `jj workspace update-stale` fails unseen, a following `jj edit`
+  snapshots stale files into the commit you're editing. So read its output
+  every time and never redirect it. "Attempted recovery, but the working
+  copy is not stale" is fine.
 - Cleanup: park the workspace `@` off the stack (`jj new <tip>`), then
   `jj workspace forget --cleanup <name>`, which also removes the directory
   and git's worktree entry.
 
 ## Choosing the mechanism
 
-Three main ways to change a commit's content; pick per change, they compose:
+Four main ways to change a commit's content; pick per change, they compose:
 
 1. **Route from tip** (`jj-hunk-tool squash/absorb`): when the lines you're
-   changing still exist at tip. Edit in the working copy, move the hunks to
-   their home commit; every tree above the home updates automatically.
-   Cheapest — no workspace, no conflicts if the lines flowed through
-   untouched.
+   changing still exist at tip *and no later commit changed the lines next
+   to them*. Edit in the working copy, move the hunks to their home commit;
+   every tree above the home updates automatically. Cheapest — no
+   workspace, no conflicts if the lines flowed through untouched. A
+   three-way merge needs an untouched line between two changes to tell them
+   apart, so adjacent edits conflict as surely as overlapping ones. Thus,
+   deleting or editing an entry in a list that later commits append to
+   conflicts in every such descendant.
 2. **Edit the commit directly** (via side workspace in shared mode): when the
    change involves lines a later commit deleted or rewrote — tip has nothing
    to route, and routing what it *does* have leaves intermediate trees broken
@@ -353,6 +361,12 @@ Three main ways to change a commit's content; pick per change, they compose:
    <paths>` forces a commit's files to a known-good state in one move —
    dissolves a whole conflict cascade when a commit's final tree should be
    byte-identical to a pre-surgery snapshot.
+4. **Transform per commit**: for the adjacent-edit case above, when the
+   change is the same mechanical edit at every commit (strip a block,
+   rename a symbol). Capture each affected commit's pre-surgery file with
+   `jj --at-op=<op before the route> file show -r <change> <path>`, apply
+   the same scripted transform to each, and write them in bottom-up from a
+   side workspace. Nothing is merged, so each commit keeps what it added.
 
 Structural edits:
 
@@ -430,7 +444,9 @@ agent's workspace. Expect and handle:
   intermediate trees that a tip-only check can't see.
 - **Tree identity**: `jj diff --from <pre-surgery-tip-commit-id> --to <tip>`
   must be empty or exactly the intended delta. Record the old tip's commit ID
-  before you start; hidden commits remain valid diff operands.
+  before you start; hidden commits remain valid diff operands. If a
+  scripted resolution drops lines a later commit added, the per-commit grep
+  for the removed symbol still passes, but this check catches it.
 - **Compile matrix**: full check at every commit you edited; full CI at tip.
   Commits you didn't touch that also grep clean are low-risk.
 - Final sweep before handing back: `jj log -r 'conflicts()'` empty, no
