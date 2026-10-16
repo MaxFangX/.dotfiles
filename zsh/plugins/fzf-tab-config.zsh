@@ -16,9 +16,14 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # Theme: red accents, white text (matches maxfangx.zsh-theme)
+#
+# fzf-tab runs fzf with --ansi, and ANSI-colored candidates (group colors,
+# LS_COLORS) keep their own foreground on the current line, so fg+ alone
+# can't mark it. Highlight the whole current line with a gray background.
 zstyle ':fzf-tab:*' fzf-flags \
-    --color=fg:7,fg+:15,bg+:-1,hl:1,hl+:1 \
+    --color=fg:7,fg+:15,bg+:238,hl:1,hl+:1 \
     --color=pointer:1,marker:1,info:1,prompt:1,border:1 \
+    --highlight-line \
     --pointer='>' \
     --marker='*'
 
