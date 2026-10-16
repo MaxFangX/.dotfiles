@@ -43,6 +43,7 @@
     "quicklook-json"
     "quicklookase"
     "rar"
+    "tad" # Quick Look can't render tables, so a GUI CSV/TSV viewer
   ];
 
   home.username = "fang";

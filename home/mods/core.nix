@@ -56,6 +56,7 @@ in
     pkgs.neovim
     pkgs.ripgrep
     pkgs.rustup
+    pkgs.visidata # Terminal CSV/TSV viewer (`vd file.tsv`)
     pkgs.zsh
     codex
     git-hunk
