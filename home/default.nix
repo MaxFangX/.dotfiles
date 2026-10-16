@@ -2,6 +2,7 @@
   hm,
   pkgs,
   sources,
+  agent-browser,
   buzz,
   claude-code,
   codex,
@@ -47,6 +48,7 @@ let
     modules = modules ++ machineModule name;
     extraSpecialArgs = {
       inherit pkgs sources git-hunk jj jj-hunk-tool rsync;
+      agent-browser = stubUnsupported agent-browser;
       buzz = stubUnsupported buzz;
       claude-code = stubUnsupported claude-code;
       codex = stubUnsupported codex;

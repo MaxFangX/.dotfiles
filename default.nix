@@ -23,6 +23,7 @@ rec {
   inherit hm pkgs sources;
 
   # Personal packages
+  agent-browser = pkgs.callPackage ./pkgs/agent-browser {};
   # buzz needs pnpm_11 and pnpm fetcherVersion 4, which landed after the
   # primary nixpkgs pin (nixos-25.11), so build it from the 26.05 pin.
   buzz = (import sources.nixpkgs-2605 { inherit system; }).callPackage
@@ -47,8 +48,8 @@ rec {
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources buzz claude-code codex git-hunk goose jj
-      jj-hunk-tool kimi-code omnara opencode paseo paseo-app rsync
+    inherit hm pkgs sources agent-browser buzz claude-code codex git-hunk
+      goose jj jj-hunk-tool kimi-code omnara opencode paseo paseo-app rsync
       tinfoil-proxy;
   };
 }
