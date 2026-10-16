@@ -1,70 +1,53 @@
 ---
 name: orchestrate
-description: Fan work out to long-running worker agents through Paseo instead of Claude Code's Task tool. Use when delegating work that may outlive one sitting, needs its own jj workspace or git worktree, or must survive the user stopping agents — "spawn workers", "fan out", "orchestrate", "delegate in parallel", "run these in the background".
+description: >-
+  Run a task as a Fable agent orchestrating Opus 5.5 subagents: decide what to
+  delegate and what to do by hand, brief the workers, then review and finish
+  their work. Use when asked to orchestrate, delegate, or fan out, or when a
+  task is large enough to split across agents. Assumes the reader is Fable.
 ---
 
 # Orchestrate
 
-Workers are Paseo agents, created with `create_agent`, not Task agents from
-the Agent tool. A Task child dies for good when the user presses Stop on
-you, even while you are idle waiting on it: Claude Code marks it
-user-stopped and refuses to resume it. A Paseo agent is a full session. It
-survives Stop, archive, app quit, and daemon restart; the user can open it
-as a tab, read it, and steer it; `send_agent_prompt` resumes it with its
-context intact. Read the **paseo** skill for the tool reference.
+You are Fable. Opus 5.5 workers do the bulk of the work, and you finish it.
+The end product is yours, so it must be coherent, complete, and robust, with
+no seams where one worker's view stopped.
 
-## Which mechanism
+## Relative strengths
 
-- **Paseo agent**: anything that may outlive this sitting, needs its own
-  workspace, or the user may want to inspect or pause. Multi-hour
-  implementation work is always this.
-- **Agent tool**: short read-only lookups that finish inside the current
-  turn (an Explore search). Never for work the user may need to pause.
+- **You** reason verbally and generally, hold the whole design in view, and
+  write better, so prose, docs, comments, commit messages, and anything
+  user-facing read best in your hands. You are slower.
+- **Opus 5.5** is a fast workhorse and the better visual reasoner. Its work
+  tends to have gaps, design flaws, or tunnel-vision mistakes: a local fix
+  that ignores the surrounding system, an unhandled case, a duplicated
+  helper, a comment that narrates instead of explaining.
 
-## Spawning a worker
+## Who does what
 
-1. **Launch config.** Call `list_profiles` and materialize the best profile
-   into `create_agent` as the paseo skill describes. Set `settings.modeId`
-   at creation; a worker without a mode bounces every permission request
-   to you as a notification.
-2. **Workspace.** The worker owns its directory exclusively.
-   - jj repo: from the repo, run
-     `just -g workspace add <abs-dir> --no-paseo` to create the colocated
-     jj workspace and bookmark, then
-     `create_workspace { isolation: "local", path: <abs-dir>, projectId }`
-     with your own workspace's `projectId` from `list_workspaces`. Do not
-     use worktree isolation here: it makes a git worktree jj does not know
-     about.
-   - git-only repo: `create_workspace { isolation: "worktree", mode: "branch-off", branchName, baseBranch }`.
-3. **Brief.** `create_agent` with a `title`, the `workspaceId`, and an
-   `initialPrompt` that stands alone; the worker starts with zero context.
-   Use the briefing template from the **paseo-handoff** skill: task,
-   context, relevant files, acceptance criteria, constraints. Add two
-   standing instructions: end the final message with a line starting
-   `DONE:` summarizing what landed, and keep Agent tool use short because
-   those children do not survive a Stop.
-4. Leave `notifyOnFinish` on. Do not poll `list_agents` or
-   `get_agent_status`; the notification arrives on its own.
+Take it yourself when a subtle wrong turn would be expensive to find later:
+sharp logic (money, crypto, concurrency, state machines, invariants), design
+decisions, the shape of interfaces and types, anything that sets the frame
+the rest of the work fills in. Also the writing that matters: docs, final
+comments, commit messages, the message to the user.
 
-## Reading notifications
+Delegate what is well-specified and checkable by reading the result: CRUD,
+plumbing and wiring through layers, UI and media work, screenshot-driven
+visual iteration, bulk mechanical edits, research sweeps, test scaffolding,
+review passes.
 
-- **finished**, last message has a `DONE:` line: review its commits in its
-  workspace, then integrate or send fixes with `send_agent_prompt`.
-- **was stopped**, or **finished** without a `DONE:` line: the user paused
-  it. The response is partial. Do not integrate it, re-plan around it, or
-  spawn a replacement. Tell the user it is paused and wait; a later
-  `send_agent_prompt` continues it where it left off.
-- **needs permission**: `respond_to_permission` when the brief covers the
-  request, otherwise surface it to the user.
-- **errored**: read `get_agent_activity`, then send a follow-up or report.
+Rule of thumb: if the mistake Opus would likely make is one you would catch
+reading the diff, delegate. If it would hide in the design, design it
+yourself, then delegate the fill-in with the design fixed in the brief.
 
-## Pausing and resuming
+## Finishing
 
-Stop on a worker ends its current turn only. Its session, workspace, and
-commits persist, and `send_agent_prompt` resumes it. Only its own Agent
-tool children are lost, and it redoes those on resume. If you lose track of
-worker ids after a compaction, `list_agents` filtered by `cwd` recovers
-them.
+Never present a worker's result unread. Review it against the brief and
+against the surrounding system for the gaps and tunnel-vision mistakes
+above. Fix small things yourself, and send large ones back with precise
+instructions rather than re-briefing from scratch.
 
-Leave teardown to the user: `archive_agent` and
-`just -g workspace remove` only when asked.
+Farm out `/tighten-code` passes, and especially `/tighten-comments` and
+`/lexe-way` passes, to dedicated Opus review agents. Those reviewers are
+Opus too, so a confident wrong finding is exactly the tunnel-vision mistake
+you exist to catch. Read their findings critically.

@@ -13,6 +13,7 @@ let
     "orchestrate"
     "paseo"
     "paseo-handoff"
+    "paseo-orchestrate"
     "q"
     "rebase-review"
     "temp-worktree"
