@@ -4,6 +4,7 @@
   lib,
   sources,
   buzz,
+  wdk-cli,
   ...
 }:
 {
@@ -15,6 +16,7 @@
 
   home.packages = [
     buzz # Buzz.app + `buzz-desktop` (see pkgs/buzz)
+    wdk-cli # Tether WDK agent wallet; bring-up lives in ~/max2022 (wdk-up)
   ];
 
   # Copy .app bundles into ~/Applications/Home Manager Apps instead of

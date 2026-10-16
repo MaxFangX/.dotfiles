@@ -1,0 +1,8 @@
+{
+  "name": "wdk-cli",
+  "version": "1.0.0-beta.7",
+  "private": true,
+  "dependencies": {
+    "@tetherto/wdk-cli": "1.0.0-beta.7"
+  }
+}

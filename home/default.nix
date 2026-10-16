@@ -17,6 +17,7 @@
   paseo-app,
   rsync,
   tinfoil-proxy,
+  wdk-cli,
 }:
 let
   lib = pkgs.lib;
@@ -59,6 +60,7 @@ let
       paseo = stubUnsupported paseo;
       paseo-app = stubUnsupported paseo-app;
       tinfoil-proxy = stubUnsupported tinfoil-proxy;
+      wdk-cli = stubUnsupported wdk-cli;
     };
   };
 

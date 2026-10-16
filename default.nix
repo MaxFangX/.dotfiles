@@ -45,11 +45,12 @@ rec {
   # tinfoil-proxy's go.mod requires Go 1.26, newer than the primary pin's.
   tinfoil-proxy = (import sources.nixpkgs-2605 { inherit system; })
     .callPackage ./pkgs/tinfoil-proxy {};
+  wdk-cli = pkgs.callPackage ./pkgs/wdk-cli {};
 
   # home-manager configs
   homeConfigs = import ./home {
     inherit hm pkgs sources agent-browser buzz claude-code codex git-hunk
       goose jj jj-hunk-tool kimi-code omnara opencode paseo paseo-app rsync
-      tinfoil-proxy;
+      tinfoil-proxy wdk-cli;
   };
 }
