@@ -145,6 +145,14 @@ in
 
   programs.home-manager.enable = true;
 
+  # Ensure ~/env/sensitive.sh is always 600 (read/write only by the owner).
+  home.activation.sensitiveEnvPerms =
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if [ -f "$HOME/env/sensitive.sh" ]; then
+        run chmod 600 "$HOME/env/sensitive.sh"
+      fi
+    '';
+
   # Skip building the `man home-configuration.nix` page. We never
   # use it, and its generation emits a noisy "options.json without
   # proper context" warning on every activation.
