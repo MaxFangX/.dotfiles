@@ -156,6 +156,11 @@
 
     " Always keep at least 2 lines above / below the cursor
     set scrolloff=2
+
+    " Once a redraw exceeds this many ms, Neovim silently disables regex
+    " syntax highlighting for the buffer until its 'syntax' is reset. The
+    " 2000ms default trips under heavy system load (e.g. parallel builds).
+    set redrawtime=10000
 """ }
 
 """ { Configuration - Search
