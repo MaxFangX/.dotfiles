@@ -9,8 +9,12 @@
 { ... }:
 {
   imports = [
+    ./mods/agent-browser.nix # Browser for agents testing web apps
     ./mods/dev.nix
   ];
+
+  # No display here, so agents each get a private headless browser.
+  agent-browser.headless = true;
 
   home.username = "maxfangx";
   home.homeDirectory = "/home/maxfangx";
