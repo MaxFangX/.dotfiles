@@ -11,8 +11,8 @@ core.nix                Base layer. Shell, editor, CLI tools.
     │                   direnv). Not for secure machines.
     │                   Pulls in paseo.nix (Paseo CLI; the
     │                   always-on daemon stays opt-in) and
-    │                   kimi.nix (Kimi K3 via the Tinfoil
-    │                   proxy in kimi/opencode/paseo).
+    │                   tinfoil.nix (the Tinfoil proxy, for
+    │                   Kimi K3 in kimi/opencode/paseo).
     │
     └── dev-lexe.nix    Lexe-specific dev environment.
         │

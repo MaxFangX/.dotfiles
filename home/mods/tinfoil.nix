@@ -1,4 +1,4 @@
-# Kimi K3 with confidential inference, pay-per-token.
+# Tinfoil: Kimi K3 with confidential inference, pay-per-token.
 #
 # Primary route: Tinfoil (tinfoil.sh), which serves Kimi K3 inside a
 # hardware enclave (AMD SEV-SNP + NVIDIA confidential compute). The
@@ -13,7 +13,7 @@
 # confidential host, which no CLI can send.)
 #
 # The key lives in ~/env/sensitive.sh as TINFOIL_API_KEY, per machine and
-# never in this repo. On activation, kimi-sync.sh wires it into two tools
+# never in this repo. On activation, tinfoil-sync.sh wires it into two tools
 # whose mutable config files home-manager can't replace wholesale:
 #
 #  1. kimi CLI   ~/.kimi-code/config.toml  Providers + model aliases;
@@ -69,14 +69,14 @@ let
   };
 
   sync = pkgs.writeShellApplication {
-    name = "kimi-sync";
+    name = "tinfoil-sync";
     runtimeInputs = with pkgs; [
       coreutils
       gawk
       gnused
       jq
     ];
-    text = builtins.readFile ./kimi-sync.sh;
+    text = builtins.readFile ./tinfoil-sync.sh;
   };
 in
 {
@@ -118,8 +118,8 @@ in
     };
   };
 
-  home.activation.kimiSync =
+  home.activation.tinfoilSync =
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      PASEO_BIN=${paseo}/bin/paseo ${sync}/bin/kimi-sync
+      PASEO_BIN=${paseo}/bin/paseo ${sync}/bin/tinfoil-sync
     '';
 }

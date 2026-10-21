@@ -180,7 +180,7 @@ alias claude-fast="claude --settings '{\"fastMode\": true}'"
 ########
 
 # OpenCode driving Kimi K3 through the Tinfoil proxy (confidential; see
-# home/mods/kimi.nix).
+# home/mods/tinfoil.nix).
 alias opencode-kimi="opencode -m tinfoil/kimi-k3"
 
 # Start a paseo session as a new tab in the workspace containing the current

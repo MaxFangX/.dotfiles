@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Wire TINFOIL_API_KEY into the kimi and Paseo configs. See kimi.nix for
+# Wire TINFOIL_API_KEY into the kimi and Paseo configs. See tinfoil.nix for
 # the design. Run on home-manager activation and
 # safe to re-run: the kimi TOML gets one marker-delimited block that is
 # replaced in place, and the Paseo JSON is merged key by key.
@@ -14,7 +14,7 @@ env_file="$HOME/env/sensitive.sh"
 [ -f "$env_file" ] && . "$env_file"
 tinfoil_key="${TINFOIL_API_KEY:-}"
 if [ -z "$tinfoil_key" ]; then
-  echo "kimi-sync: TINFOIL_API_KEY not set in $env_file; skipping"
+  echo "tinfoil-sync: TINFOIL_API_KEY not set in $env_file; skipping"
   exit 0
 fi
 
