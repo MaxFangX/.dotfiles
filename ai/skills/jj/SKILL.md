@@ -409,9 +409,15 @@ Structural edits:
 Ops from any workspace race yours — my main checkout and every peer
 agent's workspace. Expect and handle:
 
-- **Stale working copies**: any other workspace's op leaves yours stale; run
-  `jj workspace update-stale` and continue. "Updated working copy to fresh
-  commit" means the `@` identity churned; its position and tree did not.
+- **Stale working copies**: any other workspace's op leaves yours stale.
+  With a clean `@`, run `jj workspace update-stale` and continue; "Updated
+  working copy to fresh commit" means the `@` identity churned, its position
+  and tree did not. With edits on disk, or when `@` has gone divergent
+  (`xyz/0`, `xyz/1`), do not: update-stale checks out the rewritten commit
+  and the unsnapshotted files vanish from the directory, surviving only in
+  the divergent sibling. Save them first (`git diff > /tmp/wip.patch` works
+  in a colocated worktree without jj), or `jj edit` the sibling that holds
+  your work instead of updating.
 - **Forked lineages**: simultaneous ops can duplicate part of the stack —
   divergent change IDs, addressed as `change_id(xyz)` or `xyz/0`, `xyz/1`.
   Diagnose with a graph log templated to show `working_copies` and `empty`:

@@ -49,6 +49,19 @@ context intact. Read the **paseo** skill for the tool reference.
 4. Leave `notifyOnFinish` on. Do not poll `list_agents` or
    `get_agent_status`; the notification arrives on its own.
 
+## The shared repo while workers run
+
+Workers share your commit graph and op log. Do not rewrite commits below a
+running worker's base in the main workspace: a squash, absorb, or rebase
+there leaves the worker's working copy stale and its `@` divergent, and the
+recovery is where uncommitted work gets lost (see the **jj** skill on stale
+working copies). Land your own fixups above their bases, or wait for the
+notification before you touch the stack.
+
+If the `mcp__paseo__*` tools are missing from your session, the **paseo**
+skill lists the CLI equivalents; use those rather than falling back to the
+Agent tool.
+
 ## Reading notifications
 
 - **finished**, last message has a `DONE:` line: review its commits in its
