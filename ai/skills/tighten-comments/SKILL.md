@@ -7,19 +7,44 @@ description: Tighten code comments added or modified on the current branch for b
 
 Review code comments (public and private) added or modified.
 Be skeptical, and thorough.
-Make sure comments are helpful and information-dense, but space-minimized and
-concise.
 
 ## Guidelines
 
-### Contextual and semantic
+### Reader effort
 
-Ensure that the comment adds value, is coherent, and is consistent with the
-code.
-For example, some comments are valuable because they add context which isn't
-obvious just from reading the code alone.
+The top-level goal, which every rule below serves, is the least total effort to
+understand the code, with comments counted as part of the code. A comment sits
+in front of the code it describes, so a weak one costs twice: once to read, and
+once to check against the code below it. A comment can be accurate and still
+fail this test, if understanding it costs more than reading the code. An
+argument has to be worked out, so prefer a label ("Early return if the
+condition is already satisfied.") to an argument ("Do this before X, so that Y
+is not missed").
 
-Examples:
+For most code, the lowest-effort presentation has close to no comments: names,
+types, and control-flow structure that are self-describing. Only necessarily
+complex code needs more, and sometimes code that seems to need more is only
+badly structured, so that a restructure or rename would bring it back to close
+to none. So before keeping a comment, ask whether a better name would make it
+unnecessary. Rename the item in this pass when every use sits in files already
+in the diff; otherwise flag the rename in the summary. Here the comment exists
+because `N` is a poor name, and `LIVENESS_WINDOW` would make it unnecessary:
+
+```rust
+// The last N liveness results. If all are Err, we shut down the LSP.
+const N: usize = 2;
+let mut last_n_results = VecDeque::with_capacity(N);
+```
+
+### Non-obvious context
+
+Comments that say what a senior engineer would not get from the code. There are
+two tiers, and the first is the default.
+
+Not derivable from the code at any effort: an assumption about code elsewhere,
+a contract with another system, the behavior of an external library, a choice
+that looks like a mistake, or a correct-looking change that no type or test
+would catch. Always keep, usually in a sentence or two.
 
 ```rust
 let router = Router::new()
@@ -34,22 +59,35 @@ let router = Router::new()
     .fallback_service(proxy_or_fallback.with_state(state));
 ```
 
-```rust
-const LIVENESS_CHECK_INTERVAL: Duration = Duration::from_secs(5);
-let mut liveness_interval =
-    tokio::time::interval(LIVENESS_CHECK_INTERVAL);
+A fragile invariant is not automatically in this tier. The bar is whether a
+senior engineer would notice it from the code as written; a subscribe call at
+the very top of a function is plainly meant to come before the reads below it.
+Otherwise prefer code that enforces it or a name that states it (see "Execution
+flow"), and comment only when it is too subtle for any of these.
 
-// The last N liveness results. If all are Err, we shut down the LSP.
-const N: usize = 2;
-let mut last_n_results = VecDeque::with_capacity(N);
-```
+Derivable but expensive: a proof, a case analysis, a capacity argument.
+Checking a written argument is far cheaper than reconstructing one, so keep it
+when reconstructing it would take significant effort. Keep it also when a wrong
+change would be found late. If the compiler or a test would catch the mistake,
+no comment is needed. If a regtest failure would, probably none. If production
+funds or channel state would, keep the comment even though the argument is
+derivable.
 
 ### Summary comments
 
-Short comments above blocks of logic that summarize what the block does.
-Even if seemingly redundant, these enable quick codebase navigation without
-reading implementation details.
-Think of them as docs for blocks within functions.
+Short comments above a block of code that say what the block does. They are doc
+comments for blocks within a function.
+
+A summary is redundant by design, so it is justified only by the **leverage
+principle**: the summary must be much quicker to read than the block it
+summarizes. Keep a summary only when the block is costly to read, meaning that
+even a reader who knows the codebase would have to trace through it to say what
+it does. If the block's names or first few lines already say what it does, the
+reader still reads the code and now reads the comment first as well, so the
+summary saves nothing. Cut it. When unsure, cut.
+
+In practice, leverage comes from terse or sharp code: dense iterator chains,
+index arithmetic, byte layouts, state threaded through several steps.
 
 Examples:
 
@@ -96,22 +134,22 @@ self.derive_encrypt_key(&key_id).encrypt_in_place(
 // data := [version] || [key_id] || [ciphertext] || [tag]
 ```
 
-### Brevity and clarity
+### Separate clauses with blank lines
 
-When writing documentation, prioritize brevity above all else, then write to
-maximize clarity and precision within the limited space available. More
-documentation usually gets in the way, unless there is a specific reason more
-documentation is needed.
+Within a function, put a blank line between logical steps. Each step can then
+be read on its own, so most need no summary. A step that does need one gets a
+short label above it.
 
-Comments and docs should be written for a competent future maintainer. Prefer
-deletion unless the comment adds information that is hard to infer from names,
-types, and nearby code, or prevents a plausible wrong change.
+### Tighten clause by clause
 
-Assume a senior reader who knows the rest of the system but not this area.
-Tighten clause by clause, cutting rather than rewording. If the code below or
-another clause makes it obvious that A implies B, state A and cut B.
-Keep only the minimum needed to convey what's local and non-obvious: an
-invariant, gotcha, or workaround (with the problem it solves).
+Write for a senior reader who knows the rest of the system but not this area.
+Prefer deletion unless the comment adds information that is hard to infer from
+names, types, and nearby code. Tighten clause by clause, cutting rather than
+rewording. If the code below or another clause makes it obvious that A implies
+B, state A and cut B.
+
+A comment much longer than its peers (in the same struct, enum, module, or
+scope) is a sign to cut it, not a sign the peers need more.
 
 Examples:
 
@@ -149,27 +187,28 @@ plausibly be reintroduced without such a warning. Judge what's worth
 documenting based on the future reader's standards, not our own.
 
 Comments and docs should be written from the vantage point of a future reader,
-for whom our changes are already history. For example, if we are leaving
-behind cruft (such as a redirect from an old URL), documentation should focus
-on why the cruft must continue to be kept, rather than our original
-justification for the change that introduced it (e.g. "/pricing is a better
-and simpler URL than /fees-and-pricing"), unless it is still relevant to the
-future reader. Such justifications, oriented towards PR reviewers, should be
-written in commit details, discoverable in review and through `git blame`
-rather than in permanent documentation, which imposes a maintenance burden.
+for whom our changes are already history. For example, if we are leaving behind
+cruft (such as a redirect from an old URL), documentation should focus on why
+the cruft must continue to be kept, rather than our original justification for
+the change that introduced it (e.g. "/pricing is a better and simpler URL than
+/fees-and-pricing"), unless it is still relevant to the future reader. Such
+justifications belong in commit details or the changelog (see "Write rationale
+in the changelog or commit message"), not in permanent documentation.
 
 ### Document behavior at its owner
 
-A brief one-line doc comment that labels an item is fine, even if mildly
-redundant. Don't expand it into an implementation story about how the value is
-produced, refreshed, persisted, synchronized, or consumed. Put behavioral,
-lifecycle, and provenance docs at the semantic owner — the type, state machine,
-constructor, transition method, API endpoint, or usage site that defines the
-behavior. An item comment should describe the item's durable meaning or
-contract, so if it mostly explains surrounding code's use of the item, move it
-there or delete it. Conversely, keep these docs when the item itself is the
-state, API contract, or transition being defined — there the behavior is the
-item's own contract.
+A brief one-line doc comment that labels an item is fine when the name and type
+leave its meaning open. "Attempts remaining, not attempts made" on `retries:
+u32` is worth keeping, while "Client for the user node" on `node_client:
+NodeClient` is not. Don't expand a label into an implementation story about how
+the value is produced, refreshed, persisted, synchronized, or consumed. Put
+behavioral, lifecycle, and provenance docs at the semantic owner, meaning the
+type, state machine, constructor, transition method, API endpoint, or usage
+site that defines the behavior. An item comment should describe the item's
+durable meaning or contract, so if it mostly explains surrounding code's use of
+the item, move it there or delete it. Conversely, when the item itself is the
+state, API contract, or transition being defined, the behavior is the item's
+own contract, so keep these docs on it.
 
 ### Scope comments to the code they explain
 
@@ -179,7 +218,7 @@ on one step of a chain for that step. So place a comment on the exact
 scope where it applies.
 
 ```rust
-// BAD placement: a retry detail posing as the method's main description.
+// BAD placement: a retry detail presented as the method's main description.
 /// Retries within [`ACQUIRE_TIMEOUT`]. Notably, a `LeaseRejected`
 /// response does *not* stop the retries, since a crash-restarted
 /// supervisor must outwait its previous incarnation's unexpired lease.
@@ -215,42 +254,28 @@ let mega_ids_to_evict = self
     .collect::<HashSet<_>>();
 ```
 
-### Keep rationale out of the code
+### Write rationale in the changelog or commit message
 
-When you want to explain a change beyond what the code itself needs — the
-rationale, the alternatives weighed, why it ended up this way — write it to the
-repo's rationale outlet, not a code comment, and explain as much as you want.
-Prefer a local `ai-changelog.md` if the repo has one; otherwise write to
-`/tmp/YYYY-MM-DD-<project>-changelog.md`. It's your space to record reasoning
-for the reviewer, kept out of the code and read asynchronously. Feel free to
-delete stale entries, especially anything clearly from a previous session.
-
-### Calibrate against examples
-
-Match the rough verbosity and style of nearby comments (peers in the same
-struct, enum, module, or scope), unless there is a specific reason this item
-needs more. The necessary length of the comment scales with the complexity
-of the item documented.
-
-### Professionalism
-
-Comments should maintain a high standard of written English.
-They should be grammatically correct, idiomatic, and free of typos.
-Comments are essential for maintaining a readable codebase, so write them
-with care.
+When you want to explain a change beyond what the code itself needs, such as
+the rationale, the alternatives weighed, or why it ended up this way, write it
+in the commit message or the repo's changelog, not a code comment. The
+changelog is your space to record reasoning for the reviewer, kept out of the
+code and read asynchronously, so explain there as much as you want. Prefer a
+local `ai-changelog.md` if the repo has one; otherwise write to
+`/tmp/YYYY-MM-DD-<project>-changelog.md`. Feel free to delete stale entries,
+especially anything clearly from a previous session.
 
 ### Write comments as forward chains of reasoning
 
-A reader who meets a claim before its justification must hold it in
-suspense while parsing what follows, then re-read the comment backwards to
-check the logic. Thus, order the sentences so each is fully motivated by
-the ones before it. Set up the situation, walk through what can happen,
-and let the rule or mechanism land as the conclusion. A comment long
-enough to have structure should read as a derivation, not a verdict with
-citations.
+A reader who meets a claim before its justification must remember it without
+yet knowing why it holds, then re-read the comment backwards to check the
+logic. Thus, order the sentences so each is fully motivated by the ones before
+it. Set up the situation, walk through what can happen, and let the rule or
+mechanism land as the conclusion. A comment long enough to have structure
+should read as a derivation, not a conclusion followed by its reasons.
 
 These rules govern how to order a long comment, not whether to write one.
-Brevity still comes first, so if a competent future reader doesn't need
+Reader effort still comes first, so if a competent future reader doesn't need
 the justification, cut it rather than chain it. If a forward-chain rewrite
 grows a comment noticeably, that's a sign to reconsider whether the
 justification is needed at all.
@@ -268,11 +293,11 @@ justification is needed at all.
 // this by keeping the expiry monotonic.
 ```
 
-**Prose is not the only chain.** In a sequence of steps, a case split, or
-a lifecycle, each item builds on the ones before it, so the list layout is
-itself the logic, and flattening it into prose buries the structure. Carry
-such content as a list, with prose supplying the premises and conclusions
-around the enumerated core:
+**Prose is not the only chain.** In a sequence of steps, a case split, or a
+lifecycle, each item builds on the ones before it, so the list layout is itself
+the logic, and flattening it into prose hides the structure. Carry such content
+as a list, with prose supplying the premises and conclusions around the
+enumerated core:
 
 ```rust
 /// Fetch updated payments and metadata, synchronizing both streams.
@@ -295,12 +320,12 @@ around the enumerated core:
 ```
 
 **Mark every inferential step.** When a sentence is inferred from the one
-before it, mark the relationship explicitly with a connective ("so",
-"thus", "however", "instead", "otherwise") or a phrase that points back
-("this", "in this case", "by then"). A bare sentence is reserved for two
-roles: introducing a new premise, which is not inferred, so marking it
-would fake a derivation; and landing a conclusion the chain has already
-forced, where a connective is useless.
+before it, mark the relationship explicitly with a connective ("so", "thus",
+"however", "instead", "otherwise") or a phrase that points back ("this", "in
+this case", "by then"). A bare sentence is reserved for two roles: introducing
+a new premise, which is not inferred, so marking it would falsely present it as
+inferred; and landing a conclusion the chain has already forced, where a
+connective is useless.
 
 An example where every step is marked and both bare roles appear:
 ```rust
@@ -318,17 +343,17 @@ backfill it:
 - Contrast, or substitution after a rejected action: ", but ..." /
   "however, ..." / "Instead, ..."
 - Requirement: justify with what goes wrong when violated (", otherwise
-  ...") rather than a "because" contorted around the hypothetical.
+  ...") rather than a "because" that has to describe the hypothetical.
 - Reason (", since ..." / ", because ...") points backwards. Restructure
   the sentence into a forward chain instead.
 
-**Old comment** (backwards "since" holds the rule in suspense):
+**Old comment** (backwards "since" delays the rule's justification):
 ```rust
 // Skip the release if any meganode is still running (hung shutdown), since
 // releasing would let the backend grant our users to another runner
 // while the hung meganodes may still be running their usernodes.
 ```
-**Suggested** (the hazard walked forward, the rule lands last):
+**Suggested** (the hazard stated first, the rule lands last):
 ```rust
 // If a meganode hung during shutdown, its usernodes may still be
 // running, and releasing our lease would let the backend grant those
@@ -336,16 +361,15 @@ backfill it:
 // skip the release and let the lease expire on its own.
 ```
 
-**Don't splice the chain with punctuation.** An em-dash, colon, semicolon,
-or parenthesis that joins two clauses leaves their true relationship
-unstated, so the reader must infer the connective the writer skipped.
-Heavy use of these splices is a sign of unoptimized writing. Rewrite
-nearly all of them with the connective spelled out, per the table above.
-Exceptions: a colon is fine when it attaches a label rather than joining
-two claims, as in `// Hot: ...` or `/// Default env: ...`. A semicolon
-is fine between parallel statements, like two cases described side by
-side. But if any connective would fit, the semicolon is hiding it, so
-spell the connective out.
+**Don't splice the chain with punctuation.** An em-dash, colon, semicolon, or
+parenthesis that joins two clauses leaves their true relationship unstated, so
+the reader must infer the connective the writer skipped. Heavy use of these
+splices is a sign the writing has not been worked through. Rewrite nearly all
+of them with the connective spelled out, per the table above. Exceptions: a
+colon is fine when it attaches a label rather than joining two claims, as in
+`// Hot: ...` or `/// Default env: ...`. A semicolon is fine between parallel
+statements, like two cases described side by side. But if any connective would
+fit, the semicolon is hiding it, so spell the connective out.
 
 **Old comment** (a colon hiding a causal link):
 ```rust
@@ -358,9 +382,16 @@ spell the connective out.
 // our initial capacity immediately.
 ```
 
-A parenthetical that carries a premise or the substance of a claim forces
-the reader to pop out of the chain, absorb an aside, and pop back in.
-Inline it into the flow as a full clause, or drop it.
+**Separate facts that aren't inferred.** The converse also holds, so don't
+chain two facts when neither follows from the other. "The latest update read so
+far, `None` while the wallet has no payments" joins a definition and a special
+case; "Starts the cursor at `latest_update`, so polls only read updates after
+it" presents a parallel fact as a consequence. Give each such fact its own
+sentence. In a short doc comment, each sentence may take its own line.
+
+A parenthetical that carries a premise or the substance of a claim forces the
+reader to leave the chain, read the aside, and return to it. Inline it into the
+flow as a full clause, or drop it.
 
 **Old comment** (the expectation's premise hidden in an aside):
 ```rust
@@ -373,18 +404,34 @@ Inline it into the flow as a full clause, or drop it.
 // don't route those, so we expect exactly one on each.
 ```
 
-**Use only standardized terminology, simpler terms preferred.** The point
-of technical writing is to explain without ambiguity. A term is
-standardized when everyone who reads it arrives at the same precise
-meaning, ideally even without context. We see common words in context all
-the time, so they are standardized by sheer use; rarer terms of art like
-"CSPRNG" are standardized by industry definition. A made-up term like
-"tick-granular" is neither, so each reader must guess its meaning from the
-surrounding context, and different readers may guess differently. Thus, use
-standardized terms. In practice these are usually the simplest words that
-say the thing: not "renewers" but the tasks that renew, not
-"tick-granular" but only checked once per tick, not "dispatch" but send,
-not "intervening" but in between.
+### Use plain language
+
+**Use only standardized terminology, simpler terms preferred.** The point of
+technical writing is to explain without ambiguity. A term is standardized when
+everyone who reads it arrives at the same precise meaning, ideally even without
+context. We see common words in context all the time, so they are standardized
+by frequency of use; rarer terms of art like "CSPRNG" are standardized by
+industry definition. A made-up term like "tick-granular" is neither, so each
+reader must guess its meaning from the surrounding context, and different
+readers may guess differently. Thus, use standardized terms. In practice these
+are usually the simplest words that say the thing: not "renewers" but the tasks
+that renew, not "tick-granular" but only checked once per tick, not "dispatch"
+but send, not "intervening" but in between.
+
+**Say the thing directly, not through an analogy.** An analogy asks the reader
+to understand a second thing and then map it onto the subject, so it costs more
+than a direct statement. Analogies are a hallmark of AI writing, so treat each
+one as a candidate for replacement.
+
+**Old comment**:
+```rust
+// Treat the server's index as the high-water mark: once it rises above
+// ours, everything we cached sits below the waterline, so drain the cache.
+```
+**Suggested**:
+```rust
+// Clear the cache if the server's latest update is ahead of ours.
+```
 
 ### References
 
@@ -412,11 +459,6 @@ Should comply with the other guidelines.
 Format: `TODO(username): <description>`
 
 Examples:
-
-```rust
-// TODO(a-mpch): Add option to update budget limits, budget restriction type
-// (single-use, monthly, yearly, total, etc.).
-```
 
 ```rust
 // TODO(max): Find a way to avoid evicting entries of connected user nodes.
@@ -457,18 +499,19 @@ pub fee: Amount,
 
 ## Execution flow
 
-Review the comment changes in the current diff following the Guidelines
-above: for each added or modified comment, apply them, then change, skip,
-or remove the comment. Report a concise summary of what changed and why.
+Review the comment changes in the current diff following the Guidelines above.
+For each added or modified comment, first ask whether it should exist at all,
+and only then tighten what remains. A pass that ends with many rewrites and no
+deletions has almost certainly under-deleted. Report a concise summary of what
+changed and why.
+
+This pass changes no behavior and renames only within the diff (see "Reader
+effort"), so the programmer can take it without re-reviewing code. A comment
+that exists because the code is hard to read (a getter with a side effect, a
+method doing two jobs, a block that needs a summary) is a code smell, so leave
+the code alone and note the suggested restructure in the summary for a
+`/tighten-code` pass.
 
 If a removed comment holds reviewer-facing rationale worth keeping, don't move
-it to another comment — save it to the rationale outlet (see "Keep rationale out
-of the code") and note the path in the summary.
-
-
-## What NOT to do
-
-- Don't review comments unrelated to the PR context.
-- Don't force changes.
-  The rationale must be strong enough to justify any suggestion.
-- Don't remove summary comments just because they restate what the code does.
+it to another comment. Save it in the changelog (see "Write rationale in the
+changelog or commit message") and note the path in the summary.
