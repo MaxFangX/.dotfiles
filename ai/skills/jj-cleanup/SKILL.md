@@ -28,7 +28,14 @@ workspace's `@` is `<name>@`, and its git commands run in its directory.
    then run `jj workspace update-stale` there and read its output. This
    moves a checkout, which /jj forbids for one you don't own; invoking
    this skill is the user's permission for theirs, so skip workspaces that
-   belong to other agents. A non-empty `@` stays put; say so.
+   belong to other agents. A non-empty `@` stays put; say so, after
+   ruling out a phantom. A `git pull`/`checkout` that rewrote the files,
+   followed by a `git reset` back to the old HEAD, leaves jj snapshotting
+   master's own content as changes. So before calling an undescribed diff
+   work, `jj diff --from <name>@ --to <commit> --stat` against each commit
+   in that workspace's `git reflog`; a byte-identical match means `@`
+   holds nothing of its own: `jj new master` and abandon it, under the
+   same ownership rule as the rebase.
 3. Re-attach git HEAD per /jj's end-of-turn rule, to the workspace's
    branch (usually named for the workspace; skip if it has none).
 4. `jj workspace forget` each record whose root `jj workspace list` cannot
@@ -36,7 +43,8 @@ workspace's `@` is `<name>@`, and its git commands run in its directory.
    `git worktree prune`.
 5. Report, one line each: `master` ahead of its remote, conflicted stacks
    (`jj log -r 'roots(conflicts())'`), divergent changes, working copies
-   holding undescribed changes, and anything skipped above.
+   holding undescribed changes (name the files, not a guessed project),
+   phantoms dropped in step 2, and anything skipped above.
 
 ## Deep
 
