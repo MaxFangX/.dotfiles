@@ -14,9 +14,17 @@
 #     (macOS only; a stub elsewhere). Lands in
 #     ~/Applications/Home Manager Apps via targets.darwin.copyApps.
 #
+#  4. Daemon settings (`lexe.paseo.daemonConfig`), applied to
+#     ~/.paseo/config.json at activation with `paseo daemon config set`
+#     and reloaded live when a daemon is up. The daemon owns that file
+#     (the settings UI writes it), so nix can't manage it as a whole;
+#     setting individual paths through the CLI keeps both happy.
+#     Default: inject Paseo's agent tools into agents, so an agent can
+#     spawn and resume Paseo workers instead of Task children.
+#
 # Plus one opt-in piece:
 #
-#  4. An always-on Paseo *daemon* (`lexe.paseo.enableService`).
+#  5. An always-on Paseo *daemon* (`lexe.paseo.enableService`).
 #     Runs `paseo daemon run` from the nix-packaged
 #     @getpaseo/cli as a systemd user service (Linux) or launchd agent
 #     (macOS), modeled on home/mods/omnara.nix. Relay stays on by default
@@ -73,6 +81,16 @@ in
     an always-on Paseo daemon (systemd user service / launchd agent)
     using the nix-packaged @getpaseo/cli'';
 
+  options.lexe.paseo.daemonConfig = lib.mkOption {
+    type = lib.types.attrsOf (lib.types.oneOf [ lib.types.bool lib.types.int lib.types.str ]);
+    default = { };
+    description = ''
+      Paseo daemon settings by dotted config path (see `paseo daemon
+      config get`), applied to ~/.paseo/config.json at activation.
+    '';
+    example = { "daemon.mcp.injectIntoAgents" = true; };
+  };
+
   config = lib.mkMerge [
     # (1) The CLI, (2) the dev shim when a checkout is present, and
     # (3) the desktop app.
@@ -81,7 +99,21 @@ in
         ++ lib.optional (builtins.pathExists paseoRepo) crossEnv;
     }
 
-    # (4) Always-on daemon — opt-in per host.
+    # (4) Daemon settings. `config set` saves, then reloads the running
+    # daemon when there is one, so this is safe with the daemon up or down.
+    {
+      lexe.paseo.daemonConfig."daemon.mcp.injectIntoAgents" = lib.mkDefault true;
+
+      home.activation.paseoDaemonConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+        lib.concatStringsSep "\n" (lib.mapAttrsToList (path: value: ''
+          ${paseo}/bin/paseo daemon config set --home "${homeDir}/.paseo" \
+            ${lib.escapeShellArg path} ${lib.escapeShellArg (builtins.toJSON value)} \
+            >/dev/null || echo "paseo daemon config set ${path} failed" >&2
+        '') cfg.daemonConfig)
+      );
+    }
+
+    # (5) Always-on daemon — opt-in per host.
     (lib.mkIf cfg.enableService {
       # Enable "linger" so the systemd user instance (and thus this
       # service) starts at boot, not just on login.
