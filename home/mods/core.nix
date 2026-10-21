@@ -149,6 +149,8 @@ in
       '')
     ];
     ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
+    # Codex's global instructions file; same content as Claude's.
+    ".codex/AGENTS.md".source = ../../claude/CLAUDE.md;
     ".claude/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
     ".codex/skills/git-hunk/SKILL.md".source =
