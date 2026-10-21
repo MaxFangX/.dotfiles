@@ -31,11 +31,14 @@ context intact. Read the **paseo** skill for the tool reference.
    - jj repo: from the repo, run
      `just -g workspace add <abs-dir> --no-paseo` to create the colocated
      jj workspace and bookmark, then
-     `create_workspace { isolation: "local", path: <abs-dir>, projectId }`
+     `create_workspace { isolation: "local", path: <abs-dir>, projectId, title }`
      with your own workspace's `projectId` from `list_workspaces`. Do not
      use worktree isolation here: it makes a git worktree jj does not know
      about.
-   - git-only repo: `create_workspace { isolation: "worktree", mode: "branch-off", branchName, baseBranch }`.
+   - git-only repo: `create_workspace { isolation: "worktree", mode: "branch-off", branchName, baseBranch, title }`.
+   - Worker workspaces sit beside the user's own in every Paseo list, so
+     `title` names the parent: `<your workspace title>/<task>`, e.g.
+     `09-30-general/description-hash`.
 3. **Brief.** `create_agent` with a `title`, the `workspaceId`, and an
    `initialPrompt` that stands alone; the worker starts with zero context.
    Use the briefing template from the **paseo-handoff** skill: task,
@@ -66,5 +69,11 @@ tool children are lost, and it redoes those on resume. If you lose track of
 worker ids after a compaction, `list_agents` filtered by `cwd` recovers
 them.
 
-Leave teardown to the user: `archive_agent` and
-`just -g workspace remove` only when asked.
+## Teardown
+
+A worker workspace is scaffolding, not a deliverable. Once you have
+integrated a worker's commits and reviewed the result, tear it down in this
+order: `archive_agent` on the worker, `archive_workspace` on its workspace,
+then `just -g workspace remove <abs-dir>` (jj repos) to drop the jj
+workspace and directory. Workers the user paused stay up until the user
+decides; everything else goes before you report.
