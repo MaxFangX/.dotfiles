@@ -45,6 +45,14 @@ particular circumstances suggest that an alternative approach would be cleaner.
   seems worth optimizing, raise this with the user (me) and get their opinion.
 - Look for style violations (see below).
 
+## Delegating work
+
+Workers are Paseo agents. When you delegate work that edits files, runs
+builds, or commits, load the `paseo-orchestrate` skill and spawn each worker
+with `mcp__paseo__create_agent`. Never use Claude Code's Agent tool for that
+work: its children die for good when I press Stop on you. The Agent tool is
+only for read-only lookups (an Explore search) that finish inside your turn.
+
 ## Environment Variables and Shell Behavior
 
 Note: Claude Code's `Bash` tool (which actually runs the system's default shell,
