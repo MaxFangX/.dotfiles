@@ -39,6 +39,19 @@
       "artifact": "nixexprs.tar.xz",
       "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.7526.9f78f44a8794/nixexprs.tar.xz",
       "hash": "sha256-wu478baUvGLzcIMCGz8eKqSJa2uzjoUGpYSh/LTXtxo="
+    },
+    "security-audit-skill": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "cloudflare",
+        "repo": "security-audit-skill"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "c1c8a8c1471069fb0e188eeaff69b8e8db6564a8",
+      "url": "https://github.com/cloudflare/security-audit-skill/archive/c1c8a8c1471069fb0e188eeaff69b8e8db6564a8.tar.gz",
+      "hash": "sha256-oVVACjotkHvllQGxEP8yWaEt4c3GxT0d909TUM5P3NM="
     }
   },
   "version": 8

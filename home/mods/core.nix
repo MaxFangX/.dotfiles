@@ -34,6 +34,10 @@ let
       value.source = ../../ai/skills + "/${name}";
     }
   ]) sharedSkillNames);
+
+  # Third-party skill, pinned with npins rather than vendored.
+  securityAuditSkill =
+    "${sources.security-audit-skill}/skills/security-audit";
 in
 {
   imports = [
@@ -140,6 +144,8 @@ in
       "${git-hunk}/share/git-hunk/SKILL.md";
     ".codex/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
+    ".claude/skills/security-audit".source = securityAuditSkill;
+    ".codex/skills/security-audit".source = securityAuditSkill;
     # TODO(max): Let Claude Code manage settings.json itself for now, since
     # the home-manager symlink into /nix/store is read-only, which breaks
     # `/effort` and other commands that write to settings.json.
