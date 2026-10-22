@@ -163,6 +163,49 @@ in
       fi
     '';
 
+  # Restore lazy.nvim plugins to the tracked nvim/lazy-lock.json so every
+  # host runs the same commits. lazy works from a per-host copy of the
+  # lockfile (see nvim/lua/config/lazy.lua), which we seed from the tracked
+  # file. `install` only honors the lockfile when asked and skips plugins
+  # already installed, so `restore` then moves those. lazy logs every task
+  # and exits 0 even when one fails, so LAZY_QUIET silences its logging and
+  # the script reports only errored tasks. Needs network, so failures warn
+  # rather than fail the switch.
+  home.activation.lazyNvimRestore =
+    let
+      restore = pkgs.writeText "lazy-restore.lua" ''
+        local lazy = require("lazy")
+        local Config = require("lazy.core.config")
+
+        lazy.install({ wait = true, lockfile = true, show = false })
+        lazy.restore({ wait = true, show = false })
+
+        local failed = {}
+        for _, plugin in pairs(Config.plugins) do
+          for _, task in ipairs(plugin._.tasks or {}) do
+            if task:has_errors() then
+              table.insert(failed, ("[%s] %s: %s"):format(
+                plugin.name, task.name, task:output(vim.log.levels.ERROR)))
+            end
+          end
+        end
+        if #failed > 0 then
+          io.stderr:write(table.concat(failed, "\n") .. "\n")
+          vim.cmd("cquit 1")
+        end
+        vim.cmd("qall")
+      '';
+    in
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      lazyLock="${config.xdg.stateHome}/nvim/lazy/lazy-lock.json"
+      run mkdir -p "$(dirname "$lazyLock")"
+      run cp ${../../nvim/lazy-lock.json} "$lazyLock"
+      run chmod 644 "$lazyLock"
+      run env LAZY_QUIET=1 ${pkgs.neovim}/bin/nvim \
+        --headless "+luafile ${restore}" \
+        || echo "lazy.nvim restore failed; run :Lazy restore in nvim" >&2
+    '';
+
   # Skip building the `man home-configuration.nix` page. We never
   # use it, and its generation emits a noisy "options.json without
   # proper context" warning on every activation.

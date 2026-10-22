@@ -3,7 +3,6 @@
 *.DS_STORE
 .aider*
 Session.vim
-nvim/lazy-lock.json
 prompts.md
 
 # nix-managed symlinks (change on every hms rebuild)
