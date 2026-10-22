@@ -92,7 +92,10 @@
 """ { 'Learn Vimscript the Hard Way' exercises
 
     " Echoing messages: Display friendly cat when opening vim
-    echo "Welcome back! >^.^<"
+    " (not in headless runs, e.g. hms restoring plugins)
+    if index(v:argv, '--headless') < 0
+        echo "Welcome back! >^.^<"
+    endif
 """ }
 
 " # --- CONFIGURATION --- #

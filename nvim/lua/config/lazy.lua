@@ -14,7 +14,10 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
       { out, "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
-    vim.fn.getchar()
+    -- Don't hang headless runs (e.g. hms restoring plugins) on a keypress.
+    if not vim.tbl_contains(vim.v.argv, "--headless") then
+      vim.fn.getchar()
+    end
     os.exit(1)
   end
 end
