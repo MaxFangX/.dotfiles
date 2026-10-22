@@ -19,6 +19,7 @@
   paseo-app,
   rsync,
   tinfoil-proxy,
+  vgit-nvim,
   wdk-cli,
 }:
 let
@@ -50,7 +51,8 @@ let
     inherit pkgs;
     modules = modules ++ machineModule name;
     extraSpecialArgs = {
-      inherit pkgs sources complain git-hunk jj jj-hunk-tool rsync;
+      inherit pkgs sources complain git-hunk jj jj-hunk-tool rsync
+        vgit-nvim;
       agent-browser = stubUnsupported agent-browser;
       buzz = stubUnsupported buzz;
       claude-code = stubUnsupported claude-code;

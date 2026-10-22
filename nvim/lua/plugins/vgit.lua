@@ -1,11 +1,12 @@
 -- Visual Git Plugin configuration
+-- Indexed reviews are fork-only. Prefer a local checkout when available;
+-- otherwise load the pinned fork that hms links in (see pkgs/vgit-nvim).
 local local_vgit = vim.fn.expand('~/dev/nvim/vgit.nvim')
-local has_local_vgit = vim.fn.isdirectory(local_vgit) == 1
+local nix_vgit = vim.fn.stdpath('data') .. '/vgit.nvim'
 
 return {
-  -- Indexed reviews are fork-only. Prefer a local checkout when available.
-  has_local_vgit and local_vgit or 'maxfangx/vgit.nvim',
-  dir = has_local_vgit and local_vgit or nil,
+  'maxfangx/vgit.nvim',
+  dir = vim.fn.isdirectory(local_vgit) == 1 and local_vgit or nix_vgit,
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons'

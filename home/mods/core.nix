@@ -1,7 +1,7 @@
 # Shared config across all machines.
 {
   config, lib, pkgs, sources, codex, complain, git-hunk, jj, jj-hunk-tool,
-  macctl, ...
+  macctl, vgit-nvim, ...
 }:
 let
   # Agent skills in ai/skills/. Some are vendored copies: skills written by me
@@ -121,6 +121,10 @@ in
     ".zshrc".source = ../../zshrc;
     ".tmux.conf".source = ../../tmux.conf;
     ".config/nvim".source = ../../nvim;
+    # The pinned vgit.nvim fork, loaded by nvim/lua/plugins/vgit.lua as a
+    # local lazy.nvim plugin on hosts without a ~/dev/nvim/vgit.nvim
+    # checkout (nvim's stdpath('data') is ~/.local/share/nvim).
+    ".local/share/nvim/vgit.nvim".source = vgit-nvim;
     # Global justfile: machine-wide recipes via `just -g <recipe>`. just resolves
     # `mod` paths relative to the deployed justfile, so link the just/ tree next
     # to it so the worktree/workspace modules (and their scripts) resolve.
