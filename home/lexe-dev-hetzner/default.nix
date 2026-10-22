@@ -7,9 +7,16 @@
 }:
 {
   imports = [
+    ../mods/agent-browser.nix # Browser for agents testing web apps
     ../mods/dev-lexe.nix
     ../mods/omnara.nix
   ];
+
+  # No display here, so agents each get a private headless browser.
+  # Ubuntu's AppArmor blocks the user namespaces Chromium's sandbox needs,
+  # so /etc/apparmor.d/nix-chromium (hand-installed, like Ubuntu's own
+  # chrome profile) grants `userns` to /nix/store/*-playwright-chromium.
+  agent-browser.headless = true;
 
   home.username = "dev";
   home.homeDirectory = "/home/dev";
