@@ -10,6 +10,7 @@ let
   # `just skills-sync <peer> from|to` (see just/skill-sync.sh).
   sharedSkillNames = [
     "codex-review"
+    "complain"
     "jj"
     "jj-cleanup"
     "jj-rebase"

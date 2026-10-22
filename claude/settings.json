@@ -2,6 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(chmod:*)",
+      "Bash(complain:*)",
       "Bash(fastmod:*)",
       "Bash(gh api:*)",
       "Bash(gh pr:*)",
