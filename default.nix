@@ -51,8 +51,8 @@ rec {
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources agent-browser buzz claude-code codex git-hunk
-      goose jj jj-hunk-tool kimi-code macctl omnara opencode paseo paseo-app
-      rsync tinfoil-proxy wdk-cli;
+    inherit hm pkgs sources agent-browser buzz claude-code codex complain
+      git-hunk goose jj jj-hunk-tool kimi-code macctl omnara opencode paseo
+      paseo-app rsync tinfoil-proxy wdk-cli;
   };
 }

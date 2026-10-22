@@ -1,5 +1,8 @@
 # Shared config across all machines.
-{ config, lib, pkgs, sources, codex, git-hunk, jj, jj-hunk-tool, macctl, ... }:
+{
+  config, lib, pkgs, sources, codex, complain, git-hunk, jj, jj-hunk-tool,
+  macctl, ...
+}:
 let
   # Agent skills in ai/skills/. Some are vendored copies: skills written by me
   # but managed in the lexe repo, and Paseo's own agent skills from the fork
@@ -63,6 +66,7 @@ in
     pkgs.visidata # Terminal CSV/TSV viewer (`vd file.tsv`)
     pkgs.zsh
     codex
+    complain
     git-hunk
     jj-hunk-tool
     macctl

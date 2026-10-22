@@ -6,6 +6,7 @@
   buzz,
   claude-code,
   codex,
+  complain,
   git-hunk,
   goose,
   jj,
@@ -49,7 +50,7 @@ let
     inherit pkgs;
     modules = modules ++ machineModule name;
     extraSpecialArgs = {
-      inherit pkgs sources git-hunk jj jj-hunk-tool rsync;
+      inherit pkgs sources complain git-hunk jj jj-hunk-tool rsync;
       agent-browser = stubUnsupported agent-browser;
       buzz = stubUnsupported buzz;
       claude-code = stubUnsupported claude-code;
