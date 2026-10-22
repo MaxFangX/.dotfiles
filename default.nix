@@ -32,6 +32,7 @@ rec {
   claude-code = pkgs.callPackage ./pkgs/claude-code {};
   codex = pkgs.callPackage ./pkgs/codex {};
   codex-acp = pkgs.callPackage ./pkgs/codex-acp { inherit codex; };
+  complain = pkgs.callPackage ./pkgs/complain {};
   git-hunk = pkgs.callPackage ./pkgs/git-hunk {};
   goose = pkgs.callPackage ./pkgs/goose {};
   jj = pkgs.callPackage ./pkgs/jj {};
