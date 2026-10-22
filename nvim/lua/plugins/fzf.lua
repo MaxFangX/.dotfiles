@@ -34,9 +34,8 @@ return {
   -- fzf binary
   {
     "junegunn/fzf",
-    build = function()
-      vim.fn["fzf#install"]()
-    end,
+    -- Not `fzf#install()`: the autoload isn't loadable during a fresh install.
+    build = "./install --bin",
   },
 
   -- fzf.vim
