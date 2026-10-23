@@ -175,13 +175,31 @@ alias claude-go-foom="claude --dangerously-skip-permissions"
 # Start an interactive session with Opus fast mode (~2.5x faster, higher cost)
 alias claude-fast="claude --settings '{\"fastMode\": true}'"
 
-########
-# Kimi #
-########
+##########################
+# Confidential inference #
+##########################
 
-# OpenCode driving Kimi K3 through the Tinfoil proxy (confidential; see
-# home/mods/tinfoil.nix).
+# Kimi K3 through the Tinfoil proxy and DeepSeek V4.1 Flash through the
+# Maple proxy (see home/mods/confidential.nix).
 alias opencode-kimi="opencode -m tinfoil/kimi-k3"
+alias opencode-deepseek="opencode -m maple/deepseek-v4-1-flash"
+opencode-deepseek-uncensored() {
+  opencode -m maple/deepseek-v4-1-flash-1017-uncensored "$@"
+}
+
+# Claude Code on DeepSeek V4.1 Flash via claude-code-router (see
+# home/mods/maple.nix). The Maple key doubles as the router's client key.
+# Telemetry, error reporting, and update checks stay off so the proxy is
+# the session's only outbound connection.
+claude-deepseek() {
+  ANTHROPIC_BASE_URL=http://127.0.0.1:3456 \
+    ANTHROPIC_AUTH_TOKEN="$MAPLE_API_KEY" \
+    CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 claude "$@"
+}
+claude-deepseek-uncensored() {
+  ANTHROPIC_MODEL=maple,deepseek-v4-1-flash-1017-uncensored \
+    claude-deepseek "$@"
+}
 
 # Start a paseo session as a new tab in the workspace containing the current
 # dir (deepest match), or in a new workspace if none exists. Unset

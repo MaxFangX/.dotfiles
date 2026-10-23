@@ -5,7 +5,7 @@
   imports = [
     ./core.nix
     ./paseo.nix
-    ./tinfoil.nix
+    ./confidential.nix
   ];
 
   home.packages = [

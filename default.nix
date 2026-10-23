@@ -19,17 +19,23 @@
   },
   hm ? import home-manager { inherit pkgs; },
 }:
+let
+  # For packages newer than the primary pin (nixos-25.11).
+  pkgs2605 = import sources.nixpkgs-2605 { inherit system; };
+in
 rec {
   inherit hm pkgs sources;
 
   # Personal packages
   agent-browser = pkgs.callPackage ./pkgs/agent-browser {};
-  # buzz needs pnpm_11 and pnpm fetcherVersion 4, which landed after the
-  # primary nixpkgs pin (nixos-25.11), so build it from the 26.05 pin.
-  buzz = (import sources.nixpkgs-2605 { inherit system; }).callPackage
-    ./pkgs/buzz { inherit claude-agent-acp codex-acp; };
+  # buzz needs pnpm_11 and pnpm fetcherVersion 4.
+  buzz = pkgs2605.callPackage ./pkgs/buzz {
+    inherit claude-agent-acp codex-acp;
+  };
   claude-agent-acp = pkgs.callPackage ./pkgs/claude-agent-acp {};
   claude-code = pkgs.callPackage ./pkgs/claude-code {};
+  # 2.0.0 is the version verified against the Maple proxy (maple.nix).
+  claude-code-router = pkgs2605.claude-code-router;
   codex = pkgs.callPackage ./pkgs/codex {};
   codex-acp = pkgs.callPackage ./pkgs/codex-acp { inherit codex; };
   complain = pkgs.callPackage ./pkgs/complain {};
@@ -39,21 +45,22 @@ rec {
   jj-hunk-tool = pkgs.callPackage ./pkgs/jj-hunk-tool {};
   kimi-code = pkgs.callPackage ./pkgs/kimi-code {};
   macctl = pkgs.callPackage ./pkgs/macctl {};
+  maple-proxy = pkgs.callPackage ./pkgs/maple-proxy {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
   opencode = pkgs.callPackage ./pkgs/opencode {};
   paseo = pkgs.callPackage ./pkgs/paseo {};
   paseo-app = pkgs.callPackage ./pkgs/paseo-app {};
   rsync = pkgs.callPackage ./pkgs/rsync.nix {};
-  # tinfoil-proxy's go.mod requires Go 1.26, newer than the primary pin's.
-  tinfoil-proxy = (import sources.nixpkgs-2605 { inherit system; })
-    .callPackage ./pkgs/tinfoil-proxy {};
+  # tinfoil-proxy's go.mod requires Go 1.26.
+  tinfoil-proxy = pkgs2605.callPackage ./pkgs/tinfoil-proxy {};
   vgit-nvim = pkgs.callPackage ./pkgs/vgit-nvim {};
   wdk-cli = pkgs.callPackage ./pkgs/wdk-cli {};
 
   # home-manager configs
   homeConfigs = import ./home {
-    inherit hm pkgs sources agent-browser buzz claude-code codex complain
-      git-hunk goose jj jj-hunk-tool kimi-code macctl omnara opencode paseo
-      paseo-app rsync tinfoil-proxy vgit-nvim wdk-cli;
+    inherit hm pkgs sources agent-browser buzz claude-code
+      claude-code-router codex complain git-hunk goose jj jj-hunk-tool
+      kimi-code macctl maple-proxy omnara opencode paseo paseo-app rsync
+      tinfoil-proxy vgit-nvim wdk-cli;
   };
 }
