@@ -179,18 +179,15 @@ alias claude-fast="claude --settings '{\"fastMode\": true}'"
 # Confidential inference #
 ##########################
 
-# Claude Code on DeepSeek V4.1 Flash via claude-code-router (see
-# home/mods/maple.nix). The Maple key doubles as the router's client key.
-# Telemetry, error reporting, and update checks stay off so the proxy is
-# the session's only outbound connection.
-claude-deepseek() {
-  ANTHROPIC_BASE_URL=http://127.0.0.1:3456 \
-    ANTHROPIC_AUTH_TOKEN="$MAPLE_API_KEY" \
-    CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 claude "$@"
+# `claude-confidential` (home/mods/confidential.nix) is Claude Code on
+# DeepSeek V4.1 Flash inside Tinfoil's enclave. The Maple routes are the
+# same wrapper with the model named.
+claude-maple() {
+  ANTHROPIC_MODEL=maple,deepseek-v4-1-flash claude-confidential "$@"
 }
-claude-deepseek-uncensored() {
+claude-uncensored() {
   ANTHROPIC_MODEL=maple,deepseek-v4-1-flash-1017-uncensored \
-    claude-deepseek "$@"
+    claude-confidential "$@"
 }
 
 # Start a paseo session as a new tab in the workspace containing the current

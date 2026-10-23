@@ -1,58 +1,45 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Wire TINFOIL_API_KEY and MAPLE_API_KEY into the Paseo config. See
-# confidential.nix for the design. Runs on home-manager activation. The
-# JSON is merged key by key, so re-running is safe.
+# Write the `claude-confidential` Paseo provider (see confidential.nix)
+# into ~/.paseo/config.json. Runs on home-manager activation. The JSON
+# is merged key by key, so re-running is safe.
 #
 # Env:
 #   PASEO_BIN  paseo binary, used to reload the daemon if one is running
+#   WRAPPER    absolute path of the claude-confidential wrapper
 
 env_file="$HOME/env/sensitive.sh"
 # shellcheck disable=SC1090
 [ -f "$env_file" ] && . "$env_file"
 tinfoil_key="${TINFOIL_API_KEY:-}"
-maple_key="${MAPLE_API_KEY:-}"
-if [ -z "$tinfoil_key" ] && [ -z "$maple_key" ]; then
-  echo "confidential-sync: no TINFOIL_API_KEY or MAPLE_API_KEY in" \
-    "$env_file; skipping"
+if [ -z "$tinfoil_key" ]; then
+  echo "confidential-sync: TINFOIL_API_KEY not set in $env_file; skipping"
   exit 0
 fi
 
-router_url="http://127.0.0.1:3456"
 paseo_home="${PASEO_HOME:-$HOME/.paseo}"
-
-###############
-# Paseo       #
-###############
-
-# The Maple key is the `claude-deepseek` provider's router token (see
-# maple.nix). That provider inherits Claude's model list, all of which
-# route to the default DeepSeek, so the uncensored variant is an extra
-# named entry. Nonessential traffic is off there, so the proxy is the
-# session's only outbound connection.
 paseo_cfg="$paseo_home/config.json"
 mkdir -p "$paseo_home"
 [ -s "$paseo_cfg" ] || echo '{ "version": 1 }' > "$paseo_cfg"
+
+# Paseo passes provider env literally, so the key is written in.
 tmp=$(mktemp)
-jq --indent 2 --arg maple "$maple_key" --arg router "$router_url" '
-  if $maple != "" then
-      .agents.providers."claude-deepseek" = {
-        extends: "claude",
-        label: "Claude Code / DeepSeek V4.1 Flash (Maple)",
-        description: ("Claude Code on DeepSeek V4.1 Flash through "
-          + "claude-code-router and the Maple proxy (confidential)"),
-        env: {
-          ANTHROPIC_BASE_URL: $router,
-          ANTHROPIC_AUTH_TOKEN: $maple,
-          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
-        },
-        additionalModels: [{
-          id: "maple,deepseek-v4-1-flash-1017-uncensored",
-          label: "DeepSeek V4.1 Flash Uncensored"
-        }]
-      }
-    else . end
+jq --indent 2 --arg tinfoil "$tinfoil_key" --arg wrapper "$WRAPPER" '
+  .agents.providers."claude-confidential" = {
+    extends: "claude",
+    label: "Claude Code (confidential)",
+    description: ("Claude Code on DeepSeek V4.1 Flash inside Tinfoil and "
+      + "Maple enclaves, via claude-code-router"),
+    command: [$wrapper],
+    env: { TINFOIL_API_KEY: $tinfoil },
+    additionalModels: [
+      { id: "maple,deepseek-v4-1-flash",
+        label: "DeepSeek V4.1 Flash (Maple)" },
+      { id: "maple,deepseek-v4-1-flash-1017-uncensored",
+        label: "DeepSeek V4.1 Flash Uncensored (Maple)" }
+    ]
+  }
 ' "$paseo_cfg" > "$tmp"
 mv "$tmp" "$paseo_cfg"
 

@@ -22,46 +22,15 @@
   ...
 }:
 let
-  isLinux = pkgs.stdenv.hostPlatform.isLinux;
-  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  mkService = import ./user-service.nix { inherit config lib pkgs; };
 
   # With no enclave pinned, the proxy discovers Tinfoil's model router
   # enclave and verifies it against the transparency log on startup.
-  proxyArgs = [ "${tinfoil-proxy}/bin/tinfoil-proxy" ];
+  proxy = mkService "Tinfoil Proxy" (lib.getExe tinfoil-proxy);
 in
 {
   home.packages = [ tinfoil-proxy ];
 
-  # Linux — systemd user service
-  systemd.user.services.tinfoil-proxy = lib.mkIf isLinux {
-    Install.WantedBy = [ "default.target" ];
-
-    Unit = {
-      Description = "Tinfoil Proxy";
-      After = [ "network.target" ];
-    };
-
-    Service = {
-      Type = "simple";
-      ExecStart = lib.escapeShellArgs proxyArgs;
-      Restart = "on-failure";
-      RestartSec = 5;
-    };
-  };
-
-  # macOS — launchd agent
-  launchd.agents.tinfoil-proxy = lib.mkIf isDarwin {
-    enable = true;
-    config = {
-      ProcessType = "Background";
-      ProgramArguments = proxyArgs;
-      WorkingDirectory = config.home.homeDirectory;
-      RunAtLoad = true;
-      KeepAlive = {
-        SuccessfulExit = false;
-        Crashed = true;
-      };
-      ThrottleInterval = 5;
-    };
-  };
+  systemd.user.services.tinfoil-proxy = proxy.systemd;
+  launchd.agents.tinfoil-proxy = proxy.launchd;
 }

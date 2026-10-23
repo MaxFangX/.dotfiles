@@ -11,9 +11,9 @@ core.nix                Base layer. Shell, editor, CLI tools.
     │                   direnv). Not for secure machines.
     │                   Pulls in paseo.nix (Paseo CLI; the
     │                   always-on daemon stays opt-in) and
-    │                   confidential.nix (Tinfoil + Maple
-    │                   proxies: DeepSeek V4.1 Flash in Claude
-    │                   Code and Paseo).
+    │                   confidential.nix (Claude Code on
+    │                   DeepSeek V4.1 Flash inside Tinfoil and
+    │                   Maple enclaves).
     │
     └── dev-lexe.nix    Lexe-specific dev environment.
         │
