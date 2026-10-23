@@ -1,9 +1,9 @@
-# Shared by add.sh/remove.sh: resolve the <dir> argument. Absolute paths and
-# relative paths landing outside the current repo pass through unchanged. A
-# relative path that lands *inside* the repo (e.g. `add max/07-18-foo` from
-# within the checkout) almost certainly wasn't meant literally, so reinterpret
-# it as a path under the repo's workspaces dir: the nearest `workspaces` next
-# to an ancestor of the repo root (e.g. ~/lexe/workspaces for the repo
+# Shared by add.sh/remove.sh: resolve the <dir> argument to an absolute path.
+# Paths landing outside the current repo resolve as given. A relative path
+# that lands *inside* the repo (e.g. `add max/07-18-foo` from within the
+# checkout) almost certainly wasn't meant literally, so reinterpret it as a
+# path under the repo's workspaces dir: the nearest `workspaces` next to an
+# ancestor of the repo root (e.g. ~/lexe/workspaces for the repo
 # ~/lexe/org/lexe), created adjacent to the repo root if none exists yet.
 resolve_workspace_dir() {
     local dir="$1"
@@ -12,12 +12,20 @@ resolve_workspace_dir() {
         return
     fi
 
-    # Lexical resolution only (-m): `add`'s path doesn't exist yet.
-    local abs root
-    abs="$(realpath -m "$PWD/$dir")"
+    # Resolve `.` and `..` lexically: `add`'s path doesn't exist yet, and BSD
+    # realpath (first on macOS PATH) lacks GNU's -m.
+    local abs="" part parts root
+    IFS=/ read -ra parts <<< "$(pwd -P)/$dir"
+    for part in "${parts[@]}"; do
+        case "$part" in
+            "" | .) ;;
+            ..) abs="${abs%/*}" ;;
+            *) abs="$abs/$part" ;;
+        esac
+    done
     root="$(jj root 2>/dev/null || true)"
     if [[ -z "$root" || "$abs" != "$root/"* ]]; then
-        echo "$dir"
+        echo "$abs"
         return
     fi
 
