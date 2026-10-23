@@ -5,13 +5,14 @@
 # the logic lives in the sibling scripts, located via `source_directory()`.
 
 set shell := ["bash", "-euo", "pipefail", "-c"]
+set positional-arguments := true
 
 # Create a colocated jj workspace (+ git worktree). Best run from the repo.
 [no-cd]
 add dir *args:
-    @{{ source_directory() }}/add.sh {{ quote(dir) }} {{ args }}
+    @{{ source_directory() }}/add.sh "$@"
 
 # Remove a jj workspace and its colocated git worktree, safely.
 [no-cd]
 remove dir *args:
-    @{{ source_directory() }}/remove.sh {{ quote(dir) }} {{ args }}
+    @{{ source_directory() }}/remove.sh "$@"
