@@ -13,8 +13,8 @@
 #
 #       ANTHROPIC_MODEL=maple,deepseek-v4-1-flash
 #
-#     Claude Code warns `unrecognized_model` and assumes a 200K context
-#     for such names, so it compacts earlier than the 1M window needs.
+#     Claude Code warns `unrecognized_model` for such names and would
+#     assume a 200K context, so the wrapper pins the window to 1M.
 #     The `openrouter` transformer closes thinking blocks early, so no
 #     transformer is configured.
 #
@@ -116,6 +116,7 @@ let
       export ANTHROPIC_BASE_URL="http://127.0.0.1:${toString routerPort}"
       export ANTHROPIC_AUTH_TOKEN="$TINFOIL_API_KEY"
       export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+      export CLAUDE_CODE_MAX_CONTEXT_TOKENS=1048576
 
       mcp=$(jq -c --argjson keep '${builtins.toJSON mcpServers}' '
         { mcpServers: ((.mcpServers // {})
