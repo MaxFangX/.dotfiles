@@ -63,9 +63,25 @@ recovery is where uncommitted work gets lost (see the **jj** skill on stale
 working copies). Land your own fixups above their bases, or wait for the
 notification before you touch the stack.
 
-If the `mcp__paseo__*` tools are missing from your session, the **paseo**
-skill lists the CLI equivalents; use those rather than falling back to the
-Agent tool.
+## Without the MCP tools
+
+When the `mcp__paseo__*` tools are missing (a session started before tool
+injection was turned on, or a provider without MCP), the `paseo` CLI covers
+the same flow; use it rather than falling back to the Agent tool:
+
+```sh
+paseo workspace create --isolation local --path <dir> --project <id>
+paseo run -d --workspace <id> --mode <mode> "<prompt>"
+paseo agent wait <id>      # no finish notification; wait instead
+paseo send --no-wait <id> "<follow-up>"
+```
+
+There is no `list_profiles` equivalent. Gotchas the CLI help gets wrong:
+
+- `--mode` takes the provider's mode id. Claude's are `default`, `plan`,
+  `acceptEdits`, `bypassPermissions`; the help's `bypass` is not one.
+- `paseo send` returns after the turn. Its background flag is `--no-wait`;
+  there is no `-d` (that is `paseo run`'s).
 
 ## Reading notifications
 

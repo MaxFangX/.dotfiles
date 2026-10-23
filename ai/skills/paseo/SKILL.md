@@ -128,17 +128,4 @@ paseo heartbeat create --cron "*/15 * * * *" "check the build"
 
 Discover with `paseo --help` and `paseo <cmd> --help`.
 
-Gotchas the help text gets wrong or leaves out:
-
-- `--mode` takes the provider's mode id. Claude's are `default`, `plan`,
-  `acceptEdits`, `bypassPermissions`; the help's `bypass` is not one.
-- `paseo send` returns after the turn. The background flag is `--no-wait`;
-  there is no `-d` (that is `paseo run`'s).
-- When the `mcp__paseo__*` tools are missing (a session started before tool
-  injection was turned on, or a provider without MCP), the CLI covers the
-  orchestration flow: `paseo workspace create --isolation local --path <dir>
-  --project <id>`, `paseo run -d --workspace <id> ...`, `paseo agent wait
-  <id>`, `paseo send --no-wait <id> ...`. You lose `list_profiles` and finish
-  notifications, so wait with `paseo agent wait` instead.
-
 For product questions, setup, logs, version problems, or troubleshooting, use the **paseo-help** skill.
