@@ -30,17 +30,22 @@ context intact. Read the **paseo** skill for the tool reference.
 2. **Workspace.** The worker owns its directory exclusively.
    - jj repo: from the repo, run
      `just -g workspace add <abs-dir> --no-paseo` to create the colocated
-     jj workspace and bookmark, then
+     jj workspace and bookmark. Do not register it as a Paseo workspace:
+     the worker runs there through `create_agent`'s `cwd` and stays in
+     your workspace, visible only in your subagents track. (`--no-paseo`
+     also skips the recipe's own detached agent.) Only if the host rejects
+     `cwd` as an unrecognized key, register it the old way instead:
      `create_workspace { isolation: "local", path: <abs-dir>, projectId, title }`
-     with your own workspace's `projectId` from `list_workspaces`. Do not
-     use worktree isolation here: it makes a git worktree jj does not know
-     about.
-   - git-only repo: `create_workspace { isolation: "worktree", mode: "branch-off", branchName, baseBranch, title }`.
-   - Worker workspaces sit beside the user's own in every Paseo list, so
-     `title` names the parent: `<your workspace title>/<task>`, e.g.
-     `09-30-general/description-hash`.
-3. **Brief.** `create_agent` with a `title`, the `workspaceId`, and an
-   `initialPrompt` that stands alone; the worker starts with zero context.
+     with your `projectId` from `list_workspaces`, never worktree
+     isolation, which makes a git worktree jj does not know about.
+   - git-only repo: `create_workspace { isolation: "worktree", mode: "branch-off", branchName, baseBranch, title }`;
+     Paseo makes the worktree, so the workspace is unavoidable.
+   - Any worker workspace you do register sits beside the user's own in
+     every Paseo list, so `title` names the parent:
+     `<your workspace title>/<task>`, e.g. `09-30-general/description-hash`.
+3. **Brief.** `create_agent` with a `title`, an `initialPrompt` that stands
+   alone (the worker starts with zero context), and either `cwd: <abs-dir>`
+   (jj) or the `workspaceId` from `create_workspace` (git-only).
    Use the briefing template from the **paseo-handoff** skill: task,
    context, relevant files, acceptance criteria, constraints. Add two
    standing instructions: end the final message with a line starting
@@ -84,9 +89,9 @@ them.
 
 ## Teardown
 
-A worker workspace is scaffolding, not a deliverable. Once you have
-integrated a worker's commits and reviewed the result, tear it down in this
-order: `archive_agent` on the worker, `archive_workspace` on its workspace,
-then `just -g workspace remove <abs-dir>` (jj repos) to drop the jj
-workspace and directory. Workers the user paused stay up until the user
-decides; everything else goes before you report.
+A worker's checkout is scaffolding, not a deliverable. Once you have
+integrated its commits and reviewed the result, tear it down in this order:
+`archive_agent` on the worker; `archive_workspace` if you registered a
+workspace for it; then `just -g workspace remove <abs-dir>` (jj repos) to
+drop the jj workspace and directory. Workers the user paused stay up until
+the user decides; everything else goes before you report.
