@@ -46,6 +46,10 @@
     "tad" # Quick Look can't render tables, so a GUI CSV/TSV viewer
   ];
 
+  # Keep Claude Code transcripts three years on this machine; other hosts
+  # get Claude Code's 30-day default.
+  claude.settings.cleanupPeriodDays = 1095;
+
   home.username = "fang";
   home.homeDirectory = "/Users/fang";
   home.stateVersion = "25.05";

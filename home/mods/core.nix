@@ -45,6 +45,7 @@ let
 in
 {
   imports = [
+    ./claude-settings.nix
     ./git.nix
     ./jj.nix
     # Shared lexe.agent identity option, available on all machines
@@ -159,7 +160,8 @@ in
     ".codex/skills/security-audit".source = securityAuditSkill;
     # TODO(max): Let Claude Code manage settings.json itself for now, since
     # the home-manager symlink into /nix/store is read-only, which breaks
-    # `/effort` and other commands that write to settings.json.
+    # `/effort` and other commands that write to settings.json. Per-host
+    # keys go through `claude.settings` (claude-settings.nix) instead.
     # ".claude/settings.json".source =
     #   ../../claude/settings.json;
   } // sharedSkillFiles;
