@@ -1,6 +1,6 @@
 # General dev tooling — LSP, formatters, direnv.
 # Not suitable for security-critical machines.
-{ pkgs, claude-code, goose, kimi-code, rsync, ... }:
+{ pkgs, claude-code, goose, rsync, ... }:
 {
   imports = [
     ./core.nix
@@ -10,7 +10,6 @@
 
   home.packages = [
     claude-code
-    kimi-code # Moonshot AI's `kimi` CLI (see pkgs/kimi-code)
     rsync # Platform-aware wrapper (see pkgs/rsync.nix)
     pkgs.bat # Cat with syntax highlighting
     pkgs.gh # GitHub CLI

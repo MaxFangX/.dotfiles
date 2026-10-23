@@ -32,8 +32,7 @@
 # context, tool use, vision, and reasoning efforts low/high/xhigh/max,
 # default high.
 #
-# Client wiring (opencode, kimi, Paseo, aliases) lives in
-# confidential.nix.
+# Client wiring lives in confidential.nix.
 {
   config,
   lib,

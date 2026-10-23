@@ -43,11 +43,9 @@ rec {
   goose = pkgs.callPackage ./pkgs/goose {};
   jj = pkgs.callPackage ./pkgs/jj {};
   jj-hunk-tool = pkgs.callPackage ./pkgs/jj-hunk-tool {};
-  kimi-code = pkgs.callPackage ./pkgs/kimi-code {};
   macctl = pkgs.callPackage ./pkgs/macctl {};
   maple-proxy = pkgs.callPackage ./pkgs/maple-proxy {};
   omnara = pkgs.callPackage ./pkgs/omnara {};
-  opencode = pkgs.callPackage ./pkgs/opencode {};
   paseo = pkgs.callPackage ./pkgs/paseo {};
   paseo-app = pkgs.callPackage ./pkgs/paseo-app {};
   rsync = pkgs.callPackage ./pkgs/rsync.nix {};
@@ -60,7 +58,7 @@ rec {
   homeConfigs = import ./home {
     inherit hm pkgs sources agent-browser buzz claude-code
       claude-code-router codex complain git-hunk goose jj jj-hunk-tool
-      kimi-code macctl maple-proxy omnara opencode paseo paseo-app rsync
-      tinfoil-proxy vgit-nvim wdk-cli;
+      macctl maple-proxy omnara paseo paseo-app rsync tinfoil-proxy
+      vgit-nvim wdk-cli;
   };
 }

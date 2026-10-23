@@ -12,11 +12,9 @@
   goose,
   jj,
   jj-hunk-tool,
-  kimi-code,
   macctl,
   maple-proxy,
   omnara,
-  opencode,
   paseo,
   paseo-app,
   rsync,
@@ -60,10 +58,8 @@ let
       claude-code = stubUnsupported claude-code;
       codex = stubUnsupported codex;
       goose = stubUnsupported goose;
-      kimi-code = stubUnsupported kimi-code;
       macctl = stubUnsupported macctl;
       omnara = stubUnsupported omnara;
-      opencode = stubUnsupported opencode;
       paseo = stubUnsupported paseo;
       paseo-app = stubUnsupported paseo-app;
       tinfoil-proxy = stubUnsupported tinfoil-proxy;

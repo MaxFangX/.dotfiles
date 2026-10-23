@@ -12,8 +12,8 @@ core.nix                Base layer. Shell, editor, CLI tools.
     │                   Pulls in paseo.nix (Paseo CLI; the
     │                   always-on daemon stays opt-in) and
     │                   confidential.nix (Tinfoil + Maple
-    │                   proxies: Kimi K3 and DeepSeek V4.1
-    │                   Flash in kimi/opencode/claude/paseo).
+    │                   proxies: DeepSeek V4.1 Flash in Claude
+    │                   Code and Paseo).
     │
     └── dev-lexe.nix    Lexe-specific dev environment.
         │
