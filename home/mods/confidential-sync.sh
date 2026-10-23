@@ -24,6 +24,9 @@ mkdir -p "$paseo_home"
 [ -s "$paseo_cfg" ] || echo '{ "version": 1 }' > "$paseo_cfg"
 
 # Paseo passes provider env literally, so the key is written in.
+# `models` replaces the inherited Claude list. The Tinfoil entry keeps a
+# Claude ID: any name reaches the router's default route, and a 1M one
+# makes Claude Code's context accounting match DeepSeek's window.
 tmp=$(mktemp)
 jq --indent 2 --arg tinfoil "$tinfoil_key" --arg wrapper "$WRAPPER" '
   .agents.providers."claude-confidential" = {
@@ -33,7 +36,8 @@ jq --indent 2 --arg tinfoil "$tinfoil_key" --arg wrapper "$WRAPPER" '
       + "Maple enclaves, via claude-code-router"),
     command: [$wrapper],
     env: { TINFOIL_API_KEY: $tinfoil },
-    additionalModels: [
+    models: [
+      { id: "opus[1m]", label: "DeepSeek V4.1 Flash (Tinfoil)" },
       { id: "maple,deepseek-v4-1-flash",
         label: "DeepSeek V4.1 Flash (Maple)" },
       { id: "maple,deepseek-v4-1-flash-1017-uncensored",

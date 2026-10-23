@@ -31,9 +31,7 @@
 #  3. Paseo can't expand env vars in provider config, so
 #     confidential-sync.sh writes a `claude-confidential` provider that
 #     extends `claude` with the wrapper as its command and the literal
-#     key in its env. The Maple models are extra named entries. The
-#     inherited Claude names all route to Tinfoil, so pick a 1M one for
-#     correct context accounting.
+#     key in its env, with one model entry per route.
 #
 # Keys live in ~/env/sensitive.sh as TINFOIL_API_KEY and MAPLE_API_KEY,
 # per machine and never in this repo. Everything here needs the Tinfoil
