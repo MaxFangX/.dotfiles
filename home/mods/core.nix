@@ -23,6 +23,7 @@ let
     "paseo-orchestrate"
     "q"
     "rebase-review"
+    "skill-sync"
     "temp-worktree"
     "tighten"
     "tighten-code"
