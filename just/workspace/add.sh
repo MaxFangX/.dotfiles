@@ -4,7 +4,7 @@ set -euo pipefail
 # Create a colocated jj workspace (+ git worktree) at <dir>. Best run from the
 # repo. The jj analog of `worktree add`: all workspaces share one commit graph
 # and op log, and each gets a real `.git` so git tooling still works inside.
-# Usage: just -g workspace add <dir> [--no-paseo]
+# Usage: just -g workspace add <dir> [--base <rev>] [--no-paseo]
 # A relative <dir> that lands inside the repo is reinterpreted as a path under
 # the repo's workspaces dir (see resolve-dir.sh).
 
@@ -15,16 +15,27 @@ shift
 
 # By default, after creating the workspace, start a detached paseo agent
 # inside it, which also registers the directory as a paseo workspace.
-# --no-paseo opts out.
+# --no-paseo opts out. --base <rev> bases a new branch on <rev> instead of
+# trunk().
 paseo_run=true
-for arg in "$@"; do
-    case "$arg" in
+base=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
         --no-paseo) paseo_run=false ;;
+        --base)
+            if [[ $# -lt 2 ]]; then
+                echo "workspace add: --base requires a revision" >&2
+                exit 1
+            fi
+            base="$2"
+            shift
+            ;;
         *)
-            echo "workspace add: unknown argument '$arg'" >&2
+            echo "workspace add: unknown argument '$1'" >&2
             exit 1
             ;;
     esac
+    shift
 done
 
 # `jj workspace add` creates the git worktree itself and auto-colocates (a
@@ -56,13 +67,20 @@ fi
 name="$(basename "$dir")"
 
 # Create the colocated workspace. Like `worktree add`, check out an existing
-# bookmark at its tip; otherwise base the workspace on the current
-# workspace's parent and start a fresh bookmark there.
+# bookmark at its tip; otherwise base the workspace on --base if given, else
+# trunk() (master/main), and start a fresh bookmark there. Basing on trunk()
+# rather than the current workspace's parent keeps new branches rooted on
+# master even when this runs from a side workspace parked mid-stack.
 if [[ -n "$(jj log --no-pager --no-graph -r "present($branch)" -T '"x"' 2>/dev/null)" ]]; then
+    if [[ -n "$base" ]]; then
+        echo "workspace add: branch '$branch' already exists;" \
+            "--base only applies to new branches" >&2
+        exit 1
+    fi
     jj workspace add --name "$name" --revision "$branch" "$dir"
     new_branch=false
 else
-    jj workspace add --name "$name" "$dir"
+    jj workspace add --name "$name" --revision "${base:-trunk()}" "$dir"
     new_branch=true
 fi
 
