@@ -25,8 +25,8 @@ vim.opt.rtp:prepend(lazypath)
 
 -- ~/.config/nvim is a read-only nix store copy, so the lockfile lives in
 -- nvim's state dir. `hms` seeds it from the tracked nvim/lazy-lock.json and
--- restores plugins to it (see home/mods/core.nix). To update the pins, run
--- `:Lazy update`, then copy the state-dir lockfile over the tracked one.
+-- restores plugins to it (see home/mods/core.nix); `just update nvim`
+-- updates the pins.
 local lazy_state_dir = vim.fn.stdpath("state") .. "/lazy"
 vim.fn.mkdir(lazy_state_dir, "p")
 

@@ -16,9 +16,17 @@ skills-diff peer *args:
 skills-sync peer direction *args:
     ./just/skill-sync.sh {{ peer }} sync {{ direction }} {{ args }}
 
-# Update all custom packages (or one: just update codex)
+# Update all custom packages and nvim plugins (or one: just update codex)
 update package="":
-    nix-shell pkgs/update.nix {{ if package != "" { "--argstr package " + package } else { "" } }}
+    #!/usr/bin/env bash
+    set -euo pipefail
+    pkg="{{ package }}"
+    if [ "$pkg" != nvim ]; then
+      nix-shell pkgs/update.nix ${pkg:+--argstr package "$pkg"}
+    fi
+    if [ -z "$pkg" ] || [ "$pkg" = nvim ]; then
+      just/nvim-update.sh
+    fi
 
 # Run npins commands (e.g. just npins show)
 npins *args:
