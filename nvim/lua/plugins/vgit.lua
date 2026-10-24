@@ -1,5 +1,5 @@
 -- Visual Git Plugin configuration
--- Indexed reviews are fork-only. Prefer a local checkout when available;
+-- The review screens are fork-only. Prefer a local checkout when available;
 -- otherwise load the pinned fork that hms links in (see pkgs/vgit-nvim).
 local local_vgit = vim.fn.expand('~/dev/nvim/vgit.nvim')
 local nix_vgit = vim.fn.stdpath('data') .. '/vgit.nvim'
@@ -536,7 +536,7 @@ return {
     end
 
 
-    -- Shared keymaps for the four review scenes
+    -- Shared keymaps for the two review scenes
     local review_keymaps = {
       toggle_focus = {
         key = '<Tab>',
@@ -544,24 +544,12 @@ return {
       },
       previous = { key = 'k', desc = 'Previous' },
       next = { key = 'j', desc = 'Next' },
-      mark_hunk = { key = 's', desc = 'Mark hunk seen' },
+      mark_hunk = { key = 's', desc = 'Mark hunk seen (visual: mark selected lines)' },
       mark_file = { key = 'S', desc = 'Mark file seen' },
-      unmark_hunk = { key = 'u', desc = 'Unmark hunk' },
+      unmark_hunk = { key = 'u', desc = 'Unmark hunk (visual: unmark selected lines)' },
       unmark_file = { key = 'U', desc = 'Unmark file' },
       reset = { key = 'R', desc = 'Reset all marks' },
     }
-
-    -- Indexed reviews also support line-level marking via visual select
-    local indexed_review_keymaps = vim.tbl_extend('force', review_keymaps, {
-      mark_hunk = {
-        key = 's',
-        desc = 'Mark hunk seen (visual: mark selected lines)',
-      },
-      unmark_hunk = {
-        key = 'u',
-        desc = 'Unmark hunk (visual: unmark selected lines)',
-      },
-    })
 
     local vgit = require('vgit')
     vgit.setup({
@@ -706,22 +694,12 @@ return {
           require('vgit').project_commits_preview()
         end,
 
-        -- (r)eview by (c)ommit - indexed (approved-snapshot based; supports
-        -- line-level marking via visual select + s/u)
+        -- (r)eview by (c)ommit
         ['n grc'] = function()
-          require('vgit').indexed_commit_review()
-        end,
-        -- (r)eview by (f)ile - indexed
-        ['n grf'] = function()
-          require('vgit').indexed_file_review()
-        end,
-
-        -- (g)it (c)ommit (r)eview - classic hunk-mark based review
-        ['n gcr'] = function()
           require('vgit').project_review_by_commit()
         end,
-        -- (g)it (f)ile (r)eview - classic
-        ['n gfr'] = function()
+        -- (r)eview by (f)ile
+        ['n grf'] = function()
           require('vgit').project_review_by_file()
         end,
 
@@ -851,22 +829,13 @@ return {
           },
         },
 
-        -- Classic review scenes
+        -- Review scenes
         project_review_by_file = {
           keymaps = review_keymaps,
         },
         project_review_by_commit = {
           list_position = 'left',
           keymaps = review_keymaps,
-        },
-
-        -- Indexed review scenes (approved-snapshot based)
-        indexed_file_review = {
-          keymaps = indexed_review_keymaps,
-        },
-        indexed_commit_review = {
-          list_position = 'left',
-          keymaps = indexed_review_keymaps,
         },
 
         -- Visual settings inspired by delta configuration

@@ -1,6 +1,6 @@
 # Update with `nix-shell pkgs/update.nix --argstr package vgit-nvim`
 #
-# @maxfangx's fork of vgit.nvim, whose indexed reviews the nvim keymaps rely
+# @maxfangx's fork of vgit.nvim, whose review screens the nvim keymaps rely
 # on. hms links the build to ~/.local/share/nvim/vgit.nvim, where
 # nvim/lua/plugins/vgit.lua loads it as a local lazy.nvim plugin unless a
 # checkout exists at ~/dev/nvim/vgit.nvim (preferred, so edits there apply
@@ -34,7 +34,7 @@ vimUtils.buildVimPlugin {
   passthru.updateScript = ./update.sh;
 
   meta = {
-    description = "Visual Git plugin for Neovim (fork with indexed reviews)";
+    description = "Visual Git plugin for Neovim (fork with review screens)";
     homepage = "https://github.com/maxfangx/vgit.nvim";
     license = lib.licenses.mit;
     platforms = lib.platforms.all;
