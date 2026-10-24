@@ -15,7 +15,12 @@ cdl() { cd "$@" && l; }
 alias ll='ls -alF'
 alias la='ls -a'
 alias l='ls -CF'
-alias ls='ls -GFh'
+# GNU ls takes --color; BSD ls colors with -G, which GNU reads as --no-group.
+if command ls --color=auto -d . > /dev/null 2>&1; then
+    alias ls='ls --color=auto -Fh'
+else
+    alias ls='ls -GFh'
+fi
 
 ##########
 # Editor #

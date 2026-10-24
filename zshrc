@@ -167,6 +167,16 @@ if [ -f ~/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
     source ~/.nix-profile/etc/profile.d/hm-session-vars.sh
 fi
 
+# path_helper (/etc/zprofile) moves macOS's system dirs to the front of PATH,
+# so BSD tools shadow nix's GNU ones and /usr/bin outranks our own bin dirs.
+# Move the system dirs back to the end, keeping everything else in order.
+# Runs before common.sh, whose aliases probe which tools are on PATH.
+typeset -U path PATH
+() {
+    local -a sys=(${(f)"$(cat /etc/paths /etc/paths.d/*(N) 2>/dev/null)"})
+    path=(${path:|sys} ${path:*sys})
+}
+
 # Load settings common to both bash and zsh
 source ~/.dotfiles/shell/common.sh
 

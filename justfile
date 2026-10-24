@@ -143,7 +143,7 @@ remove-trailing-spaces *ARGS:
         for file in $files; do
             if grep -q '[[:space:]]$' "$file" 2>/dev/null; then
                 echo "Fixing: $file"
-                sed -i '' 's/[[:space:]]*$//' "$file"
+                sed -i.bak 's/[[:space:]]*$//' "$file" && rm "$file.bak"
                 ((fixed_count++))
             fi
         done
