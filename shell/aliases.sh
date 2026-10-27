@@ -199,7 +199,8 @@ claude-uncensored() {
 # dir (deepest match), or in a new workspace if none exists. Unset
 # PASEO_WORKSPACE_ID (exported by paseo terminals, preferred over cwd) and an
 # agent shell's PASEO_AGENT_* (which run it in the agent's workspace) so the
-# run keys off the current dir.
+# run keys off the current dir. The model is named by its exact ID, since
+# Paseo's model list has no aliases like `opus`.
 paseo-run() {
   local ws ws_args=()
   ws=$(paseo workspace ls --json | jq -r --arg pwd "$PWD" '
@@ -208,8 +209,8 @@ paseo-run() {
   [ -n "$ws" ] && ws_args=(--workspace "$ws")
   env -u PASEO_WORKSPACE_ID -u PASEO_AGENT_ID -u PASEO_AGENT_CWD \
     paseo run '/jj coedit' \
-      --provider claude/opus --thinking high --mode bypassPermissions \
-      --detach "${ws_args[@]}"
+      --provider claude/claude-opus-5-5 --thinking xhigh \
+      --mode bypassPermissions --detach "${ws_args[@]}"
 }
 
 ########

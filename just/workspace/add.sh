@@ -137,6 +137,7 @@ if [[ "$paseo_run" == true ]]; then
 fi
 
 # Start a detached paseo agent in the new workspace (sends "/jj coedit" to Opus).
+# Name the model by its exact ID: Paseo's model list has no aliases like `opus`.
 #
 # `paseo run` picks its workspace by precedence: --workspace, then the calling
 # agent's workspace (PASEO_AGENT_ID), then PASEO_WORKSPACE_ID, then a fresh
@@ -147,7 +148,7 @@ if [[ -n "$ws_id" ]]; then
     (
         cd "$dir"
         env -u PASEO_WORKSPACE_ID -u PASEO_AGENT_ID paseo run "/jj coedit" \
-            --provider claude/opus --thinking high --mode bypassPermissions \
-            --detach --workspace "$ws_id"
+            --provider claude/claude-opus-5-5 --thinking xhigh \
+            --mode bypassPermissions --detach --workspace "$ws_id"
     )
 fi
