@@ -1,20 +1,20 @@
 {
-  "version": "0.39.1",
-  "srcHash": "sha256-WIg6WAnk3728NrZVh8JYtu2iRoHi8lYT2e5CDgOg2Sc=",
+  "version": "0.39.4",
+  "srcHash": "sha256-Apa01SDrDupntTWx+yNM/fd8oanrNuE0/Ea7ho0dgM0=",
   "x86_64-linux": {
-    "url": "https://github.com/vercel-labs/agent-browser/releases/download/v0.39.1/agent-browser-linux-musl-x64",
-    "hash": "sha256-dFB82rmKqRvcFDRsVFr/l0ZAoiXkP4w9bCMWT4wPm7k="
+    "url": "https://github.com/vercel-labs/agent-browser/releases/download/v0.39.4/agent-browser-linux-musl-x64",
+    "hash": "sha256-NKi+fAYqmRZPwCMi8irF9ChwIGzHtZu0DvBFlYrTcFs="
   },
   "aarch64-linux": {
-    "url": "https://github.com/vercel-labs/agent-browser/releases/download/v0.39.1/agent-browser-linux-musl-arm64",
-    "hash": "sha256-xJWfPhk8W8jzM2EzY/JfLqzuyv4loIIYQ7JxkGR0og8="
+    "url": "https://github.com/vercel-labs/agent-browser/releases/download/v0.39.4/agent-browser-linux-musl-arm64",
+    "hash": "sha256-pTLBO99Axrh1XMUscR9j/QIsnnQD/Oeha4/oSHyIxZU="
   },
   "x86_64-darwin": {
-    "url": "https://github.com/vercel-labs/agent-browser/releases/download/v0.39.1/agent-browser-darwin-x64",
-    "hash": "sha256-M5y5qm39QEhWz5ON80zTtHecYd/Vf8JXvhGxT9Gohfk="
+    "url": "https://github.com/vercel-labs/agent-browser/releases/download/v0.39.4/agent-browser-darwin-x64",
+    "hash": "sha256-IVIqjsNAY/opSwySitA9NIXxgh6+IvnaK0e4mWP3Ma8="
   },
   "aarch64-darwin": {
-    "url": "https://github.com/vercel-labs/agent-browser/releases/download/v0.39.1/agent-browser-darwin-arm64",
-    "hash": "sha256-zBj6xB2dyYIZGDQKE25kMobqBVRMTdNWcbeW8ah0ze8="
+    "url": "https://github.com/vercel-labs/agent-browser/releases/download/v0.39.4/agent-browser-darwin-arm64",
+    "hash": "sha256-AxfONRcpBcd1wls5ORS8JZcBpGSHequXU+yIlvbji/c="
   }
 }

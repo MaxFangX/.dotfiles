@@ -1,14 +1,14 @@
 {
   "x86_64-linux": {
-    "version": "0.25.16",
+    "version": "0.25.17",
     "target": "linux-x64",
-    "url": "https://releases.omnara.com/0.25.16/omnara-linux-x64",
-    "hash": "sha256-5++nF5wNoXcPltZ0Q5tV/YZP7LTwXbtbOKz8a68Rs2g="
+    "url": "https://releases.omnara.com/0.25.17/omnara-linux-x64",
+    "hash": "sha256-FO1v0MIoTt4ql1ASaHuTxuSV7MSPtwY4gGVljVIILlM="
   },
   "aarch64-darwin": {
-    "version": "0.25.16",
+    "version": "0.25.17",
     "target": "darwin-arm64",
-    "url": "https://releases.omnara.com/0.25.16/omnara-darwin-arm64.zip",
-    "hash": "sha256-TEGBnATGRicV5Te2dEKYolWn/MRCm0e1q/c6P/EZiCY="
+    "url": "https://releases.omnara.com/0.25.17/omnara-darwin-arm64.zip",
+    "hash": "sha256-n3Z5v0Kh14M6qsrSDLwH+0+pj6lHagTsB1EJLhZUUwc="
   }
 }
