@@ -1,6 +1,8 @@
 # Paseo. Imported by mods/dev.nix, so every dev machine gets:
 #
-#  1. The nix-packaged @getpaseo/cli, i.e. `paseo` in PATH.
+#  1. Paseo from @maxfangx's fork releases (pkgs/paseo): the `paseo` CLI
+#     and daemon everywhere, plus the desktop app on macOS, which lands in
+#     ~/Applications/Home Manager Apps via targets.darwin.copyApps.
 #
 #  2. A `cross-env` shim for local Paseo *development* (only when a
 #     checkout exists). Paseo's paseo.json setup/service commands invoke
@@ -10,11 +12,7 @@
 #     a fork that continually rebases onto upstream, so we fix this in the
 #     environment rather than editing the upstream-tracked paseo.json.
 #
-#  3. The Paseo desktop app from @maxfangx's fork releases
-#     (macOS only; a stub elsewhere). Lands in
-#     ~/Applications/Home Manager Apps via targets.darwin.copyApps.
-#
-#  4. Daemon settings (`lexe.paseo.daemonConfig`), applied to
+#  3. Daemon settings (`lexe.paseo.daemonConfig`), applied to
 #     ~/.paseo/config.json at activation with `paseo daemon config set`
 #     and reloaded live when a daemon is up. The daemon owns that file
 #     (the settings UI writes it), so nix can't manage it as a whole;
@@ -24,19 +22,18 @@
 #
 # Plus one opt-in piece:
 #
-#  5. An always-on Paseo *daemon* (`lexe.paseo.enableService`).
-#     Runs `paseo daemon run` from the nix-packaged
-#     @getpaseo/cli as a systemd user service (Linux) or launchd agent
-#     (macOS), modeled on home/mods/omnara.nix. Relay stays on by default
-#     so the daemon is reachable from the phone/desktop app; pair it with
-#     `paseo daemon pair`. Off by default so importing this module on a
-#     dev laptop doesn't spin up a production daemon.
+#  4. An always-on Paseo *daemon* (`lexe.paseo.enableService`).
+#     Runs `paseo daemon run` from (1) as a systemd user service (Linux)
+#     or launchd agent (macOS), modeled on home/mods/omnara.nix. Relay
+#     stays on by default so the daemon is reachable from the
+#     phone/desktop app; pair it with `paseo daemon pair`. Off by default
+#     so importing this module on a dev laptop doesn't spin up a
+#     production daemon.
 {
   config,
   lib,
   pkgs,
   paseo,
-  paseo-app,
   ...
 }:
 let
@@ -79,7 +76,7 @@ in
 {
   options.lexe.paseo.enableService = lib.mkEnableOption ''
     an always-on Paseo daemon (systemd user service / launchd agent)
-    using the nix-packaged @getpaseo/cli'';
+    running the fork's `paseo daemon run`'';
 
   options.lexe.paseo.daemonConfig = lib.mkOption {
     type = lib.types.attrsOf (lib.types.oneOf [ lib.types.bool lib.types.int lib.types.str ]);
@@ -92,14 +89,13 @@ in
   };
 
   config = lib.mkMerge [
-    # (1) The CLI, (2) the dev shim when a checkout is present, and
-    # (3) the desktop app.
+    # (1) Paseo and (2) the dev shim when a checkout is present.
     {
-      home.packages = [ paseo paseo-app ]
+      home.packages = [ paseo ]
         ++ lib.optional (builtins.pathExists paseoRepo) crossEnv;
     }
 
-    # (4) Daemon settings. `config set` saves, then reloads the running
+    # (3) Daemon settings. `config set` saves, then reloads the running
     # daemon when there is one, so this is safe with the daemon up or down.
     {
       lexe.paseo.daemonConfig."daemon.mcp.injectIntoAgents" = lib.mkDefault true;
@@ -113,7 +109,7 @@ in
       );
     }
 
-    # (5) Always-on daemon — opt-in per host.
+    # (4) Always-on daemon — opt-in per host.
     (lib.mkIf cfg.enableService {
       # Enable "linger" so the systemd user instance (and thus this
       # service) starts at boot, not just on login.

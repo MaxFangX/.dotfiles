@@ -16,7 +16,7 @@ let
   ) {
     inherit (dotfiles) agent-browser buzz claude-agent-acp claude-code codex
       codex-acp git-hunk goose jj jj-hunk-tool maple-proxy omnara paseo
-      paseo-app tinfoil-proxy vgit-nvim wdk-cli;
+      tinfoil-proxy vgit-nvim wdk-cli;
   };
 
   packages =

@@ -16,7 +16,6 @@
   maple-proxy,
   omnara,
   paseo,
-  paseo-app,
   rsync,
   tinfoil-proxy,
   vgit-nvim,
@@ -61,7 +60,6 @@ let
       macctl = stubUnsupported macctl;
       omnara = stubUnsupported omnara;
       paseo = stubUnsupported paseo;
-      paseo-app = stubUnsupported paseo-app;
       tinfoil-proxy = stubUnsupported tinfoil-proxy;
       wdk-cli = stubUnsupported wdk-cli;
     };
