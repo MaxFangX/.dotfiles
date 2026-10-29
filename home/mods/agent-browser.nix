@@ -1,6 +1,6 @@
 # A browser for agents, driven over the Chrome DevTools Protocol (CDP)
-# through the Playwright MCP server or Vercel's `agent-browser` CLI. See
-# the agent-browser skill. Two modes, picked per machine:
+# through Vercel's `agent-browser`, as an MCP server or a CLI. See the
+# agent-browser skill. Two modes, picked per machine:
 #
 # Headed (default): one Brave instance, started with `agent-brave` and
 # left open, listens on a local CDP port. Unlike macctl it keeps
@@ -11,8 +11,8 @@
 #
 # Headless: for hosts without a display. There is no launcher or CDP
 # port. Instead, each agent launches its own private headless Chromium,
-# the build nixpkgs bundles with playwright-mcp, which is patched to run
-# on NixOS.
+# the build nixpkgs ships for Playwright, which is patched to run on
+# NixOS.
 { config, lib, pkgs, agent-browser, ... }:
 let
   cfg = config.agent-browser;
@@ -51,6 +51,23 @@ let
   '';
   chromium =
     "${pkgs.playwright-driver.components.chromium}/chrome-linux/chrome";
+  ab = lib.getExe agent-browser;
+  # Claude Code starts one MCP server per session; give each its own
+  # agent-browser session, and thus tab. CDP-attached sessions never idle
+  # out, so stop the daemon once the server exits. All tools, since Claude
+  # Code loads schemas on demand and smaller profiles lack hover and drag.
+  mcpServer = pkgs.writeShellScript "agent-browser-mcp" ''
+    ${lib.optionalString cfg.headless
+      "export AGENT_BROWSER_EXECUTABLE_PATH=${chromium}"}
+    export AGENT_BROWSER_SESSION="mcp-$(date +%s)-$$"
+    # Background jobs read /dev/null unless stdin is passed explicitly.
+    ${ab} mcp --tools all <&0 &
+    server=$!
+    trap 'kill "$server" 2>/dev/null' TERM INT HUP
+    # A trapped signal interrupts `wait`, so wait again for the server.
+    wait "$server"; wait "$server"
+    ${ab} close >/dev/null 2>&1
+  '';
 in
 {
   imports = [ ./claude-mcp.nix ];
@@ -64,7 +81,7 @@ in
   };
 
   config = {
-    home.packages = [ agent-browser pkgs.playwright-mcp ]
+    home.packages = [ agent-browser ]
       ++ lib.optional (!cfg.headless) launcher;
 
     home.file = {
@@ -85,10 +102,7 @@ in
 
     claude-mcp.servers.agent-browser = {
       type = "stdio";
-      command = "${pkgs.playwright-mcp}/bin/mcp-server-playwright";
-      args =
-        if cfg.headless then [ "--headless" ]
-        else [ "--cdp-endpoint" "http://127.0.0.1:${toString port}" ];
+      command = "${mcpServer}";
     };
   };
 }

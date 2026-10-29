@@ -32,14 +32,16 @@ needs the human's accounts is done from a headed host instead.
 
 ## Two interfaces
 
-**MCP server `agent-browser`** (Playwright MCP). For the main agent of a
-session. It has one active tab, so before anything else open your own with
-`browser_tabs` (action `new`) and stay in it.
+Both are Vercel's `agent-browser`, and each session gets its own tab.
 
-**CLI `agent-browser`** (Vercel's). For subagents, or when several agents
-must browse at once. The global config already picks the browser (`cdp` and
-`pinTab` on headed hosts), so pass only `--session`, on every invocation.
-Each session gets its own tab:
+**MCP server `agent-browser`**. For the main agent of a session, whose
+server already has its own session, so start with `open`. Screenshots come
+back as images, except very large ones (such as a long full-page capture),
+which return only their path.
+
+**CLI `agent-browser`**. For subagents, or when several agents must browse
+at once. The global config already picks the browser (`cdp` and `pinTab`
+on headed hosts), so pass only `--session`, on every invocation:
 
 ```sh
 agent-browser --session <name> open https://example.com
@@ -61,8 +63,9 @@ the CLI in a session. `close` only disconnects the session, never the browser.
   the same id for every agent in a worktree, so ignore it. Pinning doesn't
   stop a session from switching tabs, so never `tab <id>` into a tab you
   did not open.
-- Finish with `tab close` then `close` (CLI) or close your tab (MCP), so
-  the browser does not fill with dead tabs.
+- Finish with `tab close` then `close` (CLI) or `tab_close` (MCP), so the
+  browser does not fill with dead tabs. After that, MCP calls fail with
+  `tab_gone` until `tab_new` binds a fresh tab.
 - Keep snapshots small: `-i` (interactive only), `-c`, `-d <depth>`,
   `--delta`.
 - Login walls, captchas, 2FA: stop, leave the tab open and named in your
@@ -73,9 +76,8 @@ the CLI in a session. `close` only disconnects the session, never the browser.
 
 ## Gotchas
 
-- On macOS, one CLI `press` of any key floods the page with keydown
-  events until it navigates (vercel-labs/agent-browser#2053). So avoid
-  `press`, and instead submit with `fill` and a click on the submit
-  control.
+- Start a CLI session with `open`, not `tab new`: on a fresh session,
+  `tab new` first binds a blank tab of its own, which `tab close` then
+  leaves behind.
 - If a site hangs on a long-idle tab, Brave's Memory Saver (Settings >
   System) in this profile is the usual cause.
