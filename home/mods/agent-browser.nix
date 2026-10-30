@@ -37,13 +37,23 @@ let
       ${pkgs.curl}/bin/curl -sf http://127.0.0.1:${toString port}/json/version \
         >/dev/null
     }
-    if ! alive; then
-      nohup "${brave}" \
-        --user-data-dir="${dataDir}" \
-        --remote-debugging-port=${toString port} \
-        --no-first-run --no-default-browser-check "$@" >/dev/null 2>&1 &
-      for _ in $(seq 50); do alive && break; sleep 0.2; done
+    if alive; then
+      # Brave updates its app in place, but a running browser runs its old,
+      # possibly vulnerable code until it restarts. The profile's "Last
+      # Version" holds the version that started.
+      running=$(cat "${dataDir}/Last Version")
+      installed=$("${brave}" --version | grep -Eo '[0-9]+(\.[0-9]+)+' | head -1)
+      if [ "$running" != "$installed" ]; then
+        echo "agent-brave: running Brave $running, but $installed is" \
+          "installed; quit it and rerun agent-brave to update" >&2
+      fi
+      exit 0
     fi
+    nohup "${brave}" \
+      --user-data-dir="${dataDir}" \
+      --remote-debugging-port=${toString port} \
+      --no-first-run --no-default-browser-check "$@" >/dev/null 2>&1 &
+    for _ in $(seq 50); do alive && break; sleep 0.2; done
     alive || {
       echo "agent-brave: port ${toString port} not answering" >&2
       exit 1

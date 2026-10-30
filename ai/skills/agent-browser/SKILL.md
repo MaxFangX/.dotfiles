@@ -17,10 +17,11 @@ it keeps running while the machine is locked (not asleep). All agents and
 the human share its cookies, so a login made in any tab is available in
 every tab.
 
-If nothing answers on the port, run `agent-brave`. It is idempotent and
-returns once the port answers, launching the browser if needed; a window
-appearing on the human's screen is fine. If it fails, say so and hand it
-to the human.
+Run `agent-brave` before you start. It is idempotent and returns once the
+port answers, launching the browser if needed; a window appearing on the
+human's screen is fine. If it fails, say so and hand it to the human. If
+it warns that the running browser is out of date, tell the human rather
+than restarting it yourself, which would cut off every other agent.
 
 On a headless host (a remote dev box, no display), there is no `agent-brave`
 and no shared browser. Instead, both interfaces below launch a private
