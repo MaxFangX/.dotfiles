@@ -2,13 +2,13 @@
   "name": "paseo",
   "private": true,
   "dependencies": {
-    "@getpaseo/cli": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.11.2-2026_10_27/getpaseo-cli-0.11.2.tgz",
-    "@getpaseo/client": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.11.2-2026_10_27/getpaseo-client-0.11.2.tgz",
-    "@getpaseo/highlight": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.11.2-2026_10_27/getpaseo-highlight-0.11.2.tgz",
-    "@getpaseo/plugin": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.11.2-2026_10_27/getpaseo-plugin-0.11.2.tgz",
-    "@getpaseo/protocol": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.11.2-2026_10_27/getpaseo-protocol-0.11.2.tgz",
-    "@getpaseo/relay": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.11.2-2026_10_27/getpaseo-relay-0.11.2.tgz",
-    "@getpaseo/server": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.11.2-2026_10_27/getpaseo-server-0.11.2.tgz"
+    "@getpaseo/cli": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.13.2-2026_10_31/getpaseo-cli-0.13.2.tgz",
+    "@getpaseo/client": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.13.2-2026_10_31/getpaseo-client-0.13.2.tgz",
+    "@getpaseo/highlight": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.13.2-2026_10_31/getpaseo-highlight-0.13.2.tgz",
+    "@getpaseo/plugin": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.13.2-2026_10_31/getpaseo-plugin-0.13.2.tgz",
+    "@getpaseo/protocol": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.13.2-2026_10_31/getpaseo-protocol-0.13.2.tgz",
+    "@getpaseo/relay": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.13.2-2026_10_31/getpaseo-relay-0.13.2.tgz",
+    "@getpaseo/server": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.13.2-2026_10_31/getpaseo-server-0.13.2.tgz"
   },
   "overrides": {
     "uuid": "^11.1.1"
