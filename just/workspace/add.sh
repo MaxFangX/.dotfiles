@@ -114,6 +114,12 @@ echo "Created colocated jj workspace at $dir on branch $branch"
 # sees by path as its own project, cutting it off from the repo's other
 # workspaces; `paseo run` has no --project flag, so create the record first and
 # hand it the id. Needs the paseo CLI, jq, and a running daemon.
+#
+# Every paseo call here names its project or workspace explicitly, so drop the
+# calling shell's agent context. Terminals inside Paseo export PASEO_AGENT_ID
+# and PASEO_WORKSPACE_ID, and the daemon rejects workspace creation outright
+# when that agent is no longer running.
+unset PASEO_AGENT_ID PASEO_WORKSPACE_ID
 ws_id=""
 if [[ "$paseo_run" == true ]]; then
     if ! command -v paseo >/dev/null || ! command -v jq >/dev/null; then
@@ -140,14 +146,13 @@ fi
 # Name the model by its exact ID: Paseo's model list has no aliases like `opus`.
 #
 # `paseo run` picks its workspace by precedence: --workspace, then the calling
-# agent's workspace (PASEO_AGENT_ID), then PASEO_WORKSPACE_ID, then a fresh
-# workspace *and project* for the cwd. Terminals inside Paseo export both env
-# vars, so unset them for the child and only ever run with an explicit
-# --workspace: the unregistered fallback is the stray project avoided above.
+# agent's workspace (PASEO_AGENT_ID, unset above), then PASEO_WORKSPACE_ID,
+# then a fresh workspace *and project* for the cwd. So only ever run with an
+# explicit --workspace, since the fallback is the stray project avoided above.
 if [[ -n "$ws_id" ]]; then
     (
         cd "$dir"
-        env -u PASEO_WORKSPACE_ID -u PASEO_AGENT_ID paseo run "/jj coedit" \
+        paseo run "/jj coedit" \
             --provider claude/claude-opus-5-5 --thinking xhigh \
             --mode bypassPermissions --detach --workspace "$ws_id"
     )
