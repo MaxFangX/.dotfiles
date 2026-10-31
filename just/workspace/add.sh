@@ -66,48 +66,54 @@ else
 fi
 name="$(basename "$dir")"
 
-# Create the colocated workspace. Like `worktree add`, check out an existing
-# bookmark at its tip; otherwise base the workspace on --base if given, else
-# trunk() (master/main), and start a fresh bookmark there. Basing on trunk()
-# rather than the current workspace's parent keeps new branches rooted on
-# master even when this runs from a side workspace parked mid-stack.
-if [[ -n "$(jj log --no-pager --no-graph -r "present($branch)" -T '"x"' 2>/dev/null)" ]]; then
-    if [[ -n "$base" ]]; then
-        echo "workspace add: branch '$branch' already exists;" \
-            "--base only applies to new branches" >&2
-        exit 1
-    fi
-    jj workspace add --name "$name" --revision "$branch" "$dir"
-    new_branch=false
+if [[ -d "$dir/.jj" ]]; then
+    echo "workspace add: $dir exists; resuming at paseo registration." >&2
 else
-    jj workspace add --name "$name" --revision "${base:-trunk()}" "$dir"
-    new_branch=true
-fi
+    # Create the colocated workspace. Like `worktree add`, check out an
+    # existing bookmark at its tip; otherwise base the workspace on --base if
+    # given, else trunk() (master/main), and start a fresh bookmark there.
+    # Basing on trunk() rather than the current workspace's parent keeps new
+    # branches rooted on master even when this runs from a side workspace
+    # parked mid-stack.
+    if [[ -n "$(jj log --no-pager --no-graph -r "present($branch)" \
+        -T '"x"' 2>/dev/null)" ]]; then
+        if [[ -n "$base" ]]; then
+            echo "workspace add: branch '$branch' already exists;" \
+                "--base only applies to new branches" >&2
+            exit 1
+        fi
+        jj workspace add --name "$name" --revision "$branch" "$dir"
+        new_branch=false
+    else
+        jj workspace add --name "$name" --revision "${base:-trunk()}" "$dir"
+        new_branch=true
+    fi
 
-# Check the bookmark out in git so the worktree starts *on* the branch (its
-# tip) and pushes as `$branch`. For a new branch, first point the bookmark at
-# the shared parent (@-); basing at @- rather than @ keeps an empty
-# working-copy commit out of the branch history. The first `jj commit`
-# detaches git HEAD (jj's native model), so this `git switch` only sets the
-# starting point; move the bookmark with `jj bookmark set $branch` before
-# pushing.
-(
-    cd "$dir"
-    [[ "$new_branch" == true ]] && jj bookmark create "$branch" -r @-
-    jj git export
-    git switch "$branch"
-)
+    # Check the bookmark out in git so the worktree starts *on* the branch (its
+    # tip) and pushes as `$branch`. For a new branch, first point the bookmark
+    # at the shared parent (@-); basing at @- rather than @ keeps an empty
+    # working-copy commit out of the branch history. The first `jj commit`
+    # detaches git HEAD (jj's native model), so this `git switch` only sets the
+    # starting point; move the bookmark with `jj bookmark set $branch` before
+    # pushing.
+    (
+        cd "$dir"
+        [[ "$new_branch" == true ]] && jj bookmark create "$branch" -r @-
+        jj git export
+        git switch "$branch"
+    )
 
-# Carry over the current worktree's .env and .vim, mirroring `worktree add`.
-# Both are no-ops when absent.
-if [[ -f .env ]]; then
-    cp .env "$dir/.env"
-fi
-if [[ -d .vim ]]; then
-    ln -sf "$(pwd)/.vim" "$dir/.vim"
-fi
+    # Carry over the current worktree's .env and .vim, mirroring `worktree
+    # add`. Both are no-ops when absent.
+    if [[ -f .env ]]; then
+        cp .env "$dir/.env"
+    fi
+    if [[ -d .vim ]]; then
+        ln -sf "$(pwd)/.vim" "$dir/.vim"
+    fi
 
-echo "Created colocated jj workspace at $dir on branch $branch"
+    echo "Created colocated jj workspace at $dir on branch $branch"
+fi
 
 # Register the workspace in paseo under the repo's existing project, so it
 # shows up in the Paseo UI. Left to itself, paseo files a worktree it first
