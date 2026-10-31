@@ -4,7 +4,7 @@ set -euo pipefail
 # Create a colocated jj workspace (+ git worktree) at <dir>. Best run from the
 # repo. The jj analog of `worktree add`: all workspaces share one commit graph
 # and op log, and each gets a real `.git` so git tooling still works inside.
-# Usage: just -g workspace add <dir> [--base <rev>] [--no-paseo]
+# Usage: just -g workspace add <dir> [--base <rev>] [--no-paseo|--no-agent]
 # A relative <dir> that lands inside the repo is reinterpreted as a path under
 # the repo's workspaces dir (see resolve-dir.sh).
 
@@ -13,15 +13,17 @@ source "$(dirname "${BASH_SOURCE[0]}")/resolve-dir.sh"
 dir="$(resolve_workspace_dir "$1")"
 shift
 
-# By default, after creating the workspace, start a detached paseo agent
-# inside it, which also registers the directory as a paseo workspace.
-# --no-paseo opts out. --base <rev> bases a new branch on <rev> instead of
-# trunk().
+# By default, after creating the workspace, register it as a paseo workspace
+# and start a detached paseo agent inside it. --no-agent skips the agent;
+# --no-paseo skips paseo entirely. --base <rev> bases a new branch on <rev>
+# instead of trunk().
 paseo_run=true
+agent_run=true
 base=""
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --no-paseo) paseo_run=false ;;
+        --no-agent) agent_run=false ;;
         --base)
             if [[ $# -lt 2 ]]; then
                 echo "workspace add: --base requires a revision" >&2
@@ -155,7 +157,7 @@ fi
 # agent's workspace (PASEO_AGENT_ID, unset above), then PASEO_WORKSPACE_ID,
 # then a fresh workspace *and project* for the cwd. So only ever run with an
 # explicit --workspace, since the fallback is the stray project avoided above.
-if [[ -n "$ws_id" ]]; then
+if [[ -n "$ws_id" && "$agent_run" == true ]]; then
     (
         cd "$dir"
         paseo run "/jj coedit" \
