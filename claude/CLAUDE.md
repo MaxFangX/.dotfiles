@@ -63,6 +63,12 @@ add a prefix like this: `/usr/bin/env RUST_LOG=debug just cargo-test ...`
 Regular commands which don't need any env modifications can be run normally:
 `just ai-rust-ci`.
 
+Avoid zsh-only parameter expansions in `Bash` commands, such as expansion flags
+(`${(f)lines}`) and nested expansions (`${${s#a}%b}`). Claude Code's safety
+check can't parse them, so it asks for approval even in bypass mode. Strip one
+pattern per step instead (`x=${s#a}; x=${x%b}`), and split lines with
+`while IFS= read -r line; do ...; done <<< "$lines"`. `${=var}` is fine.
+
 ## GNU tools on macOS
 
 GNU sed (and other GNU coreutils) shadow the BSD versions on PATH.
