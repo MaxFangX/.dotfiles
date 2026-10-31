@@ -76,7 +76,14 @@ let
     trap 'kill "$server" 2>/dev/null' TERM INT HUP
     # A trapped signal interrupts `wait`, so wait again for the server.
     wait "$server"; wait "$server"
-    ${ab} close >/dev/null 2>&1
+    # A session that never browsed has no daemon, and `close` would start
+    # one just to give it a blank tab, then leave that open. Otherwise also
+    # close the tab if it is still blank; any other page may be a login
+    # left for the human.
+    if ${ab} session list --json | grep -qF "\"$AGENT_BROWSER_SESSION\""; then
+      [ "$(${ab} get url)" = about:blank ] && ${ab} tab close
+      ${ab} close
+    fi >/dev/null 2>&1
   '';
 in
 {
