@@ -62,16 +62,17 @@ let
   chromium =
     "${pkgs.playwright-driver.components.chromium}/chrome-linux/chrome";
   ab = lib.getExe agent-browser;
-  # Claude Code starts one MCP server per session; give each its own
-  # agent-browser session, and thus tab. CDP-attached sessions never idle
-  # out, so stop the daemon once the server exits. All tools, since Claude
-  # Code loads schemas on demand and smaller profiles lack hover and drag.
+  # Claude Code starts one MCP server per session, so give each its own
+  # agent-browser session, and thus its own tab. CDP-attached sessions
+  # never idle out, so stop the daemon once the server exits. Only `all`
+  # has hover and drag, but it adds over a hundred tool names to every
+  # session.
   mcpServer = pkgs.writeShellScript "agent-browser-mcp" ''
     ${lib.optionalString cfg.headless
       "export AGENT_BROWSER_EXECUTABLE_PATH=${chromium}"}
     export AGENT_BROWSER_SESSION="mcp-$(date +%s)-$$"
     # Background jobs read /dev/null unless stdin is passed explicitly.
-    ${ab} mcp --tools all <&0 &
+    ${ab} mcp --tools core <&0 &
     server=$!
     trap 'kill "$server" 2>/dev/null' TERM INT HUP
     # A trapped signal interrupts `wait`, so wait again for the server.

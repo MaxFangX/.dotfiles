@@ -38,7 +38,10 @@ Both are Vercel's `agent-browser`, and each session gets its own tab.
 **MCP server `agent-browser`**. For the main agent of a session, whose
 server already has its own session, so start with `open`. Screenshots come
 back as images, except very large ones (such as a long full-page capture),
-which return only their path.
+which return only their path. It runs the `core` tool profile: navigation,
+snapshots, interaction, waits, reads, screenshots, eval, and tabs. For
+anything else (cookies and saved state, network inspection, React tools,
+hover and drag), use the CLI below in a session of your own.
 
 **CLI `agent-browser`**. For subagents, or when several agents must browse
 at once. The global config already picks the browser (`cdp` and `pinTab`
