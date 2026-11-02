@@ -25,6 +25,7 @@ let
     "q"
     "rebase-review"
     "skill-sync"
+    "standards-writing"
     "temp-worktree"
     "tighten"
     "tighten-code"
