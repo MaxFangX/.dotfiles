@@ -10,11 +10,19 @@
 # credentials stay out of this repo, so an entry references one as `$VAR`
 # and the sync script fills it in from the per-machine ~/env/sensitive.sh,
 # skipping the server if it's unset.
-{ config, lib, pkgs, ... }:
+#
+# A server's tool names and instructions sit in every session's context,
+# so servers used only from a skill are declared on-demand. They stay in
+# ~/.claude.json, where `mcp-cli` finds them and their OAuth credentials,
+# but Claude Code can only disable a user-scope server per project. So
+# the sync disables them in every project ~/.claude.json lists, and a
+# project first seen after the last activation loads them until the next.
+{ config, lib, pkgs, mcp-cli, ... }:
 let
   cfg = config.claude-mcp;
   servers = pkgs.writeText "claude-mcp-servers.json"
     (builtins.toJSON cfg.servers);
+  onDemand = builtins.toJSON cfg.onDemandServers;
   sync = pkgs.writeShellApplication {
     name = "claude-mcp-sync";
     runtimeInputs = with pkgs; [
@@ -33,6 +41,15 @@ in
       + "credential references filled in from ~/env/sensitive.sh.";
   };
 
+  options.claude-mcp.onDemandServers = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    default = [];
+    example = [ "folk" ];
+    description =
+      "The subset of `claude-mcp.servers` that sessions never load. "
+      + "Reachable through `mcp-cli <server> <tool>` from a skill.";
+  };
+
   options.claude-mcp.confidentialServers = lib.mkOption {
     type = lib.types.listOf lib.types.str;
     default = [];
@@ -42,8 +59,12 @@ in
       + "gets (see confidential.nix).";
   };
 
+  config.home.packages = [ mcp-cli ];
+
   config.home.activation.claudeMcpSync =
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      CLAUDE_MCP_SERVERS=${servers} ${sync}/bin/claude-mcp-sync
+      CLAUDE_MCP_SERVERS=${servers} \
+        CLAUDE_MCP_ON_DEMAND=${lib.escapeShellArg onDemand} \
+        ${sync}/bin/claude-mcp-sync
     '';
 }

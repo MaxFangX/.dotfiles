@@ -8,6 +8,7 @@ set -euo pipefail
 # CLAUDE_MCP_SERVERS: JSON file of servers from nix. A string value may
 # reference a credential as `$VAR`, filled in from ~/env/sensitive.sh,
 # and a server whose variable is unset is skipped.
+# CLAUDE_MCP_ON_DEMAND: JSON array of servers to disable in every project.
 
 env_file="$HOME/env/sensitive.sh"
 # shellcheck disable=SC1090
@@ -50,3 +51,15 @@ jq -c 'to_entries[]' "$CLAUDE_MCP_SERVERS" | while read -r entry; do
   jq -n --arg name "$name" --argjson server "$server" '{($name): $server}' \
     | merge_servers
 done
+
+# Disable the on-demand servers in every project, and re-enable any
+# declared server that is no longer on-demand. Servers not declared here
+# (e.g. toggled off by hand in /mcp) are left as they are.
+on_demand="${CLAUDE_MCP_ON_DEMAND:-[]}"
+declared="$(jq -c 'keys' "$CLAUDE_MCP_SERVERS")"
+tmp=$(mktemp)
+jq --indent 2 --argjson on "$on_demand" --argjson declared "$declared" '
+  .projects |= with_entries(.value.disabledMcpServers |=
+    ((. // []) - ($declared - $on) + $on | unique))
+' "$cfg" > "$tmp"
+mv "$tmp" "$cfg"
