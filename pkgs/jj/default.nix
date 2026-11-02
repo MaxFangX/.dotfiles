@@ -26,6 +26,10 @@ rustPlatform.buildRustPackage {
     inherit (source) rev hash;
   };
 
+  # Detach the main worktree's HEAD when a secondary colocated workspace
+  # moves its checked-out bookmark; jj#8667 only covers linked worktrees.
+  patches = [ ./detach-main-worktree-head.patch ];
+
   # Vendor deps from the lockfile so updates don't need a
   # separate cargoHash. Kept in sync by update.sh.
   cargoLock.lockFile = ./Cargo.lock;

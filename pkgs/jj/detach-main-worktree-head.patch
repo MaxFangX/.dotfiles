@@ -1,0 +1,13 @@
+--- a/lib/src/git.rs
++++ b/lib/src/git.rs
+@@ -1459,6 +1459,10 @@
+     let git_repo = get_git_repo(mut_repo.store())?;
+ 
+     check_and_detach_head(&git_repo)?;
++    // `worktrees()` lists linked worktrees only, so when `git_repo` is a linked
++    // worktree (a secondary colocated workspace), also cover the main worktree.
++    let main_repo = git_repo.main_repo().map_err(GitExportError::from_git)?;
++    check_and_detach_head(&main_repo)?;
+     for worktree in git_repo.worktrees().map_err(GitExportError::from_git)? {
+         if let Ok(worktree_repo) = worktree.into_repo_with_possibly_inaccessible_worktree() {
+             check_and_detach_head(&worktree_repo)?;
