@@ -433,6 +433,22 @@ one as a candidate for replacement.
 // Clear the cache if the server's latest update is ahead of ours.
 ```
 
+**Spell out elided predicates.** An auxiliary without its main verb ("once
+they are", "retry if it does") or a stand-in like "do so" requires the
+reader to mentally copy the predicate in from an earlier sentence. Write it
+out.
+
+**Old comment**:
+```
+Partner fees are already tracked for every payment, but payouts are not yet
+implemented. Accrued shares will be paid out once they are.
+```
+**Suggested**:
+```
+Partner fees are already tracked for every payment, but payouts are not yet
+implemented. Accrued shares will be paid out once payouts go live.
+```
+
 ### References
 
 Comments that reference existing structs, functions, traits, etc. should link
