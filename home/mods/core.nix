@@ -17,6 +17,7 @@ let
     "knowledge-doc"
     "lexe-way"
     "macctl"
+    "mcp-cli"
     "orchestrate"
     "paseo"
     "paseo-handoff"

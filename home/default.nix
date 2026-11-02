@@ -14,6 +14,7 @@
   jj-hunk-tool,
   macctl,
   maple-proxy,
+  mcp-cli,
   omnara,
   paseo,
   rsync,
@@ -51,7 +52,7 @@ let
     modules = modules ++ machineModule name;
     extraSpecialArgs = {
       inherit pkgs sources claude-code-router complain git-hunk jj
-        jj-hunk-tool maple-proxy rsync vgit-nvim;
+        jj-hunk-tool maple-proxy mcp-cli rsync vgit-nvim;
       agent-browser = stubUnsupported agent-browser;
       buzz = stubUnsupported buzz;
       claude-code = stubUnsupported claude-code;
