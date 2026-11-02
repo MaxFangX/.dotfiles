@@ -33,6 +33,15 @@ in
       + "credential references filled in from ~/env/sensitive.sh.";
   };
 
+  options.claude-mcp.confidentialServers = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    default = [];
+    example = [ "agent-browser" ];
+    description =
+      "The subset of `claude-mcp.servers` that `claude-confidential` "
+      + "gets (see confidential.nix).";
+  };
+
   config.home.activation.claudeMcpSync =
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       CLAUDE_MCP_SERVERS=${servers} ${sync}/bin/claude-mcp-sync

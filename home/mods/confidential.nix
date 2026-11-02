@@ -21,12 +21,14 @@
 #  2. `claude-confidential` wraps `claude` for that router. It sets the
 #     base URL and token and turns off nonessential traffic (telemetry,
 #     error reports, update checks), so the proxy is the session's only
-#     outbound connection. Enclave tokens cost several times commodity
-#     hosting and the global MCP set adds ~56K tokens of tool schemas to
-#     every turn, so MCP is restricted to `mcpServers` below, picked out
-#     of ~/.claude.json by name. `--strict-mcp-config` drops project
-#     `.mcp.json` servers but keeps `--mcp-config` ones, so Paseo's own
-#     MCP injection still applies.
+#     outbound connection. Transcripts hold full prompt/response bodies,
+#     so it also points `CLAUDE_CONFIG_DIR` at a private state dir, apart
+#     from ~/.claude. Enclave tokens cost several times commodity hosting
+#     and the global MCP set adds ~56K tokens of tool schemas to every
+#     turn, so MCP is restricted to `claude-mcp.confidentialServers`,
+#     picked out of ~/.claude.json by name at activation.
+#     `--strict-mcp-config` drops project `.mcp.json` servers but keeps
+#     `--mcp-config` ones, so Paseo's own MCP injection still applies.
 #
 #  3. Paseo can't expand env vars in provider config, so
 #     confidential-sync.sh writes a `claude-confidential` provider that
@@ -53,9 +55,7 @@ let
 
   envFile = "${config.home.homeDirectory}/env/sensitive.sh";
   routerPort = 3456;
-
-  # MCP servers from ~/.claude.json that confidential sessions keep.
-  mcpServers = [ "agent-browser" ];
+  stateDir = "${config.home.homeDirectory}/.local/state/claude-confidential";
 
   routerConfig = {
     LOG = false;
@@ -106,7 +106,7 @@ let
 
   wrapper = pkgs.writeShellApplication {
     name = "claude-confidential";
-    runtimeInputs = [ claude-code pkgs.jq ];
+    runtimeInputs = [ claude-code ];
     text = ''
       if [ -z "''${TINFOIL_API_KEY:-}" ]; then
         # shellcheck disable=SC1091
@@ -117,13 +117,23 @@ let
       export ANTHROPIC_AUTH_TOKEN="$TINFOIL_API_KEY"
       export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
       export CLAUDE_CODE_MAX_CONTEXT_TOKENS=1048576
+      export CLAUDE_CONFIG_DIR="${stateDir}"
+      # `--mcp-config` is variadic, so it goes after the caller's arguments.
+      exec claude "$@" --strict-mcp-config \
+        --mcp-config "$CLAUDE_CONFIG_DIR/mcp-servers.json"
+    '';
+  };
 
-      mcp=$(jq -c --argjson keep '${builtins.toJSON mcpServers}' '
+  # Runs after claudeMcpSync, which fills in the servers' credentials.
+  writeMcpConfig = pkgs.writeShellApplication {
+    name = "claude-confidential-mcp";
+    runtimeInputs = [ pkgs.jq ];
+    text = ''
+      jq --argjson keep \
+        '${builtins.toJSON config.claude-mcp.confidentialServers}' '
         { mcpServers: ((.mcpServers // {})
             | with_entries(select(.key as $k | $keep | index($k)))) }
-      ' "$HOME/.claude.json" 2>/dev/null || echo '{"mcpServers":{}}')
-      # `--mcp-config` is variadic, so it goes after the caller's arguments.
-      exec claude "$@" --strict-mcp-config --mcp-config "$mcp"
+      ' "$HOME/.claude.json" > "${stateDir}/mcp-servers.json"
     '';
   };
 
@@ -138,6 +148,7 @@ let
 in
 {
   imports = [
+    ./claude-mcp.nix
     ./maple.nix
     ./tinfoil.nix
   ];
@@ -159,5 +170,12 @@ in
       PASEO_BIN=${paseo}/bin/paseo \
         WRAPPER=${config.home.profileDirectory}/bin/${wrapper.name} \
         ${sync}/bin/confidential-sync
+    '';
+
+  # `home.file` would create the parents 0755, so install by hand.
+  home.activation.claudeConfidentialMcp =
+    lib.hm.dag.entryAfter [ "claudeMcpSync" ] ''
+      run install -d -m 700 "${stateDir}"
+      run ${lib.getExe writeMcpConfig}
     '';
 }

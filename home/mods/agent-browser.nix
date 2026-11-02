@@ -121,5 +121,6 @@ in
       type = "stdio";
       command = "${mcpServer}";
     };
+    claude-mcp.confidentialServers = [ "agent-browser" ];
   };
 }
