@@ -52,6 +52,7 @@
     "BITCOIND_SKIP_DOWNLOAD": "1",
     "ELECTRSD_SKIP_DOWNLOAD": "1"
   },
+  "rust-analyzer.files.watcher": "server",
   "rust-analyzer.diagnostics.disabled": [
     "inactive-code",
     "unlinked-file"
