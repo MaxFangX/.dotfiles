@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Snapshot every running nvim (server, coc node, rust-analyzer) while one is
+# frozen: stack samples, open files, and the coc log. Run from another
+# terminal, then read the printed directory.
+#
+# Usage: nvim-freeze-dump [nvim-server-pid]
+# (default: every `nvim --embed` server process)
+set -euo pipefail
+
+out="/tmp/nvim-freeze-$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$out"
+
+if [[ $# -gt 0 ]]; then
+  servers=("$@")
+else
+  mapfile -t servers < <(pgrep -f 'nvim --embed' || true)
+fi
+[[ ${#servers[@]} -gt 0 ]] || { echo "no nvim --embed server found" >&2; exit 1; }
+
+dump() {
+  local label=$1 pid=$2
+  echo "sampling $label pid=$pid"
+  ps -o pid,ppid,stat,etime,%cpu,command -p "$pid" > "$out/$label-$pid.ps" || true
+  sample "$pid" 2 -file "$out/$label-$pid.sample" >/dev/null 2>&1 || true
+  lsof -p "$pid" > "$out/$label-$pid.lsof" 2>/dev/null || true
+}
+
+for s in "${servers[@]}"; do
+  cwd=$(lsof -a -p "$s" -d cwd -Fn 2>/dev/null | sed -n 's/^n//p')
+  echo "nvim server $s cwd=$cwd"
+  dump nvim "$s"
+  # Children: the coc node process and anything it spawned (rust-analyzer).
+  for c in $(pgrep -P "$s" || true); do
+    dump child "$c"
+    for g in $(pgrep -P "$c" || true); do dump grandchild "$g"; done
+  done
+  # coc log lives in the server's private tmpdir.
+  tmp=$(ps -wwE -o command -p "$(pgrep -P "$s" | head -1)" 2>/dev/null \
+    | tr ' ' '\n' | sed -n 's/^TMPDIR=//p' | head -1)
+  [[ -n "${tmp:-}" ]] && cp -r "$tmp"/coc.nvim-* "$out/" 2>/dev/null || true
+done
+
+echo "wrote $out"

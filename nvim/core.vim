@@ -323,15 +323,28 @@
         " Check periodically when cursor stops moving, but not in search mode
         " mode() =~# '[/?]' checks if we're in search mode
         autocmd CursorHold,CursorHoldI * if mode() !~# '[/?]' | checktime | endif
+        autocmd FileChangedShell * call s:OnFileChangedShell()
     augroup END
+
+    " Replaces the modal W12 dialog, which fires when a file changes on disk
+    " under a modified buffer (e.g. an agent edits while a vgit review is
+    " open). The dialog and the y/n prompt on the next :w swallow every other
+    " key, so a quick :wa afterwards looks like a frozen editor. Warn instead
+    " and leave both versions intact; :w! overwrites, :e! reloads.
+    function! s:OnFileChangedShell() abort
+        if v:fcs_reason ==# 'conflict' || v:fcs_reason ==# 'deleted'
+            let v:fcs_choice = ''
+            echohl WarningMsg
+            echomsg expand('<afile>') .. ': ' .. v:fcs_reason .. ' on disk; :w! overwrites, :e! reloads'
+            echohl None
+        else
+            let v:fcs_choice = 'reload'
+        endif
+    endfunction
 
     " Reduce the time before CursorHold triggers (default is 4000ms)
     " This makes the auto-reload more responsive
     set updatetime=1000
-
-    " Optionally, show a message when a file is reloaded
-    " (commented out by default to reduce noise)
-    " autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 """ }
 
 " # --- MAPPINGS --- #
