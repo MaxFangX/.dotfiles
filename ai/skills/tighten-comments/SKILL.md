@@ -420,8 +420,10 @@ but send, not "intervening" but in between.
 
 **Say the thing directly, not through an analogy.** An analogy asks the reader
 to understand a second thing and then map it onto the subject, so it costs more
-than a direct statement. Analogies are a hallmark of AI writing, so treat each
-one as a candidate for replacement.
+than a direct statement. A single word can be an analogy, often one that
+anthropomorphizes a value, as when a cursor "promises" or a side "vouches".
+Analogies are a hallmark of AI writing, so treat each one as a candidate for
+replacement.
 
 **Old comment**:
 ```rust
@@ -431,6 +433,17 @@ one as a candidate for replacement.
 **Suggested**:
 ```rust
 // Clear the cache if the server's latest update is ahead of ours.
+```
+
+With a one-word analogy:
+
+**Old comment**:
+```rust
+// The cursor promises every tx confirmed below it was handled.
+```
+**Suggested**:
+```rust
+// Every tx confirmed below the cursor must already be handled.
 ```
 
 **Spell out elided predicates.** An auxiliary without its main verb ("once
