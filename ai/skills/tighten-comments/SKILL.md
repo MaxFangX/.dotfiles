@@ -44,7 +44,16 @@ two tiers, and the first is the default.
 Not derivable from the code at any effort: an assumption about code elsewhere,
 a contract with another system, the behavior of an external library, a choice
 that looks like a mistake, or a correct-looking change that no type or test
-would catch. Always keep, usually in a sentence or two.
+would catch. Always keep, usually in a sentence or two. Derivable means the
+intent is derivable, not just the mechanics. Here the code shows that we
+skip, but not why:
+
+```rust
+// LDK archives a monitor only once all its funds are claimed, so skip.
+if basename.starts_with(CHANNEL_MONITORS_ARCHIVE_DIR) {
+    return Ok(());
+}
+```
 
 ```rust
 let router = Router::new()
@@ -58,6 +67,9 @@ let router = Router::new()
     // node_proxy handler, calling the default fallback otherwise.
     .fallback_service(proxy_or_fallback.with_state(state));
 ```
+
+Test code shows only the calls, so what a step simulates, what an assertion
+proves, and what the test checks are all in this tier.
 
 A fragile invariant is not automatically in this tier. The bar is whether a
 senior engineer would notice it from the code as written; a subscribe call at
@@ -146,7 +158,9 @@ Write for a senior reader who knows the rest of the system but not this area.
 Prefer deletion unless the comment adds information that is hard to infer from
 names, types, and nearby code. Tighten clause by clause, cutting rather than
 rewording. If the code below or another clause makes it obvious that A implies
-B, state A and cut B.
+B, state A and cut B. A rewrite must keep the meaning. For example, "attempts
+to cooperatively close" does not mean "cooperatively closes", and "a completed
+sweep" does not mean "a sweep".
 
 A comment much longer than its peers (in the same struct, enum, module, or
 scope) is a sign to cut it, not a sign the peers need more.
@@ -195,20 +209,31 @@ the change that introduced it (e.g. "/pricing is a better and simpler URL than
 justifications belong in commit details or the changelog (see "Write rationale
 in the changelog or commit message"), not in permanent documentation.
 
+### Label items
+
+A one-line doc comment that says what an item is:
+
+- Modules, major structs, and important types get one.
+- A function gets one only when what it does is not immediately clear from
+  its name and signature.
+- A field gets one only when its name and type leave its meaning open, as for
+  a field central to a state machine; otherwise rely on a descriptive name and
+  type. "Attempts remaining, not attempts made" on `retries: u32` is worth
+  keeping, while "Client for the user node" on `node_client: NodeClient` is
+  not.
+
+Don't expand a label into an implementation story about how the value is
+produced, refreshed, persisted, synchronized, or consumed.
+
 ### Document behavior at its owner
 
-A brief one-line doc comment that labels an item is fine when the name and type
-leave its meaning open. "Attempts remaining, not attempts made" on `retries:
-u32` is worth keeping, while "Client for the user node" on `node_client:
-NodeClient` is not. Don't expand a label into an implementation story about how
-the value is produced, refreshed, persisted, synchronized, or consumed. Put
-behavioral, lifecycle, and provenance docs at the semantic owner, meaning the
-type, state machine, constructor, transition method, API endpoint, or usage
-site that defines the behavior. An item comment should describe the item's
-durable meaning or contract, so if it mostly explains surrounding code's use of
-the item, move it there or delete it. Conversely, when the item itself is the
-state, API contract, or transition being defined, the behavior is the item's
-own contract, so keep these docs on it.
+Put behavioral, lifecycle, and provenance docs at the semantic owner, meaning
+the type, state machine, constructor, transition method, API endpoint, or
+usage site that defines the behavior. An item comment should describe the
+item's durable meaning or contract, so if it mostly explains surrounding code's
+use of the item, move it there or delete it. Conversely, when the item itself
+is the state, API contract, or transition being defined, the behavior is the
+item's own contract, so keep these docs on it.
 
 ### Scope comments to the code they explain
 
@@ -530,9 +555,8 @@ pub fee: Amount,
 
 Review the comment changes in the current diff following the Guidelines above.
 For each added or modified comment, first ask whether it should exist at all,
-and only then tighten what remains. A pass that ends with many rewrites and no
-deletions has almost certainly under-deleted. Report a concise summary of what
-changed and why.
+and only then tighten what remains. Report a concise summary of what changed
+and why.
 
 This pass changes no behavior and renames only within the diff (see "Reader
 effort"), so the programmer can take it without re-reviewing code. A comment
