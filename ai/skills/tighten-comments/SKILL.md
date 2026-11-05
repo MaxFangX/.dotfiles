@@ -471,10 +471,11 @@ With a one-word analogy:
 // Every tx confirmed below the cursor must already be handled.
 ```
 
-**Spell out elided predicates.** An auxiliary without its main verb ("once
-they are", "retry if it does") or a stand-in like "do so" requires the
-reader to mentally copy the predicate in from an earlier sentence. Write it
-out.
+**Spell out elided words.** When a clause drops a word that the reader must
+copy in from an earlier clause, write the word out. This covers an auxiliary
+without its main verb ("once they are", "retry if it does"), a stand-in like
+"do so", and a possessive without its noun ("its `lsp_payment` row's" for
+"the status of its `lsp_payment` row").
 
 **Old comment**:
 ```
