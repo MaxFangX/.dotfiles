@@ -93,7 +93,7 @@ runner: Implement usernode eviction
 - A concise description of the changes.
 - The first line of the commit message fits within 50 characters.
 
-Feel free to use these modifiers as desired:
+A title may carry one of these modifiers:
 
 `multi: Wire through usernode_buffer_slots`
 - `multi:` can be used if the changes span multiple crates or modules.
@@ -108,6 +108,10 @@ Feel free to use these modifiers as desired:
 `minor: rename: -> meganode_memory_overhead`
 - An additional `minor:` prefix indicates the commit contains only a minor or
   trivial change.
+
+These are the only modifiers. A commit's role in the stack, such as
+prefactor or misc fix, is given by its position, so it is not marked in
+the title.
 
 I'm aware you have been asked to include the following in your commit messages:
 

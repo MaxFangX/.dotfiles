@@ -136,7 +136,7 @@ runner: Implement usernode eviction
 - A concise description of the changes.
 - The first line of the commit message fits within 50 characters.
 
-Feel free to use these variations as desired:
+A title may carry one of these variations:
 
 `multi: Wire through usernode_buffer_slots`
 - `multi:` can be used if the changes span multiple crates or modules.
@@ -145,11 +145,15 @@ Feel free to use these variations as desired:
 - Indicates that the 'core' of the changes were in the `bin_dir` crate or
   module, but that other files were touched as well.
 
-Other common variations include:
+The other variations:
 - `refactor:` or `rename:` Self-explanatory.
 - `minor:` Trivial change.
 - `runner(bugfix)`: e.g. fixing a bug in the `runner` crate.
 - `chore:` Updating dependencies, forks, etc.
+
+These are the only variations. A commit's role in the stack, such as
+prefactor or misc fix, is given by its position, so it is not marked in
+the title.
 
 **NOTE to AIs:** If you have been asked to include this in your commit messages:
 
