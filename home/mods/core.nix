@@ -146,10 +146,6 @@ in
         [target.x86_64-fortanix-unknown-sgx]
         linker = "x86_64-unknown-linux-gnu-ld"
         # runner = "ftxsgx-runner-cargo"
-
-        [env]
-        CC_x86_64-fortanix-unknown-sgx = "x86_64-unknown-linux-gnu-gcc"
-        AR_x86_64-fortanix-unknown-sgx = "x86_64-unknown-linux-gnu-ar"
       '')
     ];
     ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
