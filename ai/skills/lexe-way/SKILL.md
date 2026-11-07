@@ -22,6 +22,13 @@ did they ask others to change? Find that and mirror it. Everything is on
 the table, from names and structure to the way a problem is solved: when
 precedent shows a simpler or better way to do what the code does, take it.
 
+Precedent is reviewed code. For Lexe that is the monorepo
+(`lexe-app/lexe`, at `~/lexe/org/lexe`) and Lexe's forks; for another
+project, that project's own repo and standards. `lexe-projects` has had
+little or no review, so it records what someone did, not what was
+accepted, and is not precedent even for code that lives there. Below,
+"the repo" is the one holding the precedent.
+
 ## Usage guide
 
 Work through the steps below. Fix directly, and only within the scope.
@@ -41,7 +48,7 @@ For each category from the inventory:
 
 - **The nearest siblings.** The items beside the new one, whatever holds
   them (the same trait, struct, module, command list, and so on), show how
-  this repo does that. Diff the new item against them.
+  the repo does that. Diff the new item against them.
 - **The shared crates.** The `lexe-*` crates that most of the workspace
   depends on (`lexe-std`, `lexe-common`, `lexe-tokio`, `lexe-api-core`, and
   their kin) hold Lexe's standardized, opinionated APIs for a subset of what
