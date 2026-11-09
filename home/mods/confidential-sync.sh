@@ -6,8 +6,9 @@ set -euo pipefail
 # is merged key by key, so re-running is safe.
 #
 # Env:
-#   PASEO_BIN  paseo binary, used to reload the daemon if one is running
-#   WRAPPER    absolute path of the claude-confidential wrapper
+#   PASEO_BIN         paseo binary, used to reload the daemon if running
+#   UNCENSORED_MODEL  router model ID of the uncensored route
+#   WRAPPER           absolute path of the claude-confidential wrapper
 
 env_file="$HOME/env/sensitive.sh"
 # shellcheck disable=SC1090
@@ -26,7 +27,8 @@ mkdir -p "$paseo_home"
 # Paseo passes provider env literally, so the key is written in.
 # `models` replaces the inherited Claude list with the router's routes.
 tmp=$(mktemp)
-jq --indent 2 --arg tinfoil "$tinfoil_key" --arg wrapper "$WRAPPER" '
+jq --indent 2 --arg tinfoil "$tinfoil_key" --arg wrapper "$WRAPPER" \
+  --arg uncensored "$UNCENSORED_MODEL" '
   .agents.providers."claude-confidential" = {
     extends: "claude",
     label: "Claude Code (confidential)",
@@ -39,8 +41,8 @@ jq --indent 2 --arg tinfoil "$tinfoil_key" --arg wrapper "$WRAPPER" '
         label: "DeepSeek V4.1 Flash (Tinfoil)" },
       { id: "maple,deepseek-v4-1-flash",
         label: "DeepSeek V4.1 Flash (Maple)" },
-      { id: "maple,deepseek-v4-1-flash-1017-uncensored",
-        label: "DeepSeek V4.1 Flash Uncensored (Maple)" }
+      { id: $uncensored,
+        label: "DeepSeek V4.1 Flash Abliterated (Maple)" }
     ]
   }
 ' "$paseo_cfg" > "$tmp"

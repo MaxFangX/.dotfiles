@@ -180,21 +180,6 @@ alias claude-go-foom="claude --dangerously-skip-permissions"
 # Start an interactive session with Opus fast mode (~2.5x faster, higher cost)
 alias claude-fast="claude --settings '{\"fastMode\": true}'"
 
-##########################
-# Confidential inference #
-##########################
-
-# `claude-confidential` (home/mods/confidential.nix) is Claude Code on
-# DeepSeek V4.1 Flash inside Tinfoil's enclave. The Maple routes are the
-# same wrapper with the model named.
-claude-maple() {
-  ANTHROPIC_MODEL=maple,deepseek-v4-1-flash claude-confidential "$@"
-}
-claude-uncensored() {
-  ANTHROPIC_MODEL=maple,deepseek-v4-1-flash-1017-uncensored \
-    claude-confidential "$@"
-}
-
 # Start a paseo session as a new tab in the workspace containing the current
 # dir (deepest match), or in a new workspace if none exists. Unset
 # PASEO_WORKSPACE_ID (exported by paseo terminals, preferred over cwd) and an

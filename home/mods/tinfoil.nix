@@ -9,9 +9,7 @@
 # authenticate per request with TINFOIL_API_KEY. Pay-as-you-go, no
 # subscription.
 #
-# No non-confidential fallback is wired on purpose. (TrustedRouter was
-# tried: only a `provider` object in the request body pins it to a
-# confidential host, which no CLI can send.)
+# No non-confidential fallback is wired on purpose.
 #
 # Client wiring lives in confidential.nix.
 {

@@ -15,8 +15,13 @@
 #
 #     Claude Code warns `unrecognized_model` for such names and would
 #     assume a 200K context, so the wrapper pins the window to 1M.
-#     The `openrouter` transformer closes thinking blocks early, so no
-#     transformer is configured.
+#
+#     TrustedRouter is a third upstream, taken only when `uncensoredRoute`
+#     picks it. It serves the same Maple model from its own gateway
+#     enclave, whose attestation nothing here verifies, and would fall
+#     back to non-confidential hosts unless `customparams` pins each
+#     request to Maple. The `openrouter` transformer closes thinking
+#     blocks early, so no other transformer is configured.
 #
 #  2. `claude-confidential` wraps `claude` for that router. It sets the
 #     base URL and token and turns off nonessential traffic (telemetry,
@@ -59,6 +64,16 @@ let
   routerPort = 3456;
   stateDir = "${config.home.homeDirectory}/.local/state/claude-confidential";
 
+  # How `claude-uncensored` and Paseo reach Maple's uncensored DeepSeek
+  # V4.1 Flash: "maple" through maple-proxy, which needs the Maple
+  # subscription, or "trustedrouter", pay-as-you-go.
+  uncensoredRoute = "maple";
+  uncensoredModel = {
+    maple = "maple,deepseek-v4-1-flash-1017-uncensored";
+    trustedrouter =
+      "trustedrouter,dealignai/deepseek-v4.1-flash-1017-uncensored";
+  }.${uncensoredRoute};
+
   routerConfig = {
     LOG = false;
     HOST = "127.0.0.1";
@@ -80,6 +95,18 @@ let
           "deepseek-v4-1-flash-1017-uncensored"
         ];
       }
+      {
+        name = "trustedrouter";
+        api_base_url = "https://api.trustedrouter.com/v1/chat/completions";
+        api_key = "$TRUSTEDROUTER_API_KEY";
+        models = [ "dealignai/deepseek-v4.1-flash-1017-uncensored" ];
+        transformer.use = [
+          [
+            "customparams"
+            { provider = { only = [ "maple" ]; allow_fallbacks = false; }; }
+          ]
+        ];
+      }
     ];
     Router.default = "tinfoil,deepseek-v4-1-flash";
   };
@@ -97,6 +124,7 @@ let
         exit 0
       fi
       export MAPLE_API_KEY="''${MAPLE_API_KEY:-}"
+      export TRUSTEDROUTER_API_KEY="''${TRUSTEDROUTER_API_KEY:-}"
       # ccr idles if its pid file names a live process, even one from a
       # manual run, and the service is the only legitimate instance.
       rm -f "$HOME/.claude-code-router/.claude-code-router.pid"
@@ -207,6 +235,18 @@ let
     '';
   };
 
+  # `claude-confidential` with a route's model named.
+  shortcuts = lib.mapAttrsToList (name: model: pkgs.writeShellApplication {
+    inherit name;
+    text = ''
+      ANTHROPIC_MODEL="${model}" exec ${lib.getExe wrapper} "$@"
+    '';
+  }) {
+    claude-maple = "maple,deepseek-v4-1-flash";
+    claude-uncensored = uncensoredModel;
+    claude-abliterated = uncensoredModel;
+  };
+
   # Runs after claudeMcpSync, which fills in the servers' credentials.
   writeMcpConfig = pkgs.writeShellApplication {
     name = "claude-confidential-mcp";
@@ -243,7 +283,7 @@ in
     the private state dir under Claude Code's idle cleanup'';
 
   config = {
-    home.packages = [ claude-code-router wrapper ];
+    home.packages = [ claude-code-router wrapper ] ++ shortcuts;
 
     # Nix-owned, so `ccr model` / `ccr ui` edits won't stick.
     home.file.".claude-code-router/config.json".text =
@@ -258,6 +298,7 @@ in
     home.activation.confidentialSync =
       lib.hm.dag.entryAfter [ "installPackages" ] ''
         PASEO_BIN=${paseo}/bin/paseo \
+          UNCENSORED_MODEL=${lib.escapeShellArg uncensoredModel} \
           WRAPPER=${config.home.profileDirectory}/bin/${wrapper.name} \
           ${sync}/bin/confidential-sync
       '';
