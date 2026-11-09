@@ -69,6 +69,10 @@ check can't parse them, so it asks for approval even in bypass mode. Strip one
 pattern per step instead (`x=${s#a}; x=${x%b}`), and split lines with
 `while IFS= read -r line; do ...; done <<< "$lines"`. `${=var}` is fine.
 
+Wrapping a command in `zsh -c '...'` or `bash -c '...'` also prompts for
+approval in bypass mode, so run commands directly. To scope something, such as
+sourced secrets, use a `( ... )` subshell instead.
+
 ## GNU tools on macOS
 
 GNU sed (and other GNU coreutils) shadow the BSD versions on PATH.
