@@ -29,8 +29,11 @@
   # That injects a stray `.` into nvim's <Space><Space> leader chord,
   # where normal-mode `.` silently repeats the last change. Disabled for
   # iTerm2 only, so the substitution still works in prose apps.
-  targets.darwin.defaults."com.googlecode.iterm2"
-    .NSAutomaticPeriodSubstitutionEnabled = false;
+  targets.darwin.defaults."com.googlecode.iterm2" = {
+    NSAutomaticPeriodSubstitutionEnabled = false;
+    # Background tabs get an unread-style dot on any output at all.
+    ShowNewOutputIndicator = false;
+  };
 
   homebrew.casks = [
     "halloy"
