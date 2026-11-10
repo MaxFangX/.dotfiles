@@ -38,8 +38,10 @@ workspace's `@` is `<name>@`, and its git commands run in its directory.
    same ownership rule as the rebase.
 3. Re-attach git HEAD per /jj's end-of-turn rule, to the workspace's
    branch (usually named for the workspace; skip if it has none).
-4. `jj workspace forget` each record whose root `jj workspace list` cannot
-   resolve (it prints no path) and whose `@` is empty, then
+4. A record written by an old jj lacks a root while its checkout is live,
+   so a workspace is gone only when `jj workspace list` prints no path for
+   it and `git worktree list` has no checkout of its name holding a `.jj/`.
+   `jj workspace forget` each gone record whose `@` is empty, then
    `git worktree prune`.
 5. Report, one line each: `master` ahead of its remote, conflicted stacks
    (`jj log -r 'roots(conflicts())'`), divergent changes, working copies
