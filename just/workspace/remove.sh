@@ -37,6 +37,10 @@ name="$(basename "$dir")"
 workspaces="$(jj workspace list)"
 if ! grep -q "^$name:" <<<"$workspaces"; then
     echo "workspace remove: no jj workspace named '$name'." >&2
+    if [[ -e "$dir" ]]; then
+        echo "If $dir is the leftover of a failed remove, delete it by hand:" >&2
+        echo "  rm -rf '$dir' && git worktree prune" >&2
+    fi
     echo "Known workspaces:" >&2
     echo "$workspaces" >&2
     exit 1
@@ -145,6 +149,16 @@ else
     jj workspace forget "$name" --cleanup
 fi
 
+# `--cleanup` only warns when deleting the directory fails, as when an editor
+# or rust-analyzer recreates files under it mid-delete. Retry once, then finish
+# the jj bookkeeping below and report the leftover with a nonzero exit.
+leftover_dir=false
+if [[ -e "$dir" ]]; then
+    rm -rf "$dir" 2>/dev/null || true
+    git worktree prune
+    [[ -e "$dir" ]] && leftover_dir=true
+fi
+
 # Immediately archive the workspace's record in the paseo app, if any. The
 # daemon only notices the missing directory on a workspace-list refetch, so
 # without this poke the stale record lingers in the UI. Best-effort no-op
@@ -204,4 +218,10 @@ size="$(awk '{ print $1 }' "$du_out")"
 rm -f "$du_out"
 if [[ -n "$size" ]]; then
     echo "Freed $size of disk space"
+fi
+
+if [[ "$leftover_dir" == true ]]; then
+    echo "workspace remove: forgot workspace '$name', but $dir still exists." >&2
+    echo "Delete it by hand: rm -rf '$dir' && git worktree prune" >&2
+    exit 1
 fi
