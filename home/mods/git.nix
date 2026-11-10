@@ -112,5 +112,18 @@
         clean = "git-lfs clean -- %f";
       };
     };
+
+    # Fork checkouts cut each new `lexe-*` branch from an older one and
+    # inherit its upstream, so `push.default = upstream` would push to the
+    # pinned old branch. Push to origin's same-named branch there instead.
+    includes = [
+      {
+        condition = "gitdir:~/lexe/forks/";
+        contents = {
+          push.default = "current";
+          remote.pushDefault = "origin";
+        };
+      }
+    ];
   };
 }
