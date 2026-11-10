@@ -1,8 +1,8 @@
 {
-  "version": "0.13.2-2026_11_10",
-  "tag": "maxfangx-v0.13.2-2026_11_10",
+  "version": "0.13.2-2026_11_10-2",
+  "tag": "maxfangx-v0.13.2-2026_11_10-2",
   "app": {
-    "url": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.13.2-2026_11_10/Paseo-maxfangx-v0.13.2-2026_11_10-arm64.zip",
-    "hash": "sha256-APNItYgk4qy5B/594/P5qHSz0u0CJnbFoW0BjAxa4Jk="
+    "url": "https://github.com/MaxFangX/paseo/releases/download/maxfangx-v0.13.2-2026_11_10-2/Paseo-maxfangx-v0.13.2-2026_11_10-2-arm64.zip",
+    "hash": "sha256-shZ33LDWev1tqk8P2tgysERgAXSiFCJ4p/NbsmO/WVM="
   }
 }
