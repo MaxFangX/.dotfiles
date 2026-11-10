@@ -40,4 +40,8 @@
     # as a contributor on commits from this machine.
     hooks.prepare-commit-msg = ./prepare-commit-msg;
   };
+
+  # jj skips git hooks, so it adds the same trailer itself.
+  programs.jujutsu.settings.templates.commit_trailers =
+    ''"Co-authored-by: Max Fang <hello@maxfa.ng>"'';
 }
