@@ -12,6 +12,20 @@ description: >-
 `just skills-diff <peer>` and `just skills-sync <peer> from|to [skill...]`,
 run from ~/.dotfiles, do the copying.
 
+## What is shared
+
+Everything synced between dotfiles and lexe is on this list, which `SHARED`
+in `just/skill-sync.sh` repeats:
+
+- skills: codex-review, jj, jj-rebase, lexe-way, q, tighten, tighten-code,
+  tighten-comments
+- `just/workspace/`, by hand (below)
+
+Nothing else is synced in either direction, by the script or by hand. A
+skill joins the list only when I say so, not when it is created.
+`sharedSkillNames` in `home/mods/core.nix` deploys every dotfiles skill and
+is not this list.
+
 ## Peers
 
 - **lexe** (`~/lexe/org/lexe/.agents/skills`): synced both ways.
@@ -38,8 +52,6 @@ run from ~/.dotfiles, do the copying.
 
 - Skills deploy through home-manager, so run `hms` after changing
   `ai/skills/`.
-- A new shared skill goes in `SHARED` (`just/skill-sync.sh`) and
-  `sharedSkillNames` (`home/mods/core.nix`).
 
 ## Also mirrored: just/workspace/
 
