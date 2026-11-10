@@ -689,6 +689,12 @@ Example log with `()`:
 2023-03-01T06:01:00.334028Z DEBUG (lsp):(bgp):(http-request): lexe_common::api::rest: sending request
 ```
 
+### Don't `Debug`-format commands
+
+Never `Debug`-format a `Command` (`{cmd:?}`) in logs or errors. It prints
+every arg and env var, which may contain credentials. Name the program via
+`cmd.get_program()` instead, or print specific args known to be non-secret.
+
 
 ## Cargo.toml dependencies
 
