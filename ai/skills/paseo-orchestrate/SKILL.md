@@ -47,12 +47,23 @@ context intact. Read the **paseo** skill for the tool reference.
    alone (the worker starts with zero context), and either `cwd: <abs-dir>`
    (jj) or the `workspaceId` from `create_workspace` (git-only).
    Use the briefing template from the **paseo-handoff** skill: task,
-   context, relevant files, acceptance criteria, constraints. Add two
-   standing instructions: end the final message with a line starting
-   `DONE:` summarizing what landed, and keep Agent tool use short because
-   those children do not survive a Stop.
-4. Leave `notifyOnFinish` on. Do not poll `list_agents` or
-   `get_agent_status`; the notification arrives on its own.
+   context, relevant files, acceptance criteria, constraints. Add three
+   standing instructions: wait for every check you start, in the
+   foreground or by blocking on the background task, so the turn ends
+   only when the work is done (repo rules that say to end a turn before
+   CI finishes do not apply to a worker); end that final message with a
+   line starting `DONE:` summarizing what landed; and keep Agent tool use
+   short because those children do not survive a Stop.
+4. Leave `notifyOnFinish` on, but never rely on it alone. Paseo notifies
+   for the turn your prompt started and has missed later turns that a
+   background task woke, so a worker can finish with no notification at
+   all. Whenever a notification arrives without a `DONE:` line, or none
+   has arrived by the time the work should plausibly be done, arm a
+   fallback waker: a one-shot `CronCreate` 20-30 minutes out that reads
+   `get_agent_status` and `get_agent_activity`. An idle worker whose last
+   message carries `DONE:` is finished, notification or not. Never end
+   your own turn with a worker outstanding and no waker armed; say in
+   your status message what is armed and when it fires. Don't busy-poll.
 
 ## The shared repo while workers run
 
@@ -87,10 +98,16 @@ There is no `list_profiles` equivalent. Gotchas the CLI help gets wrong:
 
 - **finished**, last message has a `DONE:` line: review its commits in its
   workspace, then integrate or send fixes with `send_agent_prompt`.
-- **was stopped**, or **finished** without a `DONE:` line: the user paused
-  it. The response is partial. Do not integrate it, re-plan around it, or
-  spawn a replacement. Tell the user it is paused and wait; a later
-  `send_agent_prompt` continues it where it left off.
+- **was stopped**: the user paused it. The response is partial. Do not
+  integrate it, re-plan around it, or spawn a replacement. Tell the user
+  it is paused and wait; a later `send_agent_prompt` continues it where
+  it left off.
+- **finished** without a `DONE:` line: either the user paused it, or it
+  ended a turn to wait on background checks despite the brief. Read
+  `get_agent_activity`: a paused worker stopped mid-step; a waiting one
+  names the checks it is watching. Treat a paused worker as above. For a
+  waiting one, arm the fallback waker from step 4 and carry on; its real
+  finish may never be announced.
 - **needs permission**: `respond_to_permission` when the brief covers the
   request, otherwise surface it to the user.
 - **errored**: read `get_agent_activity`, then send a follow-up or report.

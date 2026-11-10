@@ -53,6 +53,14 @@ with `mcp__paseo__create_agent`. Never use Claude Code's Agent tool for that
 work: its children die for good when I press Stop on you. The Agent tool is
 only for read-only lookups (an Explore search) that finish inside your turn.
 
+## Waiting on external work
+
+Never end a turn idle while work is pending on something you don't control
+(a worker, a CI run, a peer's all-clear) unless a waker is already armed: a
+one-shot `CronCreate`, a background poll that exits on the condition, or a
+`Monitor`. Notifications get dropped; the waker is what guarantees you come
+back. Say in your status message what is armed and when it fires.
+
 ## Environment Variables and Shell Behavior
 
 Note: Claude Code's `Bash` tool (which actually runs the system's default shell,
