@@ -147,6 +147,12 @@ let
       theme = "dark";
     });
 
+  # The ~/.claude/skills that sessions get, linked into each config dir.
+  skills = pkgs.linkFarm "deepseek-confidential-skills" (map (name: {
+    inherit name;
+    path = "${config.home.homeDirectory}/.claude/skills/${name}";
+  }) [ "agent-browser" ]);
+
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 
   # Creates `$dir`, a session state dir in RAM that only this user can
@@ -228,6 +234,7 @@ let
       ${if cfg.inMemorySessions then inMemorySession else ''
         dir="${stateDir}"
       ''}
+      ln -sfn ${skills} "$dir/skills"
       export ANTHROPIC_BASE_URL="http://127.0.0.1:${toString routerPort}"
       export ANTHROPIC_AUTH_TOKEN="$TINFOIL_API_KEY"
       export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
