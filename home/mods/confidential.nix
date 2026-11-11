@@ -23,7 +23,7 @@
 #     request to Maple. The `openrouter` transformer closes thinking
 #     blocks early, so no other transformer is configured.
 #
-#  2. `claude-confidential` wraps `claude` for that router. It sets the
+#  2. `deepseek-confidential` wraps `claude` for that router. It sets the
 #     base URL and token and turns off nonessential traffic (telemetry,
 #     error reports, update checks, plugin marketplace fetches), so the
 #     proxy is the session's only outbound connection. Transcripts hold
@@ -64,7 +64,7 @@ let
   routerPort = 3456;
   stateDir = "${config.home.homeDirectory}/.local/state/claude-confidential";
 
-  # How `claude-uncensored` and Paseo reach Maple's uncensored DeepSeek
+  # How `deepseek-uncensored` and Paseo reach Maple's uncensored DeepSeek
   # V4.1 Flash: "maple" through maple-proxy, which needs the Maple
   # subscription, or "trustedrouter", pay-as-you-go.
   uncensoredRoute = "maple";
@@ -206,7 +206,7 @@ let
   '';
 
   wrapper = pkgs.writeShellApplication {
-    name = "claude-confidential";
+    name = "deepseek-confidential";
     runtimeInputs = with pkgs; [
       claude-code
       coreutils
@@ -235,16 +235,16 @@ let
     '';
   };
 
-  # `claude-confidential` with a route's model named.
+  # `deepseek-confidential` with a route's model named.
   shortcuts = lib.mapAttrsToList (name: model: pkgs.writeShellApplication {
     inherit name;
     text = ''
       ANTHROPIC_MODEL="${model}" exec ${lib.getExe wrapper} "$@"
     '';
   }) {
-    claude-maple = "maple,deepseek-v4-1-flash";
-    claude-uncensored = uncensoredModel;
-    claude-abliterated = uncensoredModel;
+    deepseek-maple = "maple,deepseek-v4-1-flash";
+    deepseek-uncensored = uncensoredModel;
+    deepseek-abliterated = uncensoredModel;
   };
 
   # Runs after claudeMcpSync, which fills in the servers' credentials.
@@ -277,7 +277,7 @@ in
   ];
 
   options.confidential.inMemorySessions = lib.mkEnableOption ''
-    keeping `claude-confidential` session state in RAM, dropped with its
+    keeping `deepseek-confidential` session state in RAM, dropped with its
     MCP logs when the session exits, so nothing can be resumed, not even
     a Paseo agent whose process has exited. Otherwise sessions persist in
     the private state dir under Claude Code's idle cleanup'';

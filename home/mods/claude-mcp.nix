@@ -55,7 +55,7 @@ in
     default = [];
     example = [ "agent-browser" ];
     description =
-      "The subset of `claude-mcp.servers` that `claude-confidential` "
+      "The subset of `claude-mcp.servers` that `deepseek-confidential` "
       + "gets (see confidential.nix).";
   };
 

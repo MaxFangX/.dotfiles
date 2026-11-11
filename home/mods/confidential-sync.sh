@@ -8,7 +8,7 @@ set -euo pipefail
 # Env:
 #   PASEO_BIN         paseo binary, used to reload the daemon if running
 #   UNCENSORED_MODEL  router model ID of the uncensored route
-#   WRAPPER           absolute path of the claude-confidential wrapper
+#   WRAPPER           absolute path of the deepseek-confidential wrapper
 
 env_file="$HOME/env/sensitive.sh"
 # shellcheck disable=SC1090
