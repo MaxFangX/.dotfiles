@@ -15,10 +15,12 @@ no seams where one worker's view stopped.
 
 ## Relative strengths
 
-- **You** reason verbally and generally, hold the whole design in view, and
-  write better, so prose, docs, comments, commit messages, and anything
-  user-facing read best in your hands. You are slower.
-- **Opus 5.5** is a fast workhorse and the better visual reasoner. Its work
+- **You** are a very capable reasoner, generally and verbally, and you hold the
+  whole design in view. Your visual reasoning is weaker than your verbal
+  reasoning, though still stronger than Opus 5.5's. You write better, so prose,
+  docs, comments, commit messages, and anything user-facing read best in your
+  hands. You are slow and expensive.
+- **Opus 5.5** is a fast workhorse and a solid visual reasoner. Its work
   tends to have gaps, design flaws, or tunnel-vision mistakes: a local fix
   that ignores the surrounding system, an unhandled case, a duplicated
   helper, a comment that narrates instead of explaining.
