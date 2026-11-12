@@ -17,8 +17,8 @@ run from ~/.dotfiles, do the copying.
 Everything synced between dotfiles and lexe is on this list, which `SHARED`
 in `just/skill-sync.sh` repeats:
 
-- skills: codex-review, jj, jj-rebase, lexe-way, q, tighten, tighten-code,
-  tighten-comments
+- skills: codex-review, jj, jj-rebase, lexe-way, orchestrate, q, tighten,
+  tighten-code, tighten-comments
 - `just/workspace/`, by hand (below)
 
 Nothing else is synced in either direction, by the script or by hand. A

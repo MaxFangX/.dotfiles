@@ -43,8 +43,8 @@ case "$PEER" in
     ROOTS=("$HOME/lexe/org/lexe" "$HOME/dev/lexe" "$HOME/lexe" \
       "$HOME/lexe-agent/lexe")
     SKILLS_SUBDIR=.agents/skills
-    SHARED=(codex-review jj jj-rebase lexe-way q tighten tighten-code \
-      tighten-comments)
+    SHARED=(codex-review jj jj-rebase lexe-way orchestrate q tighten \
+      tighten-code tighten-comments)
     ALLOW_TO=true
     ;;
   paseo)
