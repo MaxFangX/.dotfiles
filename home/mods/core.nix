@@ -159,11 +159,14 @@ in
     ".codex/skills/security-audit".source = securityAuditSkill;
     # TODO(max): Let Claude Code manage settings.json itself for now, since
     # the home-manager symlink into /nix/store is read-only, which breaks
-    # `/effort` and other commands that write to settings.json. Per-host
+    # `/effort` and other commands that write to settings.json. Nix-set
     # keys go through `claude.settings` (claude-settings.nix) instead.
     # ".claude/settings.json".source =
     #   ../../claude/settings.json;
   } // sharedSkillFiles;
+
+  # Auto-compact at 500K tokens on every model with a larger window.
+  claude.settings.autoCompactWindow = 500000;
 
   programs.home-manager.enable = true;
 

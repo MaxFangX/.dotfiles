@@ -36,7 +36,8 @@
 #     `--strict-mcp-config` drops project `.mcp.json` servers but keeps
 #     `--mcp-config` ones, so Paseo's own MCP injection still applies.
 #     Sessions start in bypass permissions mode unless the caller passes
-#     `--permission-mode`, as Paseo always does.
+#     `--permission-mode`, as Paseo always does, and auto-compact at
+#     500K tokens unless it passes `--autocompact`.
 #
 #  3. Paseo can't expand env vars in provider config, so
 #     confidential-sync.sh writes a `claude-confidential` provider that
@@ -241,10 +242,11 @@ let
       export CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL=1
       export CLAUDE_CODE_MAX_CONTEXT_TOKENS=1048576
       export CLAUDE_CONFIG_DIR="$dir"
-      # The caller's arguments follow the default mode, so their
-      # `--permission-mode` wins, and precede the variadic `--mcp-config`.
-      exec claude --permission-mode bypassPermissions "$@" \
-        --strict-mcp-config --mcp-config "${stateDir}/mcp-servers.json"
+      # The caller's arguments follow the defaults, so their
+      # `--permission-mode` and `--autocompact` win, and precede the
+      # variadic `--mcp-config`.
+      exec claude --permission-mode bypassPermissions --autocompact 500k \
+        "$@" --strict-mcp-config --mcp-config "${stateDir}/mcp-servers.json"
     '';
   };
 

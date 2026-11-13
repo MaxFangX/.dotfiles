@@ -1,10 +1,10 @@
-# Per-host Claude Code settings, merged into ~/.claude/settings.json.
+# Claude Code settings, merged into ~/.claude/settings.json.
 #
 # Claude Code rewrites settings.json freely (`/effort` and friends), so
-# home-manager can't own it (see the note in core.nix). Instead a host
-# sets `claude.settings` and the keys are merged in on activation,
-# leaving the rest of the file alone. A key removed here stays in the
-# file until removed by hand.
+# home-manager can't own it (see the note in core.nix). Instead core.nix
+# and hosts set `claude.settings` and the keys are merged in on
+# activation, leaving the rest of the file alone. A key removed here
+# stays in the file until removed by hand.
 { config, lib, pkgs, ... }:
 let
   cfg = config.claude.settings;
