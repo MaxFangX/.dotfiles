@@ -702,6 +702,24 @@ return {
         ['n grf'] = function()
           require('vgit').project_review_by_file()
         end,
+        -- (r)eview (l)og: browse a commit range like grc, without marks.
+        -- Prefilled with what the last fetch brought into origin's trunk.
+        ['n grl'] = function()
+          local default = ''
+          for _, trunk in ipairs({ 'origin/main', 'origin/master' }) do
+            local previous = trunk .. '@{1}'
+            vim.fn.system({ 'git', 'rev-parse', '--verify', '--quiet', previous })
+            if vim.v.shell_error == 0 then
+              default = previous .. '..' .. trunk
+              break
+            end
+          end
+
+          local range = vim.fn.input('Range: ', default)
+          if range ~= '' then
+            require('vgit').project_browse_by_commit(range)
+          end
+        end,
 
         -- e(x)change/toggle between split and unified diff view
         ['n <LocalLeader>gx'] = function()
