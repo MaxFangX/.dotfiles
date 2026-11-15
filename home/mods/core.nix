@@ -9,6 +9,7 @@ let
   # checkout. Keep them in sync with `just skills-diff <peer>` /
   # `just skills-sync <peer> from|to` (see just/skill-sync.sh).
   sharedSkillNames = [
+    "aeo"
     "codex-review"
     "complain"
     "jj"
