@@ -9,12 +9,14 @@ ulimit -Sn 1024
 # ENVIRONMENT VARIABLES #
 #########################
 
-# Set up and source the device-specific env var files
+# Set up the device-specific env var files
 mkdir -p ~/env
 touch ~/env/local.sh ~/env/sensitive.sh
 chmod u+x ~/env/local.sh ~/env/sensitive.sh
+
+# Sourcing ~/env/sensitive.sh here would give its secrets to every program
+# a shell starts. Instead, `with-secrets <cmd>` gives them to one command.
 source ~/env/local.sh
-source ~/env/sensitive.sh
 
 # Pager config (less with color passthrough)
 export PAGER='less'
