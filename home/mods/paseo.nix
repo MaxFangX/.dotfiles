@@ -42,7 +42,6 @@ let
 
   homeDir = config.home.homeDirectory;
   paseoRepo = "${homeDir}/dev/paseo";
-  envFile = "${homeDir}/env/sensitive.sh";
 
   cfg = config.lexe.paseo;
 
@@ -68,7 +67,6 @@ let
   startScript = pkgs.writeShellScript "paseo-start" ''
     sessionVars="${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
     [ -f "$sessionVars" ] && . "$sessionVars"
-    [ -f "${envFile}" ] && . "${envFile}"
     export PATH="${config.home.profileDirectory}/bin:$PATH"
     exec ${paseo}/bin/paseo daemon run --home "${homeDir}/.paseo"
   '';

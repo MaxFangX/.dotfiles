@@ -19,7 +19,6 @@ let
   # Prefer self-updated binary; fall back to nix-managed.
   selfUpdated = "${homeDir}/.omnara/bin/omnara";
   fallback = "${omnara}/bin/omnara";
-  envFile = "${homeDir}/env/sensitive.sh";
 
   # On machines where the host default is Max's personal identity
   # (e.g. max2022), route everything omnara does — commit
@@ -44,7 +43,6 @@ let
   '';
 
   startScript = pkgs.writeShellScript "omnara-start" ''
-    [ -f ${envFile} ] && . ${envFile}
     ${lib.optionalString config.lexe.omnara.useAgentIdentity agentEnv}
     BIN=${selfUpdated}
     [ -x "$BIN" ] || BIN=${fallback}
