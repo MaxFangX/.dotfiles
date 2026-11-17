@@ -1,9 +1,5 @@
 # lexe-dev-hetzner — Linux dev server (Hetzner)
-{
-  pkgs,
-  sources,
-  ...
-}:
+{ ... }:
 {
   imports = [
     ../mods/agent-browser.nix # Browser for agents testing web apps
@@ -22,12 +18,6 @@
 
   # Run an always-on Paseo daemon (relay on → reachable from the app).
   lexe.paseo.enableService = true;
-
-  # Server packages managed via Nix instead of apt.
-  home.packages = [
-    pkgs.lego
-    pkgs.nginx
-  ];
 
   # This machine uses the lexe-agent GitHub account.
   programs.git = {
