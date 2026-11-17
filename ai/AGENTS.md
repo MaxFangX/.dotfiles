@@ -59,6 +59,14 @@ one-shot scheduled wake-up, or a background poll that exits on the
 condition. Notifications get dropped; the waker is what guarantees you come
 back. Say in your status message what is armed and when it fires.
 
+## Secrets
+
+API keys and tokens are not in the shell environment. When a command
+needs one, run it as `with-secrets -o NAME[,NAME] <cmd>`;
+`with-secrets -l` lists the names. Never read or source
+`~/env/sensitive.sh`, and never print an environment (`env`,
+`printenv`, `ps -E`, `pgrep -fl`).
+
 ## GNU tools on macOS
 
 GNU sed (and other GNU coreutils) shadow the BSD versions on PATH.
