@@ -1,6 +1,5 @@
 # lexe-dev-hetzner — Linux dev server (Hetzner)
 {
-  config,
   pkgs,
   sources,
   ...
@@ -9,7 +8,6 @@
   imports = [
     ../mods/agent-browser.nix # Browser for agents testing web apps
     ../mods/dev-lexe.nix
-    ../mods/omnara.nix
   ];
 
   # No display here, so agents each get a private headless browser.
@@ -34,7 +32,8 @@
   # This machine uses the lexe-agent GitHub account.
   programs.git = {
     settings.user = {
-      inherit (config.lexe.agent) name email;
+      name = "Lexe Agent";
+      email = "noreply@lexe.app";
     };
     # Auto-append co-author trailer so Max Fang shows
     # as a contributor on commits from this machine.

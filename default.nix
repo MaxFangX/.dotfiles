@@ -47,7 +47,6 @@ rec {
   maple-proxy = pkgs.callPackage ./pkgs/maple-proxy {};
   # mcp-cli's go.mod requires Go 1.26.
   mcp-cli = pkgs2605.callPackage ./pkgs/mcp-cli {};
-  omnara = pkgs.callPackage ./pkgs/omnara {};
   paseo = pkgs.callPackage ./pkgs/paseo {};
   rsync = pkgs.callPackage ./pkgs/rsync.nix {};
   # tinfoil-proxy's go.mod requires Go 1.26.
@@ -59,7 +58,7 @@ rec {
   homeConfigs = import ./home {
     inherit hm pkgs sources agent-browser buzz claude-code
       claude-code-router codex complain git-hunk goose jj jj-hunk-tool
-      macctl maple-proxy mcp-cli omnara paseo rsync tinfoil-proxy vgit-nvim
+      macctl maple-proxy mcp-cli paseo rsync tinfoil-proxy vgit-nvim
       wdk-cli;
   };
 }

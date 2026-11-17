@@ -15,7 +15,6 @@
   macctl,
   maple-proxy,
   mcp-cli,
-  omnara,
   paseo,
   rsync,
   tinfoil-proxy,
@@ -59,7 +58,6 @@ let
       codex = stubUnsupported codex;
       goose = stubUnsupported goose;
       macctl = stubUnsupported macctl;
-      omnara = stubUnsupported omnara;
       paseo = stubUnsupported paseo;
       tinfoil-proxy = stubUnsupported tinfoil-proxy;
       wdk-cli = stubUnsupported wdk-cli;

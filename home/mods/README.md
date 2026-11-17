@@ -31,7 +31,7 @@ homebrew.nix            Declarative Homebrew cask management.
 ```
 max-nitropad-2024   Linux (secure) ->  core only
 lexe-dev.nix        Linux SGX VM   ->  dev
-lexe-dev-hetzner/   Linux server   ->  dev-lexe + omnara
+lexe-dev-hetzner/   Linux server   ->  dev-lexe
 max2022.nix         macOS laptop   ->  dev-lexe
 ```
 

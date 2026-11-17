@@ -24,11 +24,10 @@
 #
 #  4. An always-on Paseo *daemon* (`lexe.paseo.enableService`).
 #     Runs `paseo daemon run` from (1) as a systemd user service (Linux)
-#     or launchd agent (macOS), modeled on home/mods/omnara.nix. Relay
-#     stays on by default so the daemon is reachable from the
-#     phone/desktop app; pair it with `paseo daemon pair`. Off by default
-#     so importing this module on a dev laptop doesn't spin up a
-#     production daemon.
+#     or launchd agent (macOS). Relay stays on by default so the daemon
+#     is reachable from the phone/desktop app; pair it with
+#     `paseo daemon pair`. Off by default so importing this module on a
+#     dev laptop doesn't spin up a production daemon.
 {
   config,
   lib,

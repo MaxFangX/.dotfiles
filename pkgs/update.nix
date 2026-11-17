@@ -15,7 +15,7 @@ let
     && pkg ? updateScript
   ) {
     inherit (dotfiles) agent-browser buzz claude-agent-acp claude-code codex
-      codex-acp git-hunk goose jj jj-hunk-tool maple-proxy omnara paseo
+      codex-acp git-hunk goose jj jj-hunk-tool maple-proxy paseo
       tinfoil-proxy vgit-nvim wdk-cli;
   };
 
