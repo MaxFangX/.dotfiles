@@ -63,6 +63,7 @@ let
   # needs the same nix-managed PATH an interactive shell gets. systemd /
   # launchd start with a bare environment, so source home-manager's
   # session vars and prepend the profile bin before exec'ing the daemon.
+  # Sourcing ~/env/sensitive.sh too would give every agent every secret.
   startScript = pkgs.writeShellScript "paseo-start" ''
     sessionVars="${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
     [ -f "$sessionVars" ] && . "$sessionVars"
