@@ -15,7 +15,8 @@ touch ~/env/local.sh ~/env/sensitive.sh
 chmod u+x ~/env/local.sh ~/env/sensitive.sh
 
 # Sourcing ~/env/sensitive.sh here would give its secrets to every program
-# a shell starts. Instead, `with-secrets <cmd>` gives them to one command.
+# a shell starts. Instead, `with-secrets -o NAME <cmd>` gives one command
+# what it needs.
 source ~/env/local.sh
 
 # Pager config (less with color passthrough)
