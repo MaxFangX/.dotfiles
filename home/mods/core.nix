@@ -146,9 +146,11 @@ in
         # runner = "ftxsgx-runner-cargo"
       '')
     ];
-    ".claude/CLAUDE.md".source = ../../claude/CLAUDE.md;
-    # Codex's global instructions file; same content as Claude's.
-    ".codex/AGENTS.md".source = ../../claude/CLAUDE.md;
+    # Global instructions: Codex reads AGENTS.md, and Claude Code reads
+    # CLAUDE.md, which imports AGENTS.md.
+    ".claude/AGENTS.md".source = ../../ai/AGENTS.md;
+    ".claude/CLAUDE.md".source = ../../ai/CLAUDE.md;
+    ".codex/AGENTS.md".source = ../../ai/AGENTS.md;
     ".claude/skills/git-hunk/SKILL.md".source =
       "${git-hunk}/share/git-hunk/SKILL.md";
     ".codex/skills/git-hunk/SKILL.md".source =

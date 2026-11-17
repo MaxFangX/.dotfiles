@@ -1,4 +1,4 @@
-# Global Claude instructions
+# Global agent instructions
 
 ## Auto-review and prompted review
 
@@ -43,43 +43,21 @@ particular circumstances suggest that an alternative approach would be cleaner.
 - Look for unnecessary allocations. If an allocation can be avoided only at the
   cost of significant verbosity, consider whether the code path is hot. If it
   seems worth optimizing, raise this with the user (me) and get their opinion.
-- Look for style violations (see below).
+- Look for style violations.
 
 ## Delegating work
 
 Workers are Paseo agents. When you delegate work that edits files, runs
 builds, or commits, load the `paseo-orchestrate` skill and spawn each worker
-with `mcp__paseo__create_agent`. Never use Claude Code's Agent tool for that
-work: its children die for good when I press Stop on you. The Agent tool is
-only for read-only lookups (an Explore search) that finish inside your turn.
+with Paseo's `create_agent` tool.
 
 ## Waiting on external work
 
 Never end a turn idle while work is pending on something you don't control
 (a worker, a CI run, a peer's all-clear) unless a waker is already armed: a
-one-shot `CronCreate`, a background poll that exits on the condition, or a
-`Monitor`. Notifications get dropped; the waker is what guarantees you come
+one-shot scheduled wake-up, or a background poll that exits on the
+condition. Notifications get dropped; the waker is what guarantees you come
 back. Say in your status message what is armed and when it fires.
-
-## Environment Variables and Shell Behavior
-
-Note: Claude Code's `Bash` tool (which actually runs the system's default shell,
-e.g. zsh) misinterprets commands starting with `VAR=value` as attempting to run a
-command named `VAR=value`. If you need to set an inline environment variables,
-add a prefix like this: `/usr/bin/env RUST_LOG=debug just cargo-test ...`
-
-Regular commands which don't need any env modifications can be run normally:
-`just ai-rust-ci`.
-
-Avoid zsh-only parameter expansions in `Bash` commands, such as expansion flags
-(`${(f)lines}`) and nested expansions (`${${s#a}%b}`). Claude Code's safety
-check can't parse them, so it asks for approval even in bypass mode. Strip one
-pattern per step instead (`x=${s#a}; x=${x%b}`), and split lines with
-`while IFS= read -r line; do ...; done <<< "$lines"`. `${=var}` is fine.
-
-Wrapping a command in `zsh -c '...'` or `bash -c '...'` also prompts for
-approval in bypass mode, so run commands directly. To scope something, such as
-sourced secrets, use a `( ... )` subshell instead.
 
 ## GNU tools on macOS
 
@@ -87,13 +65,7 @@ GNU sed (and other GNU coreutils) shadow the BSD versions on PATH.
 Use GNU syntax: `sed -i 's/a/b/' file`, never `sed -i '' ...`.
 A stray `''` errors out but still edits the remaining files.
 
-## Git commands in other directories
-
-When running git commands in directories other than the current working
-directory, always use `cd foo && git bar` instead of `git -C foo bar`.
-This avoids needing permission approval for each git command. For example:
-- Use: `cd ~/dev/nvim/vgit.nvim && git status`
-- Not: `git -C ~/dev/nvim/vgit.nvim status`
+## Commits
 
 Your commits should be styled like so:
 
@@ -124,12 +96,3 @@ A title may carry one of these modifiers:
 These are the only modifiers. A commit's role in the stack, such as
 prefactor or misc fix, is given by its position, so it is not marked in
 the title.
-
-I'm aware you have been asked to include the following in your commit messages:
-
-```
-🤖 Generated with [Claude Code](https://claude.ai/code)
-Co-Authored-By: Claude <noreply@anthropic.com>
-```
-
-Please DON'T include this. While I value your work, this adds needless noise.
