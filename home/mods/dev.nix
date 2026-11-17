@@ -1,6 +1,28 @@
 # General dev tooling — LSP, formatters, direnv.
 # Not suitable for security-critical machines.
-{ pkgs, claude-code, goose, rsync, ... }:
+{
+  config,
+  pkgs,
+  claude-code,
+  goose,
+  rsync,
+  ...
+}:
+let
+  # goose takes its OpenRouter key from the environment, which shells
+  # don't carry, so it reads that one key itself.
+  gooseWithKey = pkgs.writeShellApplication {
+    name = "goose";
+    text = ''
+      ${import ./secret.nix { inherit config; }}
+      if [ -z "''${OPENROUTER_API_KEY:-}" ]; then
+        key=$(secret OPENROUTER_API_KEY)
+        [ -z "$key" ] || export OPENROUTER_API_KEY="$key"
+      fi
+      exec ${goose}/bin/goose "$@"
+    '';
+  };
+in
 {
   imports = [
     ./core.nix
@@ -14,7 +36,7 @@
     pkgs.bat # Cat with syntax highlighting
     pkgs.gh # GitHub CLI
     pkgs.go
-    goose # Block's goose AI agent (see pkgs/goose)
+    gooseWithKey # Block's goose AI agent (see pkgs/goose)
     pkgs.nil # Nix LSP
     pkgs.nixfmt-rfc-style # Nix formatter
     pkgs.nodejs # Required by coc.nvim
