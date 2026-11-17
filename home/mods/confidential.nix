@@ -64,6 +64,7 @@ let
   mkService = import ./user-service.nix { inherit config lib pkgs; };
 
   envFile = "${config.home.homeDirectory}/env/sensitive.sh";
+  secretFn = import ./secret.nix { inherit config; };
   routerPort = 3456;
   stateDir = "${config.home.homeDirectory}/.local/state/claude-confidential";
 
@@ -120,14 +121,15 @@ let
     name = "claude-code-router-start";
     runtimeInputs = [ claude-code-router ];
     text = ''
-      # shellcheck disable=SC1091
-      [ -f "${envFile}" ] && . "${envFile}"
-      if [ -z "''${TINFOIL_API_KEY:-}" ]; then
+      ${secretFn}
+      TINFOIL_API_KEY=$(secret TINFOIL_API_KEY)
+      if [ -z "$TINFOIL_API_KEY" ]; then
         echo "TINFOIL_API_KEY not set in ${envFile}; not starting" >&2
         exit 0
       fi
-      export MAPLE_API_KEY="''${MAPLE_API_KEY:-}"
-      export TRUSTEDROUTER_API_KEY="''${TRUSTEDROUTER_API_KEY:-}"
+      MAPLE_API_KEY=$(secret MAPLE_API_KEY)
+      TRUSTEDROUTER_API_KEY=$(secret TRUSTEDROUTER_API_KEY)
+      export TINFOIL_API_KEY MAPLE_API_KEY TRUSTEDROUTER_API_KEY
       # ccr idles if its pid file names a live process, even one from a
       # manual run, and the service is the only legitimate instance.
       rm -f "$HOME/.claude-code-router/.claude-code-router.pid"
@@ -226,9 +228,9 @@ let
       gnugrep
     ];
     text = ''
+      ${secretFn}
       if [ -z "''${TINFOIL_API_KEY:-}" ]; then
-        # shellcheck disable=SC1091
-        [ -f "${envFile}" ] && . "${envFile}"
+        TINFOIL_API_KEY=$(secret TINFOIL_API_KEY)
       fi
       : "''${TINFOIL_API_KEY:?not set in ${envFile}}"
 
