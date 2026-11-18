@@ -3,8 +3,8 @@ name: mcp-cli
 description: >-
   Call a tool on an MCP server that this session does not load, from the
   shell, using the server's existing Claude Code configuration and OAuth
-  credentials. Use when a skill names a server (folk, superhuman, ticktick,
-  clickup, hey) and no `mcp__<server>__*` tool is available.
+  credentials. Use when a skill says to reach its server through `mcp-cli`
+  and no `mcp__<server>__*` tool is available.
 ---
 
 # mcp-cli

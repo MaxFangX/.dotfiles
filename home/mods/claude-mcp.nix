@@ -44,7 +44,6 @@ in
   options.claude-mcp.onDemandServers = lib.mkOption {
     type = lib.types.listOf lib.types.str;
     default = [];
-    example = [ "folk" ];
     description =
       "The subset of `claude-mcp.servers` that sessions never load. "
       + "Reachable through `mcp-cli <server> <tool>` from a skill.";
