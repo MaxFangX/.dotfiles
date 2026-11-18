@@ -55,6 +55,37 @@
   claude.settings.cleanupPeriodDays = 1095;
   confidential.inMemorySessions = true;
 
+  # Agents commit to lexe-projects as the lexe-agent GitHub account, with
+  # Max as co-author, as on lexe-dev-hetzner. jj matches the main repo's
+  # path even from its workspaces under ~/lexe/worktrees/ai/.
+  programs.jujutsu.settings."--scope" = [
+    {
+      "--when".repositories = [ "~/lexe/org/lexe-projects" ];
+      user = {
+        name = "Lexe Agent";
+        email = "noreply@lexe.app";
+      };
+      templates.commit_trailers =
+        ''"Co-authored-by: Max Fang <hello@maxfa.ng>"'';
+    }
+  ];
+  # The same for plain `git commit`. gitdir also matches the workspaces'
+  # linked worktrees, whose git dirs live in .git/worktrees/.
+  programs.git.includes = [
+    {
+      condition = "gitdir:~/lexe/org/lexe-projects/";
+      contents = {
+        user = {
+          name = "Lexe Agent";
+          email = "noreply@lexe.app";
+        };
+        core.hooksPath = toString (pkgs.linkFarm "lexe-projects-git-hooks" {
+          prepare-commit-msg = ./lexe-dev-hetzner/prepare-commit-msg;
+        });
+      };
+    }
+  ];
+
   home.username = "fang";
   home.homeDirectory = "/Users/fang";
   home.stateVersion = "25.05";
