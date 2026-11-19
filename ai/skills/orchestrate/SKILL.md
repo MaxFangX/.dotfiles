@@ -42,6 +42,13 @@ Rule of thumb: if the mistake Opus would likely make is one you would catch
 reading the diff, delegate. If it would hide in the design, design it
 yourself, then delegate the fill-in with the design fixed in the brief.
 
+## Worker context
+
+A worker re-reads its whole context on every call, so its calls cost more
+the larger its context is. Thus, before giving a worker a task that is not
+a follow-up to its last one, compact it. The **paseo-orchestrate** skill
+has the command for a Paseo worker.
+
 ## Finishing
 
 Never present a worker's result unread. Review it against the brief and

@@ -65,6 +65,19 @@ context intact. Read the **paseo** skill for the tool reference.
    your own turn with a worker outstanding and no waker armed; say in
    your status message what is armed and when it fires. Don't busy-poll.
 
+## Compacting a worker
+
+The **orchestrate** skill says when to compact a worker. The command:
+
+```sh
+env -u PASEO_AGENT_ID paseo send <id> /compact
+```
+
+It interrupts a running turn, so run it only on an idle worker. It returns
+when the compaction is done. A prompt sent in an agent's name arrives as
+text, not as a command, so the CLI sends this one with `PASEO_AGENT_ID`
+unset.
+
 ## The shared repo while workers run
 
 Workers share your commit graph and op log. Do not rewrite commits below a
