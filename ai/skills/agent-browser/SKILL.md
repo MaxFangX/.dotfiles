@@ -76,6 +76,9 @@ the CLI in a session. `close` only disconnects the session, never the browser.
   report, and hand it to the human. On a headed host they sign in from the
   same window and the session carries on. Never enter the human's own
   credentials.
+- Dismiss any "save login" prompt from the browser or a password manager's
+  extension. A password you create goes where the skill that sent you to
+  sign up says; if none does, ask the human before you sign up.
 - Logging out or clearing cookies in your tab logs out every agent.
 
 ## Gotchas
