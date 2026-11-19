@@ -292,6 +292,14 @@ in
         config = {
           Program = toString (pkgs.writeShellScript "run-postgres" ''
             ${initScript}
+
+            # Stop a server left by the previous agent, so that a new package
+            # or config takes effect. A stale postmaster.pid can name another
+            # process, so check with `pg_isready`, not `pg_ctl status`.
+            if ${pkg}/bin/pg_isready -q -h "${dataDir}"; then
+              ${pkg}/bin/pg_ctl -D "${dataDir}" stop
+            fi
+
             ${pkg}/bin/pg_ctl -D "${dataDir}" -l "${logDir}/postgresql.log" start
             ${setupScript}
             # Keep the agent alive by tailing the log
