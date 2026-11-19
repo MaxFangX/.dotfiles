@@ -69,22 +69,27 @@
         ''"Co-authored-by: Max Fang <hello@maxfa.ng>"'';
     }
   ];
-  # The same for plain `git commit`. gitdir also matches the workspaces'
-  # linked worktrees, whose git dirs live in .git/worktrees/.
-  programs.git.includes = [
-    {
-      condition = "gitdir:~/lexe/org/lexe-projects/";
-      contents = {
-        user = {
-          name = "Lexe Agent";
-          email = "noreply@lexe.app";
+  # The same for plain `git commit`: in the main repo and its linked
+  # worktrees, whose git dirs live in .git/worktrees/ (gitdir), and in
+  # any other clone of it, by its remote.
+  programs.git.includes =
+    map
+      (condition: {
+        inherit condition;
+        contents = {
+          user = {
+            name = "Lexe Agent";
+            email = "noreply@lexe.app";
+          };
+          core.hooksPath = toString (pkgs.linkFarm "lexe-projects-git-hooks" {
+            prepare-commit-msg = ./lexe-dev-hetzner/prepare-commit-msg;
+          });
         };
-        core.hooksPath = toString (pkgs.linkFarm "lexe-projects-git-hooks" {
-          prepare-commit-msg = ./lexe-dev-hetzner/prepare-commit-msg;
-        });
-      };
-    }
-  ];
+      })
+      [
+        "gitdir:~/lexe/org/lexe-projects/"
+        "hasconfig:remote.*.url:git@github.com:lexe-app/lexe-projects.git"
+      ];
 
   home.username = "fang";
   home.homeDirectory = "/Users/fang";
