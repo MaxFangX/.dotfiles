@@ -56,6 +56,10 @@
   claude.settings.cleanupPeriodDays = 1095;
   confidential.inMemorySessions = true;
 
+  # Agents build in parallel, and each cargo otherwise runs a job per core,
+  # which on 32 GB pushes the Mac deep into swap. Cap each at 4.
+  claude.settings.env.CARGO_BUILD_JOBS = "4";
+
   # Agents commit to lexe-projects as the lexe-agent GitHub account, with
   # Max as co-author, as on lexe-dev-hetzner. jj matches the main repo's
   # path even from its workspaces under ~/lexe/worktrees/ai/.
