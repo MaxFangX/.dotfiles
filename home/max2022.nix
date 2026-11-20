@@ -12,6 +12,7 @@
     ./mods/agent-browser.nix # CDP-driven Brave for agent web research
     ./mods/claude-mcp.nix # MCP sync; servers live in ~/max2022
     ./mods/dev-lexe.nix
+    ./mods/zen.nix # Zen Browser prefs (user.js)
   ];
 
   home.packages = [
