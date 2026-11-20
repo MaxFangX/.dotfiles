@@ -167,6 +167,11 @@ in
 
   # Auto-compact at 500K tokens on every model with a larger window.
   claude.settings.autoCompactWindow = 500000;
+  # Every agent that touches Rust would start its own ~2.5 GB rust-analyzer
+  # and keep it while the agent lives, which exhausted RAM. Agents still have
+  # `cargo check` and grep.
+  claude.settings.enabledPlugins."rust-analyzer-lsp@claude-plugins-official" =
+    false;
 
   programs.home-manager.enable = true;
 
