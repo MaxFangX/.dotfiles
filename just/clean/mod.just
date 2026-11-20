@@ -5,7 +5,7 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 # Run every section below; `days` overrides all defaults (0 = hard clean)
-all days="": (nix days) (build days) caches (rust days) (ios days)
+all days="": (nix days) (build days) caches builder (rust days) (ios days)
 
 # GC Nix: expire generations older than `days` (default 30), keeping the
 # newest `keep` (default 3) in each profile regardless of age
@@ -16,9 +16,13 @@ nix days="" keep="":
 build days="":
     @{{ source_directory() }}/clean.sh build {{ days }}
 
-# Delete package-manager and app caches
+# Delete package-manager and app caches, leaked app temp clones, and scratch
 caches:
     @{{ source_directory() }}/clean.sh caches
+
+# GC the Nix store inside OrbStack's linux-builder VM
+builder:
+    @{{ source_directory() }}/clean.sh builder
 
 # Uninstall non-default Rust toolchains unused for `days` (default 7)
 rust days="":

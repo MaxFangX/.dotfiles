@@ -13,14 +13,14 @@ set -euo pipefail
 #
 # ## Args
 #
-# section = nix | build | caches | rust | ios
+# section = nix | build | caches | builder | rust | ios
 # days    = Age threshold overriding the section default: entries untouched
 #           for longer than this are deleted. Section defaults:
 #             nix    30  Home Manager / profile generations
 #             build   0  Cargo, npm, Flutter build output dirs
 #             rust    7  rustup toolchains (per binary atime)
 #             ios    30  Xcode iOS DeviceSupport entries
-#           `caches` deletes unconditionally.
+#           `caches` and `builder` take no threshold.
 # keep    = `nix` only: the newest generations kept in each profile however
 #           old (default 3). On a machine that rebuilds many times a day, 30
 #           days is hundreds of generations, so the count is the real bound.
@@ -141,7 +141,27 @@ clean_caches() {
     "$caches/go-build" \
     "$caches/uv" \
     "$caches/Homebrew" \
-    "$caches/electron"
+    "$caches/electron" \
+    "$caches/lexe-bot-targets"
+
+  # Brave clones its bundle into the per-user temp dir at launch and leaks the
+  # clone whenever it doesn't exit cleanly. The dir comes from `getconf`, as
+  # $TMPDIR may be overridden (e.g. in Claude Code).
+  remove "$(getconf DARWIN_USER_TEMP_DIR)../X/com.brave.Browser.code_sign_clone"
+  # rust-analyzer's check target dir (see nvim/coc-settings.json)
+  remove /private/tmp/rust-analyzer-check
+}
+
+# GC the Nix store in OrbStack's linux-builder VM, which the host's
+# `nix store gc` can't see
+clean_builder() {
+  command -v orb &>/dev/null || return 0
+  orb list 2>/dev/null | awk '
+    $1 == "linux-builder" && $2 == "running" { up = 1 }
+    END { exit !up }
+  ' || return 0
+  echo "==> OrbStack linux-builder Nix store"
+  orb -m linux-builder -u root nix store gc
 }
 
 # Uninstall non-default toolchains with no binary run (per atime) within
@@ -194,6 +214,7 @@ case "$section" in
   nix) clean_nix "$days" "$keep" ;;
   build) clean_build "$days" ;;
   caches) clean_caches ;;
+  builder) clean_builder ;;
   rust) clean_rust "$days" ;;
   ios) clean_ios "$days" ;;
   *)
