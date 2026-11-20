@@ -10,6 +10,7 @@
   rustPlatform,
   fetchFromGitHub,
   jujutsu,
+  writableTmpDirAsHomeHook,
 }:
 let
   source = lib.importJSON ./source.json;
@@ -38,8 +39,9 @@ rustPlatform.buildRustPackage {
   cargoLock.lockFile =
     if useLocal then localRepo + "/Cargo.lock" else ./Cargo.lock;
 
-  # The CLI integration tests shell out to `jj`.
-  nativeCheckInputs = [ jujutsu ];
+  # The CLI integration tests shell out to `jj`, which keeps a repo's
+  # config under $HOME.
+  nativeCheckInputs = [ jujutsu writableTmpDirAsHomeHook ];
 
   passthru.updateScript = ./update.sh;
 

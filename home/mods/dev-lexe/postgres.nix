@@ -8,7 +8,6 @@
   config,
   lib,
   pkgs,
-  sources,
   ...
 }:
 let
@@ -23,12 +22,6 @@ let
     optionalString
     types
     ;
-
-  # nixos-25.11 gets no more postgres minor releases, but the lexe repo's
-  # `just pg-mirror-remote` needs at least prod's minor version.
-  pkgs2605 = import sources.nixpkgs-2605 {
-    inherit (pkgs.stdenv.hostPlatform) system;
-  };
 
   cfg = config.services.postgres;
   pkg = cfg.package;
@@ -206,7 +199,7 @@ in
 
     package = mkOption {
       type = types.package;
-      default = pkgs2605.postgresql_17;
+      default = pkgs.postgresql_17;
       description = "PostgreSQL package to use";
     };
 

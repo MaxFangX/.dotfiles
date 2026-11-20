@@ -5,7 +5,6 @@
   agent-browser,
   buzz,
   claude-code,
-  claude-code-router,
   codex,
   complain,
   git-hunk,
@@ -50,8 +49,8 @@ let
     inherit pkgs;
     modules = modules ++ machineModule name;
     extraSpecialArgs = {
-      inherit pkgs sources claude-code-router complain git-hunk jj
-        jj-hunk-tool maple-proxy mcp-cli rsync vgit-nvim;
+      inherit pkgs sources complain git-hunk jj jj-hunk-tool
+        maple-proxy mcp-cli rsync vgit-nvim;
       agent-browser = stubUnsupported agent-browser;
       buzz = stubUnsupported buzz;
       claude-code = stubUnsupported claude-code;

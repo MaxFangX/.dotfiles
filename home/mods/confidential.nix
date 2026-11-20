@@ -55,13 +55,14 @@
   lib,
   pkgs,
   claude-code,
-  claude-code-router,
   paseo,
   ...
 }:
 let
   cfg = config.confidential;
   mkService = import ./user-service.nix { inherit config lib pkgs; };
+  # 2.0.0 is the version verified against the Maple proxy (maple.nix).
+  inherit (pkgs) claude-code-router;
 
   envFile = "${config.home.homeDirectory}/env/sensitive.sh";
   secretFn = import ./secret.nix { inherit config; };

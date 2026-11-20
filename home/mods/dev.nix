@@ -38,7 +38,7 @@ in
     pkgs.go
     gooseWithKey # Block's goose AI agent (see pkgs/goose)
     pkgs.nil # Nix LSP
-    pkgs.nixfmt-rfc-style # Nix formatter
+    pkgs.nixfmt # Nix formatter
     pkgs.nodejs # Required by coc.nvim
     pkgs.python3
     pkgs.tmux

@@ -1,15 +1,9 @@
 # Lexe-specific dev environment.
 # Adds Flutter, Android SDK, PostgreSQL, and related tooling
 # on top of the general dev module.
-{ lib, pkgs, sources, ... }:
+{ lib, pkgs, ... }:
 let
-  # Flutter 3.41 isn't in nixos-25.11; pull it from the 26.05 channel,
-  # matching the lexe repo's nixpkgs pin.
-  pkgs2605 = import sources.nixpkgs-2605 {
-    inherit (pkgs) system;
-    config.allowUnfree = true;
-  };
-  flutter = pkgs2605.flutter341;
+  flutter = pkgs.flutter341;
 in
 {
   imports = [
