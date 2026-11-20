@@ -44,10 +44,10 @@ yourself, then delegate the fill-in with the design fixed in the brief.
 
 ## Worker context
 
-A worker re-reads its whole context on every call, so its calls cost more
-the larger its context is. Thus, before giving a worker a task that is not
-a follow-up to its last one, compact it. The **paseo-orchestrate** skill
-has the command for a Paseo worker.
+Keep inference costs in mind. A worker re-reads its whole context on every call,
+so its calls cost more the larger its context is. Thus, before giving a worker a
+task that is not a follow-up to its last one, compact it. The
+**paseo-orchestrate** skill has the command for a Paseo worker.
 
 ## Finishing
 
