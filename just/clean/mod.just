@@ -16,7 +16,7 @@ nix days="" keep="":
 build days="":
     @{{ source_directory() }}/clean.sh build {{ days }}
 
-# Delete package-manager and app caches, leaked app temp clones, and scratch
+# Delete package-manager, app and build caches, and Brave's leaked clones
 caches:
     @{{ source_directory() }}/clean.sh caches
 

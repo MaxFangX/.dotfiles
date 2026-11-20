@@ -21,9 +21,10 @@ set -euo pipefail
 #             rust    7  rustup toolchains (per binary atime)
 #             ios    30  Xcode iOS DeviceSupport entries
 #           `caches` and `builder` take no threshold.
-# keep    = `nix` only: the newest generations kept in each profile however
-#           old (default 3). On a machine that rebuilds many times a day, 30
-#           days is hundreds of generations, so the count is the real bound.
+# keep    = `nix` only: the newest generations kept in each profile
+#           regardless of age (default 3). On a machine that rebuilds many
+#           times a day, 30 days holds hundreds of generations, so `days`
+#           alone barely shrinks the store.
 
 section="${1:?usage: clean.sh <section> [days] [keep]}"
 days="${2:-}"
@@ -57,8 +58,8 @@ prune_generations() {
 
 clean_nix() {
   local days="${1:-30}" keep="${2:-3}"
-  # A non-numeric `keep` evaluates to 0, which would delete the current
-  # generation too
+  # Bash arithmetic evaluates a non-numeric `keep` as 0, which would delete
+  # every generation, the current one included
   [[ $keep =~ ^[1-9][0-9]*$ ]] \
     || { echo >&2 "error: keep must be at least 1, got '$keep'"; exit 1; }
   echo "==> Nix (generations older than $days days, keeping newest $keep)"
@@ -101,11 +102,13 @@ clean_build() {
       2>/dev/null) ]] || continue
     remove "$dir"
   done < <(
-    # Skip other filesystems (e.g. VM disks mounted at ~/OrbStack, whose Nix
-    # stores hold Flutter sources), ~/Library (Xcode output is handled by
-    # `ios`), hidden ~/.* dirs, which hold app state (e.g. editor extensions'
-    # node_modules, which sit next to a package.json like build output does),
-    # and the read-only Go module cache
+    # Prune trees whose matches must not be deleted here:
+    # - Other filesystems, such as the VM disk mounted at ~/OrbStack, whose
+    #   Nix store holds Flutter sources.
+    # - ~/Library, as `ios` handles Xcode output.
+    # - Hidden ~/.* dirs, which hold app state. For example, editor
+    #   extensions keep node_modules next to a package.json.
+    # - The Go module cache, which `caches` clears.
     gomodcache=$(go env GOMODCACHE 2>/dev/null || true)
     find "$HOME" -xdev \
       \( -path "$HOME/Library" -o -path "$HOME/.*" -o -path "$gomodcache" \
@@ -144,9 +147,9 @@ clean_caches() {
     "$caches/electron" \
     "$caches/lexe-bot-targets"
 
-  # Brave clones its bundle into the per-user temp dir at launch and leaks the
-  # clone whenever it doesn't exit cleanly. The dir comes from `getconf`, as
-  # $TMPDIR may be overridden (e.g. in Claude Code).
+  # Brave clones its bundle into the per-user temp dir at launch, and leaks
+  # the clone whenever it doesn't exit cleanly. $TMPDIR may be overridden, as
+  # Claude Code does, so find that dir with `getconf`.
   remove "$(getconf DARWIN_USER_TEMP_DIR)../X/com.brave.Browser.code_sign_clone"
   # rust-analyzer's check target dir (see nvim/coc-settings.json)
   remove /private/tmp/rust-analyzer-check
