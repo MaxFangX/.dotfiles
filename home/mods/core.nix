@@ -122,6 +122,8 @@ in
   home.file = {
     ".zshrc".source = ../../zshrc;
     ".tmux.conf".source = ../../tmux.conf;
+    # Stops macOS's login(1) printing "Last login: ..." in each new shell.
+    ".hushlogin" = lib.mkIf pkgs.stdenv.isDarwin { text = ""; };
     ".config/nvim".source = ../../nvim;
     # The pinned vgit.nvim fork, loaded by nvim/lua/plugins/vgit.lua as a
     # local lazy.nvim plugin on hosts without a ~/dev/nvim/vgit.nvim
