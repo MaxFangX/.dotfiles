@@ -39,34 +39,17 @@ remove() {
   done
 }
 
-# Delete all but the newest `keep` generation links ("<prefix>-<n>-link") in
-# `dir`. The current generation is the highest-numbered, so it survives.
-prune_generations() {
-  local dir=$1 prefix=$2 keep=$3 link name num
-  [[ -d $dir ]] || return 0
-  while IFS= read -r name; do
-    remove "$dir/$name"
-  done < <(
-    for link in "$dir/$prefix"-[0-9]*-link; do
-      [[ -L $link ]] || continue
-      name=${link##*/}
-      num=${name#"$prefix"-}
-      printf '%s %s\n' "${num%-link}" "$name"
-    done | sort -rn | tail -n "+$((keep + 1))" | cut -d' ' -f2
-  )
-}
-
 clean_nix() {
-  local days="${1:-30}" keep="${2:-3}"
-  # Bash arithmetic evaluates a non-numeric `keep` as 0, which would delete
-  # every generation, the current one included
-  [[ $keep =~ ^[1-9][0-9]*$ ]] \
-    || { echo >&2 "error: keep must be at least 1, got '$keep'"; exit 1; }
+  local days="${1:-30}" keep="${2:-3}" profile
   echo "==> Nix (generations older than $days days, keeping newest $keep)"
   home-manager expire-generations "-$days days"
   nix profile wipe-history --older-than "${days}d"
-  prune_generations "$HOME/.local/state/nix/profiles" 'home-manager' "$keep"
-  prune_generations "/nix/var/nix/profiles/per-user/$USER" 'profile' "$keep"
+  # `+N` never deletes the current generation, even after a rollback
+  for profile in "$HOME/.local/state/nix/profiles/home-manager" \
+    "/nix/var/nix/profiles/per-user/$USER/profile"; do
+    [[ -e $profile ]] || continue
+    nix-env --profile "$profile" --delete-generations "+$keep"
+  done
   nix store gc
 }
 
