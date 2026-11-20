@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # ## Usage
 #
-# clean.sh <section> [days]
+# clean.sh <section> [days] [keep]
 #
 # ## Args
 #
@@ -21,9 +21,13 @@ set -euo pipefail
 #             rust    7  rustup toolchains (per binary atime)
 #             ios    30  Xcode iOS DeviceSupport entries
 #           `caches` deletes unconditionally.
+# keep    = `nix` only: the newest generations kept in each profile however
+#           old (default 3). On a machine that rebuilds many times a day, 30
+#           days is hundreds of generations, so the count is the real bound.
 
-section="${1:?usage: clean.sh <section> [days]}"
+section="${1:?usage: clean.sh <section> [days] [keep]}"
 days="${2:-}"
+keep="${3:-}"
 
 remove() {
   for path in "$@"; do
@@ -34,11 +38,34 @@ remove() {
   done
 }
 
+# Delete all but the newest `keep` generation links ("<prefix>-<n>-link") in
+# `dir`. The current generation is the highest-numbered, so it survives.
+prune_generations() {
+  local dir=$1 prefix=$2 keep=$3 link name num
+  [[ -d $dir ]] || return 0
+  while IFS= read -r name; do
+    remove "$dir/$name"
+  done < <(
+    for link in "$dir/$prefix"-[0-9]*-link; do
+      [[ -L $link ]] || continue
+      name=${link##*/}
+      num=${name#"$prefix"-}
+      printf '%s %s\n' "${num%-link}" "$name"
+    done | sort -rn | tail -n "+$((keep + 1))" | cut -d' ' -f2
+  )
+}
+
 clean_nix() {
-  local days="${1:-30}"
-  echo "==> Nix (generations older than $days days)"
+  local days="${1:-30}" keep="${2:-3}"
+  # A non-numeric `keep` evaluates to 0, which would delete the current
+  # generation too
+  [[ $keep =~ ^[1-9][0-9]*$ ]] \
+    || { echo >&2 "error: keep must be at least 1, got '$keep'"; exit 1; }
+  echo "==> Nix (generations older than $days days, keeping newest $keep)"
   home-manager expire-generations "-$days days"
   nix profile wipe-history --older-than "${days}d"
+  prune_generations "$HOME/.local/state/nix/profiles" 'home-manager' "$keep"
+  prune_generations "/nix/var/nix/profiles/per-user/$USER" 'profile' "$keep"
   nix store gc
 }
 
@@ -164,7 +191,7 @@ clean_ios() {
 avail_before=$(df -k "$HOME" | awk 'NR == 2 { print $4 }')
 
 case "$section" in
-  nix) clean_nix "$days" ;;
+  nix) clean_nix "$days" "$keep" ;;
   build) clean_build "$days" ;;
   caches) clean_caches ;;
   rust) clean_rust "$days" ;;

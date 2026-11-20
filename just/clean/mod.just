@@ -7,9 +7,10 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 # Run every section below; `days` overrides all defaults (0 = hard clean)
 all days="": (nix days) (build days) caches (rust days) (ios days)
 
-# GC Nix: expire generations older than `days` (default 30)
-nix days="":
-    @{{ source_directory() }}/clean.sh nix {{ days }}
+# GC Nix: expire generations older than `days` (default 30), keeping the
+# newest `keep` (default 3) in each profile regardless of age
+nix days="" keep="":
+    @{{ source_directory() }}/clean.sh nix "{{ days }}" "{{ keep }}"
 
 # Delete Cargo/npm/Flutter build output untouched for `days` (default 0)
 build days="":
