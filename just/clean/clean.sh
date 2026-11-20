@@ -74,12 +74,13 @@ clean_build() {
       2>/dev/null) ]] || continue
     remove "$dir"
   done < <(
-    # Skip ~/Library (Xcode output is handled by `ios`), hidden ~/.* dirs,
-    # which hold app state (e.g. editor extensions' node_modules, which sit
-    # next to a package.json like build output does), and the read-only Go
-    # module cache
+    # Skip other filesystems (e.g. VM disks mounted at ~/OrbStack, whose Nix
+    # stores hold Flutter sources), ~/Library (Xcode output is handled by
+    # `ios`), hidden ~/.* dirs, which hold app state (e.g. editor extensions'
+    # node_modules, which sit next to a package.json like build output does),
+    # and the read-only Go module cache
     gomodcache=$(go env GOMODCACHE 2>/dev/null || true)
-    find "$HOME" \
+    find "$HOME" -xdev \
       \( -path "$HOME/Library" -o -path "$HOME/.*" -o -path "$gomodcache" \
         -o -name .git -o -name .jj \) -prune \
       -o -type d \( -name target -o -name node_modules -o -name build \
