@@ -28,6 +28,7 @@ in
     ./core.nix
     ./paseo.nix
     ./confidential.nix
+    ./lspmux.nix
   ];
 
   home.packages = [

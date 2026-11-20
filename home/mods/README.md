@@ -13,7 +13,9 @@ core.nix                Base layer. Shell, editor, CLI tools.
     │                   always-on daemon stays opt-in) and
     │                   confidential.nix (Claude Code on
     │                   DeepSeek V4.1 Flash inside Tinfoil and
-    │                   Maple enclaves).
+    │                   Maple enclaves), and lspmux.nix (one
+    │                   rust-analyzer per directory, shared by
+    │                   Claude Code sessions).
     │
     └── dev-lexe.nix    Lexe-specific dev environment.
         │
