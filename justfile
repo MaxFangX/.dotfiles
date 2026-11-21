@@ -100,6 +100,10 @@ nix-setup:
             ;;
     esac
 
+# Keep dev trees out of the Spotlight index (macOS; needs sudo)
+spotlight-setup:
+    ./just/spotlight-setup.sh
+
 # Remove trailing spaces from all files
 remove-trailing-spaces *ARGS:
     #!/usr/bin/env bash
