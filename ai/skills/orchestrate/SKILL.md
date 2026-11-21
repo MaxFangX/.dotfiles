@@ -49,6 +49,14 @@ so its calls cost more the larger its context is. Thus, before giving a worker a
 task that is not a follow-up to its last one, compact it. The
 **paseo-orchestrate** skill has the command for a Paseo worker.
 
+Batch what you send a worker: each message starts a turn over its whole
+context, so send one complete follow-up, not a trickle. Ask for short
+reports, the `DONE:` line and what you need to review, since each of your
+own calls re-reads everything a worker sent you. Sweep many files from an
+Explore subagent, not from your own context: a call from a 300K context
+costs ten times one from a fresh 30K one, and only the conclusion comes
+back.
+
 ## Finishing
 
 Never present a worker's result unread. Review it against the brief and
