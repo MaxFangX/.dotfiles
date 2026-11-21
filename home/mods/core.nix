@@ -167,8 +167,9 @@ in
     #   ../../claude/settings.json;
   } // sharedSkillFiles;
 
-  # Auto-compact at 500K tokens on every model with a larger window.
-  claude.settings.autoCompactWindow = 500000;
+  # Auto-compact at 300K tokens on every model with a larger window. Every
+  # turn re-reads the whole context, so bigger contexts burn usage limits.
+  claude.settings.autoCompactWindow = 300000;
   # With this plugin, every agent that touches Rust starts its own ~2.5 GB
   # rust-analyzer and keeps it while the agent lives. lspmux.nix, imported
   # by dev.nix, gives agents a shared one instead.
