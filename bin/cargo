@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Runs the next cargo on PATH. For agents, which alone have CARGO_AGENT_SLOTS=N
+# (see below), builds first wait for one of N machine-wide slots, so that
+# agents building at once can't exhaust RAM.
+set -euo pipefail
+
+# The next cargo on PATH after this one
+self_dir=$(cd "$(dirname "$0")" && pwd -P)
+real=
+IFS=: read -ra path_dirs <<< "$PATH"
+for dir in "${path_dirs[@]}"; do
+  [[ -x $dir/cargo && $(cd "$dir" && pwd -P) != "$self_dir" ]] || continue
+  real=$dir/cargo
+  break
+done
+if [[ -z $real ]]; then
+  echo >&2 "cargo: no cargo on PATH after $self_dir"
+  exit 127
+fi
+
+# The subcommand: the first arg that isn't a toolchain or an option
+sub=
+skip_value=false
+for arg in "$@"; do
+  if $skip_value; then skip_value=false; continue; fi
+  case "$arg" in
+    -Z | -C | --config | --color) skip_value=true ;;
+    +* | -*) ;;
+    *) sub=$arg; break ;;
+  esac
+done
+
+# Not a build (`run` would hold its slot while the program runs)
+case "$sub" in
+  build | b | check | c | clippy | test | t | doc | d | nextest) ;;
+  *) exec "$real" "$@" ;;
+esac
+
+# Only agents have CARGO_AGENT_SLOTS: Claude Code puts the `env` of its
+# settings.json (claude.settings.env in max2022.nix) into its sessions, but
+# a human's shells lack it. Without it, or in a cargo nested in one that
+# already holds a slot, cargo runs at once.
+slots=${CARGO_AGENT_SLOTS:-}
+[[ -n $slots && -z ${CARGO_AGENT_SLOT:-} ]] || exec "$real" "$@"
+
+# Try each slot's lock on fd 9. flock(2) locks belong to the open file, so
+# perl's lock outlives perl and holds for as long as cargo, which inherits
+# fd 9, runs. The OS releases it when the build exits or dies.
+lock_dir=/tmp/cargo-agent-slots
+mkdir -p "$lock_dir"
+take_slot() {
+  local i
+  for ((i = 1; i <= slots; i++)); do
+    exec 9>>"$lock_dir/$i"
+    if perl -MFcntl=:flock -e \
+      'open(my $f, ">&=", 9) or exit 1; flock($f, LOCK_EX | LOCK_NB) or exit 1'
+    then
+      # After `exec`, $$ is cargo's pid
+      echo "$$ $PWD: cargo $sub" > "$lock_dir/$i.holder"
+      export CARGO_AGENT_SLOT=$i
+      return 0
+    fi
+    exec 9>&-
+  done
+  return 1
+}
+
+if ! take_slot; then
+  echo >&2 "cargo: all $slots agent build slots are taken; waiting for one:"
+  for ((i = 1; i <= slots; i++)); do
+    cat "$lock_dir/$i.holder" >&2 2>/dev/null || true
+  done
+  until take_slot; do sleep 2; done
+  echo >&2 "cargo: got build slot $CARGO_AGENT_SLOT"
+fi
+exec "$real" "$@"

@@ -57,8 +57,12 @@
   confidential.inMemorySessions = true;
 
   # Agents build in parallel, and each cargo otherwise runs a job per core,
-  # which on 32 GB pushes the Mac deep into swap. Cap each at 4.
-  claude.settings.env.CARGO_BUILD_JOBS = "4";
+  # which on 32 GB pushes the Mac deep into swap. So cap each build at 4
+  # jobs, and let at most 2 agent builds run at once (see bin/cargo).
+  claude.settings.env = {
+    CARGO_BUILD_JOBS = "4";
+    CARGO_AGENT_SLOTS = "2";
+  };
 
   # Agents commit to lexe-projects as the lexe-agent GitHub account, with
   # Max as co-author, as on lexe-dev-hetzner. jj matches the main repo's
