@@ -91,12 +91,16 @@ machine-readable, and treat a fact that has not been checked as missing:
   better choice, because beehiiv takes 0% of paid subscriptions and Substack
   takes 10%. Substack works if you want a built-in network to get more
   readers and monetizing isn't a concern."
-- Each fact that changes over time, such as a price, a feature list, a
-  rating, or a customer count, is written with the date as of which the fact
-  holds. For example, "Acme has 13,231 active subscribers as of 2026."
-- An article or docs page shows "Published <date>" and "Updated <date>" below
-  its title. Review each page every 30 to 90 days, and change the "Updated"
-  date when the review changes the content.
+- A dated article, such as a blog post or an announcement, shows
+  "Published <date>" below its title, and "Updated <date>" once its content
+  has changed. A page that is revised in place, such as a landing, pricing,
+  or docs page, shows no date in its copy, neither "Updated <date>" nor
+  "as of <date>" beside a fact: that date goes stale unless someone keeps
+  editing it. Keep the page current instead.
+- When a page last changed is stated in metadata, which a crawler reads and
+  a visitor does not: `<lastmod>` in the sitemap, and `dateModified` in an
+  article's structured data. The build fills both from the last commit that
+  touched the page, so nobody maintains them.
 
 ## Crawling
 
