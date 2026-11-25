@@ -702,6 +702,10 @@ return {
         ['n grf'] = function()
           require('vgit').project_review_by_file()
         end,
+        -- (r)eview from (0): read the trunk's whole codebase, a line at a time
+        ['n gr0'] = function()
+          require('vgit').project_review_from_zero()
+        end,
         -- (r)eview (l)og: browse a commit range like grc, without marks.
         -- Prefilled with what the last fetch brought into origin's trunk.
         ['n grl'] = function()
